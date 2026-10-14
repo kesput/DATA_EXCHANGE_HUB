@@ -1,0 +1,1061 @@
+@page
+@model DATA_EXCHANGE_HUB.Pages.Apis.IndexModel
+@{
+    ViewData["Title"] = "APIS";
+}
+
+<div class="container-fluid exchange-page pt-4">
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
+                    APIS <small class="badge bg-secondary ms-2">AP</small>
+                </h3>
+                <p class="mb-0 text-dark-green">Analytics - Processes - Indicators - Statistics</p>
+            </div>
+
+            <div class="hub-app-list mb-3">
+                <div class="side-panel-title">APIS</div>
+                <div class="list-group">
+                    @foreach (var pillar in Model.Pillars)
+                    {
+                        var queries = Model.GetQueriesForArea(pillar.Area);
+                        var targetQuery = queries.FirstOrDefault(query => query.ViewMode.Equals("auto", StringComparison.OrdinalIgnoreCase)) ?? queries.FirstOrDefault();
+                        <a class="list-group-item list-group-item-action active list-with-details @(pillar.Area.Equals(Model.ActiveArea, StringComparison.OrdinalIgnoreCase) ? "is-selected" : "")"
+                           href="?Area=@Uri.EscapeDataString(pillar.Area)&QueryId=@Uri.EscapeDataString(targetQuery?.Id ?? string.Empty)#apis-@pillar.Area">
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <strong>@pillar.TitleLt</strong>
+                                <span class="text-muted small">@pillar.Letter</span>
+                            </div>
+                            <div class="d-flex justify-content-end align-items-center mt-1 client-kpis">
+                                <div class="kpi-item text-success">
+                                    <div class="fw-bold">@queries.Count</div>
+                                    <small>SQL</small>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">@L["Common.BackToHub"]</a>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+            }
+
+            <div class="hub-hero mb-4">
+                <div>
+                    <span class="hub-eyebrow">Analysis platform</span>
+                    <h1>APIS</h1>
+                    <p>Analize, procesai, indikatoriai ir statistika vienoje SQL pagrindu valdomaje darbo erdveje.</p>
+                </div>
+            </div>
+
+            <section class="hub-board mb-4">
+                <div class="hub-app-grid">
+                    @foreach (var pillar in Model.Pillars)
+                    {
+                        var queries = Model.GetQueriesForArea(pillar.Area);
+                        var targetQuery = queries.FirstOrDefault(query => query.ViewMode.Equals("auto", StringComparison.OrdinalIgnoreCase)) ?? queries.FirstOrDefault();
+                        <a class="app-tile @(pillar.Area.Equals(Model.ActiveArea, StringComparison.OrdinalIgnoreCase) ? "is-selected" : "")"
+                           href="?Area=@Uri.EscapeDataString(pillar.Area)&QueryId=@Uri.EscapeDataString(targetQuery?.Id ?? string.Empty)#apis-@pillar.Area">
+                            <span class="app-tile-icon">@pillar.Letter</span>
+                            <span class="app-tile-body">
+                                <span class="app-tile-title">@pillar.TitleLt</span>
+                                <span class="app-tile-desc">@pillar.DescriptionLt</span>
+                                <span class="text-muted">@pillar.TitleEn - @pillar.DescriptionEn</span>
+                            </span>
+                            <span class="app-status">@queries.Count SQL</span>
+                        </a>
+                    }
+                </div>
+            </section>
+
+            @foreach (var pillar in Model.Pillars.Where(pillar => pillar.Area.Equals(Model.ActiveArea, StringComparison.OrdinalIgnoreCase)))
+            {
+                var areaQueries = Model.GetQueriesForArea(pillar.Area);
+                <section class="tool-section mb-3" id="apis-@pillar.Area">
+                    <div class="section-title-row">
+                        <h2>@pillar.TitleLt</h2>
+                        <span class="status-pill">@pillar.TitleEn</span>
+                    </div>
+
+                    @if (pillar.Area.Equals("Analytics", StringComparison.OrdinalIgnoreCase) && Model.CanViewQvdPreview)
+                    {
+                        <div class="hub-board mb-3">
+                            <div class="section-title-row compact">
+                                <h3>QVD preview</h3>
+                                <span class="status-pill-muted">Data/Apis/Qvd</span>
+                            </div>
+                            @if (Model.QvdFiles.Count == 0)
+                            {
+                                                                <div class="empty-state">
+                                    <div>QVD failu sukonfiguruotuose aplankuose nerasta.</div>
+                                    @if (Model.QvdRoots.Count > 0)
+                                    {
+                                        <div class="mt-2 small">
+                                            @foreach (var root in Model.QvdRoots)
+                                            {
+                                                <div>@root.Path - @(root.Exists ? "pasiekiamas" : "nepasiekiamas")</div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <form method="get" class="row g-3 align-items-end mb-3">
+                                    <input type="hidden" name="Area" value="@Model.ActiveArea" />
+                                    <input type="hidden" name="QueryId" value="@Model.QueryId" />
+                                    <div class="col-lg-8">
+                                        <label class="form-label" for="apisQvdFile">QVD failas</label>
+                                        <select class="form-select" id="apisQvdFile" name="QvdFileId" onchange="this.form.submit()">
+                                            @foreach (var qvdFile in Model.QvdFiles)
+                                            {
+                                                <option value="@qvdFile.Id" selected="@(qvdFile.Id.Equals(Model.QvdFileId, StringComparison.OrdinalIgnoreCase))">@qvdFile.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <button type="submit" class="btn btn-outline-primary w-100">Perkrauti QVD</button>
+                                    </div>
+                                </form>
+
+                                @if (Model.QvdPreview is not null)
+                                {
+                                    <div class="hub-metrics my-3">
+                                        <div class="metric-card">
+                                            <small>Irasai QVD</small>
+                                            <h4>@Model.QvdPreview.TotalRecords</h4>
+                                        </div>
+                                        <div class="metric-card">
+                                            <small>Stulpeliai</small>
+                                            <h4>@Model.QvdPreview.Fields.Count</h4>
+                                        </div>
+                                        <div class="metric-card">
+                                            <small>Preview</small>
+                                            <h4>@Model.QvdPreview.Rows.Count</h4>
+                                        </div>
+                                        <div class="metric-card">
+                                            <small>Create UTC</small>
+                                            <h4>@(Model.QvdPreview.File.CreateUtcTime?.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) ?? "-")</h4>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-info" role="status">
+                                        <strong>CreatorDoc:</strong> @(string.IsNullOrWhiteSpace(Model.QvdPreview.File.CreatorDoc) ? "-" : Model.QvdPreview.File.CreatorDoc)
+                                    </div>
+
+                                    @if (!string.IsNullOrWhiteSpace(Model.QvdPreview.Warning))
+                                    {
+                                        <div class="alert alert-warning" role="status">@Model.QvdPreview.Warning</div>
+                                    }
+
+                                    <div class="table-responsive exchange-table-wrap mb-3">
+                                        <table class="table align-middle exchange-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Field</th>
+                                                    <th>Symbols</th>
+                                                    <th>Format</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var field in Model.QvdPreview.Fields)
+                                                {
+                                                    <tr>
+                                                        <td>@field.Name</td>
+                                                        <td>@(field.SymbolCount?.ToString(System.Globalization.CultureInfo.CurrentCulture) ?? string.Empty)</td>
+                                                        <td>@field.NumberFormat</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    @if (Model.QvdPreview.Rows.Count > 0)
+                                    {
+                                        <div class="table-responsive exchange-table-wrap">
+                                            <table class="table align-middle exchange-table">
+                                                <thead>
+                                                    <tr>
+                                                        @foreach (var field in Model.QvdPreview.Fields)
+                                                        {
+                                                            <th>@field.Name</th>
+                                                        }
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var row in Model.QvdPreview.Rows)
+                                                    {
+                                                        <tr>
+                                                            @foreach (var field in Model.QvdPreview.Fields)
+                                                            {
+                                                                <td>@(row.TryGetValue(field.Name, out var value) ? value : string.Empty)</td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    }
+                    @if (areaQueries.Count == 0)
+                    {
+                        <div class="empty-state">Siai APIS krypciai dar nera SQL failu.</div>
+                    }
+                    else
+                    {
+                        var indicatorQueries = areaQueries.ToArray();
+                        var isIndicatorView = pillar.Area.Equals("Indicators", StringComparison.OrdinalIgnoreCase);
+
+                        if (isIndicatorView)
+                        {
+                            <div class="apis-indicator-shell">
+                                <div class="apis-indicator-toolbar" aria-label="Indikatoriu pasirinkimas">
+                                    @foreach (var query in indicatorQueries)
+                                    {
+                                        <a class="apis-indicator-tab @(query.Id.Equals(Model.SelectedQuery?.Id, StringComparison.OrdinalIgnoreCase) ? "is-selected" : "")"
+                                           href="?Area=@Uri.EscapeDataString(pillar.Area)&QueryId=@Uri.EscapeDataString(query.Id)#apis-@pillar.Area">
+                                            <span>@query.Name</span>
+                                            <small>KPI</small>
+                                        </a>
+                                    }
+                                </div>
+                                @if (!string.IsNullOrWhiteSpace(Model.SelectedQuery?.Description))
+                                {
+                                    <div class="alert alert-info mb-0" role="status">
+                                        @Model.SelectedQuery.Description
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                        <form method="post" class="d-grid gap-3" id="apisQueryForm">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-lg-8">
+                                    <label class="form-label" asp-for="QueryId">SQL select / procedura</label>
+                                    <select class="form-select" asp-for="QueryId" id="apisQuerySelect">
+                                        @foreach (var query in areaQueries)
+                                        {
+                                            <option value="@query.Id">@query.Name (@(query.CommandType.Equals("Procedure", StringComparison.OrdinalIgnoreCase) ? "PROC" : "SQL"))</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-lg-4 d-flex gap-2">
+                                    <button type="submit" asp-page-handler="Execute" class="btn btn-orange" data-apis-submit-label="Vykdoma...">EXECUTE</button>
+                                    <button type="submit" asp-page-handler="ExportExcel" class="btn btn-outline-primary" data-apis-submit-label="Ruosiamas Excel..." data-apis-auto-reset-ms="5000">Export Excel</button>
+                                    <button type="submit" asp-page-handler="ExportCsv" class="btn btn-outline-success" data-apis-submit-label="Ruosiamas CSV..." data-apis-auto-reset-ms="5000">Export CSV</button>
+                                </div>
+                            </div>
+
+                            <div class="apis-query-progress" id="apisQueryProgress" role="status" aria-live="polite" hidden>
+                                <div class="apis-query-spinner" aria-hidden="true"></div>
+                                <div>
+                                    <strong id="apisQueryProgressTitle">Uzklausa vykdoma</strong>
+                                    <span>Palaukite, SQL skaiciavimas dar tesiasi. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.</span>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrWhiteSpace(Model.SelectedQuery?.Description))
+                            {
+                                <div class="alert alert-info mb-0" role="status">
+                                    @Model.SelectedQuery.Description
+                                </div>
+                            }
+                            @if (Model.SelectedQuery?.Parameters.Count > 0)
+                            {
+                                var requiredParameters = Model.SelectedQuery.Parameters
+                                    .Where(parameter => parameter.IsRequired)
+                                    .ToArray();
+                                var optionalParameters = Model.SelectedQuery.Parameters
+                                    .Where(parameter => !parameter.IsRequired)
+                                    .OrderBy(parameter => parameter.Name, StringComparer.OrdinalIgnoreCase)
+                                    .ToArray();
+                                var activeOptionalParameters = optionalParameters
+                                    .Where(parameter => Model.Parameters.Any(value =>
+                                        value.Name.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase) &&
+                                        !string.IsNullOrWhiteSpace(value.Value)))
+                                    .ToArray();
+                                <div class="hub-board apis-parameter-board" data-apis-required-parameter-count="@requiredParameters.Length">
+                                    <div class="section-title-row compact">
+                                        <h3>Parametrai</h3>
+                                        <span class="status-pill-muted">@Model.SelectedQuery.ProcedureName</span>
+                                    </div>
+                                    <div class="row g-3">
+                                        @for (var index = 0; index < requiredParameters.Length; index++)
+                                        {
+                                            var parameter = requiredParameters[index];
+                                            <div class="col-xl-4 col-md-6">
+                                                <input type="hidden" name="Parameters[@index].Name" value="@parameter.Name" />
+                                                @if (parameter.AllowedOperators.Count > 1)
+                                                {
+                                                    <label class="form-label" for="apis-param-operator-@index">Operatorius</label>
+                                                    <select class="form-select form-select-sm mb-2"
+                                                            id="apis-param-operator-@index"
+                                                            name="Parameters[@index].Operator">
+                                                        @foreach (var parameterOperator in parameter.AllowedOperators)
+                                                        {
+                                                            <option value="@parameterOperator" selected="@(Model.GetParameterOperator(parameter).Equals(parameterOperator, StringComparison.OrdinalIgnoreCase) ? "selected" : null)">
+                                                                @IndexModel.GetOperatorLabel(parameterOperator)
+                                                            </option>
+                                                        }
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    <input type="hidden" name="Parameters[@index].Operator" value="@(parameter.AllowedOperators.FirstOrDefault() ?? ExchangeTableFilter.EqualsOperator)" />
+                                                }
+                                                <label class="form-label" for="apis-param-@index">
+                                                    @parameter.Name <span class="text-danger">*</span>
+                                                </label>
+                                                @if (parameter.AllowedValues.Count > 0)
+                                                {
+                                                    <select class="form-select"
+                                                            id="apis-param-@index"
+                                                            name="Parameters[@index].Value"
+                                                            required>
+                                                        @foreach (var allowedValue in parameter.AllowedValues)
+                                                        {
+                                                            var selectedValue = Model.GetParameterValue(parameter);
+                                                            <option value="@(allowedValue.Equals("NULL", StringComparison.OrdinalIgnoreCase) ? string.Empty : allowedValue)" selected="@(allowedValue.Equals(selectedValue, StringComparison.OrdinalIgnoreCase) || (allowedValue.Equals("NULL", StringComparison.OrdinalIgnoreCase) && string.IsNullOrWhiteSpace(selectedValue)) ? "selected" : null)">@allowedValue</option>
+                                                        }
+                                                    </select>
+                                                }
+                                                else if (IndexModel.IsDateParameter(parameter))
+                                                {
+                                                    <div class="input-group apis-date-input" data-date-format="@Model.GetDateDisplayFormat()">
+                                                        <input class="form-control apis-date-display"
+                                                               id="apis-param-@index"
+                                                               name="Parameters[@index].Value"
+                                                               type="text"
+                                                               inputmode="numeric"
+                                                               value="@Model.GetParameterDisplayValue(parameter)"
+                                                               placeholder="@Model.GetDateDisplayPlaceholder()"
+                                                               pattern="@IndexModel.GetParameterPattern(parameter)"
+                                                               title="@IndexModel.GetParameterTitle(parameter)"
+                                                               autocomplete="off"
+                                                               required />
+                                                        <button class="btn btn-outline-secondary apis-date-open" type="button" aria-label="Pasirinkti data">Cal</button>
+                                                        <input class="apis-date-native" type="date" value="@Model.GetParameterNativeDateValue(parameter)" tabindex="-1" aria-hidden="true" />
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <input class="form-control"
+                                                           id="apis-param-@index"
+                                                           name="Parameters[@index].Value"
+                                                           type="@IndexModel.GetParameterInputType(parameter)"
+                                                           inputmode="@IndexModel.GetParameterInputMode(parameter)"
+                                                           value="@Model.GetParameterValue(parameter)"
+                                                           placeholder="@IndexModel.GetParameterPlaceholder(parameter)"
+                                                           pattern="@IndexModel.GetParameterPattern(parameter)"
+                                                           title="@IndexModel.GetParameterTitle(parameter)"
+                                                           required />
+                                                }
+                                                <div class="form-text">
+                                                    @if (!string.IsNullOrWhiteSpace(parameter.Description))
+                                                    {
+                                                        <span>@parameter.Description</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@parameter.DataType</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    @if (optionalParameters.Length > 0)
+                                    {
+                                        <div class="exchange-filter-form apis-filter-form mt-3">
+                                            <div class="exchange-filter-header">
+                                                <h3>Pasirinktiniai filtrai</h3>
+                                            </div>
+                                            <div class="exchange-filter-rows" id="apisOptionalParameterRows">
+                                                @for (var optionalIndex = 0; optionalIndex < activeOptionalParameters.Length; optionalIndex++)
+                                                {
+                                                    var parameter = activeOptionalParameters[optionalIndex];
+                                                    var index = requiredParameters.Length + optionalIndex;
+                                                    <div class="exchange-filter-row" data-apis-optional-parameter-row>
+                                                        <div class="filter-connector">
+                                                            <select class="form-select form-select-sm" name="Parameters[@index].Connector" aria-label="Filtro jungtis" data-apis-optional-connector>
+                                                                <option value="@ExchangeTableFilter.AndConnector" selected="@(Model.GetParameterConnector(parameter).Equals(ExchangeTableFilter.AndConnector, StringComparison.OrdinalIgnoreCase))">AND</option>
+                                                                <option value="@ExchangeTableFilter.OrConnector" selected="@(Model.GetParameterConnector(parameter).Equals(ExchangeTableFilter.OrConnector, StringComparison.OrdinalIgnoreCase))">OR</option>
+                                                            </select>
+                                                        </div>
+                                                        <select class="form-select form-select-sm" name="Parameters[@index].Name" aria-label="Filtras" data-apis-optional-name>
+                                                            <option value="">Filtras</option>
+                                                            @foreach (var optionalParameter in optionalParameters)
+                                                            {
+                                                                <option value="@optionalParameter.Name"
+                                                                        data-type="@optionalParameter.DataType"
+                                                                        data-operators="@string.Join(",", optionalParameter.AllowedOperators)"
+                                                                        data-description="@optionalParameter.Description"
+                                                                        selected="@(optionalParameter.Name.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase))">@optionalParameter.Name</option>
+                                                            }
+                                                        </select>
+                                                        <select class="form-select form-select-sm" name="Parameters[@index].Operator" aria-label="Operatorius" data-apis-optional-operator>
+                                                            @foreach (var parameterOperator in parameter.AllowedOperators)
+                                                            {
+                                                                <option value="@parameterOperator" selected="@(Model.GetParameterOperator(parameter).Equals(parameterOperator, StringComparison.OrdinalIgnoreCase))">@IndexModel.GetOperatorLabel(parameterOperator)</option>
+                                                            }
+                                                        </select>
+                                                        <input class="form-control form-control-sm filter-value-input" name="Parameters[@index].Value" value="@Model.GetParameterValue(parameter)" placeholder="@IndexModel.GetParameterPlaceholder(parameter)" data-apis-optional-value />
+                                                        <button class="btn btn-sm btn-outline-secondary filter-remove-button" type="button" data-apis-remove-optional>Valyti</button>
+                                                        <div class="form-text filter-description-line" data-apis-optional-help>@(string.IsNullOrWhiteSpace(parameter.Description) ? parameter.DataType : parameter.Description)</div>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="exchange-filter-actions">
+                                                <button class="btn btn-sm btn-outline-secondary" type="button" id="apisAddOptionalParameter">Prideti filtra</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </form>
+                        }
+                    }
+
+                    @if (Model.Result is not null && Model.SelectedQuery?.Area.Equals(pillar.Area, StringComparison.OrdinalIgnoreCase) == true)
+                    {
+                        var isWarehouseKpi = Model.SelectedQuery?.Name.Equals("WAREHOUSE_KPI", StringComparison.OrdinalIgnoreCase) == true;
+
+                        @if (isWarehouseKpi)
+                        {
+                            var warehouseRegimes = new[]
+                            {
+                                "FROZEN",
+                                "DRY (VN)",
+                                "DRY (VH)",
+                                "THERMO (VR,VU)",
+                                "THERMO (VV,VD)",
+                                "TOBACCO"
+                            };
+                            var regimeGroups = Model.Result.Rows
+                                .GroupBy(row => row.TryGetValue("REGIME", out var regime) && !string.IsNullOrWhiteSpace(regime) ? regime : "Warehouse")
+                                .ToDictionary(group => group.Key, group => group.ToArray(), StringComparer.OrdinalIgnoreCase);
+                            var baseSummaryRows = regimeGroups.Values
+                                .Select(rows => rows
+                                    .GroupBy(row => new
+                                    {
+                                        Dvaznew = row.TryGetValue("DVAZNEW", out var dvaznew) ? dvaznew ?? string.Empty : string.Empty,
+                                        Org = row.TryGetValue("ORG", out var org) ? org ?? string.Empty : string.Empty
+                                    })
+                                    .OrderBy(summary => summary.Key.Dvaznew, StringComparer.OrdinalIgnoreCase)
+                                    .ThenBy(summary => summary.Key.Org, StringComparer.OrdinalIgnoreCase)
+                                    .ToArray())
+                                .OrderByDescending(summaries => summaries.Sum(summary => IndexModel.SumKpiLong(summary, "Lines")))
+                                .ThenByDescending(summaries => summaries.Length)
+                                .FirstOrDefault();
+                            var baseKeys = baseSummaryRows is null
+                                ? new[] { new { Dvaznew = "-", Org = "-" } }
+                                : baseSummaryRows
+                                    .Select(summary => new { summary.Key.Dvaznew, summary.Key.Org })
+                                    .ToArray();
+
+                            <div class="apis-kpi-view-tabs" role="tablist" aria-label="WAREHOUSE KPI vaizdai">
+                                <button class="apis-kpi-view-tab active" id="warehouse-kpi-summary-tab" data-bs-toggle="tab" data-bs-target="#warehouse-kpi-summary" type="button" role="tab" aria-controls="warehouse-kpi-summary" aria-selected="true">KPI</button>
+                                <button class="apis-kpi-view-tab" id="warehouse-kpi-hours-tab" data-bs-toggle="tab" data-bs-target="#warehouse-kpi-hours" type="button" role="tab" aria-controls="warehouse-kpi-hours" aria-selected="false">Valandos</button>
+                            </div>
+                            <div class="tab-content apis-kpi-view-content">
+                                <div class="tab-pane fade show active" id="warehouse-kpi-summary" role="tabpanel" aria-labelledby="warehouse-kpi-summary-tab" tabindex="0">
+                                    <div class="apis-kpi-grid apis-kpi-grid-warehouse">
+                                @foreach (var regime in warehouseRegimes)
+                                {
+                                    regimeGroups.TryGetValue(regime, out var rows);
+                                    var summariesByKey = (rows ?? Array.Empty<IReadOnlyDictionary<string, string?>>())
+                                        .GroupBy(row => new
+                                        {
+                                            Dvaznew = row.TryGetValue("DVAZNEW", out var dvaznew) ? dvaznew ?? string.Empty : string.Empty,
+                                            Org = row.TryGetValue("ORG", out var org) ? org ?? string.Empty : string.Empty
+                                        })
+                                        .ToDictionary(summary => $"{summary.Key.Dvaznew}|{summary.Key.Org}", summary => summary, StringComparer.OrdinalIgnoreCase);
+
+                                    <section class="apis-kpi-panel" aria-label="@regime KPI">
+                                        <div class="apis-kpi-panel-header">
+                                            <h3>@regime - dienos KPI</h3>
+                                            <p>Data: @DateTime.Today.ToString("yyyy-MM-dd") | Bazines eilutes: @baseKeys.Length</p>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="apis-kpi-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>DVAZNEW</th>
+                                                        <th>ORG</th>
+                                                        <th>Lines</th>
+                                                        <th>Brutto_t</th>
+                                                        <th>F_pll</th>
+                                                        <th>M_pll</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var key in baseKeys)
+                                                    {
+                                                        var lookupKey = $"{key.Dvaznew}|{key.Org}";
+                                                        summariesByKey.TryGetValue(lookupKey, out var summary);
+                                                        <tr class="@(summary is null ? "apis-kpi-empty-row" : string.Empty)">
+                                                            <td>@key.Dvaznew</td>
+                                                            <td>@key.Org</td>
+                                                            <td>@(summary is null ? 0 : IndexModel.SumKpiLong(summary, "Lines"))</td>
+                                                            <td>@(summary is null ? "0,00" : IndexModel.FormatKpiDecimal(IndexModel.SumKpiDecimal(summary, "Brutto_t")))</td>
+                                                            <td>@(summary is null ? "0,00" : IndexModel.FormatKpiDecimal(IndexModel.SumKpiDecimal(summary, "F_pll")))</td>
+                                                            <td>@(summary is null ? "0,00" : IndexModel.FormatKpiDecimal(IndexModel.SumKpiDecimal(summary, "M_pll")))</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </section>
+                                }
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="warehouse-kpi-hours" role="tabpanel" aria-labelledby="warehouse-kpi-hours-tab" tabindex="0">
+                                    @{
+                                        var hourBuckets = new[] { "<07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", ">17:00" };
+                                        var baseHourSummaryRows = regimeGroups.Values
+                                            .Select(rows => rows
+                                                .GroupBy(row => new
+                                                {
+                                                    Dvaznew = row.TryGetValue("DVAZNEW", out var dvaznew) ? dvaznew ?? string.Empty : string.Empty,
+                                                    Org = row.TryGetValue("ORG", out var org) ? org ?? string.Empty : string.Empty
+                                                })
+                                                .OrderBy(summary => summary.Key.Dvaznew, StringComparer.OrdinalIgnoreCase)
+                                                .ThenBy(summary => summary.Key.Org, StringComparer.OrdinalIgnoreCase)
+                                                .ToArray())
+                                            .OrderByDescending(summaries => summaries.Sum(summary => IndexModel.SumKpiLong(summary, "Lines")))
+                                            .ThenByDescending(summaries => summaries.Length)
+                                            .FirstOrDefault();
+                                        var baseHourKeys = baseHourSummaryRows is null
+                                            ? new[] { new { Dvaznew = "-", Org = "-" } }
+                                            : baseHourSummaryRows
+                                                .Select(summary => new { summary.Key.Dvaznew, summary.Key.Org })
+                                                .ToArray();
+                                    }
+                                    <div class="apis-kpi-column-stack">
+                                        @foreach (var regime in warehouseRegimes)
+                                        {
+                                            regimeGroups.TryGetValue(regime, out var rows);
+                                            var rowsByBaseKey = (rows ?? Array.Empty<IReadOnlyDictionary<string, string?>>())
+                                                .GroupBy(row => new
+                                                {
+                                                    Dvaznew = row.TryGetValue("DVAZNEW", out var dvaznew) ? dvaznew ?? string.Empty : string.Empty,
+                                                    Org = row.TryGetValue("ORG", out var org) ? org ?? string.Empty : string.Empty
+                                                })
+                                                .ToDictionary(summary => $"{summary.Key.Dvaznew}|{summary.Key.Org}", summary => summary.ToArray(), StringComparer.OrdinalIgnoreCase);
+
+                                            <section class="apis-kpi-panel" aria-label="@regime KPI pagal valandas">
+                                                <div class="apis-kpi-panel-header">
+                                                    <h3>@regime - uzsakymai pagal valandas</h3>
+                                                    <p>Stulpeliai: TOTAL, &lt;07:00, 08:00...17:00, &gt;17:00 | Reiksme: Lines</p>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="apis-kpi-table apis-kpi-hour-pivot">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>DVAZNEW</th>
+                                                                <th>ORG</th>
+                                                                <th>TOTAL</th>
+                                                                @foreach (var bucket in hourBuckets)
+                                                                {
+                                                                    <th>@bucket</th>
+                                                                }
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var key in baseHourKeys)
+                                                            {
+                                                                var lookupKey = $"{key.Dvaznew}|{key.Org}";
+                                                                rowsByBaseKey.TryGetValue(lookupKey, out var baseRows);
+                                                                <tr class="@(baseRows is null ? "apis-kpi-empty-row" : string.Empty)">
+                                                                    <td>@key.Dvaznew</td>
+                                                                    <td>@key.Org</td>
+                                                                    <td>@IndexModel.SumKpiLong(baseRows ?? Array.Empty<IReadOnlyDictionary<string, string?>>(), "Lines")</td>
+                                                                    @foreach (var bucket in hourBuckets)
+                                                                    {
+                                                                        var bucketRows = baseRows?.Where(row => IndexModel.IsWarehouseHourBucket(row, bucket)) ?? Array.Empty<IReadOnlyDictionary<string, string?>>();
+                                                                        <td>@IndexModel.SumKpiLong(bucketRows, "Lines")</td>
+                                                                    }
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </section>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (Model.SelectedQuery?.Name.Equals("VN_NOT_PICKED_PCC_FLOWS", StringComparison.OrdinalIgnoreCase) == true)
+                        {
+                            var pccPickDelayDates = Enumerable
+                                .Range(0, 14)
+                                .Select(offset => DateTime.Today.AddDays(-offset))
+                                .ToArray();
+                            var pccPickDelayDateKeys = pccPickDelayDates
+                                .Select(date => date.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture))
+                                .ToArray();
+                            var pccRowsInWindow = Model.Result.Rows
+                                .Where(row => pccPickDelayDateKeys.Contains(IndexModel.GetKpiDateKey(row, "DVAZNEW"), StringComparer.OrdinalIgnoreCase))
+                                .ToArray();
+                            var pccCountries = pccRowsInWindow
+                                .GroupBy(row => IndexModel.GetKpiText(row, "COUNTRY", "UNKNOWN"), StringComparer.OrdinalIgnoreCase)
+                                .OrderByDescending(group => group.Count())
+                                .ThenBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
+                                .ToArray();
+                            var pccMaxAddressLength = Math.Clamp(
+                                pccRowsInWindow
+                                    .Select(row => Model.GetPccName(row))
+                                    .DefaultIfEmpty("PCC NAME")
+                                    .Max(address => address.Length),
+                                12,
+                                42);
+                            var pccPickDelayMeasures = new[]
+                            {
+                                new { Key = "line", Label = "LINE", Column = string.Empty, Description = "eiluciu kiekis" },
+                                new { Key = "brutto", Label = "BRUTTO", Column = "BRUTTO_KG_ORDERED", Description = "uzsakymo kilogramai" },
+                                new { Key = "pll", Label = "PLL", Column = "PLL_BY_ORDER", Description = "uzsakymo paletes" }
+                            };
+
+                            <div class="apis-kpi-view-tabs" role="tablist" aria-label="VN NOT PICKED PCC FLOWS KPI vaizdai">
+                                <button class="apis-kpi-view-tab active" id="pcc-pick-delay-tab" data-bs-toggle="tab" data-bs-target="#pcc-pick-delay" type="button" role="tab" aria-controls="pcc-pick-delay" aria-selected="true">PCC_PICK_DELAY</button>
+                            </div>
+                            <div class="tab-content apis-kpi-view-content">
+                                <div class="tab-pane fade show active" id="pcc-pick-delay" role="tabpanel" aria-labelledby="pcc-pick-delay-tab" tabindex="0">
+                                    @if (pccCountries.Length == 0)
+                                    {
+                                        <div class="empty-state">Paskutiniu 14 dienu PCC_PICK_DELAY duomenu nera.</div>
+                                    }
+                                    else
+                                    {
+                                        var pccPickDelayUpdatedAt = Model.ResultUpdatedAt ?? DateTime.Now;
+                                        <div class="apis-kpi-refresh-bar" role="status">
+                                            <span>Duomenys atnaujinti: <strong>@pccPickDelayUpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")</strong></span>
+                                            @if (Model.CanRefreshResult)
+                                            {
+                                                <a class="btn btn-sm btn-outline-primary"
+                                                   href="?Area=Indicators&QueryId=@Uri.EscapeDataString(Model.SelectedQuery?.Id ?? string.Empty)&Refresh=@DateTime.Now.Ticks#apis-Indicators">Atnaujinti</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-sm btn-outline-primary disabled" aria-disabled="true" tabindex="-1">Atnaujinti</a>
+                                            }
+                                        </div>
+                                        <div class="apis-kpi-view-tabs" role="tablist" aria-label="PCC_PICK_DELAY metrika">
+                                            @for (var measureIndex = 0; measureIndex < pccPickDelayMeasures.Length; measureIndex++)
+                                            {
+                                                var measure = pccPickDelayMeasures[measureIndex];
+                                                <button class="apis-kpi-view-tab @(measureIndex == 0 ? "active" : string.Empty)" id="pcc-pick-delay-@measure.Key-tab" data-bs-toggle="tab" data-bs-target="#pcc-pick-delay-@measure.Key" type="button" role="tab" aria-controls="pcc-pick-delay-@measure.Key" aria-selected="@(measureIndex == 0 ? "true" : "false")">@measure.Label</button>
+                                            }
+                                        </div>
+                                        <div class="tab-content apis-kpi-view-content">
+                                            @for (var measureIndex = 0; measureIndex < pccPickDelayMeasures.Length; measureIndex++)
+                                            {
+                                                var measure = pccPickDelayMeasures[measureIndex];
+                                                var isLineMeasure = string.IsNullOrWhiteSpace(measure.Column);
+                                                <div class="tab-pane fade @(measureIndex == 0 ? "show active" : string.Empty)" id="pcc-pick-delay-@measure.Key" role="tabpanel" aria-labelledby="pcc-pick-delay-@measure.Key-tab" tabindex="0">
+                                                    <div class="apis-kpi-column-stack">
+                                                        @foreach (var countryGroup in pccCountries)
+                                                        {
+                                                            var addressGroups = countryGroup
+                                                                .GroupBy(row => Model.GetPccName(row), StringComparer.OrdinalIgnoreCase)
+                                                                .OrderByDescending(group => isLineMeasure ? group.Count() : IndexModel.SumKpiDecimal(group, measure.Column))
+                                                                .ThenBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
+                                                                .ToArray();
+
+                                                            var countryRows = countryGroup.ToArray();
+                                                            var countryTotal = isLineMeasure
+                                                                ? countryRows.Length.ToString(System.Globalization.CultureInfo.CurrentCulture)
+                                                                : IndexModel.FormatKpiDecimal(IndexModel.SumKpiDecimal(countryRows, measure.Column));
+
+                                                            <section class="apis-kpi-panel" aria-label="@countryGroup.Key PCC pick delay @measure.Label">
+                                                                <div class="apis-kpi-panel-header apis-kpi-panel-header-actions">
+                                                                    <div>
+                                                                        <h3>@countryGroup.Key - PCC_PICK_DELAY - @measure.Label</h3>
+                                                                        <p>Dimensija: PCC NAME | Periodas: @pccPickDelayDateKeys.Last() - @pccPickDelayDateKeys.First() | Reiksme: @measure.Description</p>
+                                                                    </div>
+                                                                    <a class="btn btn-sm btn-outline-light"
+                                                                       asp-page-handler="ExportPccPickDelayCountryExcel"
+                                                                       asp-route-QueryId="@Model.SelectedQuery?.Id"
+                                                                       asp-route-country="@countryGroup.Key">Excel</a>
+                                                                </div>
+                                                                <div class="table-responsive">
+                                                                    <table class="apis-kpi-table apis-kpi-date-pivot">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>PCC NAME</th>
+                                                                                <th>TOTAL</th>
+                                                                                @foreach (var date in pccPickDelayDates)
+                                                                                {
+                                                                                    <th>@date.ToString("MM-dd")</th>
+                                                                                }
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach (var addressGroup in addressGroups)
+                                                                            {
+                                                                                var addressRows = addressGroup.ToArray();
+                                                                                var addressTotal = isLineMeasure
+                                                                                    ? addressRows.Length.ToString(System.Globalization.CultureInfo.CurrentCulture)
+                                                                                    : IndexModel.FormatKpiDecimal(IndexModel.SumKpiDecimal(addressRows, measure.Column));
+                                                                                <tr>
+                                                                                    <td class="apis-kpi-address-cell" style="--address-ch:@pccMaxAddressLength" title="@addressGroup.Key"><span>@addressGroup.Key</span></td>
+                                                                                    <td>@addressTotal</td>
+                                                                                    @foreach (var dateKey in pccPickDelayDateKeys)
+                                                                                    {
+                                                                                        var dateRows = addressRows.Where(row => IndexModel.GetKpiDateKey(row, "DVAZNEW").Equals(dateKey, StringComparison.OrdinalIgnoreCase)).ToArray();
+                                                                                        <td>@(isLineMeasure ? dateRows.Length.ToString(System.Globalization.CultureInfo.CurrentCulture) : IndexModel.FormatKpiDecimal(IndexModel.SumKpiDecimal(dateRows, measure.Column)))</td>
+                                                                                    }
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+                                                                                <td class="apis-kpi-address-cell" style="--address-ch:@pccMaxAddressLength"><span>TOTAL</span></td>
+                                                                                <td>@countryTotal</td>
+                                                                                @foreach (var dateKey in pccPickDelayDateKeys)
+                                                                                {
+                                                                                    var countryDateRows = countryRows.Where(row => IndexModel.GetKpiDateKey(row, "DVAZNEW").Equals(dateKey, StringComparison.OrdinalIgnoreCase)).ToArray();
+                                                                                    <td>@(isLineMeasure ? countryDateRows.Length.ToString(System.Globalization.CultureInfo.CurrentCulture) : IndexModel.FormatKpiDecimal(IndexModel.SumKpiDecimal(countryDateRows, measure.Column)))</td>
+                                                                                }
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </section>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }                        else if (Model.Result.Rows.Count == 0)
+                        {
+                            <div class="empty-state">@L["DataExchange.NoData"]</div>
+                        }
+                        else
+                        {
+                            <div class="hub-metrics my-4">
+                                <div class="metric-card">
+                                    <small>Eilutes</small>
+                                    <h4>@Model.Result.Rows.Count</h4>
+                                </div>
+                                <div class="metric-card">
+                                    <small>Stulpeliai</small>
+                                    <h4>@Model.Result.Columns.Count</h4>
+                                </div>
+                                <div class="metric-card">
+                                    <small>Saltinis</small>
+                                    <h4>@Model.SelectedQuery?.Name</h4>
+                                </div>
+                            </div>
+
+                            @if (Model.HasResultPaging)
+                            {
+                                <div class="d-flex align-items-center gap-2 flex-wrap mb-3" data-result-pager>
+                                    <span class="status-pill">Rodoma @Model.ResultPageStartRow-@Model.ResultPageEndRow is @Model.ResultTotalRows</span>
+                                    <button type="submit" form="apisQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Max(1, Model.ResultPageValue - 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue <= 1)">Ankstesnis</button>
+                                    <span class="small text-muted">Puslapis @Model.ResultPageValue / @Model.ResultTotalPages</span>
+                                    <button type="submit" form="apisQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Min(Model.ResultTotalPages, Model.ResultPageValue + 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue >= Model.ResultTotalPages)">Kitas</button>
+                                </div>
+                            }
+                            <div class="table-responsive exchange-table-wrap">
+                                <table class="table align-middle exchange-table">
+                                    <thead>
+                                        <tr>
+                                            @foreach (var column in Model.Result.Columns)
+                                            {
+                                                <th>@column</th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var row in Model.DisplayRows)
+                                        {
+                                            <tr>
+                                                @foreach (var column in Model.Result.Columns)
+                                                {
+                                                    <td>@(row.TryGetValue(column, out var value) ? value : string.Empty)</td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    }                </section>
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const querySelect = document.getElementById("apisQuerySelect");
+            const queryForm = document.getElementById("apisQueryForm");
+            const progress = document.getElementById("apisQueryProgress");
+            const progressTitle = document.getElementById("apisQueryProgressTitle");
+            const optionalParameterDefinitions = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.SelectedQuery?.Parameters.Where(parameter => !parameter.IsRequired).Select(parameter => new
+            {
+                parameter.Name,
+                parameter.DataType,
+                parameter.Description,
+                parameter.AllowedOperators,
+                parameter.AllowedValues,
+                DefaultValue = parameter.DefaultValue ?? string.Empty,
+                Placeholder = IndexModel.GetParameterPlaceholder(parameter)
+            }) ?? []));
+            const optionalDefinitionsByName = new Map(optionalParameterDefinitions.map(definition => [definition.name ?? definition.Name, definition]));
+            const optionalRows = document.getElementById("apisOptionalParameterRows");
+            const addOptionalButton = document.getElementById("apisAddOptionalParameter");
+            const parameterBoard = document.querySelector("[data-apis-required-parameter-count]");
+            const requiredParameterCount = Number(parameterBoard?.dataset.apisRequiredParameterCount || 0);
+
+            const getOperatorText = value => ({
+                eq: "=",
+                ne: "!=",
+                like: "LIKE",
+                in: "IN",
+                gt: ">",
+                gte: ">=",
+                lt: "<",
+                lte: "<="
+            }[value] || value);
+
+            const getDefinitionValue = (definition, key) => definition?.[key] ?? definition?.[key.charAt(0).toUpperCase() + key.slice(1)];
+            const createOption = (value, text, selected = false) => {
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent = text;
+                option.selected = selected;
+                return option;
+            };
+
+            querySelect?.addEventListener("change", () => {
+                const url = new URL(window.location.href);
+                url.searchParams.set("QueryId", querySelect.value);
+                url.searchParams.set("Area", "@Model.ActiveArea");
+                window.location.href = url.toString();
+            });
+            const updateOptionalRow = row => {
+                const nameSelect = row.querySelector("[data-apis-optional-name]");
+                const operatorSelect = row.querySelector("[data-apis-optional-operator]");
+                const valueInput = row.querySelector("[data-apis-optional-value]");
+                const help = row.querySelector("[data-apis-optional-help]");
+                const definition = optionalDefinitionsByName.get(nameSelect?.value || "");
+                if (!definition) return;
+
+                const currentOperator = operatorSelect.value;
+                const operators = getDefinitionValue(definition, "allowedOperators") || ["eq"];
+                operatorSelect.replaceChildren();
+                operators.forEach(operator => operatorSelect.appendChild(createOption(operator, getOperatorText(operator), operator === currentOperator)));
+                if (![...operatorSelect.options].some(option => option.selected)) {
+                    operatorSelect.selectedIndex = 0;
+                }
+
+                const dataType = getDefinitionValue(definition, "dataType") || "text";
+                valueInput.type = dataType === "int" || dataType === "decimal" ? "number" : dataType === "date" ? "date" : "text";
+                valueInput.placeholder = getDefinitionValue(definition, "placeholder") || getDefinitionValue(definition, "defaultValue") || "NULL";
+                help.textContent = getDefinitionValue(definition, "description") || dataType;
+            };
+
+            const reindexOptionalRows = () => {
+                optionalRows?.querySelectorAll("[data-apis-optional-parameter-row]").forEach((row, index) => {
+                    const parameterIndex = requiredParameterCount + index;
+                    row.querySelector("[data-apis-optional-connector]")?.setAttribute("name", `Parameters[${parameterIndex}].Connector`);
+                    row.querySelector("[data-apis-optional-name]")?.setAttribute("name", `Parameters[${parameterIndex}].Name`);
+                    row.querySelector("[data-apis-optional-operator]")?.setAttribute("name", `Parameters[${parameterIndex}].Operator`);
+                    row.querySelector("[data-apis-optional-value]")?.setAttribute("name", `Parameters[${parameterIndex}].Value`);
+                });
+            };
+
+            const createOptionalRow = () => {
+                if (!optionalRows || optionalParameterDefinitions.length === 0) return;
+                const firstDefinition = optionalParameterDefinitions[0];
+                const row = document.createElement("div");
+                row.className = "exchange-filter-row";
+                row.dataset.apisOptionalParameterRow = "";
+
+                const connectorWrap = document.createElement("div");
+                connectorWrap.className = "filter-connector";
+                const connectorSelect = document.createElement("select");
+                connectorSelect.className = "form-select form-select-sm";
+                connectorSelect.dataset.apisOptionalConnector = "";
+                connectorSelect.setAttribute("aria-label", "Filtro jungtis");
+                connectorSelect.appendChild(createOption("and", "AND", true));
+                connectorSelect.appendChild(createOption("or", "OR"));
+                connectorWrap.appendChild(connectorSelect);
+                row.appendChild(connectorWrap);
+
+                const nameSelect = document.createElement("select");
+                nameSelect.className = "form-select form-select-sm";
+                nameSelect.dataset.apisOptionalName = "";
+                nameSelect.setAttribute("aria-label", "Filtras");
+                nameSelect.appendChild(createOption("", "Filtras"));
+                optionalParameterDefinitions.forEach(definition => {
+                    const name = getDefinitionValue(definition, "name");
+                    const option = createOption(name, name, definition === firstDefinition);
+                    option.dataset.type = getDefinitionValue(definition, "dataType") || "text";
+                    option.dataset.operators = (getDefinitionValue(definition, "allowedOperators") || ["eq"]).join(",");
+                    option.dataset.description = getDefinitionValue(definition, "description") || "";
+                    nameSelect.appendChild(option);
+                });
+                row.appendChild(nameSelect);
+
+                const operatorSelect = document.createElement("select");
+                operatorSelect.className = "form-select form-select-sm";
+                operatorSelect.dataset.apisOptionalOperator = "";
+                operatorSelect.setAttribute("aria-label", "Operatorius");
+                row.appendChild(operatorSelect);
+
+                const valueInput = document.createElement("input");
+                valueInput.className = "form-control form-control-sm filter-value-input";
+                valueInput.dataset.apisOptionalValue = "";
+                row.appendChild(valueInput);
+
+                const removeButton = document.createElement("button");
+                removeButton.className = "btn btn-sm btn-outline-secondary filter-remove-button";
+                removeButton.type = "button";
+                removeButton.dataset.apisRemoveOptional = "";
+                removeButton.textContent = "Valyti";
+                row.appendChild(removeButton);
+
+                const help = document.createElement("div");
+                help.className = "form-text filter-description-line";
+                help.dataset.apisOptionalHelp = "";
+                row.appendChild(help);
+
+                nameSelect.addEventListener("change", () => updateOptionalRow(row));
+                removeButton.addEventListener("click", () => {
+                    row.remove();
+                    reindexOptionalRows();
+                });
+                optionalRows.appendChild(row);
+                updateOptionalRow(row);
+                reindexOptionalRows();
+            };
+            optionalRows?.querySelectorAll("[data-apis-optional-parameter-row]").forEach(row => {
+                row.querySelector("[data-apis-optional-name]")?.addEventListener("change", () => updateOptionalRow(row));
+                row.querySelector("[data-apis-remove-optional]")?.addEventListener("click", () => {
+                    row.remove();
+                    reindexOptionalRows();
+                });
+            });
+            addOptionalButton?.addEventListener("click", createOptionalRow);
+            reindexOptionalRows();
+
+            queryForm?.addEventListener("submit", event => {
+                if (queryForm.dataset.submitting === "true") {
+                    event.preventDefault();
+                    return;
+                }
+
+                reindexOptionalRows();
+
+                const submitter = event.submitter;
+                queryForm.dataset.submitting = "true";
+                queryForm.classList.add("is-submitting");
+
+                if (progress) {
+                    progress.hidden = false;
+                    progressTitle.textContent = submitter?.textContent?.toLowerCase().includes("excel")
+                        ? "Excel failas ruosiamas"
+                        : "Uzklausa vykdoma";
+                    progress.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+
+                queryForm.querySelectorAll("button[type='submit']").forEach(button => {
+                    button.dataset.originalText ||= button.textContent;
+                    button.disabled = true;
+                });
+
+                if (submitter) {
+                    submitter.dataset.originalText ||= submitter.textContent;
+                    submitter.textContent = submitter.dataset.apisSubmitLabel || "Vykdoma...";
+                }
+
+                const autoResetMs = Number(submitter?.dataset.apisAutoResetMs || 0);
+                if (autoResetMs > 0) {
+                    window.setTimeout(() => {
+                        delete queryForm.dataset.submitting;
+                        queryForm.classList.remove("is-submitting");
+                        if (progress) {
+                            progress.hidden = true;
+                        }
+                        queryForm.querySelectorAll("button[type='submit']").forEach(button => {
+                            button.disabled = false;
+                            if (button.dataset.originalText) {
+                                button.textContent = button.dataset.originalText;
+                            }
+                        });
+                    }, autoResetMs);
+                }
+            });
+
+            const pad = value => String(value).padStart(2, "0");
+            const formatDate = (isoValue, format) => {
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(isoValue)) return "";
+                const [year, month, day] = isoValue.split("-");
+                return format === "dd/MM/yyyy" ? `${day}/${month}/${year}` : `${year}-${month}-${day}`;
+            };
+            const parseDisplayDate = (value, format) => {
+                const trimmed = value.trim();
+                let match = format === "dd/MM/yyyy"
+                    ? /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(trimmed)
+                    : /^(\d{4})-(\d{2})-(\d{2})$/.exec(trimmed);
+                if (!match) return "";
+                const year = format === "dd/MM/yyyy" ? match[3] : match[1];
+                const month = format === "dd/MM/yyyy" ? match[2] : match[2];
+                const day = format === "dd/MM/yyyy" ? match[1] : match[3];
+                return `${year}-${pad(month)}-${pad(day)}`;
+            };
+
+            document.querySelectorAll(".apis-date-input").forEach(group => {
+                const display = group.querySelector(".apis-date-display");
+                const native = group.querySelector(".apis-date-native");
+                const opener = group.querySelector(".apis-date-open");
+                const format = group.dataset.dateFormat || "yyyy-MM-dd";
+                opener?.addEventListener("click", () => {
+                    native.value = parseDisplayDate(display.value, format) || native.value;
+                    if (typeof native.showPicker === "function") {
+                        native.showPicker();
+                    } else {
+                        native.click();
+                    }
+                });
+                native?.addEventListener("change", () => {
+                    display.value = formatDate(native.value, format);
+                    display.dispatchEvent(new Event("input", { bubbles: true }));
+                });
+                display?.addEventListener("change", () => {
+                    native.value = parseDisplayDate(display.value, format);
+                });
+            });
+        })();
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+

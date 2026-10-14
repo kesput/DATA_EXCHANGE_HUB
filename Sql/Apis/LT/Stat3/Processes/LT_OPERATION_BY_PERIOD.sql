@@ -1,0 +1,167 @@
+-- SQL_DESCRIPTION: MNH'o oeracijos IN bei OUT (tik reiksmingos likucio balansui) uz praita diena
+-- SQL_PARAM_MUST: @OWNER|text||Prekiu savininko kodas. Iveskite tiksliai 3 simbolius, pvz. SNX.|regex=^[A-Za-z0-9]{3}$;message=@OWN turi buti tiksliai 3 raides arba skaiciai.
+-- SQL_PARAM_MUST: @SNDATE|date||Pradzios data (imtinai)|format=yyyyMMdd
+-- SQL_PARAM_MUST: @ENDATE|date||Pabaigos data (imtinai)|format=yyyyMMdd
+
+
+DECLARE @OWN      nvarchar(3) = @OWNER;
+DECLARE @DateFrom date        = @SNDATE;   -- nuo (imtinai)
+DECLARE @DateTo   date        = @ENDATE;   -- iki (imtinai)
+
+IF @DateFrom IS NULL OR @DateTo IS NULL OR @DateFrom > @DateTo
+    THROW 50001, N'Neteisingas laikotarpis: @DateFrom turi būti <= @DateTo.', 1;
+
+-- Atvira viršutinė riba: diena po @DateTo
+DECLARE @DateToNext    date     = DATEADD(DAY, 1, @DateTo);
+DECLARE @DateFromIso   char(10) = CONVERT(char(10), @DateFrom,   23);   -- yyyy-mm-dd (OPENQUERY)
+DECLARE @DateToNextIso char(10) = CONVERT(char(10), @DateToNext, 23);
+DECLARE @DateFromKey   char(8)  = CONVERT(char(8),  @DateFrom,   112);  -- yyyymmdd (INVOICE.NDATE)
+DECLARE @DateToNextKey char(8)  = CONVERT(char(8),  @DateToNext, 112);
+
+DECLARE @OPENQUERY1 nvarchar(max);
+DECLARE @OPENQUERY2 nvarchar(max);
+DECLARE @SQL        nvarchar(max);
+
+
+SET @OPENQUERY1 = N'
+WITH T AS
+    (SELECT
+             ACTION_DATE
+            ,COMPANY
+            ,REFERENCE_ID
+            ,POSID
+            ,CUSTOMER = CASE WHEN WORK_B IN (''Container change'',''Container cancel'') AND NULLIF(LTRIM(RTRIM(CUSTOMER)), '''') IS NULL THEN MAX(NULLIF(LTRIM(RTRIM(CUSTOMER)), '''')) OVER (PARTITION BY REFERENCE_ID, ITEM, LPN)
+                             ELSE CUSTOMER
+                             END
+            ,CUSTOMER_ADDRESS
+            ,WORK_A
+            ,WORK_B
+            ,OWNER_ORDER = CASE WHEN WORK_B IN (''Container change'',''Container cancel'') AND NULLIF(LTRIM(RTRIM(OWNER_ORDER)), '''') IS NULL THEN MAX(NULLIF(LTRIM(RTRIM(OWNER_ORDER)), '''')) OVER (PARTITION BY REFERENCE_ID, ITEM, LPN)
+                                ELSE OWNER_ORDER
+                                END
+            ,ITEM
+            ,OWNER_ITEM
+            ,LOT
+            ,LOT_DATE
+            ,LPN
+            ,SSCC
+            ,[INVENTORY_STS]
+            ,[INVENTORY_STS_TO]
+            ,AFTER_QTY
+            ,BEFORE_QTY
+        FROM ILSLT.dbo.BLS_MANH_OPERATIONS_CURRENT WITH (NOLOCK)
+        WHERE ACTION_DATE >= CONVERT(date, ''' + @DateFromIso   + N''', 23)
+          AND ACTION_DATE <  CONVERT(date, ''' + @DateToNextIso + N''', 23)
+          AND COMPANY = ''' + REPLACE(@OWN,'''','''''') + N'''
+          AND ((WORK_A = ''Receiving'' AND WORK_B IN (''Check in'', ''Container change'', ''Container cancel'')) OR WORK_A = ''Adjustment''))
+
+SELECT * FROM T
+';
+
+
+SET @OPENQUERY2 = N'
+SELECT
+      COMPANY
+     ,REFERENCE_ID
+     ,POSID
+     ,CUSTOMER
+     ,CUSTOMER_ADDRESS
+     ,WORK_A
+     ,WORK_B
+     ,OWNER_ORDER
+     ,ITEM
+     ,OWNER_ITEM
+     ,LOT
+     ,LOT_DATE
+     ,[INVENTORY_STS]
+     ,[INVENTORY_STS_TO]
+     ,LPN_TO
+     ,SSCC_TO
+     ,QUANTITY
+FROM ILSLT.dbo.BLS_MANH_OPERATIONS_CURRENT WITH (NOLOCK)
+WHERE COMPANY = ''' + REPLACE(@OWN,'''','''''') + N'''
+  AND ((WORK_A = ''Picking'' AND RIGHT(TO_LOC,4) = ''Avai'')
+    OR (WORK_A = ''Picking'' AND REFERENCE_TYPE = ''Parcel'' AND LEFT(TO_LOC,3) = ''PCK''))
+';
+
+
+SET @SQL = N'
+SELECT
+      CONVERT(VARCHAR, OPERATIONS.[ACTION_DATE], 112) AS NDATE
+     ,OPERATIONS.COMPANY
+     ,OPERATIONS.[REFERENCE_ID]
+     ,OPERATIONS.POSID
+     ,OPERATIONS.CUSTOMER
+     ,OPERATIONS.CUSTOMER_ADDRESS
+     ,OPERATIONS.[WORK_A]
+     ,OPERATIONS.[WORK_B]
+     ,OPERATIONS.[OWNER_ORDER]
+     ,OPERATIONS.[ITEM]
+     ,OPERATIONS.OWNER_ITEM
+     ,OPERATIONS.[LOT]
+     ,OPERATIONS.INVENTORY_STS
+     ,OPERATIONS.INVENTORY_STS_TO
+     ,OPERATIONS.LOT_DATE
+     ,OPERATIONS.[LPN]
+     ,OPERATIONS.[SSCC]
+     ,QUANTITY = OPERATIONS.AFTER_QTY - OPERATIONS.BEFORE_QTY
+FROM OPENQUERY(BLSTXSTA3, ''' + REPLACE(@OPENQUERY1,'''','''''') + N''') AS OPERATIONS
+LEFT JOIN SNTXDATA.dbo.[OWNER] AS [OWNER] WITH (NOLOCK) ON [OWNER].SHORTNAME = OPERATIONS.COMPANY AND [OWNER].FIRMID = ''SA'' AND [OWNER].ACTIVE = 1
+LEFT JOIN SNTXDATA.dbo.ORDSTAT AS ORDSTAT WITH (NOLOCK) ON ORDSTAT.REFORDERNUM = OPERATIONS.[OWNER_ORDER] AND [OWNER].ID = ORDSTAT.OWNERID AND ORDSTAT.FIRMID = ''SA''
+LEFT JOIN SNTXDATA.dbo.ORDSTATROW AS ORDSTATROW WITH (NOLOCK) ON ORDSTATROW.ORDSTATID = ORDSTAT.ORDSTATID AND ORDSTATROW.FIRMID = ORDSTAT.FIRMID AND ORDSTATROW.INF_PREK_X = OPERATIONS.ITEM
+
+UNION ALL
+
+SELECT
+      INVOICE.NDATE
+     ,OPERATIONS.COMPANY
+     ,OPERATIONS.[REFERENCE_ID]
+     ,OPERATIONS.POSID
+     ,OPERATIONS.CUSTOMER
+     ,OPERATIONS.CUSTOMER_ADDRESS
+     ,OPERATIONS.[WORK_A]
+     ,OPERATIONS.[WORK_B]
+     ,OPERATIONS.[OWNER_ORDER]
+     ,OPERATIONS.[ITEM]
+     ,OPERATIONS.OWNER_ITEM
+     ,OPERATIONS.[LOT]
+     ,OPERATIONS.INVENTORY_STS
+     ,OPERATIONS.INVENTORY_STS_TO
+     ,OPERATIONS.LOT_DATE
+     ,OPERATIONS.[LPN_TO] AS LPN
+     ,OPERATIONS.[SSCC_TO] AS SSCC
+     ,OPERATIONS.QUANTITY AS QUANTITY
+FROM OPENQUERY(BLSTXSTA3, ''' + REPLACE(@OPENQUERY2,'''','''''') + N''') AS OPERATIONS
+LEFT JOIN SNTXDATA.dbo.[OWNER] AS [OWNER] WITH (NOLOCK) ON [OWNER].SHORTNAME = OPERATIONS.COMPANY AND [OWNER].FIRMID = ''SA'' AND [OWNER].ACTIVE = 1
+LEFT JOIN SNTXDATA.dbo.ORDSTAT AS ORDSTAT WITH (NOLOCK) ON ORDSTAT.REFORDERNUM = OPERATIONS.[OWNER_ORDER] AND [OWNER].ID = ORDSTAT.OWNERID AND ORDSTAT.FIRMID = ''SA''
+    LEFT JOIN
+    (
+        SELECT DISTINCT
+               R.ORDSTATID,
+               R.FIRMID,
+               R.INF_PREK_X,
+               R.PRODUCTID
+        FROM SNTXDATA.dbo.ORDSTATROW AS R WITH (NOLOCK)
+        WHERE R.FIRMID = ''SA''
+    ) AS ORDSTATROW ON ORDSTATROW.ORDSTATID = ORDSTAT.ORDSTATID AND ORDSTATROW.FIRMID = ORDSTAT.FIRMID AND ORDSTATROW.INF_PREK_X = OPERATIONS.ITEM
+    LEFT JOIN
+    (
+        SELECT DISTINCT
+               INVOICELINE.INVOICEID,
+               INVOICELINE.ORDSTATID,
+               INVOICELINE.INF_PREK,
+               INVOICELINE.PRODUCTID,
+               INVOICE.INVOICENO,
+               INVOICE.NDATE
+        FROM [SNTXDATA].[dbo].[INVOICELINE] AS INVOICELINE WITH (NOLOCK)
+            LEFT JOIN SNTXDATA.dbo.INVOICE AS INVOICE WITH (NOLOCK) ON INVOICE.INVOICEID = INVOICELINE.INVOICEID AND INVOICE.FIRMID = ''SA'' AND INVOICE.TEST = 0 AND INVOICE.ACTIVE = 1
+    ) AS INVOICE ON INVOICE.ORDSTATID = ORDSTATROW.ORDSTATID AND INVOICE.PRODUCTID = ORDSTATROW.PRODUCTID
+    WHERE INVOICE.NDATE >= @DateFromKey
+      AND INVOICE.NDATE <  @DateToNextKey;
+';
+
+EXEC sys.sp_executesql
+    @SQL,
+    N'@DateFromKey char(8), @DateToNextKey char(8)',
+    @DateFromKey   = @DateFromKey,
+    @DateToNextKey = @DateToNextKey;

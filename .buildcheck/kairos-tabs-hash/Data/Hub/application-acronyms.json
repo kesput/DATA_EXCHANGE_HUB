@@ -1,0 +1,101 @@
+﻿[
+  {
+    "title": "APIS",
+    "symbolLt": "Jėgos ir gyvybingumo dievas",
+    "symbolEn": "God of strength and vitality",
+    "tooltipLt": "APIS - analizės, procesų, indikatorių ir statistikos erdvė.",
+    "tooltipEn": "APIS - analytics, processes, indicators and statistics workspace.",
+    "terms": [
+      { "letter": "A", "lt": "Analizė", "ltDescription": "duomenų apdorojimas", "en": "Analytics", "enDescription": "data analysis" },
+      { "letter": "P", "lt": "Procesai", "ltDescription": "veiklos srautai", "en": "Performance", "enDescription": "efficiency metrics" },
+      { "letter": "I", "lt": "Indikatoriai", "ltDescription": "pagrindiniai KPI", "en": "Indicators", "enDescription": "key KPIs" },
+      { "letter": "S", "lt": "Statistika", "ltDescription": "rodiklių suvestinė", "en": "Statistics", "enDescription": "metrics summary" }
+    ]
+  },
+  {
+    "title": "ARETE",
+    "symbolLt": "Aretė graikų mitologijoje ir filosofijoje - svarbiausių dorybių ir meistriškumo įsikūnijimas.",
+    "symbolEn": "Arete in Greek mythology and philosophy represents virtue, excellence and mastery.",
+    "tooltipLt": "ARETE - Ataskaitų Rodiklių Efektyvumo Tikrinimo Erdvė.",
+    "tooltipEn": "ARETE - Analytics & Reporting Excellence Tracking Environment.",
+    "terms": [
+      { "letter": "A", "lt": "Ataskaitų", "en": "Analytics" },
+      { "letter": "R", "lt": "Rodiklių", "en": "Reporting" },
+      { "letter": "E", "lt": "Efektyvumo", "en": "Excellence" },
+      { "letter": "T", "lt": "Tikrinimo", "en": "Tracking" },
+      { "letter": "E", "lt": "Erdvė", "en": "Environment" }
+    ]
+  },
+  {
+    "title": "ARGUS",
+    "symbolLt": "ARGUS (graikų mitologijoje - šimtaakis milžinas, kuris niekada nemiega).",
+    "symbolEn": "ARGUS (in Greek mythology - the hundred-eyed giant who never sleeps).",
+    "tooltipLt": "Simbolis nuolatinei procesų, raportų, KPI ir serverio būsenos stebėsenai.",
+    "tooltipEn": "A symbol for continuous monitoring of processes, reports, KPIs and server state."
+  },
+  {
+    "title": "ATLAS",
+    "symbolLt": "ATLAS (graikų titanas - laiko viską).",
+    "symbolEn": "ATLAS (Greek titan - holds everything).",
+    "tooltipLt": "Simbolis planavimo erdvei, kuri laiko bendrą komandų, laiko ir veiklų vaizdą.",
+    "tooltipEn": "A symbol for a planning space that holds the shared view of teams, time and activities."
+  },
+  {
+    "title": "HYDRA",
+    "symbolLt": "HYDRA (graikų mitologijos daugiagalvė vandens pabaisa, kuriai nukirtus vieną galvą atauga kelios naujos).",
+    "symbolEn": "HYDRA (the many-headed water monster of Greek mythology; when one head is cut off, several new ones grow back).",
+    "tooltipLt": "Simbolis procesams ir darbams, kuriuose viena užduotis gali išauginti kelias naujas priklausomybes.",
+    "tooltipEn": "A symbol for processes and tasks where one action can grow into several new dependencies."
+  },
+  {
+    "title": "KAIROS",
+    "symbolLt": "KAIROS (graikų mitologijoje - tinkamo momento arba palankios progos dievas).",
+    "symbolEn": "KAIROS (in Greek mythology - the god of the right moment or favorable opportunity).",
+    "tooltipLt": "Simbolis darbų ir poreikių registravimui, kur svarbiausia laiku pagauti tinkamą momentą.",
+    "tooltipEn": "A symbol for registering work and needs where catching the right moment matters most."
+  },
+  {
+    "title": "ORACUL",
+    "symbolLt": "ORACLE (graikų - Delfų orakulas, tiesos ir atsakymų šaltinis).",
+    "symbolEn": "ORACLE (Greek - the Delphic oracle, a source of truth and answers).",
+    "tooltipLt": "Simbolis užklausoms, kurios pateikia aiškų atsakymą iš duomenų šaltinio.",
+    "tooltipEn": "A symbol for queries that return a clear answer from the data source."
+  },
+  {
+    "title": "SESHAT",
+    "symbolLt": "SESHAT (Egipto skaičiavimo ir raštijos deivė).",
+    "symbolEn": "SESHAT (Egyptian goddess of calculation and writing).",
+    "tooltipLt": "Seshat buvo atsakinga už dokumentaciją, matavimus ir taisyklių saugojimą - idealus simbolis.",
+    "tooltipEn": "Seshat was responsible for documentation, measurements and preserving rules - an ideal symbol.",
+    "terms": [
+      { "letter": "S", "lt": "Skyriaus", "en": "Systems" },
+      { "letter": "E", "lt": "Ekspertiniai", "en": "Exchange" },
+      { "letter": "S", "lt": "Susitarimai", "en": "Standards" },
+      { "letter": "H", "lt": "Harmonizuoti", "en": "Hub" },
+      { "letter": "A", "lt": "Aktai", "en": "Agreements" },
+      { "letter": "T", "lt": "Tvarka", "en": "Tracking" }
+    ]
+  },
+  {
+    "title": "SPHINX",
+    "symbolLt": "SPHINX (egiptiečių - sfinkso esmė: klausinėti ir saugoti žinias).",
+    "symbolEn": "SPHINX (Egyptian - the essence of the sphinx: asking questions and guarding knowledge).",
+    "tooltipLt": "Simbolis apklausų formai, kuri klausia, veda per logiką ir saugo surinktą žinojimą.",
+    "tooltipEn": "A symbol for a survey form that asks, guides through logic and preserves collected knowledge."
+  },
+  {
+    "title": "THEMIS",
+    "symbolLt": "THEMIS - dieviškosios tvarkos ir teisingumo deivė, laiko svarstykles. Žodis reiškia tai, kas nustatyta.",
+    "symbolEn": "THEMIS - goddess of divine order and justice, holding the scales. The word means what is established.",
+    "tooltipLt": "THEMIS - Teikiamų paslaugų Hierarchinė Efektyvumo Matavimo Indikatorių Sistema.",
+    "tooltipEn": "THEMIS - Threshold Healthcheck, Evaluation, Monitoring & Insight Suite.",
+    "terms": [
+      { "letter": "T", "lt": "Teikiamų paslaugų", "en": "Threshold" },
+      { "letter": "H", "lt": "Hierarchinė", "en": "Healthcheck" },
+      { "letter": "E", "lt": "Efektyvumo", "en": "Evaluation" },
+      { "letter": "M", "lt": "Matavimo", "en": "Monitoring" },
+      { "letter": "I", "lt": "Indikatorių", "en": "Insight" },
+      { "letter": "S", "lt": "Sistema", "en": "Suite" }
+    ]
+  }
+]

@@ -1,0 +1,832 @@
+﻿@page
+@using DATA_EXCHANGE_HUB.Models
+@model DATA_EXCHANGE_HUB.Pages.Themis.IndexModel
+@{
+    ViewData["Title"] = "THEMIS";
+    var selectedTableNameJson = Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.SelectedTable?.TableName ?? string.Empty));
+    var filterColumnsJson = Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TableData?.Columns.Select(c => new { c.Name, c.DataType }).ToArray() ?? Array.Empty<object>()));
+    var uiTextJson = Html.Raw(System.Text.Json.JsonSerializer.Serialize(new
+    {
+        saving = L["Themis.Saving"].Value,
+        errorPrefix = L["Themis.ErrorPrefix"].Value,
+        connectionFailed = L["Themis.ConnectionFailed"].Value
+    }));
+}
+
+<div class="container-fluid exchange-page pt-4">
+    <form id="antiForgeryForm" method="post" class="d-none">
+        @Html.AntiForgeryToken()
+    </form>
+
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
+                    THEMIS <small class="badge bg-secondary ms-2">TH</small>
+                </h3>
+                <p class="mb-0 text-dark-green">@L["Themis.Subtitle"]</p>
+            </div>
+
+            <div class="access-panel stacked mb-3">
+                <div>
+                    <span class="field-label">@L["Common.User"]</span>
+                    <strong>@Model.CurrentUserName</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["Themis.Access"]</span>
+                    <strong>@(Model.HasAccess ? L["Themis.AccessGranted"] : L["Themis.AccessDenied"])</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["Themis.LogTable"]</span>
+                    <strong>SL_CONFIG_LOG</strong>
+                </div>
+            </div>
+
+            @if (Model.HasAccess)
+            {
+                <div class="hub-app-list mb-3">
+                    <div class="list-group">
+                        @foreach (var table in Model.Tables)
+                        {
+                            var isSelected = Model.SelectedTable?.TableName.Equals(table.TableName, StringComparison.OrdinalIgnoreCase) == true;
+                            var shortName = table.TableName.Split('.').Last().Trim('[', ']');
+                            <a class="@(isSelected ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action")"
+                               asp-page="/Themis/Index"
+                               asp-route-tableName="@table.TableName"
+                               asp-route-rowLimit="10">
+                                <strong>@shortName</strong>
+                                <div class="text-muted small text-truncate">@table.TableName</div>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">@L["Common.BackToHub"]</a>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+            {
+                <div class="alert alert-success" role="status">@Model.SuccessMessage</div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+            }
+
+            @if (!Model.HasAccess)
+            {
+                <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
+                    <h2 class="fw-bold text-dark-green">@L["Common.AccessDenied"]</h2>
+                    <p class="mb-0">@L["Themis.AccessDeniedBody"]</p>
+                </div>
+            }
+            else if (Model.SelectedTable is null)
+            {
+                <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
+                    @L["Themis.NoTables"]
+                </div>
+            }
+            else
+            {
+                <section class="tool-section mb-3">
+                    @if (Model.TableData is null)
+                    {
+                        <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
+                            @L["Themis.LoadFailed"]
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="exchange-table-header mb-3">
+                            <div class="exchange-table-title">
+                                <h2>@Model.SelectedTable.TableName</h2>
+                                <span class="status-pill">ADMIN</span>
+                                @if (Model.CanEditSelectedTable)
+                                {
+                                    <button id="updateButton" type="button" class="btn btn-sm btn-dark-green" style="display:none;">
+                                        @L["Common.SaveChanges"]
+                                    </button>
+                                    <span id="updateStatus" class="small text-muted"></span>
+                                }
+                            </div>
+
+                            <div class="exchange-table-controls">
+                                <form method="get" class="exchange-row-limit-form">
+                                    <input type="hidden" name="tableName" value="@Model.SelectedTable.TableName" />
+                                    <input type="hidden" name="pageNumber" value="1" />
+                                    @for (var i = 0; i < Model.ActiveFilters.Count; i++)
+                                    {
+                                        var f = Model.ActiveFilters[i];
+                                        <input type="hidden" name="FilterColumns[@i]" value="@f.ColumnName" />
+                                        <input type="hidden" name="FilterOperators[@i]" value="@f.Operator" />
+                                        <input type="hidden" name="FilterValues[@i]" value="@f.Value" />
+                                        <input type="hidden" name="FilterConnectors[@i]" value="@f.Connector" />
+                                    }
+                                    <select name="rowLimit" class="form-select form-select-sm" onchange="this.form.submit()">
+                                        @foreach (var opt in Model.RowLimitOptions)
+                                        {
+                                            <option value="@opt" selected="@(Model.RowLimitValue == opt)">Top @opt</option>
+                                        }
+                                    </select>
+                                </form>
+
+                                <div class="excel-actions">
+                                    <a class="btn btn-sm btn-outline-primary"
+                                       asp-page-handler="ExportExcel"
+                                       asp-all-route-data="@Model.CurrentFilterRouteValues">
+                                        @L["DataExchange.ExportExcel"]
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-success"
+                                       asp-page-handler="ExportCsv"
+                                       asp-all-route-data="@Model.CurrentFilterRouteValues">
+                                        Export CSV
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-secondary"
+                                       asp-page-handler="ExportTemplate"
+                                       asp-route-tableName="@Model.SelectedTable.TableName"
+                                       asp-route-rowLimit="@Model.RowLimit">
+                                        Template
+                                    </a>
+                                    <form method="post"
+                                          asp-page-handler="ImportExcel"
+                                          enctype="multipart/form-data"
+                                          class="excel-upload-form">
+                                        <input type="hidden" name="tableName" value="@Model.SelectedTable.TableName" />
+                                        <input type="hidden" name="rowLimit" value="@Model.RowLimit" />
+                                        <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+                                        @for (var fi = 0; fi < Model.ActiveFilters.Count; fi++)
+                                        {
+                                            var f = Model.ActiveFilters[fi];
+                                            <input type="hidden" name="FilterColumns[@fi]" value="@f.ColumnName" />
+                                            <input type="hidden" name="FilterOperators[@fi]" value="@f.Operator" />
+                                            <input type="hidden" name="FilterValues[@fi]" value="@f.Value" />
+                                            <input type="hidden" name="FilterConnectors[@fi]" value="@f.Connector" />
+                                        }
+                                        <label class="btn btn-sm btn-outline-secondary mb-0">
+                                            @L["DataExchange.ImportExcel"]
+                                            <input type="file" name="excelFile" accept="@ExcelFileNames.UploadAccept" class="d-none" onchange="this.form.submit()" />
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (Model.TableData.UniqueKeys.Count > 0)
+                        {
+                            <div class="alert alert-info py-2 mb-3">
+                                <strong>@L["Themis.UniqueRules"]</strong>
+                                <div class="small mt-1">
+                                    @foreach (var uniqueKey in Model.TableData.UniqueKeys)
+                                    {
+                                        <div>
+                                            <span class="fw-semibold">@uniqueKey.Name</span>
+                                            <span class="text-muted">(@uniqueKey.Type):</span>
+                                            @uniqueKey.ColumnLabel
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.ImportPreview is not null)
+                        {
+                            <div class="import-preview-panel mb-3">
+                                <div>
+                                    <strong>@L["Themis.ImportPreview"]</strong>
+                                    <div class="text-muted small">
+                                        @Model.ImportPreview.FileName &mdash; @Model.ImportPreview.Rows.Count
+                                        @if (Model.ImportPreview.IgnoredHeaders.Count > 0)
+                                        {
+                                            <span>@L["Themis.Ignored"]: @string.Join(", ", Model.ImportPreview.IgnoredHeaders)</span>
+                                        }
+                                    </div>
+                                </div>
+                                <form method="post" asp-page-handler="ConfirmImportExcel" class="import-preview-actions">
+                                    <input type="hidden" name="tableName" value="@Model.SelectedTable.TableName" />
+                                    <input type="hidden" name="rowLimit" value="@Model.RowLimit" />
+                                    <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+                                    <input type="hidden" name="importToken" value="@Model.ImportPreview.Token" />
+                                    @for (var fi = 0; fi < Model.ActiveFilters.Count; fi++)
+                                    {
+                                        var f = Model.ActiveFilters[fi];
+                                        <input type="hidden" name="FilterColumns[@fi]" value="@f.ColumnName" />
+                                        <input type="hidden" name="FilterOperators[@fi]" value="@f.Operator" />
+                                        <input type="hidden" name="FilterValues[@fi]" value="@f.Value" />
+                                        <input type="hidden" name="FilterConnectors[@fi]" value="@f.Connector" />
+                                    }
+                                    <button type="submit" class="btn btn-sm btn-dark-green"
+                                            onclick="return confirm('@string.Format(L["Themis.ConfirmImportMessage"].Value, Model.ImportPreview.Rows.Count, Model.SelectedTable.TableName)');">
+                                        @L["Themis.ConfirmImport"]
+                                    </button>
+                                </form>
+                            </div>
+                        }
+
+                        <form method="get" class="exchange-filter-form mb-3" id="filterForm">
+                            <input type="hidden" name="tableName" value="@Model.SelectedTable.TableName" />
+                            <input type="hidden" name="rowLimit" value="@Model.RowLimit" />
+                            <input type="hidden" name="pageNumber" value="1" />
+
+                            <div class="exchange-filter-header">
+                                <h3>@L["DataExchange.Filters"]</h3>
+                                @if (Model.HasActiveFilters)
+                                {
+                                    <span class="status-pill">@string.Format(L["Themis.ActiveFilters"].Value, Model.ActiveFilters.Count)</span>
+                                }
+                            </div>
+                            <div class="text-danger small" id="filterValidationMessage" hidden></div>
+
+                            <div class="exchange-filter-rows" id="filterRows">
+                                @for (var i = 0; i < Model.FilterRows.Count; i++)
+                                {
+                                    var filter = Model.FilterRows[i];
+                                    var placeholder = filter.Operator.Equals(ExchangeTableFilter.InOperator, StringComparison.OrdinalIgnoreCase)
+                                        ? "in: pvz. A, B"
+                                        : filter.Operator.Equals(ExchangeTableFilter.BetweenOperator, StringComparison.OrdinalIgnoreCase)
+                                            ? "between: pvz. 1..100"
+                                            : L["DataExchange.Value"].Value;
+                                    <div class="exchange-filter-row">
+                                        <div class="filter-connector">
+                                            @if (i == 0)
+                                            {
+                                                <span class="filter-connector-placeholder">WHERE</span>
+                                                <input type="hidden" name="FilterConnectors" value="@ExchangeTableFilter.AndConnector" />
+                                            }
+                                            else
+                                            {
+                                                <select name="FilterConnectors" class="form-select form-select-sm">
+                                                    <option value="@ExchangeTableFilter.AndConnector" selected="@(filter.Connector.Equals(ExchangeTableFilter.AndConnector, StringComparison.OrdinalIgnoreCase))">AND</option>
+                                                    <option value="@ExchangeTableFilter.OrConnector" selected="@(filter.Connector.Equals(ExchangeTableFilter.OrConnector, StringComparison.OrdinalIgnoreCase))">OR</option>
+                                                </select>
+                                            }
+                                        </div>
+                                        <select name="FilterColumns" class="form-select form-select-sm">
+                                            <option value="">@L["DataExchange.Column"]</option>
+                                            @foreach (var col in Model.TableData.Columns)
+                                            {
+                                                <option value="@col.Name" selected="@(filter.ColumnName.Equals(col.Name, StringComparison.OrdinalIgnoreCase))">@col.Name</option>
+                                            }
+                                        </select>
+                                        <select name="FilterOperators" class="form-select form-select-sm">
+                                            <option value="@ExchangeTableFilter.EqualsOperator" selected="@(filter.Operator == ExchangeTableFilter.EqualsOperator)">=</option>
+                                            <option value="@ExchangeTableFilter.NotEqualsOperator" selected="@(filter.Operator == ExchangeTableFilter.NotEqualsOperator)">!=</option>
+                                            <option value="@ExchangeTableFilter.GreaterThanOperator" selected="@(filter.Operator == ExchangeTableFilter.GreaterThanOperator)">&gt;</option>
+                                            <option value="@ExchangeTableFilter.GreaterThanOrEqualOperator" selected="@(filter.Operator == ExchangeTableFilter.GreaterThanOrEqualOperator)">&gt;=</option>
+                                            <option value="@ExchangeTableFilter.LessThanOperator" selected="@(filter.Operator == ExchangeTableFilter.LessThanOperator)">&lt;</option>
+                                            <option value="@ExchangeTableFilter.LessThanOrEqualOperator" selected="@(filter.Operator == ExchangeTableFilter.LessThanOrEqualOperator)">&lt;=</option>
+                                            <option value="@ExchangeTableFilter.LikeOperator" selected="@(filter.Operator.Equals(ExchangeTableFilter.LikeOperator, StringComparison.OrdinalIgnoreCase))">LIKE</option>
+                                            <option value="@ExchangeTableFilter.InOperator" selected="@(filter.Operator.Equals(ExchangeTableFilter.InOperator, StringComparison.OrdinalIgnoreCase))">IN</option>
+                                            <option value="@ExchangeTableFilter.BetweenOperator" selected="@(filter.Operator.Equals(ExchangeTableFilter.BetweenOperator, StringComparison.OrdinalIgnoreCase))">BETWEEN</option>
+                                        </select>
+                                        <input class="form-control form-control-sm filter-value-input"
+                                               name="FilterValues"
+                                               value="@filter.Value"
+                                               placeholder="@placeholder" />
+                                        <button type="button" class="btn btn-sm btn-outline-secondary filter-remove-button" data-remove-filter>@L["Common.Clear"]</button>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="exchange-filter-actions">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="addFilterButton">@L["DataExchange.AddFilter"]</button>
+                                <div class="exchange-filter-submit">
+                                    @if (Model.HasActiveFilters)
+                                    {
+                                        <a class="btn btn-sm btn-outline-secondary"
+                                           asp-page="/Themis/Index"
+                                           asp-all-route-data="@Model.ClearFilterRouteValues">
+                                            @L["DataExchange.ClearFilters"]
+                                        </a>
+                                    }
+                                    <button type="submit" class="btn btn-sm btn-dark-green">@L["DataExchange.Filter"]</button>
+                                    <button type="submit"
+                                            form="previewDeleteFilteredRowsForm"
+                                            class="btn btn-sm btn-outline-danger"
+                                            disabled="@(!Model.HasActiveFilters)"
+                                            title="@L["DataExchange.DeleteByFilterTitle"]">
+                                        @L["DataExchange.DeleteByFilter"]
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <form id="previewDeleteFilteredRowsForm"
+                              method="post"
+                              asp-page-handler="PreviewDeleteFilteredRows"
+                              class="d-none">
+                            <input type="hidden" name="tableName" value="@Model.SelectedTable.TableName" />
+                            <input type="hidden" name="rowLimit" value="@Model.RowLimit" />
+                            <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+                            @for (var i = 0; i < Model.ActiveFilters.Count; i++)
+                            {
+                                var f = Model.ActiveFilters[i];
+                                <input type="hidden" name="FilterColumns[@i]" value="@f.ColumnName" />
+                                <input type="hidden" name="FilterOperators[@i]" value="@f.Operator" />
+                                <input type="hidden" name="FilterValues[@i]" value="@f.Value" />
+                                <input type="hidden" name="FilterConnectors[@i]" value="@f.Connector" />
+                            }
+                        </form>
+
+                        @if (Model.HasMatchingDeletePreview)
+                        {
+                            <div class="delete-preview-panel mb-3">
+                                <div>
+                                    <strong>@string.Format(L["DataExchange.DeletePreviewTitle"].Value, Model.DeletePreviewCount)</strong>
+                                    <div class="text-muted small">@L["DataExchange.DeletePreviewBody"]</div>
+                                </div>
+                                <form method="post"
+                                      asp-page-handler="DeleteFilteredRows"
+                                      class="delete-preview-actions"
+                                      onsubmit="return confirm('@string.Format(L["Themis.ConfirmDeleteFiltered"].Value, Model.DeletePreviewCount)');">
+                                    <input type="hidden" name="tableName" value="@Model.SelectedTable.TableName" />
+                                    <input type="hidden" name="rowLimit" value="@Model.RowLimit" />
+                                    <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+                                    <input type="hidden" name="deletePreviewKey" value="@Model.CurrentDeleteFilterKey" />
+                                    @for (var i = 0; i < Model.ActiveFilters.Count; i++)
+                                    {
+                                        var f = Model.ActiveFilters[i];
+                                        <input type="hidden" name="FilterColumns[@i]" value="@f.ColumnName" />
+                                        <input type="hidden" name="FilterOperators[@i]" value="@f.Operator" />
+                                        <input type="hidden" name="FilterValues[@i]" value="@f.Value" />
+                                        <input type="hidden" name="FilterConnectors[@i]" value="@f.Connector" />
+                                    }
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">@L["DataExchange.ConfirmFilteredDelete"]</button>
+                                </form>
+                            </div>
+                        }
+
+                        <div class="exchange-table-wrap mb-3">
+                            <table class="table table-sm table-hover exchange-table" id="dataTable">
+                                <thead>
+                                    <tr>
+                                        @foreach (var col in Model.TableData.Columns)
+                                        {
+                                            <th class="sortable-header"
+                                                data-sort-column="@col.Name"
+                                                title="@L["DataExchange.SortTitle"]">
+                                                <span>@col.Name</span><br /><small class="text-muted fw-normal">@col.DataType</small>
+                                            </th>
+                                        }
+                                        <th class="row-actions text-end">@L["DataExchange.Actions"]</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody"
+                                       data-table-name="@Model.SelectedTable.TableName"
+                                       data-key-column="@Model.TableData.KeyColumn"
+                                       data-can-edit="@Model.CanEditSelectedTable.ToString().ToLower()">
+                                    @foreach (var row in Model.TableData.Rows)
+                                    {
+                                        <tr class="data-row" data-key-value="@row.KeyValue">
+                                            @foreach (var col in Model.TableData.Columns)
+                                            {
+                                                var cellValue = Model.CellValue(row, col.Name);
+                                                @if (Model.CanEditSelectedTable && col.CanUpdate)
+                                                {
+                                                    <td data-col="@col.Name"
+                                                        data-column-name="@col.Name"
+                                                        data-editable="true"
+                                                        data-type="@col.DataType"
+                                                        class="editable-cell">@cellValue</td>
+                                                }
+                                                else
+                                                {
+                                                    <td data-column-name="@col.Name" data-editable="false">@cellValue</td>
+                                                }
+                                            }
+                                            <td class="row-actions">
+                                                <form method="post"
+                                                      asp-page-handler="DeleteRow"
+                                                      asp-route-tableName="@Model.SelectedTable.TableName"
+                                                      asp-route-rowLimit="@Model.RowLimit"
+                                                      asp-route-pageNumber="@Model.PageNumber"
+                                                      onsubmit="return confirm('@L["Themis.ConfirmDeleteRow"]');">
+                                                    @for (var i = 0; i < Model.ActiveFilters.Count; i++)
+                                                    {
+                                                        var f = Model.ActiveFilters[i];
+                                                        <input type="hidden" name="FilterColumns[@i]" value="@f.ColumnName" />
+                                                        <input type="hidden" name="FilterOperators[@i]" value="@f.Operator" />
+                                                        <input type="hidden" name="FilterValues[@i]" value="@f.Value" />
+                                                        <input type="hidden" name="FilterConnectors[@i]" value="@f.Connector" />
+                                                    }
+                                                    <input type="hidden" name="keyValue" value="@row.KeyValue" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">@L["Common.Delete"]</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-pagination">
+                            @if (Model.TableData.HasPreviousPage)
+                            {
+                                <a class="btn btn-sm btn-outline-secondary"
+                                   asp-page="/Themis/Index"
+                                   asp-all-route-data="@Model.PreviousPageRouteValues">
+                                    &laquo; @L["DataExchange.Previous"]
+                                </a>
+                            }
+                            <span class="text-muted small">@string.Format(L["DataExchange.PageInfo"].Value, Model.PageNumber, Model.TableData.Rows.Count)</span>
+                            @if (Model.TableData.HasNextPage)
+                            {
+                                <a class="btn btn-sm btn-outline-secondary"
+                                   asp-page="/Themis/Index"
+                                   asp-all-route-data="@Model.NextPageRouteValues">
+                                    @L["DataExchange.Next"] &raquo;
+                                </a>
+                            }
+                        </div>
+                    }
+                </section>
+
+                <section class="tool-section mb-3">
+                    <div class="section-title-row">
+                        <h2>@L["Themis.AddNewRow"]</h2>
+                    </div>
+                    @if (Model.TableData is not null && Model.TableData.InsertableColumns.Count > 0)
+                    {
+                        <form method="post" asp-page-handler="AddRow">
+                            <input type="hidden" name="tableName" value="@Model.SelectedTable.TableName" />
+                            <input type="hidden" name="rowLimit" value="@Model.RowLimit" />
+                            <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+                            @for (var i = 0; i < Model.ActiveFilters.Count; i++)
+                            {
+                                var f = Model.ActiveFilters[i];
+                                <input type="hidden" name="FilterColumns[@i]" value="@f.ColumnName" />
+                                <input type="hidden" name="FilterOperators[@i]" value="@f.Operator" />
+                                <input type="hidden" name="FilterValues[@i]" value="@f.Value" />
+                                <input type="hidden" name="FilterConnectors[@i]" value="@f.Connector" />
+                            }
+                            <div class="exchange-add-form">
+                                <div class="exchange-add-grid">
+                                    @foreach (var col in Model.TableData.InsertableColumns)
+                                    {
+                                        <div>
+                                            <label class="field-label" for="col_@col.Name">
+                                                @col.Name
+                                                <span class="text-muted fw-normal">@col.DataType@(col.IsNullable ? "" : "*")</span>
+                                            </label>
+                                            @if (Model.IsBooleanColumn(col))
+                                            {
+                                                <select id="col_@col.Name" name="@col.Name" class="form-select form-select-sm">
+                                                    @if (col.IsNullable || col.HasDefaultValue)
+                                                    {
+                                                        <option value="">&mdash; @L["Themis.Select"] &mdash;</option>
+                                                    }
+                                                    <option value="1">@L["Common.Yes"]</option>
+                                                    <option value="0">@L["Common.No"]</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <input id="col_@col.Name"
+                                                       class="form-control form-control-sm"
+                                                       type="@Model.InputTypeForColumn(col)"
+                                                       step="@Model.InputStepForColumn(col)"
+                                                       name="@col.Name"
+                                                       placeholder="@Model.InputPlaceholderForColumn(col)"
+                                                       required="@(!col.IsNullable && !col.HasDefaultValue)" />
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-dark-green">@L["DataExchange.AddRow"]</button>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="empty-state compact">@L["Themis.NoInsertableColumns"]</div>
+                    }
+                </section>
+
+                @if (Model.AuditLogs.Count > 0)
+                {
+                    <section class="tool-section">
+                        <div class="section-title-row">
+                            <h2>@L["Themis.ChangeHistory"] (SL_CONFIG_LOG)</h2>
+                        </div>
+                        <div class="exchange-log-wrap">
+                            <table class="table table-sm exchange-log-table">
+                                <thead>
+                                    <tr>
+                                        <th>Log ID</th>
+                                        <th>@L["DataExchange.Time"]</th>
+                                        <th>@L["DataExchange.Action"]</th>
+                                        <th>@L["Themis.Source"]</th>
+                                        <th>@L["DataExchange.Key"]</th>
+                                        <th>@L["Common.User"]</th>
+                                        <th>@L["Common.Status"]</th>
+                                        <th class="text-end">@L["DataExchange.Actions"]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var log in Model.AuditLogs)
+                                    {
+                                        <tr class="@(log.IsReverted ? "table-secondary" : "")">
+                                            <td>@log.LogId</td>
+                                            <td class="text-nowrap">@UiFormat.DateTime(log.EventAt)</td>
+                                            <td><span class="badge @(log.ActionType == "DELETE" ? "bg-danger" : log.ActionType == "INSERT" ? "bg-success" : "bg-secondary")">@log.ActionType</span></td>
+                                            <td>@log.Source</td>
+                                            <td>@log.KeyValue</td>
+                                            <td>@log.ActorUser</td>
+                                            <td>
+                                                @if (log.IsReverted)
+                                                {
+                                                    <span class="text-muted small">@L["DataExchange.RevertedStatus"]</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-success small">OK</span>
+                                                }
+                                            </td>
+                                            <td class="row-actions">
+                                                @if (log.CanRevert)
+                                                {
+                                                    <form method="post"
+                                                          asp-page-handler="RevertLog"
+                                                          asp-route-tableName="@Model.SelectedTable.TableName"
+                                                          asp-route-rowLimit="@Model.RowLimit"
+                                                          asp-route-pageNumber="@Model.PageNumber"
+                                                          onsubmit="return confirm('@string.Format(L["DataExchange.ConfirmRevertLog"].Value, log.LogId)');">
+                                                        <input type="hidden" name="logId" value="@log.LogId" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-secondary">@L["DataExchange.Revert"]</button>
+                                                    </form>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const tableName = @selectedTableNameJson;
+            const filterColumnsData = @filterColumnsJson;
+            const uiText = @uiTextJson;
+            const tableBody = document.getElementById('tableBody');
+            const updateButton = document.getElementById('updateButton');
+            const updateStatus = document.getElementById('updateStatus');
+            const antiForgeryToken = document.querySelector('#antiForgeryForm [name="__RequestVerificationToken"]')?.value ?? '';
+            const canEdit = tableBody?.dataset.canEdit === 'true';
+            const keyColumn = tableBody?.dataset.keyColumn ?? '';
+            const pendingUpdates = {};
+            const sortDirections = {};
+
+            document.querySelectorAll('#dataTable th[data-sort-column]').forEach((header) => {
+                header.addEventListener('dblclick', () => sortTableByColumn(header));
+            });
+
+            if (canEdit && tableBody) {
+                tableBody.querySelectorAll('td[data-editable="true"]').forEach((cell) => {
+                    cell.addEventListener('dblclick', () => makeEditable(cell));
+                });
+
+                updateButton?.addEventListener('click', async () => {
+                    updateButton.disabled = true;
+                    if (updateStatus) {
+                        updateStatus.textContent = uiText.saving;
+                    }
+
+                    try {
+                        const response = await fetch('?handler=UpdateRows', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': antiForgeryToken
+                            },
+                            body: JSON.stringify({ tableName, updates: pendingUpdates })
+                        });
+
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            const msg = await response.text();
+                            if (updateStatus) {
+                                updateStatus.textContent = `${uiText.errorPrefix} ${msg}`;
+                            }
+                            updateButton.disabled = false;
+                        }
+                    } catch {
+                        if (updateStatus) {
+                            updateStatus.textContent = uiText.connectionFailed;
+                        }
+                        updateButton.disabled = false;
+                    }
+                });
+            }
+
+            const filterRows = document.getElementById('filterRows');
+            const addFilterButton = document.getElementById('addFilterButton');
+            const filterTemplate = filterRows?.querySelector('.exchange-filter-row')?.cloneNode(true);
+
+            if (filterTemplate) {
+                filterTemplate.querySelectorAll('input[name="FilterValues"]').forEach(i => i.value = '');
+                filterTemplate.querySelectorAll('select[name="FilterColumns"] option[selected]').forEach(o => o.removeAttribute('selected'));
+                filterTemplate.querySelectorAll('select[name="FilterOperators"] option').forEach((o, i) => {
+                    if (i === 0) o.setAttribute('selected', ''); else o.removeAttribute('selected');
+                });
+                filterTemplate.querySelectorAll('.filter-connector select option').forEach((o, i) => {
+                    if (i === 0) o.setAttribute('selected', ''); else o.removeAttribute('selected');
+                });
+                const hiddenConnector = filterTemplate.querySelector('input[name="FilterConnectors"]');
+                if (hiddenConnector) {
+                    hiddenConnector.parentElement.innerHTML = `<select name="FilterConnectors" class="form-select form-select-sm"><option value="AND" selected>AND</option><option value="OR">OR</option></select>`;
+                }
+            }
+
+            addFilterButton?.addEventListener('click', () => {
+                if (!filterTemplate || !filterRows) return;
+                const newRow = filterTemplate.cloneNode(true);
+                newRow.querySelectorAll('.editable-cell').forEach(c => c.textContent = '');
+                filterRows.appendChild(newRow);
+                newRow.querySelector('input[name="FilterValues"]')?.focus();
+            });
+
+            filterRows?.addEventListener('click', e => {
+                if (e.target.matches('[data-remove-filter]')) {
+                    const row = e.target.closest('.exchange-filter-row');
+                    if (filterRows.querySelectorAll('.exchange-filter-row').length > 1) {
+                        row?.remove();
+                    } else if (row) {
+                        row.querySelectorAll('input[name="FilterValues"]').forEach(i => i.value = '');
+                        row.querySelectorAll('select[name="FilterColumns"]').forEach(s => s.value = '');
+                    }
+                }
+            });
+
+            function makeEditable(cell) {
+                if (cell.querySelector('input')) {
+                    return;
+                }
+
+                const originalValue = cell.textContent.trim();
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'form-control form-control-sm';
+                input.value = originalValue;
+
+                input.addEventListener('blur', () => saveCellValue(cell, input.value));
+                input.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        input.blur();
+                    }
+
+                    if (event.key === 'Escape') {
+                        event.preventDefault();
+                        cell.textContent = originalValue;
+                    }
+                });
+
+                cell.textContent = '';
+                cell.appendChild(input);
+                input.focus();
+                input.select();
+            }
+
+            function saveCellValue(cell, value) {
+                const row = cell.closest('tr');
+                const keyValue = row?.dataset.keyValue;
+                const colName = cell.dataset.col ?? cell.dataset.columnName;
+                if (!keyValue || !colName) {
+                    cell.textContent = value;
+                    return;
+                }
+
+                cell.textContent = value;
+                if (!pendingUpdates[keyValue]) {
+                    pendingUpdates[keyValue] = {};
+                }
+
+                pendingUpdates[keyValue][colName] = value.trim();
+                row.style.backgroundColor = '#f0f0f0';
+
+                if (updateButton) {
+                    updateButton.style.display = 'inline-block';
+                }
+            }
+
+            function getInputType(dataType) {
+                const normalized = dataType.toLowerCase();
+                if (normalized === 'date') {
+                    return 'date';
+                }
+
+                if (normalized.includes('date') || normalized.includes('time')) {
+                    return 'datetime-local';
+                }
+
+                if (isNumericType(normalized)) {
+                    return 'number';
+                }
+
+                return 'text';
+            }
+
+            function isNumericType(dataType) {
+                return ['tinyint', 'smallint', 'int', 'bigint', 'decimal', 'numeric', 'money', 'smallmoney', 'float', 'real'].includes(dataType.toLowerCase());
+            }
+
+            function isDecimalType(dataType) {
+                return ['decimal', 'numeric', 'money', 'smallmoney', 'float', 'real'].includes(dataType.toLowerCase());
+            }
+
+            function sortTableByColumn(header) {
+                const table = document.getElementById('dataTable');
+                const tbody = table?.querySelector('tbody');
+                const columnName = header.getAttribute('data-sort-column');
+                if (!table || !tbody || !columnName) {
+                    return;
+                }
+
+                const nextDirection = sortDirections[columnName] === 'asc' ? 'desc' : 'asc';
+                Object.keys(sortDirections).forEach((key) => delete sortDirections[key]);
+                sortDirections[columnName] = nextDirection;
+
+                table.querySelectorAll('th[data-sort-column]').forEach((item) => {
+                    item.classList.remove('sort-asc', 'sort-desc');
+                });
+                header.classList.add(nextDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+
+                const rows = Array.from(tbody.querySelectorAll('tr.data-row'));
+                rows.sort((leftRow, rightRow) => compareCellValues(
+                    getSortValue(leftRow, columnName),
+                    getSortValue(rightRow, columnName),
+                    nextDirection));
+
+                rows.forEach((row) => tbody.appendChild(row));
+            }
+
+            function getSortValue(row, columnName) {
+                return row
+                    .querySelector(`td[data-column-name="${cssEscape(columnName)}"]`)
+                    ?.textContent
+                    ?.trim() ?? '';
+            }
+
+            function compareCellValues(leftValue, rightValue, direction) {
+                const directionMultiplier = direction === 'asc' ? 1 : -1;
+                const leftEmpty = leftValue.length === 0;
+                const rightEmpty = rightValue.length === 0;
+
+                if (leftEmpty || rightEmpty) {
+                    if (leftEmpty && rightEmpty) {
+                        return 0;
+                    }
+
+                    return leftEmpty ? 1 : -1;
+                }
+
+                const leftNumber = parseNumber(leftValue);
+                const rightNumber = parseNumber(rightValue);
+                if (!Number.isNaN(leftNumber) && !Number.isNaN(rightNumber)) {
+                    return (leftNumber - rightNumber) * directionMultiplier;
+                }
+
+                const leftDate = Date.parse(leftValue);
+                const rightDate = Date.parse(rightValue);
+                if (!Number.isNaN(leftDate) && !Number.isNaN(rightDate)) {
+                    return (leftDate - rightDate) * directionMultiplier;
+                }
+
+                return leftValue.localeCompare(rightValue, 'lt', {
+                    numeric: true,
+                    sensitivity: 'base'
+                }) * directionMultiplier;
+            }
+
+            function parseNumber(value) {
+                const normalized = value
+                    .replace(/\s/g, '')
+                    .replace(',', '.');
+
+                return normalized === '' ? Number.NaN : Number(normalized);
+            }
+
+            function cssEscape(value) {
+                if (window.CSS?.escape) {
+                    return CSS.escape(value);
+                }
+
+                return value.replace(/["\\]/g, '\\$&');
+            }
+        })();
+    </script>
+}
+
+

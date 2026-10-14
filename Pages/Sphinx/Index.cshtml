@@ -1,0 +1,623 @@
+@page
+@model DATA_EXCHANGE_HUB.Pages.Sphinx.IndexModel
+@{
+    ViewData["Title"] = "SPHINX";
+    string StatusLabel(string s) => s switch {
+        "OPEN"   => L["Common.Active"],
+        "CLOSED" => L["Sphinx.Status.Closed"],
+        _        => s
+    };
+    string StatusClass(string s) => s == "OPEN" ? "text-success" : "text-muted";
+}
+
+<div class="container-fluid exchange-page pt-4">
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
+                    SPHINX <small class="badge bg-secondary ms-2">SP</small>
+                </h3>
+                <p class="mb-0 text-dark-green">@L["Landing.Sphinx.Eyebrow"]</p>
+            </div>
+
+            <div class="hub-app-list mb-3">
+                <div class="side-panel-title">@L["Common.Status"]</div>
+                <div class="list-group">
+                    <div class="list-group-item active list-with-details">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <strong>@L["Sphinx.CreateSurvey"]</strong>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center mt-1 client-kpis">
+                            <div class="kpi-item text-success">
+                                <div class="fw-bold">@Model.Surveys.Count</div>
+                                <small>@L["Sphinx.TotalSurveys"]</small>
+                            </div>
+                            <div class="kpi-item text-success">
+                                <div class="fw-bold">@Model.Surveys.Count(s => s.Status == "OPEN")</div>
+                                <small>@L["Common.Active"]</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">@L["Common.BackToHub"]</a>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+            {
+                <div class="alert alert-success mb-3" role="alert">@Model.SuccessMessage</div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger mb-3" role="alert">@Model.ErrorMessage</div>
+            }
+
+            <div class="hub-hero mb-4">
+                <div>
+                    <span class="hub-eyebrow">@L["Landing.Sphinx.Eyebrow"]</span>
+                    <h1>SPHINX</h1>
+                    <p>@L["Landing.Sphinx.Description"]</p>
+                </div>
+            </div>
+
+            <div class="hub-board mb-4" id="create-section">
+                <div class="section-title-row">
+                    <h2>@L["Sphinx.CreateSurvey"]</h2>
+                    <a class="btn btn-sm btn-outline-secondary"
+                       asp-page-handler="ExportTemplate">
+                        @L["Sphinx.ExcelTemplate"]
+                    </a>
+                </div>
+
+                <div class="sphinx-template-guide mb-3">
+                    <div class="sphinx-guide-card">
+                        <div class="sphinx-guide-title">
+                            <span class="sphinx-guide-chip">SINGLE</span>
+                            <strong>@L["Sphinx.Guide.Single"]</strong>
+                        </div>
+                        <div class="sphinx-guide-flow">
+                            <span>Q1</span>
+                            <span>@L["Common.Yes"]</span>
+                            <span>@L["Common.No"]</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm mb-0 sphinx-guide-table">
+                                <tbody>
+                                    <tr><td>Q1</td><td>SINGLE</td><td>Q1_A1</td><td>@L["Common.Yes"]</td></tr>
+                                    <tr><td>Q1</td><td>SINGLE</td><td>Q1_A2</td><td>@L["Common.No"]</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="sphinx-guide-card">
+                        <div class="sphinx-guide-title">
+                            <span class="sphinx-guide-chip">MULTI</span>
+                            <strong>@L["Sphinx.Guide.Multi"]</strong>
+                        </div>
+                        <div class="sphinx-guide-flow multi">
+                            <span>Q2</span>
+                            <span>@L["Sphinx.Guide.Chair"]</span>
+                            <span>@L["Sphinx.Guide.Monitor"]</span>
+                            <span>@L["Sphinx.Guide.Quiet"]</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm mb-0 sphinx-guide-table">
+                                <tbody>
+                                    <tr><td>Q2</td><td>MULTI</td><td>Q2_A1</td><td>@L["Sphinx.Guide.ErgonomicChair"]</td></tr>
+                                    <tr><td>Q2</td><td>MULTI</td><td>Q2_A2</td><td>@L["Sphinx.Guide.AdditionalMonitor"]</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="sphinx-guide-card">
+                        <div class="sphinx-guide-title">
+                            <span class="sphinx-guide-chip">SUB</span>
+                            <strong>@L["Sphinx.Guide.SubQuestion"]</strong>
+                        </div>
+                        <div class="sphinx-guide-flow branch">
+                            <span>Q3</span>
+                            <span>@L["Common.Yes"]</span>
+                            <span>Q3_SUB1</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm mb-0 sphinx-guide-table">
+                                <tbody>
+                                    <tr><td>Q3</td><td>SINGLE</td><td>Q3_A1</td><td>@L["Common.Yes"]</td></tr>
+                                    <tr><td>Q3_SUB1</td><td>TEXT</td><td>Parent</td><td>Q3_A1</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="sphinx-guide-card">
+                        <div class="sphinx-guide-title">
+                            <span class="sphinx-guide-chip">TEXT</span>
+                            <strong>@L["Sphinx.Guide.Contacts"]</strong>
+                        </div>
+                        <div class="sphinx-guide-flow branch">
+                            <span>EMAIL</span>
+                            <span>tekstas@tekstas.lt</span>
+                        </div>
+                        <div class="sphinx-guide-flow branch">
+                            <span>PHONE</span>
+                            <span>+37060000000</span>
+                            <span>+370-60000000</span>
+                        </div>
+                        <div class="sphinx-guide-flow branch">
+                            <span>NUMBER</span>
+                            <span>10</span>
+                            <span>10.5</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm mb-0 sphinx-guide-table">
+                                <tbody>
+                                    <tr><td>Q4</td><td>TEXT</td><td>EMAIL</td><td>@L["Sphinx.Validation.Email"]</td></tr>
+                                    <tr><td>Q5</td><td>TEXT</td><td>PHONE</td><td>@L["Sphinx.Validation.Phone"]</td></tr>
+                                    <tr><td>Q6</td><td>TEXT</td><td>NUMBER</td><td>@L["Sphinx.Validation.Number"]</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" id="sphinx-form" class="d-grid gap-3">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold" asp-for="SphinxSurveyTitle">@L["Landing.Sphinx.SurveyTitle"]</label>
+                            <input class="form-control" asp-for="SphinxSurveyTitle" maxlength="500" required
+                                   placeholder="@L["Landing.Sphinx.SurveyTitlePlaceholder"]" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">@L["Landing.Sphinx.Creator"]</label>
+                            <input class="form-control" asp-for="SphinxCreatedBy" readonly />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label fw-semibold">@L["Sphinx.SurveyKind"]</label>
+                        <div class="d-flex gap-3 flex-wrap align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="SurveyKind" value="SURVEY" id="kind-survey" checked />
+                                <label class="form-check-label" for="kind-survey">@L["Sphinx.SurveyKind.Survey"]</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="SurveyKind" value="POLL" id="kind-poll" />
+                                <label class="form-check-label" for="kind-poll">@L["Sphinx.SurveyKind.Poll"]</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label fw-semibold" asp-for="SphinxSurveyDescription">@L["Landing.Sphinx.SurveyDescription"]</label>
+                        <textarea class="form-control" asp-for="SphinxSurveyDescription" rows="2" maxlength="2000"
+                                  placeholder="@L["Landing.Sphinx.SurveyDescriptionPlaceholder"]"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="form-label fw-semibold">@L["Sphinx.LimitMode"]</label>
+                        <div class="d-flex gap-3 flex-wrap align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="LimitMode" value="none" id="limit-none" checked />
+                                <label class="form-check-label" for="limit-none">@L["Sphinx.Limit.None"]</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="LimitMode" value="count" id="limit-count" />
+                                <label class="form-check-label" for="limit-count">@L["Sphinx.Limit.Count"]</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="LimitMode" value="date" id="limit-date" />
+                                <label class="form-check-label" for="limit-date">@L["Sphinx.Limit.Date"]</label>
+                            </div>
+                        </div>
+                        <div id="limit-count-field" class="mt-2 d-none">
+                            <label class="form-label" asp-for="MaxResponses">@L["Sphinx.MaxResponses"]</label>
+                            <input class="form-control" style="max-width:14rem" asp-for="MaxResponses" type="number" min="1" max="10000" placeholder="pvz. 50" />
+                        </div>
+                        <div id="limit-date-field" class="mt-2 d-none">
+                            <label class="form-label" asp-for="ExpiresAtString">@L["Sphinx.ExpiresAt"]</label>
+                            <input class="form-control" style="max-width:14rem" asp-for="ExpiresAtString" type="datetime-local" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label fw-semibold">@L["Sphinx.Anonymity"]</label>
+                        <div class="d-flex gap-3 flex-wrap align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="IsAnonymous" value="true" id="anonymous-yes" checked />
+                                <label class="form-check-label" for="anonymous-yes">@L["Sphinx.Anonymity.Anonymous"]</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="IsAnonymous" value="false" id="anonymous-no" />
+                                <label class="form-check-label" for="anonymous-no">@L["Sphinx.Anonymity.Named"]</label>
+                            </div>
+                        </div>
+                        <div class="small text-muted mt-1">
+                            @L["Sphinx.Anonymity.Help"]
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label fw-semibold mb-0">@L["Landing.Sphinx.Questions"]</label>
+                        </div>
+                        <div id="sphinx-q-area" class="d-grid gap-2"></div>
+                        <div class="mt-3">
+                            <button type="button" id="sphinx-add-main-q" class="btn btn-sm btn-outline-secondary">
+                                + @L["Landing.Sphinx.AddQuestion"]
+                            </button>
+                        </div>
+                        <div class="mt-2 small text-muted">@L["Landing.Sphinx.Hint"]</div>
+                    </div>
+
+                    <input type="hidden" name="SphinxDefinitionJson" id="sphinx-def-json" />
+
+                    <div class="sphinx-import-panel">
+                        <label class="form-label fw-semibold" asp-for="ImportFile">@L["Sphinx.Import.Title"]</label>
+                        <div class="d-flex gap-2 flex-wrap align-items-center">
+                            <input class="form-control" style="max-width:24rem" asp-for="ImportFile" type="file" accept="@ExcelFileNames.UploadAccept" />
+                            <button class="btn btn-outline-success"
+                                    type="submit"
+                                    data-sphinx-import-submit
+                                    formaction="?handler=Import"
+                                    formnovalidate>
+                                @L["Sphinx.Import.Submit"]
+                            </button>
+                        </div>
+                        <div class="small text-muted mt-1">
+                            @L["Sphinx.Import.Help"]
+                        </div>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-orange" type="submit">@L["Landing.Sphinx.Submit"]</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="hub-board mb-4">
+                <div class="section-title-row">
+                    <h2>@L["Sphinx.ManagementList"]</h2>
+                    <span class="status-pill">@Model.Surveys.Count</span>
+                </div>
+
+                @if (Model.Surveys.Count == 0)
+                {
+                    <p class="text-muted">@L["Sphinx.NoSurveys"]</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>@L["Sphinx.SurveyKind"]</th>
+                                    <th>@L["Common.Title"]</th>
+                                    <th class="text-center">@L["Sphinx.QuestionCount"]</th>
+                                    <th class="text-center">@L["Sphinx.ResponseCount"]</th>
+                                    <th class="text-center">@L["Common.Status"]</th>
+                                    <th class="text-center">@L["Sphinx.Limit"]</th>
+                                    <th class="text-center">@L["Sphinx.ExpiresAt"]</th>
+                                    <th class="text-center">@L["Sphinx.CreatedAt"]</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var s in Model.Surveys)
+                                {
+                                    <tr>
+                                        <td><span class="status-pill-muted">@(s.SurveyKind == "POLL" ? L["Sphinx.SurveyKind.Poll"] : L["Sphinx.SurveyKind.Survey"])</span></td>
+                                        <td><strong>@s.Title</strong><br /><small class="text-muted">@s.CreatedBy</small></td>
+                                        <td class="text-center">@s.QuestionCount</td>
+                                        <td class="text-center">
+                                            @s.ResponseCount
+                                            @if (s.MaxResponses.HasValue)
+                                            {
+                                                <span class="text-muted">/ @s.MaxResponses</span>
+                                            }
+                                        </td>
+                                        <td class="text-center"><span class="@StatusClass(s.Status)">@StatusLabel(s.Status)</span></td>
+                                        <td class="text-center">
+                                            @if (s.MaxResponses.HasValue)
+                                            {
+                                                <span>@s.MaxResponses @L["Sphinx.Respondents"]</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">-</span>
+                                            }
+                                        </td>
+                                        <td class="text-center small">
+                                            @if (s.ExpiresAt.HasValue)
+                                            {
+                                                @s.ExpiresAt.Value.ToString("yyyy-MM-dd HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">-</span>
+                                            }
+                                        </td>
+                                        <td class="text-center small text-muted">@s.CreatedAt.ToString("yyyy-MM-dd")</td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-secondary"
+                                               asp-page-handler="Results"
+                                               asp-route-id="@s.Id">
+                                                @L["Sphinx.Results"]
+                                            </a>
+                                            <a class="btn btn-sm btn-outline-success"
+                                               asp-page-handler="ExportSurveyTemplate"
+                                               asp-route-id="@s.Id">
+                                                Excel
+                                            </a>
+                                            @if (s.Status == "OPEN")
+                                            {
+                                                <form method="post" asp-page-handler="Close" class="d-inline">
+                                                    <input type="hidden" name="id" value="@s.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                            onclick="return confirm('@L["Sphinx.ConfirmClose"]')">
+                                                        @L["Sphinx.Close"]
+                                                    </button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </section>
+    </div>
+</div>
+
+<template id="sphinx-q-tpl">
+    <div class="sphinx-q-card card border-secondary-subtle mb-1" data-qid="">
+        <div class="card-header d-flex gap-2 align-items-center py-2 bg-transparent">
+            <span class="sphinx-q-label badge bg-secondary" style="min-width:2.5rem">Q?</span>
+            <select class="form-select form-select-sm sphinx-q-type" style="width:auto">
+                <option value="TEXT">@L["Landing.Sphinx.Type.Text"]</option>
+                <option value="SINGLE">@L["Landing.Sphinx.Type.Single"]</option>
+                <option value="MULTI">@L["Landing.Sphinx.Type.Multi"]</option>
+            </select>
+            <select class="form-select form-select-sm sphinx-q-validation" style="width:auto">
+                <option value="NONE">@L["Sphinx.Validation.Text"]</option>
+                <option value="EMAIL">@L["Sphinx.Validation.Email"]</option>
+                <option value="PHONE">@L["Sphinx.Validation.Phone"]</option>
+                <option value="NUMBER">@L["Sphinx.Validation.Number"]</option>
+            </select>
+            <input type="text" class="form-control form-control-sm sphinx-q-text flex-grow-1"
+                   placeholder="@L["Landing.Sphinx.QuestionPlaceholder"]" maxlength="500" />
+            <button type="button" class="btn btn-sm btn-outline-danger sphinx-del-q flex-shrink-0">x</button>
+        </div>
+        <div class="card-body p-2 sphinx-q-body" style="display:none">
+            <div class="sphinx-opt-list d-grid gap-1"></div>
+            <button type="button" class="btn btn-sm btn-outline-secondary sphinx-add-opt mt-2">
+                + @L["Landing.Sphinx.AddOption"]
+            </button>
+        </div>
+    </div>
+</template>
+
+<template id="sphinx-opt-tpl">
+    <div class="sphinx-opt-row" data-oid="">
+        <div class="input-group input-group-sm mb-1">
+            <span class="input-group-text text-muted px-2">o</span>
+            <input type="text" class="form-control sphinx-opt-text"
+                   placeholder="@L["Landing.Sphinx.OptionPlaceholder"]" maxlength="500" />
+            <select class="form-select form-select-sm sphinx-opt-skip" style="max-width:9rem">
+                <option value="NEXT">-&gt; @L["Landing.Sphinx.Skip.Next"]</option>
+                <option value="END">END @L["Landing.Sphinx.Skip.End"]</option>
+                <option value="JUMP">JUMP @L["Landing.Sphinx.Skip.Jump"]</option>
+            </select>
+            <select class="form-select form-select-sm sphinx-opt-jump d-none" style="max-width:9rem"></select>
+            <button type="button" class="btn btn-sm btn-outline-secondary sphinx-add-sub"
+                    title="@L["Landing.Sphinx.AddSubQuestion"]">+ @L["Landing.Sphinx.AddSubQuestion"]</button>
+            <button type="button" class="btn btn-sm btn-outline-danger sphinx-del-opt">x</button>
+        </div>
+        <div class="sphinx-sub-area ps-3 border-start border-secondary border-opacity-25 mb-1" style="display:none">
+            <div class="sphinx-sub-list d-grid gap-1"></div>
+        </div>
+    </div>
+</template>
+
+@section Scripts {
+    <script>
+        (() => {
+            // Limit mode toggle
+            const radios = document.querySelectorAll("[name='LimitMode']");
+            const countField = document.getElementById("limit-count-field");
+            const dateField  = document.getElementById("limit-date-field");
+            function updateLimitFields() {
+                const val = document.querySelector("[name='LimitMode']:checked")?.value;
+                countField?.classList.toggle("d-none", val !== "count");
+                dateField?.classList.toggle("d-none",  val !== "date");
+            }
+            radios.forEach(r => r.addEventListener("change", updateLimitFields));
+            updateLimitFields();
+
+            // Survey builder
+            const area     = document.getElementById("sphinx-q-area");
+            const addMainQ = document.getElementById("sphinx-add-main-q");
+            const form     = document.getElementById("sphinx-form");
+            const jsonIn   = document.getElementById("sphinx-def-json");
+            const qTpl     = document.getElementById("sphinx-q-tpl");
+            const oTpl     = document.getElementById("sphinx-opt-tpl");
+            const kindInputs = Array.from(document.querySelectorAll("input[name='SurveyKind']"));
+            let isImportSubmit = false;
+            if (!area || !addMainQ || !form || !jsonIn || !qTpl || !oTpl) return;
+
+            let seq = 0;
+            const uid = () => `s${seq++}`;
+            const topCards = () => Array.from(area.querySelectorAll(":scope > .sphinx-q-card"));
+
+            function reindex() {
+                topCards().forEach((c, i) => {
+                    const lbl = c.querySelector(".sphinx-q-label");
+                    if (lbl) lbl.textContent = `Q${i + 1}`;
+                });
+            }
+
+            function fillJumpTargets(sel) {
+                const cur = sel.value;
+                sel.innerHTML = topCards().map((c, i) => {
+                    const txt = (c.querySelector(".sphinx-q-text")?.value ?? "").trim();
+                    const lbl = `Q${i + 1}${txt ? ": " + txt.slice(0, 22) : ""}`;
+                    const s = c.dataset.qid === cur ? " selected" : "";
+                    return `<option value="${c.dataset.qid}"${s}>${lbl}</option>`;
+                }).join("");
+            }
+
+            function wireQuestion(card, isSubQ) {
+                card.dataset.qid = uid();
+                if (isSubQ) {
+                    card.querySelector(".sphinx-q-label").textContent = "Sub";
+                    card.querySelector(".sphinx-q-label").className = "sphinx-q-label badge bg-secondary opacity-75";
+                }
+                card.querySelector(".sphinx-q-type").addEventListener("change", function () {
+                    card.querySelector(".sphinx-q-body").style.display = this.value === "TEXT" ? "none" : "";
+                    card.querySelector(".sphinx-q-validation").classList.toggle("d-none", this.value !== "TEXT");
+                });
+                card.querySelector(".sphinx-del-q").addEventListener("click", () => {
+                    card.remove();
+                    if (!isSubQ) reindex();
+                });
+                card.querySelector(".sphinx-add-opt").addEventListener("click", () => {
+                    const row = oTpl.content.cloneNode(true).querySelector(".sphinx-opt-row");
+                    wireOption(row);
+                    card.querySelector(".sphinx-opt-list").appendChild(row);
+                });
+                if (!isSubQ) reindex();
+                return card;
+            }
+
+            function ensurePollShape() {
+                if (document.querySelector("input[name='SurveyKind']:checked")?.value !== "POLL") {
+                    addMainQ.classList.remove("d-none");
+                    area.querySelectorAll(".sphinx-add-sub, .sphinx-opt-skip").forEach(el => el.classList.remove("d-none"));
+                    area.querySelectorAll(".sphinx-q-text, .sphinx-opt-text").forEach(input => input.required = false);
+                    return;
+                }
+
+                const cards = topCards();
+                cards.slice(1).forEach(card => card.remove());
+                const card = topCards()[0];
+                if (!card) return;
+
+                const type = card.querySelector(".sphinx-q-type");
+                card.querySelector(".sphinx-q-text").required = true;
+                type.value = "SINGLE";
+                type.dispatchEvent(new Event("change"));
+                type.disabled = true;
+                addMainQ.classList.add("d-none");
+
+                const list = card.querySelector(".sphinx-opt-list");
+                while (list.querySelectorAll(":scope > .sphinx-opt-row").length < 2) {
+                    const row = oTpl.content.cloneNode(true).querySelector(".sphinx-opt-row");
+                    wireOption(row);
+                    list.appendChild(row);
+                }
+                list.querySelectorAll(":scope > .sphinx-opt-row").forEach((row, index) => {
+                    row.querySelector(".sphinx-opt-text").required = index < 2;
+                });
+                card.querySelectorAll(".sphinx-add-sub").forEach(btn => btn.classList.add("d-none"));
+                card.querySelectorAll(".sphinx-opt-skip").forEach(sel => {
+                    sel.value = "END";
+                    sel.classList.add("d-none");
+                });
+                card.querySelectorAll(".sphinx-opt-jump").forEach(sel => sel.classList.add("d-none"));
+                reindex();
+            }
+
+            function wireOption(row) {
+                row.dataset.oid = uid();
+                const skipSel = row.querySelector(".sphinx-opt-skip");
+                const jumpSel = row.querySelector(".sphinx-opt-jump");
+                skipSel.addEventListener("change", function () {
+                    if (this.value === "JUMP") { fillJumpTargets(jumpSel); jumpSel.classList.remove("d-none"); }
+                    else jumpSel.classList.add("d-none");
+                });
+                row.querySelector(".sphinx-add-sub").addEventListener("click", () => {
+                    const subArea = row.querySelector(".sphinx-sub-area");
+                    subArea.style.display = "";
+                    const subCard = qTpl.content.cloneNode(true).querySelector(".sphinx-q-card");
+                    wireQuestion(subCard, true);
+                    row.querySelector(".sphinx-sub-list").appendChild(subCard);
+                });
+                row.querySelector(".sphinx-del-opt").addEventListener("click", () => row.remove());
+                return row;
+            }
+
+            function serQ(card) {
+                const type = card.querySelector(".sphinx-q-type").value;
+                const optRows = type === "TEXT" ? [] :
+                    Array.from(card.querySelector(".sphinx-opt-list")
+                        ?.querySelectorAll(":scope > .sphinx-opt-row") ?? []);
+                return {
+                    clientId: card.dataset.qid,
+                    text: (card.querySelector(".sphinx-q-text")?.value ?? "").trim(),
+                    type,
+                    textValidation: type === "TEXT" ? (card.querySelector(".sphinx-q-validation")?.value ?? "NONE") : "NONE",
+                    options: optRows.map(row => {
+                        const skip = row.querySelector(".sphinx-opt-skip").value;
+                        return {
+                            clientId: row.dataset.oid,
+                            text: (row.querySelector(".sphinx-opt-text")?.value ?? "").trim(),
+                            skipAction: skip,
+                            skipToId: skip === "JUMP" ? (row.querySelector(".sphinx-opt-jump")?.value ?? null) : null,
+                            subQuestions: Array.from(
+                                row.querySelector(".sphinx-sub-list")?.querySelectorAll(":scope > .sphinx-q-card") ?? []
+                            ).map(serQ)
+                        };
+                    })
+                };
+            }
+
+            const firstCard = qTpl.content.cloneNode(true).querySelector(".sphinx-q-card");
+            wireQuestion(firstCard, false);
+            area.appendChild(firstCard);
+
+            addMainQ.addEventListener("click", () => {
+                const card = qTpl.content.cloneNode(true).querySelector(".sphinx-q-card");
+                wireQuestion(card, false);
+                area.appendChild(card);
+            });
+
+            kindInputs.forEach(input => input.addEventListener("change", () => {
+                area.querySelectorAll(".sphinx-q-type").forEach(sel => {
+                    sel.disabled = false;
+                });
+                ensurePollShape();
+            }));
+            form.querySelector("[data-sphinx-import-submit]")?.addEventListener("click", () => {
+                isImportSubmit = true;
+            });
+
+            form.addEventListener("submit", e => {
+                if (isImportSubmit) {
+                    isImportSubmit = false;
+                    return;
+                }
+                area.querySelectorAll(".sphinx-q-type").forEach(sel => {
+                    sel.disabled = false;
+                });
+                ensurePollShape();
+                const questions = topCards().map(serQ);
+                if (!questions.some(q => q.text.length > 0)) {
+                    e.preventDefault();
+                    area.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                    return;
+                }
+                if (document.querySelector("input[name='SurveyKind']:checked")?.value === "POLL") {
+                    const poll = questions[0];
+                    const optionCount = poll?.options?.filter(o => o.text.length > 0).length ?? 0;
+                    if (!poll?.text || poll.type !== "SINGLE" || optionCount < 2) {
+                        e.preventDefault();
+                        area.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                        return;
+                    }
+                }
+                jsonIn.value = JSON.stringify({ questions });
+            });
+        })();
+    </script>
+}
+

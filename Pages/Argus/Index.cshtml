@@ -1,0 +1,746 @@
+@page "/Argus"
+@model DATA_EXCHANGE_HUB.Pages.Argus.IndexModel
+@{
+    ViewData["Title"] = "ARGUS";
+    var previousDate = Model.Dashboard.Date.AddDays(-1).ToString("yyyy-MM-dd");
+    var nextDate = Model.Dashboard.Date.AddDays(1).ToString("yyyy-MM-dd");
+    var finishedEntries = Model.Dashboard.Entries
+        .Where(entry => entry.IsFinished && entry.Duration.HasValue)
+        .OrderByDescending(entry => entry.Duration)
+        .ToArray();
+    var runningEntries = Model.Dashboard.Entries
+        .Where(entry => !entry.IsFinished)
+        .OrderByDescending(entry => entry.Duration)
+        .ToArray();
+    var averageDuration = finishedEntries.Any()
+        ? TimeSpan.FromTicks((long)finishedEntries.Average(entry => entry.Duration!.Value.Ticks))
+        : (TimeSpan?)null;
+    var maxDuration = finishedEntries.FirstOrDefault()?.Duration;
+    var lastFinish = Model.Dashboard.Entries
+        .Where(entry => entry.FinishTime.HasValue)
+        .OrderByDescending(entry => entry.FinishTime)
+        .FirstOrDefault()?.FinishTime;
+    var latestServerMetric = Model.ServerMetrics.LatestServerMetric;
+    int PercentWidth(decimal? value) => value.HasValue
+        ? Math.Clamp((int)Math.Round(value.Value), 0, 100)
+        : 0;
+    var serverHistoryJson = Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ServerMetrics.HistorySamples.Select(sample => new
+    {
+        timestamp = DateTime.SpecifyKind(sample.Timestamp, DateTimeKind.Utc).ToString("O"),
+        cpu = sample.CpuPercent,
+        ram = sample.MemoryUsedPercent
+    })));
+    var latestServerMetricTimestamp = latestServerMetric is null
+        ? null
+        : DateTime.SpecifyKind(latestServerMetric.Timestamp, DateTimeKind.Utc).ToString("O");
+    var serverSignals = new[]
+    {
+        new { Title = "CPU", Value = Model.FormatNumber(latestServerMetric?.CpuPercent, "%"), Hint = "Procesoriaus apkrova", Level = latestServerMetric is null ? "Nera duomenu" : "Live", Width = PercentWidth(latestServerMetric?.CpuPercent), ClassName = "cpu" },
+        new { Title = "RAM", Value = Model.FormatNumber(latestServerMetric?.MemoryUsedPercent, "%"), Hint = $"{Model.FormatNumber(latestServerMetric?.MemoryUsedGb, " GB")} naudota", Level = latestServerMetric is null ? "Nera duomenu" : "Live", Width = PercentWidth(latestServerMetric?.MemoryUsedPercent), ClassName = "ram" },
+        new { Title = "Procesai", Value = Model.ServerMetrics.TopCpuProcesses.Count.ToString(), Hint = "Top CPU procesu eilutes", Level = "SQL", Width = Math.Clamp(Model.ServerMetrics.TopCpuProcesses.Count * 12, 0, 100), ClassName = "process" },
+        new { Title = "NET IN", Value = Model.FormatNumber(latestServerMetric?.NetworkInMbps, " Mbps"), Hint = "Ieinantis srautas", Level = latestServerMetric is null ? "Nera duomenu" : "Live", Width = PercentWidth(latestServerMetric?.NetworkInMbps), ClassName = "net" },
+        new { Title = "NET OUT", Value = Model.FormatNumber(latestServerMetric?.NetworkOutMbps, " Mbps"), Hint = "Iseinantis srautas", Level = latestServerMetric is null ? "Nera duomenu" : "Live", Width = PercentWidth(latestServerMetric?.NetworkOutMbps), ClassName = "net" },
+        new { Title = "Diskas", Value = Model.FormatNumber(latestServerMetric?.DiskUsedPercent, "%"), Hint = latestServerMetric?.DiskName ?? "Diskas", Level = Model.FormatNumber(latestServerMetric?.DiskFreeGb, " GB free"), Width = PercentWidth(latestServerMetric?.DiskUsedPercent), ClassName = "disk" }
+    };
+}
+
+<div class="container-fluid exchange-page pt-4">
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
+                    ARGUS <small class="badge bg-secondary ms-2">RG</small>
+                </h3>
+                <p class="mb-0 text-dark-green">Statistinio serverio darbu busenos.</p>
+            </div>
+
+            <div class="access-panel stacked mb-3">
+                <div>
+                    <span class="field-label">Role</span>
+                    <strong>@(Model.Access.IsAdmin ? "ADMIN" : "USER")</strong>
+                </div>
+                <div>
+                    <span class="field-label">Katalogas</span>
+                    <strong>@(Model.Dashboard.RootExists ? "OK" : "NERA")</strong>
+                </div>
+                <div>
+                    <span class="field-label">Data</span>
+                    <strong>@Model.Dashboard.Date.ToString("yyyy-MM-dd")</strong>
+                </div>
+            </div>
+
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">Grizti i HUB</a>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            <div class="hub-hero mb-4">
+                <div>
+                    <span class="hub-eyebrow">Serveris, procesai, raportai</span>
+                    <h1>ARGUS</h1>
+                    <p>Serverio sveikatos langas ir TASK_STATUS katalogu stebesena pagal START, RUNING ir FINISH irasus.</p>
+                </div>
+            </div>
+
+            <div class="alert alert-warning mb-3" role="alert">
+                Serverio backup laikas nustatytas 22:30. Backup trunka apie 20-25 minutes, todel tuo metu nedekite dideliu skaiciavimu.
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.TaskKillMessage))
+            {
+                <div class="alert alert-success mb-3" role="status">@Model.TaskKillMessage</div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.TaskKillError))
+            {
+                <div class="alert alert-danger mb-3" role="alert">@Model.TaskKillError</div>
+            }
+
+            <ul class="nav nav-tabs argus-main-tabs mb-3" id="argusMainTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link @(!Model.IsCalendarView && !Model.IsQvdView ? "active" : "")" id="argus-server-tab" href="/Argus" role="tab" aria-controls="argus-server-pane" aria-selected="@(!Model.IsCalendarView && !Model.IsQvdView ? "true" : "false")">Serverio rodikliai</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link @(Model.IsCalendarView ? "active" : "")" id="argus-calendar-tab" href="/Argus?view=calendar" role="tab" aria-controls="argus-calendar-pane" aria-selected="@(Model.IsCalendarView ? "true" : "false")">Darbu kalendorius</a>
+                </li>
+                @if (Model.CanViewQvdPreview)
+                {
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link @(Model.IsQvdView ? "active" : "")" id="argus-qvd-tab" href="/Argus?view=qvd" role="tab" aria-controls="argus-qvd-pane" aria-selected="@(Model.IsQvdView ? "true" : "false")">QVD traukiklis</a>
+                    </li>
+                }
+            </ul>
+
+            <div class="tab-content argus-main-tab-content" id="argusMainTabsContent">
+                <section class="argus-observability tab-pane fade @(!Model.IsCalendarView && !Model.IsQvdView ? "show active" : "") mb-4" id="argus-server-pane" role="tabpanel" aria-labelledby="argus-server-tab" tabindex="0">
+                <div class="section-title-row">
+                    <div>
+                        <span class="hub-eyebrow">SQL metrikos</span>
+                        <h2 id="argus-observability-title">Serverio rodikliai</h2>
+                    </div>
+                    <span class="status-pill" data-local-datetime="@latestServerMetricTimestamp">@(latestServerMetric is null ? "Nera duomenu" : Model.FormatDateTime(latestServerMetric.Timestamp))</span>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.ServerMetricsError))
+                {
+                    <div class="alert alert-warning" role="alert">Serverio KPI nepavyko nuskaityti: @Model.ServerMetricsError</div>
+                }
+                else if (!Model.ServerMetrics.HasData)
+                {
+                    <div class="alert alert-info" role="status">Serverio KPI lentelese dar nerasta irasu.</div>
+                }
+
+                <div class="argus-signal-grid mb-3">
+                    @foreach (var signal in serverSignals)
+                    {
+                        <article class="argus-signal-card argus-signal-@signal.ClassName">
+                            <div class="argus-signal-head">
+                                <span>@signal.Title</span>
+                                <strong>@signal.Value</strong>
+                            </div>
+                            <div class="argus-signal-track" aria-hidden="true">
+                                <span style="width: @signal.Width%"></span>
+                            </div>
+                            <div class="argus-signal-foot">
+                                <small>@signal.Hint</small>
+                                <span>@signal.Level</span>
+                            </div>
+                        </article>
+                    }
+                </div>
+
+
+                <article class="argus-panel argus-history-panel mb-3">
+                    <div class="section-title-row compact">
+                        <h3>CPU ir RAM kreives</h3>
+                        <span class="status-pill-muted">6 val. / 5 min</span>
+                    </div>
+                    <div class="argus-chart-wrap">
+                        <canvas id="argusCpuRamChart" width="1200" height="300" aria-label="CPU ir RAM naudojimo kreives per paskutines 6 valandas" role="img"></canvas>
+                    </div>
+                </article>
+                <div class="argus-dashboard-grid">
+                                        <article class="argus-panel">
+                        <div class="section-title-row compact">
+                            <h3>Top CPU procesai</h3>
+                            <span class="status-pill-muted">@Model.ServerMetrics.TopCpuProcesses.Count</span>
+                        </div>
+                        <div class="argus-process-list">
+                            @foreach (var row in Model.ServerMetrics.TopCpuProcesses)
+                            {
+                                <div class="argus-process-row">
+                                    <div>
+                                        <strong>@row.ProcessName</strong>
+                                        <small>PID @(row.Pid?.ToString() ?? "-") � @Model.FormatDateTime(row.StartTime)</small>
+                                    </div>
+                                    <span class="status-pill">CPU</span>
+                                    <span>@Model.FormatNumber(row.CpuPercent, "%")</span>
+                                    <span>@Model.FormatNumber(row.MemoryMb, " MB", 0)</span>
+                                </div>
+                            }
+                        </div>
+                    </article>
+
+                    <article class="argus-panel">
+                        <div class="section-title-row compact">
+                            <h3>Top RAM procesai</h3>
+                            <span class="status-pill-muted">@Model.ServerMetrics.TopMemoryProcesses.Count</span>
+                        </div>
+                        <div class="argus-process-list">
+                            @foreach (var row in Model.ServerMetrics.TopMemoryProcesses)
+                            {
+                                <div class="argus-process-row">
+                                    <div>
+                                        <strong>@row.ProcessName</strong>
+                                        <small>PID @(row.Pid?.ToString() ?? "-") � veikimo s @((row.RuntimeSeconds?.ToString()) ?? "-")</small>
+                                    </div>
+                                    <span class="status-pill status-pill-muted">RAM</span>
+                                    <span>@Model.FormatNumber(row.CpuPercent, "%")</span>
+                                    <span>@Model.FormatNumber(row.MemoryMb, " MB", 0)</span>
+                                </div>
+                            }
+                        </div>
+                    </article>
+                </div>
+            
+                <article class="argus-panel argus-qv-panel mt-3">
+                    <div class="section-title-row compact">
+                        <h3>Visi QV procesai</h3>
+                        <span class="status-pill-muted">@Model.ServerMetrics.QvProcesses.Count</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle exchange-table argus-qv-table">
+                            <thead>
+                                <tr>
+                                    @if (Model.CanKillPid)
+                                    {
+                                        <th>Veiksmas</th>
+                                    }
+                                    <th>Procesas</th>
+                                    <th>PID</th>
+                                    <th>CPU</th>
+                                    <th>RAM</th>
+                                    <th>Paleista</th>
+                                    <th>Skaiciuojasi</th>
+                                    <th>Command line</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!Model.ServerMetrics.QvProcesses.Any())
+                                {
+                                    <tr><td colspan="@(Model.CanKillPid ? 8 : 7)" class="text-muted">QV procesu paskutiniame serverio snapshot'e nerasta.</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (var row in Model.ServerMetrics.QvProcesses)
+                                    {
+                                        <tr>
+                                            @if (Model.CanKillPid)
+                                            {
+                                                <td>
+                                                    @if (row.Pid.HasValue && row.Pid.Value > 0)
+                                                    {
+                                                        var isKillQueued = Model.QueuedKillPids.Contains(row.Pid.Value);
+                                                        <form method="post" asp-page-handler="KillPid" class="m-0">
+                                                            <input type="hidden" name="pid" value="@row.Pid.Value" />
+                                                            <button type="submit" class="btn btn-sm @(isKillQueued ? "btn-danger" : "btn-outline-danger")">@(isKillQueued ? "ABORT KILL PID" : "KILL PID")</button>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted">-</span>
+                                                    }
+                                                </td>
+                                            }
+                                            <td><strong>@row.ProcessName</strong></td>
+                                            <td>@(row.Pid?.ToString() ?? "-")</td>
+                                            <td>@Model.FormatNumber(row.CpuPercent, "%")</td>
+                                            <td>@Model.FormatNumber(row.MemoryMb, " MB", 0)</td>
+                                            <td>@Model.FormatDateTime(row.StartTime)</td>
+                                            <td>@Model.FormatSeconds(row.RuntimeSeconds)</td>
+                                            <td class="argus-command-line" title="@row.CommandLine">@(string.IsNullOrWhiteSpace(row.CommandLine) ? "-" : row.CommandLine)</td>
+</tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </article></section>
+
+                <section class="hub-board tab-pane fade @(Model.IsCalendarView ? "show active" : "") mb-4" id="argus-calendar-pane" role="tabpanel" aria-labelledby="argus-calendar-tab" tabindex="0">
+                <div class="section-title-row">
+                    <h2>Darbu kalendorius</h2>
+                    <span class="status-pill">@Model.Dashboard.RootPath</span>
+                </div>
+
+                <form method="get" action="/Argus" class="d-flex flex-wrap gap-2 align-items-end mb-3">
+                    <a class="btn btn-outline-secondary" href="/Argus?view=calendar&Date=@previousDate">Ankstesne</a>
+                    <div>
+                        <label class="form-label" for="argusDate">Data</label>
+                        <input type="hidden" name="view" value="calendar" />
+                        <input id="argusDate" class="form-control" name="Date" type="date" value="@Model.Dashboard.Date.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <button class="btn btn-orange" type="submit">Rodyti</button>
+                    <a class="btn btn-outline-secondary" href="/Argus?view=calendar&Date=@nextDate">Kita</a>
+                    <a class="btn btn-outline-secondary" href="/Argus?view=calendar">Siandien</a>
+                </form>
+
+                @if (!Model.Dashboard.RootExists)
+                {
+                    <div class="alert alert-warning" role="alert">TASK_STATUS katalogas nerastas: @Model.Dashboard.RootPath</div>
+                }
+
+                <ul class="nav nav-tabs argus-tabs mb-3" id="argusTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="task-status-tab" data-bs-toggle="tab" data-bs-target="#task-status-pane" type="button" role="tab" aria-controls="task-status-pane" aria-selected="true">TASK_STATUS</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="server-kpi-tab" data-bs-toggle="tab" data-bs-target="#server-kpi-pane" type="button" role="tab" aria-controls="server-kpi-pane" aria-selected="false">Serverio KPI</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="slow-jobs-tab" data-bs-toggle="tab" data-bs-target="#slow-jobs-pane" type="button" role="tab" aria-controls="slow-jobs-pane" aria-selected="false">Ilgiausi darbai</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="days-tab" data-bs-toggle="tab" data-bs-target="#days-pane" type="button" role="tab" aria-controls="days-pane" aria-selected="false">Dienos</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="argusTabsContent">
+                    <div class="tab-pane fade show active" id="task-status-pane" role="tabpanel" aria-labelledby="task-status-tab" tabindex="0">
+                        <div class="hub-metrics argus-calendar-metrics mb-4">
+                            @foreach (var metric in Model.Metrics)
+                            {
+                                <div class="metric-card">
+                                    <small>@metric.Title</small>
+                                    <h4>@metric.Value</h4>
+                                    <span class="text-muted">@metric.Hint</span>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle exchange-table">
+                                <thead>
+                                    <tr>
+                                        <th>Triggeris</th>
+                                        <th>Busena</th>
+                                        <th>START</th>
+                                        <th>RUNING</th>
+                                        <th>FINISH</th>
+                                        <th>Trukme</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (!Model.Dashboard.Entries.Any())
+                                    {
+                                        <tr>
+                                            <td colspan="6" class="text-muted">Pasirinktai dienai irasu nerasta.</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var entry in Model.Dashboard.Entries)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <strong>@entry.TriggerName</strong>
+                                                    <div class="text-muted small">@entry.TaskKey</div>
+                                                </td>
+                                                <td><span class="status-pill @(entry.IsFinished ? "" : "status-pill-muted")">@(entry.IsFinished ? "Baigta" : "Skaiciuoja")</span></td>
+                                                <td title="@entry.StartFile">@Model.FormatTime(entry.StartTime)</td>
+                                                <td title="@entry.RunningFile">@Model.FormatTime(entry.RunningTime)</td>
+                                                <td title="@entry.FinishFile">@Model.FormatTime(entry.FinishTime)</td>
+                                                <td>@Model.FormatDuration(entry.Duration)</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="server-kpi-pane" role="tabpanel" aria-labelledby="server-kpi-tab" tabindex="0">
+                        <div class="hub-metrics mb-4">
+                            <div class="metric-card">
+                                <small>Vyksta</small>
+                                <h4>@runningEntries.Length</h4>
+                                <span class="text-muted">START be FINISH</span>
+                            </div>
+                            <div class="metric-card">
+                                <small>Baigta</small>
+                                <h4>@finishedEntries.Length</h4>
+                                <span class="text-muted">Su FINISH irasu</span>
+                            </div>
+                            <div class="metric-card">
+                                <small>Vid. trukme</small>
+                                <h4>@Model.FormatDuration(averageDuration)</h4>
+                                <span class="text-muted">Tik baigti darbai</span>
+                            </div>
+                            <div class="metric-card">
+                                <small>Ilgiausia</small>
+                                <h4>@Model.FormatDuration(maxDuration)</h4>
+                                <span class="text-muted">Pasirinkta diena</span>
+                            </div>
+                            <div class="metric-card">
+                                <small>Pask. FINISH</small>
+                                <h4>@Model.FormatTime(lastFinish)</h4>
+                                <span class="text-muted">Naujausias uzbaigimas</span>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle exchange-table">
+                                <thead>
+                                    <tr>
+                                        <th>KPI</th>
+                                        <th>Reiksme</th>
+                                        <th>Pastaba</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Viso triggeriu</td><td>@Model.Dashboard.Entries.Count</td><td>START pagrindu rasti darbai</td></tr>
+                                    <tr><td>Vyksta</td><td>@runningEntries.Length</td><td>Neturi FINISH failo</td></tr>
+                                    <tr><td>Baigta</td><td>@finishedEntries.Length</td><td>Turi FINISH faila</td></tr>
+                                    <tr><td>Vidutine trukme</td><td>@Model.FormatDuration(averageDuration)</td><td>Baigtu darbu vidurkis</td></tr>
+                                    <tr><td>Ilgiausia trukme</td><td>@Model.FormatDuration(maxDuration)</td><td>Ilgiausias baigtas darbas</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="slow-jobs-pane" role="tabpanel" aria-labelledby="slow-jobs-tab" tabindex="0">
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle exchange-table">
+                                <thead>
+                                    <tr>
+                                        <th>Triggeris</th>
+                                        <th>Busena</th>
+                                        <th>START</th>
+                                        <th>FINISH</th>
+                                        <th>Trukme</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (!finishedEntries.Any() && !runningEntries.Any())
+                                    {
+                                        <tr><td colspan="5" class="text-muted">Pasirinktai dienai KPI irasu nerasta.</td></tr>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var entry in runningEntries.Concat(finishedEntries).Take(30))
+                                        {
+                                            <tr>
+                                                <td><strong>@entry.TriggerName</strong></td>
+                                                <td><span class="status-pill @(entry.IsFinished ? "" : "status-pill-muted")">@(entry.IsFinished ? "Baigta" : "Skaiciuoja")</span></td>
+                                                <td>@Model.FormatTime(entry.StartTime)</td>
+                                                <td>@Model.FormatTime(entry.FinishTime)</td>
+                                                <td>@Model.FormatDuration(entry.Duration)</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="days-pane" role="tabpanel" aria-labelledby="days-tab" tabindex="0">
+                        <div class="section-title-row">
+                            <h2>Dienu santrauka</h2>
+                            <span class="status-pill">Pasirinkta diena</span>
+                        </div>
+                        <div class="hub-app-grid">
+                            @foreach (var day in Model.Dashboard.Days)
+                            {
+                                <a class="app-tile text-decoration-none" href="@($"/Argus?view=calendar&Date={day.Date:yyyy-MM-dd}")">
+                                    <span class="app-tile-icon">@day.Date.ToString("dd")</span>
+                                    <span class="app-tile-body">
+                                        <span class="app-tile-title">@day.Date.ToString("yyyy-MM-dd")</span>
+                                        <span class="app-tile-desc">START @day.Started � FINISH @day.Finished � vyksta @Math.Max(0, day.Running)</span>
+                                    </span>
+                                    <span class="app-status">@day.Date.ToString("ddd")</span>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </section>
+                @if (Model.CanViewQvdPreview)
+                {
+                    <section class="hub-board tab-pane fade @(Model.IsQvdView ? "show active" : "") mb-4" id="argus-qvd-pane" role="tabpanel" aria-labelledby="argus-qvd-tab" tabindex="0">
+                        <div class="section-title-row">
+                            <div>
+                                <span class="hub-eyebrow">QVD reader</span>
+                                <h2>QVD traukiklis</h2>
+                            </div>
+                            <span class="status-pill">Data/Apis/Qvd</span>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.QvdPreviewError))
+                        {
+                            <div class="alert alert-warning" role="alert">QVD preview nepavyko nuskaityti: @Model.QvdPreviewError</div>
+                        }
+
+                        @if (Model.QvdFiles.Count == 0)
+                        {
+                            <div class="empty-state">
+                                <div>QVD failu sukonfiguruotuose aplankuose nerasta.</div>
+                                @if (Model.QvdRoots.Count > 0)
+                                {
+                                    <div class="mt-2 small">
+                                        @foreach (var root in Model.QvdRoots)
+                                        {
+                                            <div>@root.Path - @(root.Exists ? "pasiekiamas" : "nepasiekiamas")</div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <form method="get" action="/Argus" class="row g-3 align-items-end mb-3">
+                                <input type="hidden" name="view" value="qvd" />
+                                <div class="col-lg-8">
+                                    <label class="form-label" for="argusQvdFile">QVD failas</label>
+                                    <select class="form-select" id="argusQvdFile" name="QvdFileId" onchange="this.form.submit()">
+                                        @foreach (var qvdFile in Model.QvdFiles)
+                                        {
+                                            <option value="@qvdFile.Id" selected="@(qvdFile.Id.Equals(Model.QvdFileId, StringComparison.OrdinalIgnoreCase))">@qvdFile.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-lg-4">
+                                    <button type="submit" class="btn btn-outline-primary w-100">Perkrauti QVD</button>
+                                </div>
+                            </form>
+
+                            @if (Model.QvdPreview is not null)
+                            {
+                                <div class="hub-metrics my-3">
+                                    <div class="metric-card">
+                                        <small>Irasai QVD</small>
+                                        <h4>@Model.QvdPreview.TotalRecords</h4>
+                                    </div>
+                                    <div class="metric-card">
+                                        <small>Stulpeliai</small>
+                                        <h4>@Model.QvdPreview.Fields.Count</h4>
+                                    </div>
+                                    <div class="metric-card">
+                                        <small>Preview</small>
+                                        <h4>@Model.QvdPreview.Rows.Count</h4>
+                                    </div>
+                                    <div class="metric-card">
+                                        <small>Create UTC</small>
+                                        <h4>@(Model.QvdPreview.File.CreateUtcTime?.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) ?? "-")</h4>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info" role="status">
+                                    <strong>CreatorDoc:</strong> @(string.IsNullOrWhiteSpace(Model.QvdPreview.File.CreatorDoc) ? "-" : Model.QvdPreview.File.CreatorDoc)
+                                </div>
+
+                                @if (!string.IsNullOrWhiteSpace(Model.QvdPreview.Warning))
+                                {
+                                    <div class="alert alert-warning" role="status">@Model.QvdPreview.Warning</div>
+                                }
+
+                                <div class="table-responsive exchange-table-wrap mb-3">
+                                    <table class="table align-middle exchange-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Field</th>
+                                                <th>Symbols</th>
+                                                <th>Format</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var field in Model.QvdPreview.Fields)
+                                            {
+                                                <tr>
+                                                    <td>@field.Name</td>
+                                                    <td>@(field.SymbolCount?.ToString(System.Globalization.CultureInfo.CurrentCulture) ?? string.Empty)</td>
+                                                    <td>@field.NumberFormat</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                @if (Model.QvdPreview.Rows.Count > 0)
+                                {
+                                    <div class="table-responsive exchange-table-wrap">
+                                        <table class="table align-middle exchange-table">
+                                            <thead>
+                                                <tr>
+                                                    @foreach (var field in Model.QvdPreview.Fields)
+                                                    {
+                                                        <th>@field.Name</th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var row in Model.QvdPreview.Rows)
+                                                {
+                                                    <tr>
+                                                        @foreach (var field in Model.QvdPreview.Fields)
+                                                        {
+                                                            <td>@(row.TryGetValue(field.Name, out var value) ? value : string.Empty)</td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                            }
+                        }
+                    </section>
+                }
+        </section>
+    </div>
+</div>
+
+
+
+
+
+
+@section Scripts {
+    <script>
+        (() => {
+            const hash = window.location.hash;
+            if (hash) {
+                const tab = document.querySelector(`[data-bs-target="${hash}"]`);
+                if (tab && window.bootstrap?.Tab) {
+                    window.bootstrap.Tab.getOrCreateInstance(tab).show();
+                }
+            }
+
+            const history = @serverHistoryJson;
+            const localTimeFormatter = new Intl.DateTimeFormat(undefined, {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+                hourCycle: 'h23'
+            });
+            const localDateTimeFormatter = new Intl.DateTimeFormat(undefined, {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                hourCycle: 'h23'
+            });
+            document.querySelectorAll('[data-local-datetime]').forEach(element => {
+                const timestamp = element.getAttribute('data-local-datetime');
+                if (!timestamp) {
+                    return;
+                }
+
+                const date = new Date(timestamp);
+                if (!Number.isNaN(date.getTime())) {
+                    element.textContent = localDateTimeFormatter.format(date);
+                    element.title = timestamp;
+                }
+            });
+            const canvas = document.getElementById('argusCpuRamChart');
+            if (!canvas) {
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = Math.max(1, Math.round(rect.width * dpr));
+            canvas.height = Math.round(300 * dpr);
+            ctx.scale(dpr, dpr);
+
+            const width = rect.width;
+            const height = 300;
+            const pad = { left: 44, right: 18, top: 24, bottom: 38 };
+            const plotWidth = width - pad.left - pad.right;
+            const plotHeight = height - pad.top - pad.bottom;
+            ctx.clearRect(0, 0, width, height);
+            ctx.font = '12px Segoe UI, sans-serif';
+            ctx.lineWidth = 1;
+
+            const drawText = (text, x, y, align = 'left', color = '#60756a') => {
+                ctx.fillStyle = color;
+                ctx.textAlign = align;
+                ctx.fillText(text, x, y);
+            };
+
+            if (!history.length) {
+                drawText('6 valandu CPU/RAM istorijos irasu nerasta.', width / 2, height / 2, 'center');
+                return;
+            }
+
+            ctx.strokeStyle = '#d7e8cd';
+            for (let value = 0; value <= 100; value += 25) {
+                const y = pad.top + plotHeight - (value / 100) * plotHeight;
+                ctx.beginPath();
+                ctx.moveTo(pad.left, y);
+                ctx.lineTo(width - pad.right, y);
+                ctx.stroke();
+                drawText(`${value}%`, pad.left - 8, y + 4, 'right');
+            }
+
+            const pointX = index => pad.left + (history.length === 1 ? plotWidth : (index / (history.length - 1)) * plotWidth);
+            const pointY = value => pad.top + plotHeight - (Math.max(0, Math.min(100, value || 0)) / 100) * plotHeight;
+
+            const drawLine = (key, color) => {
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                let started = false;
+                history.forEach((row, index) => {
+                    if (row[key] === null || row[key] === undefined) {
+                        return;
+                    }
+                    const x = pointX(index);
+                    const y = pointY(row[key]);
+                    if (!started) {
+                        ctx.moveTo(x, y);
+                        started = true;
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                });
+                ctx.stroke();
+            };
+
+            drawLine('cpu', '#f28c28');
+            drawLine('ram', '#173d23');
+
+            const labelStep = Math.max(1, Math.ceil(history.length / 8));
+            history.forEach((row, index) => {
+                if (index % labelStep === 0 || index === history.length - 1) {
+                    const date = new Date(row.timestamp);
+                    const label = Number.isNaN(date.getTime())
+                        ? ''
+                        : localTimeFormatter.format(date);
+                    drawText(label, pointX(index), height - 14, 'center');
+                }
+            });
+
+            const last = history[history.length - 1];
+            const cpuLabel = typeof last.cpu === 'number' ? last.cpu.toFixed(1) : '-';
+            const ramLabel = typeof last.ram === 'number' ? last.ram.toFixed(1) : '-';
+            drawText(`CPU ${cpuLabel}%`, width - 150, 18, 'left', '#f28c28');
+            drawText(`RAM ${ramLabel}%`, width - 76, 18, 'left', '#173d23');
+        })();
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

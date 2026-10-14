@@ -1,0 +1,663 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Header.Subtitle" xml:space="preserve">
+    <value>Vidiniu aplikaciju centras</value>
+  </data>
+  <data name="Language.Lithuanian" xml:space="preserve">
+    <value>Lietuviu kalba</value>
+  </data>
+  <data name="Language.English" xml:space="preserve">
+    <value>Anglu kalba</value>
+  </data>
+  <data name="Common.Active" xml:space="preserve"><value>Aktyvu</value></data>
+  <data name="Common.AccessDenied" xml:space="preserve"><value>Prieiga nesuteikta</value></data>
+  <data name="Common.Applications" xml:space="preserve"><value>Aplikacijos</value></data>
+  <data name="Common.Application" xml:space="preserve"><value>Aplikacija</value></data>
+  <data name="Common.BackToHub" xml:space="preserve"><value>Grizti i HUB</value></data>
+  <data name="Common.ContactForAccess" xml:space="preserve"><value>Del teisiu kreiptis</value></data>
+  <data name="Common.File" xml:space="preserve"><value>Failas</value></data>
+  <data name="Common.No" xml:space="preserve"><value>Ne</value></data>
+  <data name="Common.Status" xml:space="preserve"><value>Busena</value></data>
+  <data name="Common.Type" xml:space="preserve"><value>Tipas</value></data>
+  <data name="Common.User" xml:space="preserve"><value>Vartotojas</value></data>
+  <data name="Common.Yes" xml:space="preserve"><value>Taip</value></data>
+  <data name="Common.Add" xml:space="preserve"><value>Prideti</value></data>
+  <data name="Common.Clear" xml:space="preserve"><value>Isvalyti</value></data>
+  <data name="Common.Delete" xml:space="preserve"><value>Salinti</value></data>
+  <data name="Common.Empty" xml:space="preserve"><value>Tuscia</value></data>
+  <data name="Common.SaveChanges" xml:space="preserve"><value>Issaugoti pakeitimus</value></data>
+  <data name="Common.Title" xml:space="preserve"><value>Pavadinimas</value></data>
+  <data name="Sphinx.CreateSurvey" xml:space="preserve"><value>Kurti apklausa</value></data>
+  <data name="Sphinx.TotalSurveys" xml:space="preserve"><value>Viso apklausu</value></data>
+  <data name="Sphinx.ManagementList" xml:space="preserve"><value>Valdymo sarasas</value></data>
+  <data name="Sphinx.NoSurveys" xml:space="preserve"><value>Apklausu dar nesukurta.</value></data>
+  <data name="Sphinx.LimitMode" xml:space="preserve"><value>Apklausos galiojimas</value></data>
+  <data name="Sphinx.Limit.None" xml:space="preserve"><value>Neterminuotai</value></data>
+  <data name="Sphinx.Limit.Count" xml:space="preserve"><value>Iki respondentų skaičiaus</value></data>
+  <data name="Sphinx.Limit.Date" xml:space="preserve"><value>Iki datos</value></data>
+  <data name="Sphinx.MaxResponses" xml:space="preserve"><value>Maksimalus respondentų skaičius</value></data>
+  <data name="Sphinx.ExpiresAt" xml:space="preserve"><value>Galioja iki</value></data>
+  <data name="Sphinx.QuestionCount" xml:space="preserve"><value>Klausimai</value></data>
+  <data name="Sphinx.ResponseCount" xml:space="preserve"><value>Atsakymai</value></data>
+  <data name="Sphinx.Limit" xml:space="preserve"><value>Limitas</value></data>
+  <data name="Sphinx.Respondents" xml:space="preserve"><value>respondentai</value></data>
+  <data name="Sphinx.CreatedAt" xml:space="preserve"><value>Sukurta</value></data>
+  <data name="Sphinx.Close" xml:space="preserve"><value>Uzdaryti</value></data>
+  <data name="Sphinx.ConfirmClose" xml:space="preserve"><value>Ar tikrai norite uzdaryti sia apklausa?</value></data>
+  <data name="Sphinx.Status.Closed" xml:space="preserve"><value>Uzdaryta</value></data>
+  <data name="Sphinx.Guide.Single" xml:space="preserve"><value>Vienas atsakymas</value></data>
+  <data name="Sphinx.Guide.Multi" xml:space="preserve"><value>Keli atsakymai</value></data>
+  <data name="Sphinx.Guide.SubQuestion" xml:space="preserve"><value>Subklausimas</value></data>
+  <data name="Sphinx.Guide.Contacts" xml:space="preserve"><value>Kontaktai</value></data>
+  <data name="Sphinx.Guide.Chair" xml:space="preserve"><value>Kede</value></data>
+  <data name="Sphinx.Guide.Monitor" xml:space="preserve"><value>Monitorius</value></data>
+  <data name="Sphinx.Guide.Quiet" xml:space="preserve"><value>Tyla</value></data>
+  <data name="Sphinx.Guide.ErgonomicChair" xml:space="preserve"><value>Ergonomine kede</value></data>
+  <data name="Sphinx.Guide.AdditionalMonitor" xml:space="preserve"><value>Papildomas monitorius</value></data>
+  <data name="Sphinx.ExcelTemplate" xml:space="preserve"><value>Excel template</value></data>
+  <data name="Sphinx.SurveyKind" xml:space="preserve"><value>Tipas</value></data>
+  <data name="Sphinx.SurveyKind.Survey" xml:space="preserve"><value>Pilna apklausa</value></data>
+  <data name="Sphinx.SurveyKind.Poll" xml:space="preserve"><value>Greitas balsavimas</value></data>
+  <data name="Sphinx.Anonymity" xml:space="preserve"><value>Atsakymu anonimiskumas</value></data>
+  <data name="Sphinx.Anonymity.Anonymous" xml:space="preserve"><value>Anoniminiai atsakymai</value></data>
+  <data name="Sphinx.Anonymity.Named" xml:space="preserve"><value>Vardiniai atsakymai</value></data>
+  <data name="Sphinx.Anonymity.Help" xml:space="preserve"><value>Anonimine apklausa fiksuoja vartotoja tik pakartotinio pildymo kontrolei, o rezultatu eksporte vardas nuasmeninamas.</value></data>
+  <data name="Sphinx.Import.Title" xml:space="preserve"><value>Importuoti is Excel</value></data>
+  <data name="Sphinx.Import.Submit" xml:space="preserve"><value>Importuoti kaip nauja apklausa</value></data>
+  <data name="Sphinx.Import.Help" xml:space="preserve"><value>Importas naudoja ta pati Excel template struktura. Pavadinimas, tipas, limitai ir anonimiskumas imami is formos lauku virsuje.</value></data>
+  <data name="Sphinx.Results" xml:space="preserve"><value>Rezultatai</value></data>
+  <data name="Sphinx.Validation.Text" xml:space="preserve"><value>Tekstas</value></data>
+  <data name="Sphinx.Validation.Email" xml:space="preserve"><value>El. pastas</value></data>
+  <data name="Sphinx.Validation.Phone" xml:space="preserve"><value>Telefonas</value></data>
+  <data name="Sphinx.Validation.Number" xml:space="preserve"><value>Skaicius</value></data>
+  <data name="Sphinx.Error.TitleRequired" xml:space="preserve"><value>Apklausos pavadinimas privalomas.</value></data>
+  <data name="Sphinx.Error.QuestionRequired" xml:space="preserve"><value>Apklausa turi tureti bent viena klausima.</value></data>
+  <data name="Sphinx.Error.SelectExcelFile" xml:space="preserve"><value>Pasirinkite Excel faila importui.</value></data>
+  <data name="Sphinx.Error.InvalidExcelFile" xml:space="preserve"><value>Importui naudokite .xlsx arba .xlsm Excel faila.</value></data>
+  <data name="Sphinx.Error.ImportTitleRequired" xml:space="preserve"><value>Pries importuojant nurodykite naujos apklausos pavadinima.</value></data>
+  <data name="Sphinx.Success.Created" xml:space="preserve"><value>Apklausa sukurta.</value></data>
+  <data name="Sphinx.Success.Closed" xml:space="preserve"><value>Apklausa uzdaryta.</value></data>
+  <data name="Sphinx.Success.Imported" xml:space="preserve"><value>Apklausa importuota.</value></data>
+  <data name="Spinkx.Questions" xml:space="preserve"><value>klausimai</value></data>
+  <data name="Spinkx.Respondents" xml:space="preserve"><value>respondentai</value></data>
+  <data name="Spinkx.Until" xml:space="preserve"><value>iki</value></data>
+  <data name="Spinkx.FillSurvey" xml:space="preserve"><value>Pildyti apklausa</value></data>
+  <data name="Spinkx.EditAnswer" xml:space="preserve"><value>Redaguoti atsakyma</value></data>
+  <data name="Spinkx.AlreadyFilled" xml:space="preserve"><value>Uzpildyta</value></data>
+  <data name="Spinkx.CanUpdate" xml:space="preserve"><value>galite atnaujinti</value></data>
+  <data name="Spinkx.BackToList" xml:space="preserve"><value>Apklausu sarasas</value></data>
+  <data name="Spinkx.SurveyClosed" xml:space="preserve"><value>Si apklausa jau uzdaryta ir nebepasiekiama.</value></data>
+  <data name="Spinkx.Submit" xml:space="preserve"><value>Pateikti atsakymus</value></data>
+  <data name="Spinkx.UpdateAnswer" xml:space="preserve"><value>Atnaujinti atsakymus</value></data>
+  <data name="Spinkx.TextPlaceholder" xml:space="preserve"><value>Iveskite atsakyma...</value></data>
+  <data name="Spinkx.AnswerAtLeastOne" xml:space="preserve"><value>Prasome atsakyti bent i viena klausima.</value></data>
+  <data name="DataExchange.AccessMode" xml:space="preserve"><value>Rezimas</value></data>
+  <data name="DataExchange.AddFilter" xml:space="preserve"><value>Prideti filtra</value></data>
+  <data name="DataExchange.AddRow" xml:space="preserve"><value>Prideti irasa</value></data>
+  <data name="DataExchange.ActiveStatus" xml:space="preserve"><value>Aktyvus</value></data>
+  <data name="DataExchange.AuditLog" xml:space="preserve"><value>Audit log</value></data>
+  <data name="DataExchange.AuditStatus" xml:space="preserve"><value>Statusas</value></data>
+  <data name="DataExchange.ChangedColumns" xml:space="preserve"><value>Stulpeliai</value></data>
+  <data name="DataExchange.CanReceive" xml:space="preserve"><value>Gali gauti</value></data>
+  <data name="DataExchange.CanUpload" xml:space="preserve"><value>Gali ikelti</value></data>
+  <data name="DataExchange.ClearFilters" xml:space="preserve"><value>Isvalyti filtrus</value></data>
+  <data name="DataExchange.Column" xml:space="preserve"><value>Stulpelis</value></data>
+  <data name="DataExchange.ConfirmDeleteFiltered" xml:space="preserve"><value>Ar tikrai trinti {0} irasu pagal aktyvius filtrus?</value></data>
+  <data name="DataExchange.ConfirmDeleteRow" xml:space="preserve"><value>Ar tikrai salinti si teisiu irasa?</value></data>
+  <data name="DataExchange.ConfirmRevertLog" xml:space="preserve"><value>Ar tikrai atstatyti audit irasa #{0}?</value></data>
+  <data name="DataExchange.ConfirmFilteredDelete" xml:space="preserve"><value>Patvirtinti trynima</value></data>
+  <data name="DataExchange.DeleteByFilter" xml:space="preserve"><value>Trynimas pagal filtra</value></data>
+  <data name="DataExchange.DeleteByFilterTitle" xml:space="preserve"><value>Pirmiausia suskaiciuoja pagal filtrus atrinktas eilutes</value></data>
+  <data name="DataExchange.DeletePreviewBody" xml:space="preserve"><value>Patvirtinkite tik jei filtrai tiksliai atitinka norima bloka.</value></data>
+  <data name="DataExchange.DeletePreviewTitle" xml:space="preserve"><value>Pagal aktyvius filtrus bus trinama: {0} irasu.</value></data>
+  <data name="DataExchange.EmptySearch" xml:space="preserve"><value>Lenteliu pagal paieska nerasta.</value></data>
+  <data name="DataExchange.ExportExcel" xml:space="preserve"><value>Eksportuoti Excel</value></data>
+  <data name="DataExchange.Filters" xml:space="preserve"><value>Filtrai</value></data>
+  <data name="DataExchange.Filter" xml:space="preserve"><value>Filtruoti</value></data>
+  <data name="DataExchange.FilterValidationBetween" xml:space="preserve"><value>BETWEEN filtrui iveskite dvi reiksmes formatu nuo..iki.</value></data>
+  <data name="DataExchange.FilterValidationIn" xml:space="preserve"><value>IN filtrui iveskite bent viena reiksme.</value></data>
+  <data name="DataExchange.FilterValidationRequired" xml:space="preserve"><value>Kiekvienam aktyviam filtrui pasirinkite stulpeli ir reiksme.</value></data>
+  <data name="DataExchange.NoInsertableColumns" xml:space="preserve"><value>Sioje lenteleje nera stulpeliu, kuriuos galima pildyti rankiniu budu.</value></data>
+  <data name="DataExchange.ImportExcel" xml:space="preserve"><value>Ikelti Excel</value></data>
+  <data name="DataExchange.NoAccess" xml:space="preserve"><value>Siam Windows vartotojui lenteleje [BLS_LOGIT_STAT].[dbo].[BS_EXCHANGE_ACCESS] nera aktyviu Data Exchange teisiu.</value></data>
+  <data name="DataExchange.NoData" xml:space="preserve"><value>Lenteleje nera duomenu pagal pasirinkta rezima.</value></data>
+  <data name="DataExchange.NoReceive" xml:space="preserve"><value>Siai lentelei perziuros teise nesuteikta. Galimas tik nauju irasu pridejimas.</value></data>
+  <data name="DataExchange.SearchPlaceholder" xml:space="preserve"><value>Ieskoti lenteles</value></data>
+  <data name="DataExchange.Select" xml:space="preserve"><value>Pasirinkti</value></data>
+  <data name="DataExchange.Subtitle" xml:space="preserve"><value>SQL lenteles, kurias vartotojas gali pasiekti pagal priskirtas teises.</value></data>
+  <data name="DataExchange.Tables" xml:space="preserve"><value>Lenteles</value></data>
+  <data name="DataExchange.Time" xml:space="preserve"><value>Laikas</value></data>
+  <data name="DataExchange.TopRows" xml:space="preserve"><value>Top eiluciu skaicius</value></data>
+  <data name="DataExchange.Upload" xml:space="preserve"><value>Ikelti</value></data>
+  <data name="DataExchange.PageInfo" xml:space="preserve"><value>Puslapis {0}, rodoma iki {1} eil.</value></data>
+  <data name="DataExchange.Previous" xml:space="preserve"><value>Ankstesnis</value></data>
+  <data name="DataExchange.Next" xml:space="preserve"><value>Kitas</value></data>
+  <data name="DataExchange.RecentCount" xml:space="preserve"><value>{0} naujausi</value></data>
+  <data name="DataExchange.RevertedStatus" xml:space="preserve"><value>Atstatytas</value></data>
+  <data name="DataExchange.Revert" xml:space="preserve"><value>Atstatyti</value></data>
+  <data name="DataExchange.SortTitle" xml:space="preserve"><value>Dukart paspauskite rusiavimui</value></data>
+  <data name="DataExchange.Value" xml:space="preserve"><value>Reiksme</value></data>
+  <data name="DataExchange.ViewAllFiltered" xml:space="preserve"><value>Visi filtruoti irasai</value></data>
+  <data name="DataExchange.Action" xml:space="preserve"><value>Veiksmas</value></data>
+  <data name="DataExchange.Actions" xml:space="preserve"><value>Veiksmai</value></data>
+  <data name="DataExchange.Key" xml:space="preserve"><value>Raktas</value></data>
+  <data name="DataExchange.GeneralAccess" xml:space="preserve"><value>Bendra teise</value></data>
+  <data name="DataExchange.TestModeUnlimited" xml:space="preserve"><value>Testavimas be apribojimu</value></data>
+  <data name="DataExchange.NoTablesAssigned" xml:space="preserve"><value>Vartotojui nepriskirta ne viena lentele.</value></data>
+  <data name="DataExchange.LoadFailed" xml:space="preserve"><value>Nepavyko uzkrauti lenteles duomenu.</value></data>
+  <data name="DataExchange.Template" xml:space="preserve"><value>Template</value></data>
+  <data name="DataExchange.UniqueRules" xml:space="preserve"><value>Unikalumo taisykles</value></data>
+  <data name="DataExchange.ImportPreview" xml:space="preserve"><value>Excel importo perziura</value></data>
+  <data name="DataExchange.ConfirmImport" xml:space="preserve"><value>Patvirtinti importa</value></data>
+  <data name="DataExchange.Ignored" xml:space="preserve"><value>Ignoruojami</value></data>
+  <data name="DataExchange.RowCountShort" xml:space="preserve"><value>{0} eil.</value></data>
+  <data name="DataExchange.ActiveFilters" xml:space="preserve"><value>{0} aktyvu</value></data>
+  <data name="DataExchange.FilterConnector" xml:space="preserve"><value>Filtro jungiklis</value></data>
+  <data name="DataExchange.FilterColumn" xml:space="preserve"><value>Filtro stulpelis</value></data>
+  <data name="DataExchange.FilterOperator" xml:space="preserve"><value>Filtro operatorius</value></data>
+  <data name="DataExchange.ChangesSaved" xml:space="preserve"><value>Pakeitimai issaugoti.</value></data>
+  <data name="DataExchange.ChangesSaveFailed" xml:space="preserve"><value>Nepavyko issaugoti pakeitimu.</value></data>
+  <data name="DataExchange.Error.TableNotAssigned" xml:space="preserve"><value>Pasirinkta lentele nepriskirta vartotojui.</value></data>
+  <data name="DataExchange.Error.CorrectionInsertDisabled" xml:space="preserve"><value>Siai lentelei nauju irasu pridejimas negalimas. Galima koreguoti tik esamas reiksmes.</value></data>
+  <data name="DataExchange.Error.NoInsertPermission" xml:space="preserve"><value>Siai lentelei prideti ir koreguoti teise nesuteikta.</value></data>
+  <data name="DataExchange.Error.ExportNoReceive" xml:space="preserve"><value>Siai lentelei perziuros teise nesuteikta, todel duomenu eksportas negalimas.</value></data>
+  <data name="DataExchange.Error.ImportNoAccess" xml:space="preserve"><value>Siai lentelei ikelimo teise nesuteikta.</value></data>
+  <data name="DataExchange.Error.NoImportColumns" xml:space="preserve"><value>Sioje lenteleje nera stulpeliu, kuriuos galima pildyti Excel importui.</value></data>
+  <data name="DataExchange.Error.SelectExcelFile" xml:space="preserve"><value>Pasirinkite Excel faila ikelimui.</value></data>
+  <data name="DataExchange.Error.InvalidExcelFile" xml:space="preserve"><value>Netinkamas failo formatas. Ikelimui naudokite .xlsx arba .xlsm Excel faila.</value></data>
+  <data name="DataExchange.Error.EmptyExcelFile" xml:space="preserve"><value>Excel faile nerasta duomenu ikelimui.</value></data>
+  <data name="DataExchange.Error.PreviewMissing" xml:space="preserve"><value>Importo perziura neberasta arba pasibaige jos galiojimas. Ikelkite Excel faila dar karta.</value></data>
+  <data name="DataExchange.Error.PreviewTableMismatch" xml:space="preserve"><value>Importo perziura neatitinka pasirinktos lenteles.</value></data>
+  <data name="DataExchange.Error.EmptyImportRows" xml:space="preserve"><value>Excel faile nerasta eiluciu su pildomais duomenimis.</value></data>
+  <data name="DataExchange.Error.DeleteAccessDenied" xml:space="preserve"><value>Trinti eilutes gali tik vartotojas, turintis perziuros ir ikelimo teises.</value></data>
+  <data name="DataExchange.Error.DeleteRowKeyMissing" xml:space="preserve"><value>Nepavyko nustatyti salinamo iraso.</value></data>
+  <data name="DataExchange.Error.DeletePreviewRequiresFilter" xml:space="preserve"><value>Blokinio trynimo perziurai privalomas bent vienas aktyvus filtras.</value></data>
+  <data name="DataExchange.Error.DeleteRequiresFilter" xml:space="preserve"><value>Blokiniam trynimui privalomas bent vienas aktyvus filtras.</value></data>
+  <data name="DataExchange.Error.DeletePreviewRequired" xml:space="preserve"><value>Pirma atlikite blokinio trynimo perziura pagal dabartinius filtrus.</value></data>
+  <data name="DataExchange.Error.RevertAccessDenied" xml:space="preserve"><value>Atstatyti irasus galima tik vartotojui, turinciam perziuros ir ikelimo teises.</value></data>
+  <data name="DataExchange.Error.ImportAccessDenied" xml:space="preserve"><value>Serveris neturi rasymo teises i importo perziuru kataloga: {0}. Suteikite IIS AppPool vartotojui Modify teise i App_Data\DataExchange.</value></data>
+  <data name="DataExchange.Success.RowAdded" xml:space="preserve"><value>Irasas pridetas i lentele {0}.</value></data>
+  <data name="DataExchange.Success.RowDeleted" xml:space="preserve"><value>Irasas pasalintas.</value></data>
+  <data name="DataExchange.Success.ImportPreviewPrepared" xml:space="preserve"><value>Paruosta importo perziura: {0} eil.</value></data>
+  <data name="DataExchange.Success.ImportPreviewPreparedIgnored" xml:space="preserve"><value>Paruosta importo perziura: {0} eil. Ignoruojami sisteminiai laukai: {1}.</value></data>
+  <data name="DataExchange.Success.ImportRowInserted" xml:space="preserve"><value>Ikeltas 1 irasas i lentele {0}.</value></data>
+  <data name="DataExchange.Success.ImportRowsInserted" xml:space="preserve"><value>Ikelta irasu: {0}. Lentele: {1}.</value></data>
+  <data name="DataExchange.Success.DeletePreviewFound" xml:space="preserve"><value>Pagal aktyvius filtrus rasta irasu: {0}. Patikrinkite ir patvirtinkite trynima.</value></data>
+  <data name="DataExchange.Success.FilteredRowDeleted" xml:space="preserve"><value>Pagal aktyvius filtrus pasalintas 1 irasas.</value></data>
+  <data name="DataExchange.Success.FilteredRowsDeleted" xml:space="preserve"><value>Pagal aktyvius filtrus pasalinta irasu: {0}.</value></data>
+  <data name="DataExchange.Success.AuditReverted" xml:space="preserve"><value>Audit irasas #{0} atstatytas.</value></data>
+  <data name="DataExchange.Excel.EmptyHeader" xml:space="preserve"><value>Netinkamas failas. Excel header eilute negali tureti tusciu stulpeliu.</value></data>
+  <data name="DataExchange.Excel.DuplicateHeaders" xml:space="preserve"><value>Netinkamas failas. Pasikartojantys headeriai: {0}.</value></data>
+  <data name="DataExchange.Excel.MissingHeaders" xml:space="preserve"><value>truksta: {0}</value></data>
+  <data name="DataExchange.Excel.ExtraHeaders" xml:space="preserve"><value>pertekliniai: {0}</value></data>
+  <data name="DataExchange.Excel.StructureMismatch" xml:space="preserve"><value>Netinkamas failas. Excel stulpeliai neatitinka lenteles strukturos ({0}).</value></data>
+  <data name="DataExchange.CorrectionContextRequired" xml:space="preserve"><value>Privaloma nurodyti trukstama informacija: CORRECTION_TYPE (DISCOUNT arba COMPENSATION) ir CORRECTION_YEARMONTH formatu YYYYMM.</value></data>
+  <data name="FileUpload.AccessDeniedBody" xml:space="preserve"><value>Siam Windows vartotojui lenteleje BS_APP_ACCESS turi buti aktyvi teise su APP_NAME = FILE_UPLOAD.</value></data>
+  <data name="FileUpload.Directory" xml:space="preserve"><value>Katalogas</value></data>
+  <data name="FileUpload.DirectorySpace" xml:space="preserve"><value>Katalogo vieta</value></data>
+  <data name="FileUpload.Empty" xml:space="preserve"><value>Siame kataloge failu nerasta arba katalogas dar nepasiekiamas.</value></data>
+  <data name="FileUpload.MaxFile" xml:space="preserve"><value>Maks. failas</value></data>
+  <data name="FileUpload.RecentFiles" xml:space="preserve"><value>Paskutiniai failai</value></data>
+  <data name="FileUpload.Size" xml:space="preserve"><value>Dydis</value></data>
+  <data name="FileUpload.StorageLimit" xml:space="preserve"><value>Vietos limitas</value></data>
+  <data name="FileUpload.StorageLimitReached" xml:space="preserve"><value>Failu ikelimo katalogo limitas pasiektas. Informuokite administratoriu, kad atlaisvintu vieta failu ikelimui.</value></data>
+  <data name="FileUpload.StorageReady" xml:space="preserve"><value>Pasiekiamas</value></data>
+  <data name="FileUpload.StorageWillBeCreated" xml:space="preserve"><value>Bus sukurtas ikeliant</value></data>
+  <data name="FileUpload.Subtitle" xml:space="preserve"><value>Failu ikelimas i serverio kataloga.</value></data>
+  <data name="FileUpload.Time" xml:space="preserve"><value>Laikas</value></data>
+  <data name="FileUpload.Upload" xml:space="preserve"><value>Ikelti</value></data>
+  <data name="FileUpload.UploadFile" xml:space="preserve"><value>Ikelti faila</value></data>
+  <data name="FileUpload.UploadNote" xml:space="preserve"><value>Failas bus irasytas i {0}.</value></data>
+  <data name="FileUpload.Error.AccessDenied" xml:space="preserve"><value>Siam vartotojui FILE_UPLOAD teise nesuteikta.</value></data>
+  <data name="FileUpload.Error.Cancelled" xml:space="preserve"><value>Failo ikelimas nutrauktas.</value></data>
+  <data name="FileUpload.Error.EmptyFile" xml:space="preserve"><value>Pasirinkite faila ikelimui.</value></data>
+  <data name="FileUpload.Error.MaxFile" xml:space="preserve"><value>Failas per didelis. Maksimalus dydis: {0} MB.</value></data>
+  <data name="FileUpload.Error.NoStoragePath" xml:space="preserve"><value>Failu ikelimo katalogas nesukonfiguruotas.</value></data>
+  <data name="FileUpload.Error.StorageFull" xml:space="preserve"><value>Failu ikelimo katalogo limitas pasiektas. Informuokite administratoriu, kad atlaisvintu vieta failu ikelimui.</value></data>
+  <data name="FileUpload.Error.StorageWouldOverflow" xml:space="preserve"><value>Failas neikeliamas, nes virsytu failu ikelimo katalogo limita. Informuokite administratoriu, kad atlaisvintu vieta failu ikelimui.</value></data>
+  <data name="FileUpload.Error.Unauthorized" xml:space="preserve"><value>Serveris neturi rasymo teises i kataloga: {0}. Suteikite IIS AppPool vartotojui Modify teise.</value></data>
+  <data name="FileUpload.Error.WriteFailed" xml:space="preserve"><value>Nepavyko irasyti failo i {0}: {1}</value></data>
+  <data name="FileUpload.Success.Uploaded" xml:space="preserve"><value>Failas ikeltas: {0} ({1}).</value></data>
+  <data name="FileUpload.Used" xml:space="preserve"><value>Naudojama</value></data>
+  <data name="Hub.ActiveApplications" xml:space="preserve"><value>Aktyvios</value></data>
+  <data name="Hub.ApplicationList" xml:space="preserve"><value>Aplikaciju sarasas</value></data>
+  <data name="Hub.EmptySearch" xml:space="preserve"><value>Aplikaciju pagal paieska nerasta.</value></data>
+  <data name="Hub.HeroText" xml:space="preserve"><value>Viena pazistama aplinka duomenu mainams ir vidinems web aplikacijoms.</value></data>
+  <data name="Hub.OpenDataExchange" xml:space="preserve"><value>Atidaryti Data exchange</value></data>
+  <data name="Hub.SearchPlaceholder" xml:space="preserve"><value>Ieskoti aplikacijos</value></data>
+  <data name="Landing.Eyebrow" xml:space="preserve"><value>VIDINIU APLIKACIJU CENTRAS</value></data>
+  <data name="Landing.HeroText" xml:space="preserve"><value>Vidine logistikos ziniu ir aplikaciju prieigos erdve. Darbo HUB pasiekiamas tik su slaptazodziu ir priskirtomis teisemis.</value></data>
+  <data name="Landing.LoginToHub" xml:space="preserve"><value>Jungtis prie HUB</value></data>
+  <data name="Landing.AccessRequest" xml:space="preserve"><value>Prieigos prasymas</value></data>
+  <data name="Landing.WindowsUser" xml:space="preserve"><value>Windows vartotojas</value></data>
+  <data name="Landing.AccessType" xml:space="preserve"><value>Prieigos tipas</value></data>
+  <data name="Landing.Comment" xml:space="preserve"><value>Komentaras</value></data>
+  <data name="Landing.SubmitRequest" xml:space="preserve"><value>Pateikti prasyma</value></data>
+  <data name="Landing.Metric.Access" xml:space="preserve"><value>Prieiga</value></data>
+  <data name="Landing.Metric.DomainUsers" xml:space="preserve"><value>Domeno vartotojai</value></data>
+  <data name="Landing.Metric.Workspace" xml:space="preserve"><value>Darbo aplinka</value></data>
+  <data name="Landing.Metric.HubPermissions" xml:space="preserve"><value>HUB + teises</value></data>
+  <data name="Landing.Metric.Version" xml:space="preserve"><value>Versija</value></data>
+  <data name="Landing.LogisticsModels" xml:space="preserve"><value>Logistikos veiklos modeliai</value></data>
+  <data name="Landing.Logistics.1PL" xml:space="preserve"><value>Imone pati valdo savo logistika: sandelius, transporta ir procesus.</value></data>
+  <data name="Landing.Logistics.2PL" xml:space="preserve"><value>Atskiri paslaugu tiekejai vykdo transporto ar sandeliavimo dalis.</value></data>
+  <data name="Landing.Logistics.3PL" xml:space="preserve"><value>Vienas partneris koordinuoja platesni logistikos paslaugu paketa.</value></data>
+  <data name="Landing.Logistics.4PL" xml:space="preserve"><value>Valdomas visas tiekimo grandines modelis, jungiant procesus, partnerius ir duomenis.</value></data>
+  <data name="Landing.Glossary" xml:space="preserve"><value>Terminu zodynelis</value></data>
+  <data name="Landing.Status.Filling" xml:space="preserve"><value>Pildoma</value></data>
+  <data name="Landing.Glossary.Kpi.Title" xml:space="preserve"><value>Rodiklis</value></data>
+  <data name="Landing.Glossary.Kpi.Body" xml:space="preserve"><value>Matuojama proceso busena arba rezultatas.</value></data>
+  <data name="Landing.Glossary.Sla.Title" xml:space="preserve"><value>Paslaugos lygis</value></data>
+  <data name="Landing.Glossary.Sla.Body" xml:space="preserve"><value>Sutarti kokybes, laiko ar aptarnavimo isipareigojimai.</value></data>
+  <data name="Landing.Glossary.Throughput.Title" xml:space="preserve"><value>Pralaidumas</value></data>
+  <data name="Landing.Glossary.Throughput.Body" xml:space="preserve"><value>Kiek operaciju ar vienetu apdorojama per laiko vieneta.</value></data>
+  <data name="Landing.KnowledgeSectors" xml:space="preserve"><value>Ziniu sektoriai</value></data>
+  <data name="Landing.Sector.LogisticsModels" xml:space="preserve"><value>1PL, 2PL, 3PL ir 4PL veiklos modeliu skirtumai.</value></data>
+  <data name="Landing.Sector.Transport" xml:space="preserve"><value>Transporto tipai, marsruto taskai ir pristatymo terminai.</value></data>
+  <data name="Landing.Sector.DistributionModel" xml:space="preserve"><value>Kaip prekes juda is centrinio sandelio i filialus ir klientus.</value></data>
+  <data name="Landing.Sector.Warehousing" xml:space="preserve"><value>Sandeliavimo srautas nuo priemimo iki isvezimo.</value></data>
+  <data name="Landing.Sector.Packing" xml:space="preserve"><value>Pakavimo paslaugos, kontroles ir srauto valdymo principai.</value></data>
+  <data name="Landing.Sector.Glossary" xml:space="preserve"><value>Trumpi terminai, naudojami logistikoje ir sistemose.</value></data>
+  <data name="Landing.Sector.Kpi" xml:space="preserve"><value>Rodikliai, tikslai ir kaip is ju gimsta veiksmai.</value></data>
+  <data name="Landing.Transport" xml:space="preserve"><value>Transportas</value></data>
+  <data name="Landing.Transport.Jumbo.Title" xml:space="preserve"><value>Didelio turio transportas</value></data>
+  <data name="Landing.Transport.Jumbo.Body" xml:space="preserve"><value>JUMBO naudojamas kai svarbus krovinio turis, ne tik svoris. Tinka lengvesnems, bet daugiau vietos uzimancioms prekems.</value></data>
+  <data name="Landing.Transport.Tilt.Title" xml:space="preserve"><value>Tentine puspriekabe</value></data>
+  <data name="Landing.Transport.Tilt.Body" xml:space="preserve"><value>TILT yra tentinis transportas, kuri galima krauti is sono, galo arba virsaus, kai krovinys nereikalauja temperaturos rezimo.</value></data>
+  <data name="Landing.Transport.Multitemp.Title" xml:space="preserve"><value>Keliu temperaturu transportas</value></data>
+  <data name="Landing.Transport.Multitemp.Body" xml:space="preserve"><value>MULTITEMP leidzia vezti skirtingu temperaturu prekes vienoje masinoje, atskiriant zonas pagal produkto reikalavimus.</value></data>
+  <data name="Landing.Transport.SmallTruck.Title" xml:space="preserve"><value>Distribucine furyte</value></data>
+  <data name="Landing.Transport.SmallTruck.Body" xml:space="preserve"><value>Mazas distribucinis sunkvezimis naudojamas miesto ir regiono pristatymams, kai reikia lankstumo, daznu sustojimu ir riboto krovinio kiekio.</value></data>
+  <data name="Landing.Transport.Van.Title" xml:space="preserve"><value>Mazas krovininis vienaturis</value></data>
+  <data name="Landing.Transport.Van.Body" xml:space="preserve"><value>Vienaturis tinka smulkioms siuntoms ir tabako distribucijai. Paprastai telpa apie 1-2 EUR paletes, todel patogus marsrutams su daug pristatymo tasku.</value></data>
+  <data name="Landing.Transport.Poi.Title" xml:space="preserve"><value>Pristatymo taskas</value></data>
+  <data name="Landing.Transport.Poi.Body" xml:space="preserve"><value>POI yra konkretus taskas marsrute: klientas, rampa, sandelis ar kita vieta, kur atliekamas veiksmas.</value></data>
+  <data name="Landing.Transport.Drop.Title" xml:space="preserve"><value>Iskrovimo veiksmas</value></data>
+  <data name="Landing.Transport.Drop.Body" xml:space="preserve"><value>DROP zymi pristatyma arba iskrovima konkreciame taske. Marsrutas gali tureti viena arba kelis DROP taskus.</value></data>
+  <data name="Landing.DistributionModel" xml:space="preserve"><value>Prekiu isvezimo modelis</value></data>
+  <data name="Landing.Distribution.MapLabel" xml:space="preserve"><value>Lietuvos paskirstymo modelio schema</value></data>
+  <data name="Landing.Distribution.CentralShort" xml:space="preserve"><value>Alsenu g.10</value></data>
+  <data name="Landing.Distribution.Ibl" xml:space="preserve"><value>IBL raudonos kryptys i filialus</value></data>
+  <data name="Landing.Distribution.Dst" xml:space="preserve"><value>DST zalios distribucijos kryptys</value></data>
+  <data name="Landing.Distribution.Ibl.Title" xml:space="preserve"><value>Tarpfilialine logistika</value></data>
+  <data name="Landing.Distribution.Ibl.Body" xml:space="preserve"><value>IBL furu srautas is centrinio sandelio Kauno rajone veza produktus i filialus: Vilniu, Panevezi, Utena, Siaulius ir Klaipeda.</value></data>
+  <data name="Landing.Distribution.Dst.Title" xml:space="preserve"><value>Distribucinis pristatymas</value></data>
+  <data name="Landing.Distribution.Dst.Body" xml:space="preserve"><value>DST srautas mazesniu transportu is Kauno ir filialu pristato prekes klientams pagal marsrutus ir pristatymo taskus.</value></data>
+  <data name="Landing.Warehousing" xml:space="preserve"><value>Sandeliavimas</value></data>
+  <data name="Landing.Warehousing.Inbound.Title" xml:space="preserve"><value>Prekiu priemimas</value></data>
+  <data name="Landing.Warehousing.Inbound.Body" xml:space="preserve"><value>Inbound apima atvykusiu prekiu patikra, registravima, kokybes kontrole ir paruosima sandeliavimui.</value></data>
+  <data name="Landing.Warehousing.Storage.Title" xml:space="preserve"><value>Saugojimas</value></data>
+  <data name="Landing.Warehousing.Storage.Body" xml:space="preserve"><value>Saugojime svarbu vietos valdymas, partijos, galiojimai, apyvartumas ir prekiu pasiekiamumas operacijoms.</value></data>
+  <data name="Landing.Warehousing.Outbound.Title" xml:space="preserve"><value>Surinkimas ir isvezimas</value></data>
+  <data name="Landing.Warehousing.Outbound.Body" xml:space="preserve"><value>Outbound apima uzsakymu surinkima, tikrinima, pakrovima ir perdavima transportui pagal pristatymo plana.</value></data>
+  <data name="Landing.Packing" xml:space="preserve"><value>Pakavimas</value></data>
+  <data name="Landing.Packing.Service.Title" xml:space="preserve"><value>Pridetines vertes paslauga</value></data>
+  <data name="Landing.Packing.Service.Body" xml:space="preserve"><value>Pakavimas gali apimti perpakavima, rinkiniu formavima, lipdukavima, zenklinima ir kitas produkto paruosimo operacijas.</value></data>
+  <data name="Landing.Packing.Control.Title" xml:space="preserve"><value>Kokybes kontrole</value></data>
+  <data name="Landing.Packing.Control.Body" xml:space="preserve"><value>Valdymui svarbus aiskus standartas, medziagu apskaita, atlikto kiekio patvirtinimas ir klaidu sekimas.</value></data>
+  <data name="Landing.Packing.Flow.Title" xml:space="preserve"><value>Operaciju srautas</value></data>
+  <data name="Landing.Packing.Flow.Body" xml:space="preserve"><value>Pakavimo darbai planuojami pagal poreiki, darbo norma, darbuotoju pajeguma ir galutini pristatymo termina.</value></data>
+  <data name="Landing.Kpi" xml:space="preserve"><value>KPI paaiskinimas</value></data>
+  <data name="Landing.Kpi.What.Title" xml:space="preserve"><value>Kas yra KPI</value></data>
+  <data name="Landing.Kpi.What.Body" xml:space="preserve"><value>KPI yra sutartas rodiklis, padedantis matyti ar procesas juda norima kryptimi.</value></data>
+  <data name="Landing.Kpi.Target.Title" xml:space="preserve"><value>Tikslas ir faktas</value></data>
+  <data name="Landing.Kpi.Target.Body" xml:space="preserve"><value>Rodiklis turi tureti aisku skaiciavimo taisykle, tiksla ir faktine reiksme, kad butu galima vertinti nuokrypi.</value></data>
+  <data name="Landing.Kpi.Action.Title" xml:space="preserve"><value>Veiksmas po rodiklio</value></data>
+  <data name="Landing.Kpi.Action.Body" xml:space="preserve"><value>KPI nera tik skaicius. Jis turi padeti priimti sprendima, koreguoti procesa arba patvirtinti, kad kryptis gera.</value></data>
+  <data name="Landing.KnowledgeEmpty" xml:space="preserve"><value>Pasirinkite ziniu sektoriu. Cia atsidarys pasirinktos temos paaiskinimai, schemos ir terminai.</value></data>
+  <data name="Landing.Sector.Sphinx" xml:space="preserve"><value>Apklausu sudarymas su sakota logika ir bendruomenes atsiliepimu rinkimas.</value></data>
+  <data name="Landing.Sphinx.Eyebrow" xml:space="preserve"><value>Survey Platform for Human Insights Networked Xchange</value></data>
+  <data name="Landing.Sphinx.Description" xml:space="preserve"><value>SPHINX leidzia kurti sakotu apklausu formas: nustatykite atsakymu variantus, priskirkite sub-klausimus ir valdykite dalyvio kelione per apklausa pagal atsakymus.</value></data>
+  <data name="Landing.Sphinx.SurveyTitle" xml:space="preserve"><value>Apklausos pavadinimas</value></data>
+  <data name="Landing.Sphinx.SurveyTitlePlaceholder" xml:space="preserve"><value>pvz. Darbo aplinkos vertinimas 2026</value></data>
+  <data name="Landing.Sphinx.SurveyDescription" xml:space="preserve"><value>Aprasas (neprivaloma)</value></data>
+  <data name="Landing.Sphinx.SurveyDescriptionPlaceholder" xml:space="preserve"><value>Trumpai aprasykite apklausos tiksla</value></data>
+  <data name="Landing.Sphinx.Questions" xml:space="preserve"><value>Klausimai</value></data>
+  <data name="Landing.Sphinx.AddQuestion" xml:space="preserve"><value>Prideti klausima</value></data>
+  <data name="Landing.Sphinx.QuestionPlaceholder" xml:space="preserve"><value>Iveskite klausima...</value></data>
+  <data name="Landing.Sphinx.AddOption" xml:space="preserve"><value>Prideti atsakyma</value></data>
+  <data name="Landing.Sphinx.OptionPlaceholder" xml:space="preserve"><value>Atsakymo variantas...</value></data>
+  <data name="Landing.Sphinx.AddSubQuestion" xml:space="preserve"><value>Sub-klausimas</value></data>
+  <data name="Landing.Sphinx.Skip.Next" xml:space="preserve"><value>Sekantis</value></data>
+  <data name="Landing.Sphinx.Skip.End" xml:space="preserve"><value>Baigti</value></data>
+  <data name="Landing.Sphinx.Skip.Jump" xml:space="preserve"><value>Sokti i...</value></data>
+  <data name="Landing.Sphinx.Type.Text" xml:space="preserve"><value>Atviras tekstas</value></data>
+  <data name="Landing.Sphinx.Type.Single" xml:space="preserve"><value>Vienas pasirinkimas</value></data>
+  <data name="Landing.Sphinx.Type.Multi" xml:space="preserve"><value>Keli pasirinkimai</value></data>
+  <data name="Landing.Sphinx.Creator" xml:space="preserve"><value>Kurejo vardas</value></data>
+  <data name="Landing.Sphinx.Submit" xml:space="preserve"><value>Sukurti apklausa</value></data>
+  <data name="Landing.Sphinx.Hint" xml:space="preserve"><value>SINGLE ir MULTI klausimuose galite prideti atsakymo variantus, nustatyti sokimo logika arba priskirti sub-klausima kiekvienam variantui.</value></data>
+  <data name="Landing.Glossary.SearchPlaceholder" xml:space="preserve"><value>Ieskoti termino, sinonimo ar veiksmo</value></data>
+  <data name="Landing.Glossary.NoResults" xml:space="preserve"><value>Pagal paieska terminu nerasta.</value></data>
+  <data name="Landing.Glossary.Synonyms" xml:space="preserve"><value>Sinonimai</value></data>
+  <data name="Landing.Feedback.Eyebrow" xml:space="preserve"><value>Atvira erdve</value></data>
+  <data name="Landing.Feedback.Title" xml:space="preserve"><value>Padekite mums tobuleti</value></data>
+  <data name="Landing.Feedback.Description" xml:space="preserve"><value>Cia galite sudalyvauti aktyviose apklausose, palikti pasiulyma arba greitai nubalsuoti uz tai, kas jums svarbiausia.</value></data>
+  <data name="Landing.Feedback.ActiveSurveysShort" xml:space="preserve"><value>aktyvios</value></data>
+  <data name="Landing.Feedback.Surveys" xml:space="preserve"><value>Aktyvios apklausos</value></data>
+  <data name="Landing.Feedback.AllSurveys" xml:space="preserve"><value>Visos apklausos</value></data>
+  <data name="Landing.Feedback.SuggestionTitle" xml:space="preserve"><value>Pasiulymas</value></data>
+  <data name="Landing.Feedback.SuggestionPlaceholder" xml:space="preserve"><value>Parasykite ideja, pastebejima arba problema...</value></data>
+  <data name="Landing.Feedback.SendSuggestion" xml:space="preserve"><value>Siusti pasiulyma</value></data>
+  <data name="Landing.Feedback.QuickPoll" xml:space="preserve"><value>Greitas balsavimas</value></data>
+  <data name="Landing.Feedback.PollUnavailable" xml:space="preserve"><value>Balsavimas siuo metu nepasiekiamas.</value></data>
+  <data name="Landing.Feedback.Vote" xml:space="preserve"><value>Balsuoti</value></data>
+  <data name="Landing.Feedback.UpdateVote" xml:space="preserve"><value>Atnaujinti balsa</value></data>
+  <data name="Landing.Glossary.Sku.Title" xml:space="preserve"><value>Stock Keeping Unit</value></data>
+  <data name="Landing.Glossary.Sku.Body" xml:space="preserve"><value>Unikalus prekes ar artikulo identifikatorius, pagal kuri valdoma atsarga, judejimas, kainos ir uzsakymai.</value></data>
+  <data name="Landing.Glossary.Lifo.Title" xml:space="preserve"><value>Last In, First Out</value></data>
+  <data name="Landing.Glossary.Lifo.Body" xml:space="preserve"><value>Atsargu naudojimo logika, kai pirmiausia isduodama veliausiai gauta preke ar partija.</value></data>
+  <data name="Landing.Glossary.Fifo.Title" xml:space="preserve"><value>First In, First Out</value></data>
+  <data name="Landing.Glossary.Fifo.Body" xml:space="preserve"><value>Atsargu naudojimo logika, kai pirmiausia isduodama seniausiai gauta preke ar partija. Daznai svarbu galiojimams ir rotacijai.</value></data>
+  <data name="Landing.Glossary.Asn.Title" xml:space="preserve"><value>Advanced Shipping Notice</value></data>
+  <data name="Landing.Glossary.Asn.Body" xml:space="preserve"><value>Isankstinis pranesimas apie atvykstancia siunta: kas atvaziuoja, kokiais kiekiais, kada ir pagal kokius dokumentus.</value></data>
+  <data name="Landing.Glossary.Grn.Title" xml:space="preserve"><value>Goods Receipt Note</value></data>
+  <data name="Landing.Glossary.Grn.Body" xml:space="preserve"><value>Prekiu priemimo irasas arba dokumentas, patvirtinantis, kad prekes gautos ir uzregistruotos sandelyje.</value></data>
+  <data name="Landing.Glossary.Po.Title" xml:space="preserve"><value>Purchase Order</value></data>
+  <data name="Landing.Glossary.Po.Body" xml:space="preserve"><value>Pirkimo uzsakymas, kuriame nurodoma ka, kiek, uz kokia kaina ir kokiomis salygomis perkama.</value></data>
+  <data name="Landing.Glossary.Rfid.Title" xml:space="preserve"><value>Radio Frequency Identification</value></data>
+  <data name="Landing.Glossary.Rfid.Body" xml:space="preserve"><value>Identifikavimas radijo dazniu, kai prekes, paletes ar vietos nuskaitomos per RFID zymas be tiesioginio barkodo skenavimo.</value></data>
+  <data name="Landing.Glossary.Bom.Title" xml:space="preserve"><value>Bill of Materials</value></data>
+  <data name="Landing.Glossary.Bom.Body" xml:space="preserve"><value>Medziagu ar komponentu sarasas, reikalingas produktui, rinkiniui, pakavimui ar kitai operacijai atlikti.</value></data>
+  <data name="Landing.Glossary.Erp.Title" xml:space="preserve"><value>Enterprise Resource Planning</value></data>
+  <data name="Landing.Glossary.Erp.Body" xml:space="preserve"><value>Imones verslo sistema, jungianti finansus, pirkimus, pardavimus, atsargas, gamyba ar kitus pagrindinius procesus.</value></data>
+  <data name="Landing.Glossary.Wms.Title" xml:space="preserve"><value>Warehouse Management System</value></data>
+  <data name="Landing.Glossary.Wms.Body" xml:space="preserve"><value>Sandelio valdymo sistema, valdanti lokacijas, atsargas, priemima, surinkima, papildyma ir isvezima.</value></data>
+  <data name="Landing.Glossary.Abc.Title" xml:space="preserve"><value>ABC Analysis</value></data>
+  <data name="Landing.Glossary.Abc.Body" xml:space="preserve"><value>Atsargu ar prekiu grupavimas pagal svarba, apyvarta ar verte, kad kontrole butu skiriama svarbiausioms pozicijoms.</value></data>
+  <data name="Landing.Glossary.Ltl.Title" xml:space="preserve"><value>Less Than Truckload</value></data>
+  <data name="Landing.Glossary.Ltl.Body" xml:space="preserve"><value>Dalinis krovinys, kai viena siunta neuzpildo visos masinos ir gali buti konsoliduojama su kitomis siuntomis.</value></data>
+  <data name="Landing.Glossary.Ftl.Title" xml:space="preserve"><value>Full Truckload</value></data>
+  <data name="Landing.Glossary.Ftl.Body" xml:space="preserve"><value>Pilnas krovinys, kai masina ar priekaba skiriama vienam klientui, marsrutui ar siuntai.</value></data>
+  <data name="Landing.Glossary.ThirdPl.Title" xml:space="preserve"><value>Third-Party Logistics</value></data>
+  <data name="Landing.Glossary.ThirdPl.Body" xml:space="preserve"><value>Logistikos partneris, kuris koordinuoja platesni paslaugu paketa, pvz. sandeliavima, transporta ir uzsakymu valdyma.</value></data>
+  <data name="Landing.Glossary.Otif.Title" xml:space="preserve"><value>On-Time In-Full</value></data>
+  <data name="Landing.Glossary.Otif.Body" xml:space="preserve"><value>Rodiklis, rodantis ar uzsakymas pristatytas laiku ir pilnu sutartu kiekiu.</value></data>
+  <data name="Landing.Glossary.Eta.Title" xml:space="preserve"><value>Estimated Time of Arrival</value></data>
+  <data name="Landing.Glossary.Eta.Body" xml:space="preserve"><value>Numatomas transporto, siuntos ar prekiu atvykimo laikas.</value></data>
+  <data name="Landing.Glossary.Pod.Title" xml:space="preserve"><value>Proof of Delivery</value></data>
+  <data name="Landing.Glossary.Pod.Body" xml:space="preserve"><value>Pristatymo patvirtinimas: dokumentas, parasas, skaitmeninis irasas ar kitas irodymas, kad krovinys pristatytas.</value></data>
+  <data name="Landing.Glossary.Mrp.Title" xml:space="preserve"><value>Material Requirements Planning</value></data>
+  <data name="Landing.Glossary.Mrp.Body" xml:space="preserve"><value>Medziagu poreikio planavimas pagal paklausa, gamyba, atsargas ir pirkimo terminus.</value></data>
+  <data name="Landing.Glossary.Rfq.Title" xml:space="preserve"><value>Request for Quotation</value></data>
+  <data name="Landing.Glossary.Rfq.Body" xml:space="preserve"><value>Uzklausa tiekejui ar partneriui pateikti kaina, salygas ir galimybes konkreciai paslaugai ar prekei.</value></data>
+  <data name="Landing.Warehousing.LayoutTitle" xml:space="preserve"><value>Sandeliu isdestymo schema</value></data>
+  <data name="Landing.Warehousing.Layout.Gate" xml:space="preserve"><value>Ivaziavimas</value></data>
+  <data name="Landing.Warehousing.Layout.GateBody" xml:space="preserve"><value>Transporto atvykimas, patikra ir nukreipimas i rampa.</value></data>
+  <data name="Landing.Warehousing.Layout.Inbound" xml:space="preserve"><value>Priemimas</value></data>
+  <data name="Landing.Warehousing.Layout.InboundBody" xml:space="preserve"><value>Dokumentai, kiekiai, kokybe ir pirminis srauto valdymas.</value></data>
+  <data name="Landing.Warehousing.Layout.Storage" xml:space="preserve"><value>Sandeliavimo zona</value></data>
+  <data name="Landing.Warehousing.Layout.StorageBody" xml:space="preserve"><value>Lokacijos, partijos, galiojimai ir prekiu pasiekiamumas.</value></data>
+  <data name="Landing.Warehousing.Layout.Packing" xml:space="preserve"><value>Pakavimas</value></data>
+  <data name="Landing.Warehousing.Layout.PackingBody" xml:space="preserve"><value>Perpakavimas, lipdukavimas, rinkiniu formavimas ir kontrole.</value></data>
+  <data name="Landing.Warehousing.Layout.Outbound" xml:space="preserve"><value>Isvezimas</value></data>
+  <data name="Landing.Warehousing.Layout.OutboundBody" xml:space="preserve"><value>Surinkimas, patikra, pakrovimas ir perdavimas transportui.</value></data>
+  <data name="App.DataExchange.Description" xml:space="preserve"><value>Failu ir duomenu apsikeitimas su SQL Server saugykla.</value></data>
+  <data name="App.Sphinx.Description" xml:space="preserve"><value>Sakotu apklausu formu kurimas su atsakymu sokimo logika.</value></data>
+  <data name="Spinkx.ActiveSurveys" xml:space="preserve"><value>Aktyvios apklausos</value></data>
+  <data name="Spinkx.NoSurveys" xml:space="preserve"><value>Siuo metu aktyviu apklausu nera.</value></data>
+  <data name="App.FileUpload.Description" xml:space="preserve"><value>Failu ikelimas i serverio kataloga.</value></data>
+  <data name="App.ClientInfo.Description" xml:space="preserve"><value>STAT3 klientu ir poziciju informacija pagal FIRMID.</value></data>
+  <data name="App.Kairos.Description" xml:space="preserve"><value>Specialiu darbu poreikiu registravimas pagal 11:00 taisykle.</value></data>
+  <data name="App.Oracul.Description" xml:space="preserve"><value>KPI uzklausa pagal savaites diena ir pasirinkta klientu grupe.</value></data>
+  <data name="App.Themis.Description" xml:space="preserve"><value>Konfiguraciniu lenteliu valdymas.</value></data>
+  <data name="App.Hydra.Description" xml:space="preserve"><value>Prekiu zenklinimo, lipdukavimo, poreikio, KPI ir atlygio skaiciavimo modelis.</value></data>
+  <data name="Hydra.Subtitle" xml:space="preserve"><value>Zenklinimo proceso, nasumo ir atlygio modelis.</value></data>
+  <data name="Hydra.Eyebrow" xml:space="preserve"><value>Handling, Yield, Demand, Results, Attendance</value></data>
+  <data name="Hydra.HeroText" xml:space="preserve"><value>Viena aplinka prekiu zenklinimo ir lipdukavimo procesui: poreikiu skaiciavimui, darbo apimciu planavimui, KPI stebesenai, nasumo analizei ir atlygio logikai.</value></data>
+  <data name="Hydra.Status.Design" xml:space="preserve"><value>Projektuojama</value></data>
+  <data name="Hydra.Metric.Scope" xml:space="preserve"><value>Kryptys</value></data>
+  <data name="Hydra.Metric.Process" xml:space="preserve"><value>Procesas</value></data>
+  <data name="Hydra.Metric.ProcessValue" xml:space="preserve"><value>Zenklinimas</value></data>
+  <data name="Hydra.Metric.Output" xml:space="preserve"><value>Rezultatas</value></data>
+  <data name="Hydra.Pillars" xml:space="preserve"><value>HYDRA kryptys</value></data>
+  <data name="Hydra.Pillar.Handling.Title" xml:space="preserve"><value>Handling operations</value></data>
+  <data name="Hydra.Pillar.Handling.Body" xml:space="preserve"><value>Prekiu zenklinimo, lipdukavimo ir operaciju srauto valdymas.</value></data>
+  <data name="Hydra.Pillar.Yield.Title" xml:space="preserve"><value>Yield &amp; productivity tracking</value></data>
+  <data name="Hydra.Pillar.Yield.Body" xml:space="preserve"><value>Darbo nasumo, normu, valandu ir atlikto kiekio stebesena.</value></data>
+  <data name="Hydra.Pillar.Demand.Title" xml:space="preserve"><value>Demand &amp; volume planning</value></data>
+  <data name="Hydra.Pillar.Demand.Body" xml:space="preserve"><value>Poreikio, kiekiu, planuojamu apimciu ir apkrovos skaiciavimas.</value></data>
+  <data name="Hydra.Pillar.Results.Title" xml:space="preserve"><value>Results &amp; KPI monitoring</value></data>
+  <data name="Hydra.Pillar.Results.Body" xml:space="preserve"><value>Veiklos rezultatu, KPI ir nuokrypiu matavimas vienoje vietoje.</value></data>
+  <data name="Hydra.Pillar.Attendance.Title" xml:space="preserve"><value>Attendance &amp; wage calculation</value></data>
+  <data name="Hydra.Pillar.Attendance.Body" xml:space="preserve"><value>Dirbanciu zmoniu lankomumo, darbo laiko, nasumo ir atlygio skaiciavimo logika.</value></data>
+  <data name="Hydra.Workstreams" xml:space="preserve"><value>Pradines darbo sritys</value></data>
+  <data name="Hydra.Query.Select" xml:space="preserve"><value>Uzklausa</value></data>
+  <data name="Hydra.Query.Empty" xml:space="preserve"><value>HYDRA SQL uzklausu kataloge nerasta.</value></data>
+  <data name="Hydra.Query.Rows" xml:space="preserve"><value>Eilutes</value></data>
+  <data name="Hydra.Workstream.Labeling" xml:space="preserve"><value>Zenklinimo ir lipdukavimo uzduotys</value></data>
+  <data name="Hydra.Workstream.Planning" xml:space="preserve"><value>Poreikio ir apimciu planavimas</value></data>
+  <data name="Hydra.Workstream.Productivity" xml:space="preserve"><value>Nasumo ir KPI stebesena</value></data>
+  <data name="Hydra.Workstream.Wages" xml:space="preserve"><value>Lankomumo ir atlygio skaiciavimas</value></data>
+  <data name="Oracul.AccessDeniedBody" xml:space="preserve"><value>Siam Windows vartotojui SQL teisiu procedura nesuteike ORACUL aplikacijos prieigos.</value></data>
+  <data name="Oracul.AccessDeniedError" xml:space="preserve"><value>Siam Windows vartotojui ORACUL aplikacijos teise nesuteikta.</value></data>
+  <data name="Oracul.Parameters" xml:space="preserve"><value>Parametrai</value></data>
+  <data name="Oracul.QueryMode" xml:space="preserve"><value>Uzklausos tipas</value></data>
+  <data name="Oracul.ByWeekday" xml:space="preserve"><value>Pagal savaites diena</value></data>
+  <data name="Oracul.ByDate" xml:space="preserve"><value>Pagal data</value></data>
+  <data name="Oracul.Weekday" xml:space="preserve"><value>Savaites diena</value></data>
+  <data name="Oracul.Date" xml:space="preserve"><value>Data</value></data>
+  <data name="Oracul.Rows" xml:space="preserve"><value>Eilutes</value></data>
+  <data name="Oracul.Results" xml:space="preserve"><value>Rezultatai</value></data>
+  <data name="Oracul.NoRows" xml:space="preserve"><value>Pagal pasirinktus parametrus irasu nerasta.</value></data>
+  <data name="Oracul.LoadFailed" xml:space="preserve"><value>Duomenu nepavyko uzkrauti.</value></data>
+  <data name="Oracul.Error.WeekdayRange" xml:space="preserve"><value>Savaites diena turi buti nuo 1 iki 7.</value></data>
+  <data name="Oracul.Error.InvalidDate" xml:space="preserve"><value>Pasirinkite teisinga data.</value></data>
+  <data name="Oracul.Error.EmptyReports" xml:space="preserve"><value>KPI sarasas tuscias. Patikrinkite LSP_ORDERS_BY_WEEKDAY_POS lentele.</value></data>
+  <data name="Oracul.Error.InvalidReport" xml:space="preserve"><value>Pasirinktas netinkamas KPI.</value></data>
+  <data name="App.Atlas.Description" xml:space="preserve"><value>Atostogu, darbo is namu ir susirinkimu planavimo kalendorius.</value></data>
+  <data name="Status.Active" xml:space="preserve"><value>Aktyvu</value></data>
+  <data name="Atlas.Subtitle" xml:space="preserve"><value>Atostogu tvarkymo ir laiko administravimo sistema.</value></data>
+  <data name="Atlas.AccessDeniedBody" xml:space="preserve"><value>Siam Windows vartotojui BS_APP_ACCESS lenteleje nesuteikta ATLAS prieiga.</value></data>
+  <data name="Atlas.Month" xml:space="preserve"><value>Menuo</value></data>
+  <data name="Atlas.View" xml:space="preserve"><value>Vaizdas</value></data>
+  <data name="Atlas.Display" xml:space="preserve"><value>Tipas</value></data>
+  <data name="Atlas.Display.Calendar" xml:space="preserve"><value>Kalendorius</value></data>
+  <data name="Atlas.Display.Matrix" xml:space="preserve"><value>Matrica</value></data>
+  <data name="Atlas.MonthShort" xml:space="preserve"><value>men.</value></data>
+  <data name="Atlas.VisiblePlans" xml:space="preserve"><value>Matomi planai</value></data>
+  <data name="Atlas.Holidays" xml:space="preserve"><value>Nacionalines sventes</value></data>
+  <data name="Atlas.Today" xml:space="preserve"><value>Siandien</value></data>
+  <data name="Atlas.Watch" xml:space="preserve"><value>Stebeti</value></data>
+  <data name="Atlas.NewPlan" xml:space="preserve"><value>Naujas planas</value></data>
+  <data name="Atlas.FutureOnly" xml:space="preserve"><value>Keisti galima tik savo siandienos/ateities planus</value></data>
+  <data name="Atlas.Date" xml:space="preserve"><value>Data</value></data>
+  <data name="Atlas.DateFrom" xml:space="preserve"><value>Nuo</value></data>
+  <data name="Atlas.DateTo" xml:space="preserve"><value>Iki</value></data>
+  <data name="Atlas.Title" xml:space="preserve"><value>Pavadinimas</value></data>
+  <data name="Atlas.Notes" xml:space="preserve"><value>Pastabos</value></data>
+  <data name="Atlas.Users" xml:space="preserve"><value>ATLAS vartotojai</value></data>
+  <data name="Atlas.Users.All" xml:space="preserve"><value>Visi vartotojai</value></data>
+  <data name="Atlas.Color" xml:space="preserve"><value>Spalva</value></data>
+  <data name="Atlas.Type.Leave" xml:space="preserve"><value>Atostogos / tevadienis</value></data>
+  <data name="Atlas.Type.WorkFromHome" xml:space="preserve"><value>Darbas is namu</value></data>
+  <data name="Atlas.Type.Meeting" xml:space="preserve"><value>Susirinkimas</value></data>
+  <data name="Atlas.ConfirmDelete" xml:space="preserve"><value>Ar tikrai trinti si ATLAS plana?</value></data>
+  <data name="Atlas.Success.Created" xml:space="preserve"><value>ATLAS planas issaugotas: {0} d.</value></data>
+  <data name="Atlas.Success.Deleted" xml:space="preserve"><value>ATLAS planas istrintas.</value></data>
+  <data name="Atlas.Success.ColorSaved" xml:space="preserve"><value>ATLAS spalva issaugota.</value></data>
+  <data name="Atlas.Error.InvalidDate" xml:space="preserve"><value>Iveskite data siuo formatu: {0}.</value></data>
+  <data name="Atlas.Error.EndBeforeStart" xml:space="preserve"><value>Periodo pabaiga negali buti ankstesne uz pradzia.</value></data>
+  <data name="Atlas.Weekday.Monday" xml:space="preserve"><value>Pr</value></data>
+  <data name="Atlas.Weekday.Tuesday" xml:space="preserve"><value>An</value></data>
+  <data name="Atlas.Weekday.Wednesday" xml:space="preserve"><value>Tr</value></data>
+  <data name="Atlas.Weekday.Thursday" xml:space="preserve"><value>Kt</value></data>
+  <data name="Atlas.Weekday.Friday" xml:space="preserve"><value>Pn</value></data>
+  <data name="Atlas.Weekday.Saturday" xml:space="preserve"><value>St</value></data>
+  <data name="Atlas.Weekday.Sunday" xml:space="preserve"><value>Sk</value></data>
+  <data name="Themis.Subtitle" xml:space="preserve"><value>Konfiguraciniu lenteliu valdymas.</value></data>
+  <data name="Themis.Access" xml:space="preserve"><value>Prieiga</value></data>
+  <data name="Themis.AccessGranted" xml:space="preserve"><value>Suteikta</value></data>
+  <data name="Themis.AccessDenied" xml:space="preserve"><value>Nesuteikta</value></data>
+  <data name="Themis.AccessDeniedBody" xml:space="preserve"><value>Siam Windows vartotojui nesuteikta THEMIS prieiga (APPLICATION_GetUserAccess).</value></data>
+  <data name="Themis.LogTable" xml:space="preserve"><value>Log lentele</value></data>
+  <data name="Themis.NoTables" xml:space="preserve"><value>Konfiguracijoje nera leistinu lenteliu.</value></data>
+  <data name="Themis.LoadFailed" xml:space="preserve"><value>Nepavyko uzkrauti lenteles duomenu.</value></data>
+  <data name="Themis.UniqueRules" xml:space="preserve"><value>Unikalumo taisykles</value></data>
+  <data name="Themis.ImportPreview" xml:space="preserve"><value>Excel importo perziura</value></data>
+  <data name="Themis.Ignored" xml:space="preserve"><value>Ignoruojami</value></data>
+  <data name="Themis.ConfirmImport" xml:space="preserve"><value>Patvirtinti importa</value></data>
+  <data name="Themis.ConfirmImportMessage" xml:space="preserve"><value>Ikelti {0} eilutes i {1}?</value></data>
+  <data name="Themis.ActiveFilters" xml:space="preserve"><value>{0} aktyvu</value></data>
+  <data name="Themis.ConfirmDeleteRow" xml:space="preserve"><value>Ar tikrai trinti si irasa?</value></data>
+  <data name="Themis.ConfirmDeleteFiltered" xml:space="preserve"><value>Ar tikrai trinti {0} irasu pagal aktyvius filtrus?</value></data>
+  <data name="Themis.AddNewRow" xml:space="preserve"><value>Prideti nauja irasa</value></data>
+  <data name="Themis.NoInsertableColumns" xml:space="preserve"><value>Sioje lenteleje nera stulpeliu, kuriuos galima pildyti.</value></data>
+  <data name="Themis.ChangeHistory" xml:space="preserve"><value>Pakeitimu istorija</value></data>
+  <data name="Themis.Source" xml:space="preserve"><value>Saltinis</value></data>
+  <data name="Themis.Select" xml:space="preserve"><value>Pasirinkti</value></data>
+  <data name="Themis.Saving" xml:space="preserve"><value>Saugoma...</value></data>
+  <data name="Themis.ErrorPrefix" xml:space="preserve"><value>Klaida:</value></data>
+  <data name="Themis.ConnectionFailed" xml:space="preserve"><value>Nepavyko prisijungti.</value></data>
+  <data name="Themis.Error.TableNotFound" xml:space="preserve"><value>Pasirinkta lentele nerasta THEMIS konfiguracijoje.</value></data>
+  <data name="Themis.Error.NoImportColumns" xml:space="preserve"><value>Sioje lenteleje nera stulpeliu, kuriuos galima pildyti Excel importui.</value></data>
+  <data name="Themis.Error.SelectExcelFile" xml:space="preserve"><value>Pasirinkite Excel faila ikelimui.</value></data>
+  <data name="Themis.Error.InvalidExcelFile" xml:space="preserve"><value>Netinkamas failo formatas. Ikelimui naudokite .xlsx arba .xlsm Excel faila.</value></data>
+  <data name="Themis.Error.EmptyExcelFile" xml:space="preserve"><value>Excel faile nerasta duomenu ikelimui.</value></data>
+  <data name="Themis.Error.PreviewMissing" xml:space="preserve"><value>Importo perziura neberasta arba pasibaige jos galiojimas. Ikelkite Excel faila dar karta.</value></data>
+  <data name="Themis.Error.PreviewTableMismatch" xml:space="preserve"><value>Importo perziura neatitinka pasirinktos lenteles.</value></data>
+  <data name="Themis.Error.EmptyImportRows" xml:space="preserve"><value>Excel faile nerasta eiluciu su pildomais duomenimis.</value></data>
+  <data name="Themis.Error.DeleteRowKeyMissing" xml:space="preserve"><value>Nepavyko nustatyti salinamo iraso.</value></data>
+  <data name="Themis.Error.DeletePreviewRequiresFilter" xml:space="preserve"><value>Blokinio trynimo perziurai privalomas bent vienas aktyvus filtras.</value></data>
+  <data name="Themis.Error.DeleteRequiresFilter" xml:space="preserve"><value>Blokiniam trynimui privalomas bent vienas aktyvus filtras.</value></data>
+  <data name="Themis.Error.DeletePreviewRequired" xml:space="preserve"><value>Pirma atlikite blokinio trynimo perziura pagal dabartinius filtrus.</value></data>
+  <data name="Themis.Error.ImportAccessDenied" xml:space="preserve"><value>Serveris neturi rasymo teises i THEMIS importo perziuru kataloga: {0}. Suteikite IIS AppPool vartotojui Modify teise i App_Data.</value></data>
+  <data name="Themis.Success.ImportPreviewPrepared" xml:space="preserve"><value>Paruosta importo perziura: {0} eil.</value></data>
+  <data name="Themis.Success.ImportPreviewPreparedIgnored" xml:space="preserve"><value>Paruosta importo perziura: {0} eil. Ignoruojami sisteminiai laukai: {1}.</value></data>
+  <data name="Themis.Success.ImportRowInserted" xml:space="preserve"><value>I {0} importuota 1 eilute.</value></data>
+  <data name="Themis.Success.ImportRowsInserted" xml:space="preserve"><value>I {1} importuota eiluciu: {0}.</value></data>
+  <data name="Themis.Success.RowAdded" xml:space="preserve"><value>Irasas pridetas i {0}.</value></data>
+  <data name="Themis.Success.RowDeleted" xml:space="preserve"><value>Irasas pasalintas.</value></data>
+  <data name="Themis.Success.DeletePreviewFound" xml:space="preserve"><value>Pagal aktyvius filtrus rasta irasu: {0}. Patikrinkite ir patvirtinkite trynima.</value></data>
+  <data name="Themis.Success.FilteredRowDeleted" xml:space="preserve"><value>Pagal aktyvius filtrus pasalintas 1 irasas.</value></data>
+  <data name="Themis.Success.FilteredRowsDeleted" xml:space="preserve"><value>Pagal aktyvius filtrus pasalinta irasu: {0}.</value></data>
+  <data name="Themis.Success.AuditReverted" xml:space="preserve"><value>Audit irasas #{0} atstatytas.</value></data>
+  <data name="Themis.Placeholder.Boolean" xml:space="preserve"><value>Taip arba Ne</value></data>
+  <data name="Themis.Placeholder.Number" xml:space="preserve"><value>skaicius</value></data>
+  <data name="Themis.Excel.EmptyHeader" xml:space="preserve"><value>Netinkamas failas. Excel header eilute negali tureti tusciu stulpeliu.</value></data>
+  <data name="Themis.Excel.DuplicateHeaders" xml:space="preserve"><value>Netinkamas failas. Pasikartojantys headeriai: {0}.</value></data>
+  <data name="Themis.Excel.MissingHeaders" xml:space="preserve"><value>truksta: {0}</value></data>
+  <data name="Themis.Excel.ExtraHeaders" xml:space="preserve"><value>pertekliniai: {0}</value></data>
+  <data name="Themis.Excel.StructureMismatch" xml:space="preserve"><value>Netinkamas failas. Excel stulpeliai neatitinka lenteles strukturos ({0}).</value></data>
+  <data name="App.Arete.Description" xml:space="preserve"><value>Atitikties rodikliu, ataskaitu ir veiklos efektyvumo tikrinimo erdve.</value></data>
+  <data name="Arete.Subtitle" xml:space="preserve"><value>Atitikties, rodikliu ir efektyvumo tikrinimo erdve.</value></data>
+  <data name="Arete.Eyebrow" xml:space="preserve"><value>Assurance, Reporting, Excellence, Tracking</value></data>
+  <data name="Arete.HeroText" xml:space="preserve"><value>ARETE - Atitikties Rodikliu Efektyvumo Tikrinimo Erdve: viena vieta SQL uzklausoms, filtrams, ataskaitoms ir veiklos kontrolei.</value></data>
+  <data name="Arete.Status.Design" xml:space="preserve"><value>Projektuojama</value></data>
+  <data name="Arete.Pillars" xml:space="preserve"><value>ARETE sritys</value></data>
+  <data name="Arete.Pillar.Handling.Title" xml:space="preserve"><value>Assurance</value></data>
+  <data name="Arete.Pillar.Handling.Body" xml:space="preserve"><value>Atitikties ir kontroles uzklausu valdymas.</value></data>
+  <data name="Arete.Pillar.Yield.Title" xml:space="preserve"><value>Reporting</value></data>
+  <data name="Arete.Pillar.Yield.Body" xml:space="preserve"><value>Ataskaitu, suvestiniu ir rodikliu stebesena.</value></data>
+  <data name="Arete.Pillar.Demand.Title" xml:space="preserve"><value>Excellence</value></data>
+  <data name="Arete.Pillar.Demand.Body" xml:space="preserve"><value>Efektyvumo, kokybes ir gerinimo kryptys.</value></data>
+  <data name="Arete.Pillar.Results.Title" xml:space="preserve"><value>Tracking</value></data>
+  <data name="Arete.Pillar.Results.Body" xml:space="preserve"><value>Rezultatu, nuokrypiu ir veiksmu sekimas.</value></data>
+  <data name="Arete.Pillar.Attendance.Title" xml:space="preserve"><value>Environment</value></data>
+  <data name="Arete.Pillar.Attendance.Body" xml:space="preserve"><value>Bendra uzklausu ir kontroles darbo aplinka.</value></data>
+  <data name="Arete.Workstreams" xml:space="preserve"><value>Pradines darbo sritys</value></data>
+  <data name="Arete.Query.Select" xml:space="preserve"><value>Uzklausa</value></data>
+  <data name="Arete.Query.Empty" xml:space="preserve"><value>ARETE SQL uzklausu kataloge nerasta.</value></data>
+  <data name="Arete.Query.Rows" xml:space="preserve"><value>Eilutes</value></data>
+  <data name="Arete.Pillar.Assurance.Title" xml:space="preserve"><value>Assurance</value></data>
+  <data name="Arete.Pillar.Assurance.Body" xml:space="preserve"><value>Atitikties ir kontroles uzklausu valdymas.</value></data>
+  <data name="Arete.Pillar.Reporting.Title" xml:space="preserve"><value>Reporting</value></data>
+  <data name="Arete.Pillar.Reporting.Body" xml:space="preserve"><value>Ataskaitu, suvestiniu ir rodikliu stebesena.</value></data>
+  <data name="Arete.Pillar.Excellence.Title" xml:space="preserve"><value>Excellence</value></data>
+  <data name="Arete.Pillar.Excellence.Body" xml:space="preserve"><value>Efektyvumo, kokybes ir gerinimo kryptys.</value></data>
+  <data name="Arete.Pillar.Tracking.Title" xml:space="preserve"><value>Tracking</value></data>
+  <data name="Arete.Pillar.Tracking.Body" xml:space="preserve"><value>Rezultatu, nuokrypiu ir veiksmu sekimas.</value></data>
+  <data name="Arete.Pillar.Environment.Title" xml:space="preserve"><value>Environment</value></data>
+  <data name="Arete.Pillar.Environment.Body" xml:space="preserve"><value>Bendra uzklausu ir kontroles darbo aplinka.</value></data>  <data name="Arete.Workstream.Labeling" xml:space="preserve"><value>Atitikties tikrinimas</value></data>
+  <data name="Arete.Workstream.Planning" xml:space="preserve"><value>Ataskaitu planavimas</value></data>
+  <data name="Arete.Workstream.Productivity" xml:space="preserve"><value>Efektyvumo rodikliai</value></data>
+  <data name="Arete.Workstream.Wages" xml:space="preserve"><value>Veiksmu sekimas</value></data>
+  <data name="App.Argus.Description" xml:space="preserve"><value>Statistinio serverio darbo, procesu, raportu ir KPI stebesenos dashboard'as.</value></data>
+  <data name="Argus.Subtitle" xml:space="preserve"><value>Statistinio serverio darbo stebesena.</value></data>
+  <data name="Argus.Eyebrow" xml:space="preserve"><value>Serveris, procesai, raportai, KPI</value></data>
+  <data name="Argus.HeroText" xml:space="preserve"><value>ARGUS - statistinio serverio darbo dashboard'as: procesai, raportu issaugojimai, KPI ir administraciniai veiksmai vienoje vietoje.</value></data>
+  <data name="Argus.Navigation" xml:space="preserve"><value>ARGUS navigacija</value></data>
+  <data name="Argus.Dashboard" xml:space="preserve"><value>Darbo dashboard'as</value></data>
+  <data name="Argus.Status.Pending" xml:space="preserve"><value>Ruosiamas</value></data>
+  <data name="Argus.Metric.ActiveProcesses" xml:space="preserve"><value>Aktyvus procesai</value></data>
+  <data name="Argus.Metric.ActiveProcessesHint" xml:space="preserve"><value>Bus jungiama prie statistinio serverio procesu.</value></data>
+  <data name="Argus.Metric.SavedReports" xml:space="preserve"><value>Issaugoti raportai</value></data>
+  <data name="Argus.Metric.SavedReportsHint" xml:space="preserve"><value>Bus rodoma raportu issaugojimo istorija.</value></data>
+  <data name="Argus.Metric.FailedJobs" xml:space="preserve"><value>Klaidos</value></data>
+  <data name="Argus.Metric.FailedJobsHint" xml:space="preserve"><value>Bus sekami nepavyke skaiciavimai.</value></data>
+  <data name="Argus.Metric.ServerLoad" xml:space="preserve"><value>Serverio apkrova</value></data>
+  <data name="Argus.Metric.ServerLoadHint" xml:space="preserve"><value>Bus prijungti apkrovos indikatoriai.</value></data>
+  <data name="Argus.Panel.Processes.Title" xml:space="preserve"><value>Procesu stebesena</value></data>
+  <data name="Argus.Panel.Processes.Body" xml:space="preserve"><value>Koks procesas skaiciuojamas, kiek trunka ir kokia jo busena.</value></data>
+  <data name="Argus.Panel.Reports.Title" xml:space="preserve"><value>Raportu istorija</value></data>
+  <data name="Argus.Panel.Reports.Body" xml:space="preserve"><value>Kokie raportai issisaugojo, kada ir su kokia busena.</value></data>
+  <data name="Argus.Panel.Kpi.Title" xml:space="preserve"><value>KPI rodikliai</value></data>
+  <data name="Argus.Panel.Kpi.Body" xml:space="preserve"><value>Statistinio serverio darbo kokybes ir efektyvumo rodikliai.</value></data>
+  <data name="Argus.Admin.Title" xml:space="preserve"><value>Administraciniai veiksmai</value></data>
+  <data name="Argus.Admin.Body" xml:space="preserve"><value>Cia bus dedamos saugios administratoriaus komandos, pvz. procesu stabdymas pagal uzduoti.</value></data>
+  <data name="App.Apis.Description" xml:space="preserve"><value>Analize, procesu stebejimas, indikatoriai ir statistika SQL pagrindu.</value></data>
+  <data name="App.Seshat.Description" xml:space="preserve"><value>Skyriaus ekspertiniai susitarimai, dokumentai ir ju vykdymo irodymu registras.</value></data>  <data name="App.SendMailFile.Description" xml:space="preserve"><value>Send Mail failu atsisiuntimas pagal salies katalogo teises.</value></data>
+  <data name="SendMailFile.Subtitle" xml:space="preserve"><value>Failu atsisiuntimas pagal salies katalogo teises.</value></data>
+  <data name="SendMailFile.Countries" xml:space="preserve"><value>Salys</value></data>
+  <data name="SendMailFile.NoAccess" xml:space="preserve"><value>Nera teisiu</value></data>
+  <data name="SendMailFile.AccessDeniedBody" xml:space="preserve"><value>Neturite teisiu nei vienam Send Mail failu katalogui.</value></data>
+  <data name="SendMailFile.CountryFiles" xml:space="preserve"><value>{0} failai</value></data>
+  <data name="SendMailFile.DirectoryFound" xml:space="preserve"><value>Katalogas rastas</value></data>
+  <data name="SendMailFile.DirectoryMissing" xml:space="preserve"><value>Katalogo nera</value></data>
+  <data name="SendMailFile.SearchPlaceholder" xml:space="preserve"><value>Paieska pagal failo pavadinima</value></data>
+  <data name="SendMailFile.DirectoryUnavailable" xml:space="preserve"><value>Katalogas dar nepasiekiamas.</value></data>
+  <data name="SendMailFile.Empty" xml:space="preserve"><value>Failu nera.</value></data>
+  <data name="SendMailFile.Size" xml:space="preserve"><value>Dydis</value></data>
+  <data name="SendMailFile.Time" xml:space="preserve"><value>Laikas</value></data>
+  <data name="SendMailFile.Download" xml:space="preserve"><value>Parsisiusti</value></data>
+  <data name="SendMailFile.SearchEmpty" xml:space="preserve"><value>Pagal paieska failu nerasta.</value></data>  <data name="SendMailFile.UsedSpace" xml:space="preserve"><value>Uzimta vieta: {0}</value></data>
+  <data name="SendMailFile.RefreshHint" xml:space="preserve"><value>Norint pamatyti naujai sugeneruotus failus, atnaujinkite puslapi, pvz. paspauskite F5.</value></data>
+  <data name="Iris.Subtitle" xml:space="preserve"><value>Informaciniu rodikliu issiuntimo sistema.</value></data>
+  <data name="Iris.Eyebrow" xml:space="preserve"><value>Mail reports</value></data>
+  <data name="Iris.HeroHtml" xml:space="preserve"><value>&lt;strong&gt;I&lt;/strong&gt;nformaciniu &lt;strong&gt;R&lt;/strong&gt;odikliu &lt;strong&gt;I&lt;/strong&gt;ssiuntimo &lt;strong&gt;S&lt;/strong&gt;istema - Information &amp;amp; Reports Issued on Schedule</value></data>
+  <data name="Iris.Tab.Builder" xml:space="preserve"><value>Kurimo erdve</value></data>
+  <data name="Iris.Tab.Control" xml:space="preserve"><value>Valdymo skydas</value></data>
+  <data name="Iris.Tab.Kpi" xml:space="preserve"><value>KPI stebesena</value></data>
+  <data name="Iris.Senders" xml:space="preserve"><value>Senderiai</value></data>
+  <data name="Iris.Archive" xml:space="preserve"><value>Archyvas</value></data>
+  <data name="Iris.Recent" xml:space="preserve"><value>Paskutiniai</value></data>
+  <data name="Iris.DraftSaved" xml:space="preserve"><value>Draft issaugotas</value></data>
+  <data name="Iris.FormTitle" xml:space="preserve"><value>Laisko kurimas</value></data>
+  <data name="Iris.BusyTitle" xml:space="preserve"><value>Laiskas ruosiamas</value></data>
+  <data name="Iris.BusyMessage" xml:space="preserve"><value>Palaukite, veiksmas vykdomas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.</value></data>
+  <data name="Iris.BusyPreview" xml:space="preserve"><value>Rengiama perziura...</value></data>
+  <data name="Iris.BusySave" xml:space="preserve"><value>Issaugoma...</value></data>
+  <data name="Iris.Sender" xml:space="preserve"><value>Senderis</value></data>
+  <data name="Iris.Application" xml:space="preserve"><value>Aplikacija</value></data>
+  <data name="Iris.Process" xml:space="preserve"><value>Procesas / tema</value></data>
+  <data name="Iris.RecipientEmail" xml:space="preserve"><value>Gavejo el. pastas</value></data>
+  <data name="Iris.RecipientName" xml:space="preserve"><value>Gavejo vardas</value></data>
+  <data name="Iris.Message" xml:space="preserve"><value>Tekstas</value></data>
+  <data name="Iris.Preview" xml:space="preserve"><value>Perziura</value></data>
+  <data name="Iris.SaveDraft" xml:space="preserve"><value>Issaugoti draft</value></data>
+  <data name="Iris.PreviewEmpty" xml:space="preserve"><value>Uzpildykite duomenis ir spauskite perziura.</value></data>
+  <data name="Iris.ControlEyebrow" xml:space="preserve"><value>Archyvas ir istorija</value></data>
+  <data name="Iris.CreatedAt" xml:space="preserve"><value>Sukurta</value></data>
+  <data name="Iris.RecentEmpty" xml:space="preserve"><value>Irasu dar nera.</value></data>
+  <data name="Iris.Kpi.Total" xml:space="preserve"><value>Viso irasu</value></data>
+  <data name="Iris.Kpi.RecentWindow" xml:space="preserve"><value>Paskutiniai archyvo irasai</value></data>
+  <data name="Iris.Kpi.Success" xml:space="preserve"><value>Sekmingi</value></data>
+  <data name="Iris.Kpi.SuccessHint" xml:space="preserve"><value>Draft / saved / sent busenos</value></data>
+  <data name="Iris.Kpi.Errors" xml:space="preserve"><value>Klaidos</value></data>
+  <data name="Iris.Kpi.ErrorsHint" xml:space="preserve"><value>Error / fail busenos</value></data>
+  <data name="Iris.Kpi.Last" xml:space="preserve"><value>Paskutinis veiksmas</value></data>
+  <data name="Iris.Kpi.StatusBreakdown" xml:space="preserve"><value>Busenu santrauka</value></data>
+  <data name="Iris.Kpi.Count" xml:space="preserve"><value>Kiekis</value></data></root>
+

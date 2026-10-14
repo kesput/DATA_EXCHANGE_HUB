@@ -1,0 +1,16 @@
+Using launch settings from C:\Users\kesput\WINFORM\DATA_EXCHANGE_HUB\Properties\launchSettings.json...
+Building...
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5056
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Users\kesput\WINFORM\DATA_EXCHANGE_HUB
+Security Warning: The negotiated TLS 1.0 is an insecure protocol and is supported for backward compatibility only. The recommended protocol version is TLS 1.2 and later.
+info: DATA_EXCHANGE_HUB.Services.SeshatReminderSchedulerService[0]
+      SESHAT reminder scheduler checked 07/07/2026 00:00:00 after 12:00; sent 0 email reminder(s).
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+Security Warning: The negotiated TLS 1.0 is an insecure protocol and is supported for backward compatibility only. The recommended protocol version is TLS 1.2 and later.

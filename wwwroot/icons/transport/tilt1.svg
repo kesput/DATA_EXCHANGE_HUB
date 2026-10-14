@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 75" role="img" aria-label="Tilt truck">
+  <g fill="#f7fbf4" stroke="#27451f" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M8 16h84v33H8z"/>
+    <path d="M92 24h13v28H92z"/>
+    <path d="M105 18h16l14 13 6 20h-36z"/>
+    <path d="M116 23h7l8 8h-15z" fill="#dff6ff" stroke-width="3"/>
+    <path d="M97 16c3 4 3 9 0 13"/>
+    <path d="M106 48h35"/>
+    <circle cx="25" cy="57" r="8"/>
+    <circle cx="42" cy="57" r="8"/>
+    <circle cx="118" cy="57" r="8"/>
+    <circle cx="136" cy="57" r="8"/>
+  </g>
+  <g fill="#27451f">
+    <circle cx="25" cy="57" r="3"/>
+    <circle cx="42" cy="57" r="3"/>
+    <circle cx="118" cy="57" r="3"/>
+    <circle cx="136" cy="57" r="3"/>
+    <rect x="130" y="41" width="9" height="4" rx="2"/>
+  </g>
+</svg>

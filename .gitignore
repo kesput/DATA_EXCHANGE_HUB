@@ -1,0 +1,11 @@
+bin/
+obj/
+logs/
+App_Data/
+publish/
+appsettings.Production.json
+appsettings.Local.json
+
+*.user
+*.suo
+*.rsuser

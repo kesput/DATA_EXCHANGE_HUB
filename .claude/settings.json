@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//q/SCRIPTS_VBS/LT/**)",
+      "Read(//c/Users/kesput/CLAUDE_FOLDER/**)"
+    ]
+  }
+}

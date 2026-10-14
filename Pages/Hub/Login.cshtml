@@ -1,0 +1,38 @@
+@page
+@model DATA_EXCHANGE_HUB.Pages.Hub.LoginModel
+@{
+    ViewData["Title"] = "HUB login";
+}
+
+<div class="container-fluid hub-page pt-4">
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+    }
+
+    <div class="hub-hero mb-4">
+        <div>
+            <span class="hub-eyebrow">DARBO APLINKA</span>
+            <h1>Prisijungimas prie HUB</h1>
+            <p>Serveryje prisijungimas atliekamas su Windows vartotoju. Jei Windows vartotojas neatpazintas, prisijunkite su savo vartotojo vardu be domeno ir slaptazodziu.</p>
+        </div>
+    </div>
+
+    <section class="tool-section" style="max-width: 640px;">
+        <form method="post" class="d-grid gap-3">
+            <input type="hidden" asp-for="ReturnUrl" />
+            <div>
+                <label class="form-label" asp-for="UserName">Prisijungimo vardas</label>
+                <input class="form-control" asp-for="UserName" autocomplete="username" pattern="[A-Za-z0-9._-]+" title="Iveskite tik vartotojo varda be domeno" autofocus />
+            </div>
+            <div>
+                <label class="form-label" asp-for="Password">Slaptazodis</label>
+                <input class="form-control" asp-for="Password" type="password" autocomplete="current-password" />
+            </div>
+            <div class="d-flex gap-2 justify-content-end">
+                <a class="btn btn-outline-secondary" asp-page="/Index">Grizti</a>
+                <button class="btn btn-orange" type="submit">Jungtis</button>
+            </div>
+        </form>
+    </section>
+</div>

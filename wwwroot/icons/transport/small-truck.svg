@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 92" fill="none">
+  <g stroke="#555" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cargo box -->
+    <path d="M35 17h80a4 4 0 0 1 4 4v48H35a4 4 0 0 1-4-4V21a4 4 0 0 1 4-4z"/>
+
+    <!-- Cab -->
+    <path d="M119 42h18l18 19v18h-17"/>
+    <path d="M119 69h-25"/>
+    <path d="M136 42l14 17h-31V42h17z"/>
+
+    <!-- Small bumper / front detail -->
+    <path d="M155 70h6v7h-6"/>
+
+    <!-- Wheels -->
+    <circle cx="58" cy="78" r="14"/>
+    <circle cx="58" cy="78" r="6"/>
+    <circle cx="136" cy="78" r="14"/>
+    <circle cx="136" cy="78" r="6"/>
+
+    <!-- Wheel arches / base details -->
+    <path d="M44 78H31V67"/>
+    <path d="M72 78h50"/>
+  </g>
+</svg>

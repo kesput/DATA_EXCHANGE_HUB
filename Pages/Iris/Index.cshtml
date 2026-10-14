@@ -1,0 +1,852 @@
+﻿@page
+@model DATA_EXCHANGE_HUB.Pages.Iris.IndexModel
+@{
+    ViewData["Title"] = "IRIS";
+    var isBuilderActive = Model.ActiveTab != "control" && Model.ActiveTab != "kpi";
+    var isControlActive = Model.ActiveTab == "control";
+    var isKpiActive = Model.ActiveTab == "kpi";
+    var totalMails = Model.RecentMails.Count;
+    var successMails = Model.RecentMails.Count(mail =>
+        mail.Status.Contains("sent", StringComparison.OrdinalIgnoreCase) ||
+        mail.Status.Contains("draft", StringComparison.OrdinalIgnoreCase) ||
+        mail.Status.Contains("saved", StringComparison.OrdinalIgnoreCase));
+    var errorMails = Model.RecentMails.Count(mail =>
+        mail.Status.Contains("error", StringComparison.OrdinalIgnoreCase) ||
+        mail.Status.Contains("fail", StringComparison.OrdinalIgnoreCase));
+    var lastMail = Model.RecentMails.OrderByDescending(mail => mail.CreatedAt).FirstOrDefault();
+}
+
+<div class="container-fluid exchange-page pt-4">
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
+                    IRIS <small class="badge bg-secondary ms-2">IR</small>
+                </h3>
+                <p class="mb-0 text-dark-green">@L["Iris.Subtitle"]</p>
+            </div>
+
+            <div class="access-panel stacked mb-3">
+                <div>
+                    <span class="field-label">@L["Iris.Senders"]</span>
+                    <strong>@Model.SenderProfiles.Count</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["Iris.Archive"]</span>
+                    <strong>@(string.IsNullOrWhiteSpace(Model.ArchiveRoot) ? "-" : "OK")</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["Iris.Recent"]</span>
+                    <strong>@totalMails</strong>
+                </div>
+            </div>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            <div class="hub-hero mb-4">
+                <div>
+                    <span class="hub-eyebrow">@L["Iris.Eyebrow"]</span>
+                    <h1>IRIS <span aria-hidden="true">&#9993;</span></h1>
+                    <p>@Html.Raw(L["Iris.HeroHtml"].Value)</p>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger mb-3" role="alert">@Model.ErrorMessage</div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+            {
+                <div class="alert alert-success mb-3" role="status">@Model.SuccessMessage</div>
+            }
+            @if (Model.ArchiveResult is not null)
+            {
+                <div class="alert alert-success mb-3" role="status">
+                    @L["Iris.DraftSaved"]: <strong>@Model.ArchiveResult.Subject</strong><br />
+                    <span class="small">@Model.ArchiveResult.ArchivePath</span>
+                </div>
+            }
+
+            <ul class="nav nav-tabs argus-main-tabs mb-3" id="irisMainTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(isBuilderActive ? "active" : "")" id="iris-builder-tab" data-bs-toggle="tab" data-bs-target="#iris-builder-pane" type="button" role="tab" aria-controls="iris-builder-pane" aria-selected="@(isBuilderActive ? "true" : "false")">@L["Iris.Tab.Builder"]</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(isControlActive ? "active" : "")" id="iris-control-tab" data-bs-toggle="tab" data-bs-target="#iris-control-pane" type="button" role="tab" aria-controls="iris-control-pane" aria-selected="@(isControlActive ? "true" : "false")">@L["Iris.Tab.Control"]</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(isKpiActive ? "active" : "")" id="iris-kpi-tab" data-bs-toggle="tab" data-bs-target="#iris-kpi-pane" type="button" role="tab" aria-controls="iris-kpi-pane" aria-selected="@(isKpiActive ? "true" : "false")">@L["Iris.Tab.Kpi"]</button>
+                </li>
+            </ul>
+
+            <div class="tab-content argus-main-tab-content" id="irisMainTabsContent">
+                <section class="tab-pane fade @(isBuilderActive ? "show active" : "")" id="iris-builder-pane" role="tabpanel" aria-labelledby="iris-builder-tab" tabindex="0">
+                    <div class="row g-4 align-items-start">
+                        <div class="col-xxl-4 col-xl-5">
+                            <section class="hub-board mb-4">
+                                <div class="section-title-row">
+                                    <h2>@L["Iris.FormTitle"]</h2>
+                                </div>
+                                <form method="post" class="d-grid gap-3" data-busy-form data-busy-title="@L["Iris.BusyTitle"]" data-busy-message="@L["Iris.BusyMessage"]">
+                                    <div>
+                                        <label class="form-label" asp-for="SenderKey">@L["Iris.Sender"]</label>
+                                        <select class="form-select" asp-for="SenderKey">
+                                            @foreach (var sender in Model.SenderProfiles)
+                                            {
+                                                <option value="@sender.Key">@sender.DisplayName &lt;@sender.Email&gt;</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="ApplicationName">@L["Iris.Application"]</label>
+                                        <input class="form-control" asp-for="ApplicationName" maxlength="80" />
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="ProcessName">@L["Iris.Process"]</label>
+                                        <input class="form-control" asp-for="ProcessName" maxlength="160" />
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="RecipientEmail">@L["Iris.RecipientEmail"]</label>
+                                        <input class="form-control" asp-for="RecipientEmail" maxlength="320" />
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="RecipientName">@L["Iris.RecipientName"]</label>
+                                        <input class="form-control" asp-for="RecipientName" maxlength="160" />
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="Message">@L["Iris.Message"]</label>
+                                        <textarea class="form-control" asp-for="Message" rows="7" maxlength="4000"></textarea>
+                                    </div>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <button class="btn btn-outline-success" type="submit" asp-page-handler="Preview" data-busy-label="@L["Iris.BusyPreview"]">@L["Iris.Preview"]</button>
+                                        <button class="btn btn-orange" type="submit" asp-page-handler="SaveDraft" data-busy-label="@L["Iris.BusySave"]">@L["Iris.SaveDraft"]</button>
+                                    </div>
+                                </form>
+                            </section>
+                        </div>
+
+                        <div class="col-xxl-8 col-xl-7">
+                            <section class="hub-board mb-4">
+                                <div class="section-title-row">
+                                    <h2>@L["Iris.Preview"]</h2>
+                                    @if (Model.Draft is not null)
+                                    {
+                                        <span class="status-pill">@Model.Draft.SenderEmail</span>
+                                    }
+                                </div>
+                                @if (Model.Draft is null)
+                                {
+                                    <div class="empty-state compact">@L["Iris.PreviewEmpty"]</div>
+                                }
+                                else
+                                {
+                                    <div class="mail-preview-frame">
+                                        @Html.Raw(Model.Draft.BodyHtml)
+                                    </div>
+                                }
+                            </section>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="hub-board tab-pane fade @(isControlActive ? "show active" : "")" id="iris-control-pane" role="tabpanel" aria-labelledby="iris-control-tab" tabindex="0">
+                    <div class="section-title-row">
+                        <div>
+                            <span class="hub-eyebrow">@L["Iris.ControlEyebrow"]</span>
+                            <h2>@L["Iris.Tab.Control"]</h2>
+                        </div>
+                        <span class="status-pill">@totalMails</span>
+                    </div>
+
+                    <div class="alert alert-info" role="status">
+                        <strong>@L["Iris.Archive"]:</strong> @(string.IsNullOrWhiteSpace(Model.ArchiveRoot) ? "-" : Model.ArchiveRoot)
+                    </div>
+
+                    <form method="get" class="row g-3 align-items-end mb-4">
+                        <input type="hidden" name="ActiveTab" value="control" />
+                        <div class="col-xl-8 col-lg-9">
+                            <label class="form-label" for="SelectedReportId">Redaguojamas KPI siuntimo taskas</label>
+                            <select class="form-select" id="SelectedReportId" name="SelectedReportId" onchange="this.form.submit()">
+                                @foreach (var report in Model.Reports)
+                                {
+                                    <option value="@report.Id" selected="@(report.Id == Model.SelectedReportId)">@report.KpiName - @report.Title</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-xl-4 col-lg-3">
+                            <button class="btn btn-outline-primary w-100" type="submit">Uzkrauti taska</button>
+                        </div>
+                    </form>
+
+                    <div class="iris-control-grid mb-4">
+                        <div class="iris-control-column iris-control-column-left">
+                        <div class="iris-control-cell iris-control-cell-report">
+                            <section class="argus-panel">
+                                <div class="section-title-row compact">
+                                    <h3>Kurti KPI siuntimo taska</h3>
+                                    <span class="status-pill-muted">IRIS</span>
+                                </div>
+                                <form method="post" class="d-grid gap-3">
+                                    <input type="hidden" asp-for="ActiveTab" value="control" />
+                                    <input type="hidden" asp-for="SelectedReportId" />
+                                    <div>
+                                        <label class="form-label" asp-for="NewKpiName">KPI vardas</label>
+                                        <input class="form-control" asp-for="NewKpiName" maxlength="260" placeholder="pvz. DAILY_SALES_REPORT" required />
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="NewReportTitle">Ataskaitos pavadinimas</label>
+                                        <input class="form-control" asp-for="NewReportTitle" maxlength="500" required />
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="NewReportSubjectTemplate">Subject sablonas</label>
+                                        <input class="form-control" asp-for="NewReportSubjectTemplate" maxlength="500" placeholder="Pvz. Ataskaita {date:yyyyMMdd} arba Menesine {month:yyyyMM;offset=-1}" />
+                                        <div class="form-text">Tokenai: {date:yyyyMMdd}, {month:yyyyMM;offset=-1}, {week:yyyy/ww}, {periodFrom:yyyy-MM-dd;period=week;offset=-1}, {periodTo:yyyy-MM-dd;period=week;offset=-1}.</div>
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="NewReportSenderKey">@L["Iris.Sender"]</label>
+                                        <select class="form-select" asp-for="NewReportSenderKey">
+                                            @foreach (var sender in Model.SenderProfiles)
+                                            {
+                                                <option value="@sender.Key">@sender.DisplayName &lt;@sender.Email&gt;</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="NewReportSqlConnectionName">Numatytas SQL serveris</label>
+                                        <select class="form-select" asp-for="NewReportSqlConnectionName">
+                                            @foreach (var name in Model.SqlConnectionNames)
+                                            {
+                                                <option value="@name">@name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        @if (Model.SelectedReportId == 0)
+                                        {
+                                            <button class="btn btn-orange" type="submit" asp-page-handler="UpdateReport" disabled>Atnaujinti taska</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-orange" type="submit" asp-page-handler="UpdateReport">Atnaujinti taska</button>
+                                        }
+                                        <button class="btn btn-outline-success" type="submit" asp-page-handler="CreateReport">Sukurti kaip nauja</button>
+                                    </div>
+                                </form>
+                            </section>
+                        </div>
+                        <div class="iris-control-cell iris-control-cell-recipient">
+                            <section class="argus-panel">
+                                <div class="section-title-row compact">
+                                    <h3>Adresatai</h3>
+                                    <span class="status-pill-muted">TO / CC / BCC</span>
+                                </div>
+                                <form method="post" class="d-grid gap-3">
+                                    <input type="hidden" asp-for="ActiveTab" value="control" />
+                                    <input type="hidden" asp-for="SelectedReportId" />
+                                    <div>
+                                        <label class="form-label" asp-for="RecipientReportId">KPI taskas</label>
+                                        <select class="form-select" asp-for="RecipientReportId">
+                                            @foreach (var report in Model.Reports)
+                                            {
+                                                <option value="@report.Id">@report.KpiName - @report.Title</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label" asp-for="RecipientAddressType">Tipas</label>
+                                            <select class="form-select" asp-for="RecipientAddressType">
+                                                <option value="TO">TO</option>
+                                                <option value="CC">CC</option>
+                                                <option value="BCC">BCC</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <label class="form-label" asp-for="RecipientEmailAddress">El. pastas</label>
+                                            <input class="form-control" asp-for="RecipientEmailAddress" maxlength="320" placeholder="vardas@imone.lt" />
+                                        </div>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-7">
+                                            <label class="form-label" asp-for="RecipientDisplayName">Vardas / grupe</label>
+                                            <input class="form-control" asp-for="RecipientDisplayName" maxlength="260" />
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label class="form-label" asp-for="RecipientErp">ERP / salis</label>
+                                            <input class="form-control" asp-for="RecipientErp" maxlength="100" placeholder="LT, LV, EE..." />
+                                        </div>
+                                    </div>
+                                    @if (Model.Reports.Count == 0)
+                                    {
+                                        <button class="btn btn-outline-success" type="submit" asp-page-handler="CreateRecipient" disabled>Prideti adresata</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-outline-success" type="submit" asp-page-handler="CreateRecipient">Prideti adresata</button>
+                                    }
+                                </form>
+                            </section>
+                        </div>
+                        </div>
+
+                        <div class="iris-control-column iris-control-column-right">
+                        <div class="iris-control-cell iris-control-cell-source">
+                            <section class="argus-panel">
+                                <div class="section-title-row compact">
+                                    <h3>@(Model.SourceId > 0 ? "Redaguoti SQL saltini" : "Prideti SQL saltini")</h3>
+                                    <span class="status-pill-muted">SQL / file / SP</span>
+                                </div>
+                                <form method="post" class="d-grid gap-3 iris-source-form">
+                                    <input type="hidden" asp-for="ActiveTab" value="control" />
+                                    <input type="hidden" asp-for="SelectedReportId" />
+                                    <input type="hidden" asp-for="SourceId" />
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label" asp-for="SourceReportId">KPI taskas</label>
+                                            <select class="form-select" asp-for="SourceReportId">
+                                                @foreach (var report in Model.Reports)
+                                                {
+                                                    <option value="@report.Id">@report.KpiName - @report.Title</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label" asp-for="SourceType">Tipas</label>
+                                            <select class="form-select" asp-for="SourceType" data-iris-source-type>
+                                                <option value="INLINE_SQL">SQL tekstas</option>
+                                                <option value="SQL_FILE">SQL failas</option>
+                                                <option value="STORED_PROCEDURE">Procedura</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label" asp-for="SourceSqlConnectionName">Serveris</label>
+                                            <select class="form-select" asp-for="SourceSqlConnectionName">
+                                                @foreach (var name in Model.SqlConnectionNames)
+                                                {
+                                                    <option value="@name">@name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="SourceTableTitle">Lenteles pavadinimas laiske</label>
+                                        <input class="form-control" asp-for="SourceTableTitle" maxlength="260" />
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="SourceSqlFilePath">SQL failo kelias</label>
+                                        <input class="form-control" asp-for="SourceSqlFilePath" maxlength="2048" placeholder="Q:\...\report.sql" data-iris-sql-file />
+                                    </div>
+                                    <div>
+                                        <label class="form-label" asp-for="SourceStoredProcedure">Stored procedure</label>
+                                        <input class="form-control" asp-for="SourceStoredProcedure" maxlength="512" placeholder="dbo.PROCEDURE_NAME" data-iris-stored-procedure />
+                                    </div>
+                                    <div class="iris-source-sql-text-field">
+                                        <label class="form-label" asp-for="SourceSqlText">SQL tekstas</label>
+                                        <textarea class="form-control font-monospace" asp-for="SourceSqlText" rows="8" placeholder="SELECT ..." data-iris-sql-text></textarea>
+                                    </div>
+                                    <div class="iris-source-actions">
+                                        <div class="d-flex gap-3 flex-wrap align-items-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" asp-for="SourceIncludeHtmlTable" />
+                                                <label class="form-check-label" asp-for="SourceIncludeHtmlTable">Rodyti HTML lentele</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" asp-for="SourceAttachExcel" />
+                                                <label class="form-check-label" asp-for="SourceAttachExcel">Prisegti Excel</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" asp-for="SourceAttachCsv" />
+                                                <label class="form-check-label" asp-for="SourceAttachCsv">Prisegti CSV</label>
+                                            </div>
+                                        </div>
+                                        @if (Model.Reports.Count == 0)
+                                        {
+                                            <button class="btn btn-outline-success" type="submit" asp-page-handler="CreateSource" disabled>Prideti saltini</button>
+                                        }
+                                        else if (Model.SourceId > 0)
+                                        {
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <button class="btn btn-outline-success" type="submit" asp-page-handler="UpdateSource">Atnaujinti saltini</button>
+                                                <button class="btn btn-outline-secondary" type="submit" asp-page-handler="CreateSource">Sukurti kaip nauja</button>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-outline-success" type="submit" asp-page-handler="CreateSource">Prideti saltini</button>
+                                        }
+                                    </div>
+                                </form>
+                            </section>
+                        </div>
+                        </div>
+
+                        <div class="iris-control-cell iris-control-cell-schedule">
+                            <section class="argus-panel">
+                                <div class="section-title-row compact">
+                                    <h3>Siuntimo grafikas</h3>
+                                    <span class="status-pill-muted">Task Scheduler</span>
+                                </div>
+                                <form method="post" class="iris-scheduler-form" data-iris-scheduler-form>
+                                    <input type="hidden" asp-for="ActiveTab" value="control" />
+                                    <input type="hidden" asp-for="SelectedReportId" />
+                                    <input type="hidden" asp-for="ScheduleId" />
+                                    <div class="iris-scheduler-report-row">
+                                        <label class="form-label" asp-for="ScheduleReportId">KPI taskas</label>
+                                        <select class="form-select" asp-for="ScheduleReportId">
+                                            @foreach (var report in Model.Reports)
+                                            {
+                                                <option value="@report.Id">@report.KpiName - @report.Title</option>
+                                            }
+                                        </select>
+                                        @if (Model.Reports.Count == 0)
+                                        {
+                                            <button class="btn btn-outline-success" type="submit" asp-page-handler="CreateSchedule" disabled>Prideti grafika</button>
+                                        }
+                                        else if (Model.ScheduleId > 0)
+                                        {
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <button class="btn btn-outline-success" type="submit" asp-page-handler="UpdateSchedule">Atnaujinti grafika</button>
+                                                <button class="btn btn-outline-secondary" type="submit" asp-page-handler="CreateSchedule">Sukurti kaip nauja</button>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-outline-success" type="submit" asp-page-handler="CreateSchedule">Prideti grafika</button>
+                                        }
+                                    </div>
+
+                                    <div class="iris-scheduler-box">
+                                        <div class="iris-scheduler-modes" role="radiogroup" aria-label="Siuntimo rezimas">
+                                            <label><input class="form-check-input" asp-for="ScheduleType" type="radio" value="ONCE" data-iris-schedule-type /> One time</label>
+                                            <label><input class="form-check-input" asp-for="ScheduleType" type="radio" value="DAILY" data-iris-schedule-type /> Daily</label>
+                                            <label><input class="form-check-input" asp-for="ScheduleType" type="radio" value="WEEKLY" data-iris-schedule-type /> Weekly</label>
+                                            <label><input class="form-check-input" asp-for="ScheduleType" type="radio" value="MONTHLY" data-iris-schedule-type /> Monthly</label>
+                                            <label><input class="form-check-input" asp-for="ScheduleType" type="radio" value="MANUAL" data-iris-schedule-type /> Manual</label>
+                                        </div>
+
+                                        <div class="iris-scheduler-settings">
+                                            <div class="iris-scheduler-period-row">
+                                                <div class="iris-scheduler-start-group">
+                                                    <span class="iris-scheduler-label">Start:</span>
+                                                    <span class="iris-date-combo"><input class="form-control" asp-for="ScheduleStartDate" type="text" inputmode="numeric" pattern="^\d{4}-\d{2}-\d{2}$" placeholder="YYYY-MM-DD" data-iris-date-text="ScheduleStartDatePicker" /><button class="btn btn-outline-secondary iris-calendar-button" type="button" data-iris-date-button="ScheduleStartDatePicker" aria-label="Pasirinkti start datą">...</button><input id="ScheduleStartDatePicker" class="iris-date-picker-native" type="date" value="@Model.ScheduleStartDate" data-iris-date-picker /></span>
+                                                    <select class="form-select" asp-for="ScheduleHour" aria-label="Start hour">
+                                                    <option value="0">00</option>
+                                                    <option value="1">01</option>
+                                                    <option value="2">02</option>
+                                                    <option value="3">03</option>
+                                                    <option value="4">04</option>
+                                                    <option value="5">05</option>
+                                                    <option value="6">06</option>
+                                                    <option value="7">07</option>
+                                                    <option value="8">08</option>
+                                                    <option value="9">09</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12">12</option>
+                                                    <option value="13">13</option>
+                                                    <option value="14">14</option>
+                                                    <option value="15">15</option>
+                                                    <option value="16">16</option>
+                                                    <option value="17">17</option>
+                                                    <option value="18">18</option>
+                                                    <option value="19">19</option>
+                                                    <option value="20">20</option>
+                                                    <option value="21">21</option>
+                                                    <option value="22">22</option>
+                                                    <option value="23">23</option>
+                                                    </select>
+                                                    <span class="iris-time-separator">:</span>
+                                                    <select class="form-select" asp-for="ScheduleMinute" aria-label="Start minute">
+                                                    <option value="0">00</option>
+                                                    <option value="5">05</option>
+                                                    <option value="10">10</option>
+                                                    <option value="15">15</option>
+                                                    <option value="20">20</option>
+                                                    <option value="25">25</option>
+                                                    <option value="30">30</option>
+                                                    <option value="35">35</option>
+                                                    <option value="40">40</option>
+                                                    <option value="45">45</option>
+                                                    <option value="50">50</option>
+                                                    <option value="55">55</option>
+                                                    </select>
+                                                </div>
+                                                <div class="iris-scheduler-end-group">
+                                                    <span class="iris-scheduler-label">End:</span>
+                                                    <label><input class="form-check-input" asp-for="ScheduleNoEndDate" type="checkbox" data-iris-no-end-date /> No end date</label>
+                                                    <label data-iris-end-date-row>End by: <span class="iris-date-combo"><input class="form-control" asp-for="ScheduleEndAt" type="text" inputmode="numeric" pattern="^\d{4}-\d{2}-\d{2}$" placeholder="YYYY-MM-DD" data-iris-end-date data-iris-date-text="ScheduleEndAtPicker" /><button class="btn btn-outline-secondary iris-calendar-button" type="button" data-iris-date-button="ScheduleEndAtPicker" aria-label="Pasirinkti pabaigos datą">...</button><input id="ScheduleEndAtPicker" class="iris-date-picker-native" type="date" value="@Model.ScheduleEndAt" data-iris-date-picker /></span></label>
+                                                </div>
+                                            </div>
+
+                                            <div class="iris-scheduler-detail" data-iris-schedule-panel="MANUAL">
+                                                <p class="mb-0 text-muted">Tik rankinis paleidimas arba testinis siuntimas. Automatinis laikas nebus skaičiuojamas.</p>
+                                            </div>
+                                            <div class="iris-scheduler-detail" data-iris-schedule-panel="ONCE">
+                                                <p class="mb-0">Task will run one time at selected start date and time.</p>
+                                            </div>
+                                            <div class="iris-scheduler-detail" data-iris-schedule-panel="DAILY">
+                                                <label class="iris-inline-control">Recur every: <input class="form-control" asp-for="ScheduleDailyInterval" type="number" min="1" /> days</label>
+                                            </div>
+                                            <div class="iris-scheduler-detail" data-iris-schedule-panel="WEEKLY">
+                                                <label class="iris-inline-control">Recur every: <input class="form-control" asp-for="ScheduleWeeklyInterval" type="number" min="1" /> weeks on:</label>
+                                                <div class="iris-weekday-options">
+                                                    <label><input class="form-check-input" name="ScheduleDaysOfWeek" type="checkbox" value="1" checked="@(Model.ScheduleDaysOfWeek.Contains(1) || (!Model.ScheduleDaysOfWeek.Any() && Model.ScheduleDayOfWeek == 1))" /> Monday</label>
+                                                    <label><input class="form-check-input" name="ScheduleDaysOfWeek" type="checkbox" value="2" checked="@(Model.ScheduleDaysOfWeek.Contains(2))" /> Tuesday</label>
+                                                    <label><input class="form-check-input" name="ScheduleDaysOfWeek" type="checkbox" value="3" checked="@(Model.ScheduleDaysOfWeek.Contains(3))" /> Wednesday</label>
+                                                    <label><input class="form-check-input" name="ScheduleDaysOfWeek" type="checkbox" value="4" checked="@(Model.ScheduleDaysOfWeek.Contains(4))" /> Thursday</label>
+                                                    <label><input class="form-check-input" name="ScheduleDaysOfWeek" type="checkbox" value="5" checked="@(Model.ScheduleDaysOfWeek.Contains(5))" /> Friday</label>
+                                                    <label><input class="form-check-input" name="ScheduleDaysOfWeek" type="checkbox" value="6" checked="@(Model.ScheduleDaysOfWeek.Contains(6))" /> Saturday</label>
+                                                    <label><input class="form-check-input" name="ScheduleDaysOfWeek" type="checkbox" value="7" checked="@(Model.ScheduleDaysOfWeek.Contains(7))" /> Sunday</label>
+                                                </div>
+                                            </div>
+                                            <div class="iris-scheduler-detail" data-iris-schedule-panel="MONTHLY">
+                                                <div class="iris-monthly-row iris-months-row">
+                                                    <span>Months:</span>
+                                                    <div class="iris-month-options">
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="1" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(1))" /> Jan</label>
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="2" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(2))" /> Feb</label>
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="3" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(3))" /> Mar</label>
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="4" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(4))" /> Apr</label>
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="5" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(5))" /> May</label>
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="6" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(6))" /> Jun</label>
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="7" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(7))" /> Jul</label>
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="8" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(8))" /> Aug</label>
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="9" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(9))" /> Sep</label>
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="10" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(10))" /> Oct</label>
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="11" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(11))" /> Nov</label>
+                                                        <label><input class="form-check-input" name="ScheduleMonths" type="checkbox" value="12" checked="@(Model.ScheduleMonths.Count == 0 || Model.ScheduleMonths.Contains(12))" /> Dec</label>
+                                                    </div>
+                                                </div>
+                                                <label class="iris-monthly-row">
+                                                    <input class="form-check-input" asp-for="ScheduleLastDayOfMonth" type="checkbox" data-iris-last-day /> Last day of month
+                                                </label>
+                                                <label class="iris-monthly-row" data-iris-month-day-row>
+                                                    Day:
+                                                    <input class="form-control" asp-for="ScheduleDayOfMonth" type="number" min="1" max="31" data-iris-month-day />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="table-responsive exchange-table-wrap mb-4">
+                        <table class="table table-sm align-middle exchange-table">
+                            <thead>
+                                <tr>
+                                    <th>KPI vardas</th>
+                                    <th>@L["Common.Title"]</th>
+                                    <th>Senderis</th>
+                                    <th>SQL serveris</th>
+                                    <th>Saltiniai</th>
+                                    <th>Gavejai</th>
+                                    <th>@L["Common.Status"]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!Model.Reports.Any())
+                                {
+                                    <tr><td colspan="7" class="text-muted">IRIS tasku dar nera.</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (var report in Model.Reports)
+                                    {
+                                        <tr>
+                                            <td><strong>@report.KpiName</strong></td>
+                                            <td>@report.Title</td>
+                                            <td>@report.SenderKey</td>
+                                            <td>@report.DefaultSqlConnectionName</td>
+                                            <td>@report.SourceCount</td>
+                                            <td>@report.RecipientCount</td>
+                                            <td><span class="status-pill @(report.IsActive ? "" : "status-pill-muted")">@(report.IsActive ? "Aktyvu" : "Isjungta")</span></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if (Model.SelectedReportSources.Any())
+                    {
+                        <div class="table-responsive exchange-table-wrap mb-4">
+                            <table class="table table-sm align-middle exchange-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tipas</th>
+                                        <th>Serveris</th>
+                                        <th>Saltinis</th>
+                                        <th>Laisko lentele</th>
+                                        <th>Eksportai</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var source in Model.SelectedReportSources)
+                                    {
+                                        var sourceValue = source.SourceType switch
+                                        {
+                                            "SQL_FILE" => source.SqlFilePath,
+                                            "STORED_PROCEDURE" => source.StoredProcedure,
+                                            _ => source.SqlText
+                                        };
+                                        <tr>
+                                            <td>@source.SourceOrder</td>
+                                            <td>@source.SourceType</td>
+                                            <td>@source.SqlConnectionName</td>
+                                            <td class="font-monospace small">
+                                                <details>
+                                                    <summary>@(string.IsNullOrWhiteSpace(sourceValue) ? "-" : sourceValue.Length > 80 ? sourceValue[..80] + "..." : sourceValue)</summary>
+                                                    <pre class="iris-source-preview">@sourceValue</pre>
+                                                </details>
+                                            </td>
+                                            <td>@(source.IncludeHtmlTable ? "Taip" : "Ne") @source.TableTitle</td>
+                                            <td>Excel @(source.AttachExcel ? "Taip" : "Ne") / CSV @(source.AttachCsv ? "Taip" : "Ne")</td>
+                                            <td class="text-end">
+                                                <div class="d-flex gap-2 justify-content-end flex-wrap">
+                                                    <form method="post" class="m-0">
+                                                        <input type="hidden" name="ActiveTab" value="control" />
+                                                        <input type="hidden" name="SelectedReportId" value="@Model.SelectedReportId" />
+                                                        <input type="hidden" name="sourceId" value="@source.Id" />
+                                                        <button class="btn btn-sm btn-outline-success" type="submit" asp-page-handler="LoadSource">Redaguoti</button>
+                                                    </form>
+                                                    <form method="post" class="m-0">
+                                                        <input type="hidden" name="ActiveTab" value="control" />
+                                                        <input type="hidden" name="SelectedReportId" value="@Model.SelectedReportId" />
+                                                        <input type="hidden" name="sourceId" value="@source.Id" />
+                                                        <button class="btn btn-sm btn-outline-danger" type="submit" asp-page-handler="DeleteSource">Panaikinti</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+
+                    @if (Model.SelectedReportRecipients.Any() || Model.SelectedReportSchedules.Any())
+                    {
+                        <div class="iris-management-grid mb-4">
+                            <div class="iris-management-recipients">
+                                <div class="table-responsive exchange-table-wrap">
+                                    <table class="table table-sm align-middle exchange-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="iris-recipient-type-col">Tipas</th>
+                                                <th>El. pastas</th>
+                                                <th class="iris-recipient-erp-col">Vardas / ERP</th>
+                                                <th class="iris-recipient-status-col">Busena</th>
+                                                <th class="iris-recipient-actions-col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var recipient in Model.SelectedReportRecipients)
+                                            {
+                                                <tr>
+                                                    <td>@recipient.AddressType</td>
+                                                    <td>@recipient.Email</td>
+                                                    <td>@recipient.DisplayName @recipient.Erp</td>
+                                                    <td><span class="status-pill @(recipient.IsActive ? "" : "status-pill-muted")">@(recipient.IsActive ? "Aktyvu" : "Isjungta")</span></td>
+                                                    <td class="text-end">
+                                                        <form method="post" class="m-0">
+                                                            <input type="hidden" name="ActiveTab" value="control" />
+                                                            <input type="hidden" name="SelectedReportId" value="@Model.SelectedReportId" />
+                                                            <input type="hidden" name="recipientId" value="@recipient.Id" />
+                                                            <input type="hidden" name="isActive" value="@((!recipient.IsActive).ToString().ToLowerInvariant())" />
+                                                            <button class="btn btn-sm @(recipient.IsActive ? "btn-outline-danger" : "btn-outline-success")" type="submit" asp-page-handler="ToggleRecipient">
+                                                                @(recipient.IsActive ? "Isjungti" : "Aktyvuoti")
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            @if (!Model.SelectedReportRecipients.Any())
+                                            {
+                                                <tr><td colspan="5" class="text-muted">Adresatu dar nera.</td></tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="iris-management-schedules">
+                                <div class="table-responsive exchange-table-wrap">
+                                    <table class="table table-sm align-middle exchange-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="iris-schedule-type-col">Režimas</th>
+                                                <th class="iris-schedule-next-col">Kitas vykdymas</th>
+                                                <th class="iris-schedule-description-col">Aprasymas</th>
+                                                <th class="iris-schedule-status-col">Busena</th>
+                                                <th class="iris-schedule-actions-col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var schedule in Model.SelectedReportSchedules)
+                                            {
+                                                <tr>
+                                                    <td>@schedule.ScheduleType</td>
+                                                    <td>@(schedule.NextRunAt?.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                                                    <td class="font-monospace small">
+                                                        <details>
+                                                            <summary>@(schedule.ScheduleJson.Length > 54 ? schedule.ScheduleJson[..54] + "..." : schedule.ScheduleJson)</summary>
+                                                            <pre class="iris-source-preview">@schedule.ScheduleJson</pre>
+                                                        </details>
+                                                    </td>
+                                                    <td><span class="status-pill @(schedule.IsActive ? "" : "status-pill-muted")">@(schedule.IsActive ? "Aktyvu" : "Isjungta")</span></td>
+                                                    <td class="text-end">
+                                                        <div class="d-flex gap-2 justify-content-end flex-wrap">
+                                                            <form method="post" class="m-0">
+                                                                <input type="hidden" name="ActiveTab" value="control" />
+                                                                <input type="hidden" name="SelectedReportId" value="@Model.SelectedReportId" />
+                                                                <input type="hidden" name="scheduleId" value="@schedule.Id" />
+                                                                <button class="btn btn-sm btn-outline-success" type="submit" asp-page-handler="LoadSchedule">Redaguoti</button>
+                                                            </form>
+                                                            <form method="post" class="m-0">
+                                                                <input type="hidden" name="ActiveTab" value="control" />
+                                                                <input type="hidden" name="SelectedReportId" value="@Model.SelectedReportId" />
+                                                                <input type="hidden" name="scheduleId" value="@schedule.Id" />
+                                                                <input type="hidden" name="isActive" value="@((!schedule.IsActive).ToString().ToLowerInvariant())" />
+                                                                <button class="btn btn-sm @(schedule.IsActive ? "btn-outline-danger" : "btn-outline-success")" type="submit" asp-page-handler="ToggleSchedule">
+                                                                    @(schedule.IsActive ? "Isjungti" : "Aktyvuoti")
+                                                                </button>
+                                                            </form>
+                                                            <form method="post" class="m-0">
+                                                                <input type="hidden" name="ActiveTab" value="control" />
+                                                                <input type="hidden" name="SelectedReportId" value="@Model.SelectedReportId" />
+                                                                <input type="hidden" name="scheduleId" value="@schedule.Id" />
+                                                                <button class="btn btn-sm btn-outline-danger" type="submit" asp-page-handler="DeleteSchedule">Panaikinti</button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            @if (!Model.SelectedReportSchedules.Any())
+                                            {
+                                                <tr><td colspan="5" class="text-muted">Grafiko dar nera.</td></tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="table-responsive exchange-table-wrap">
+                        <table class="table table-sm align-middle exchange-table">
+                            <thead>
+                                <tr>
+                                    <th>@L["Iris.CreatedAt"]</th>
+                                    <th>@L["Iris.Application"]</th>
+                                    <th>@L["Iris.Process"]</th>
+                                    <th>@L["Iris.RecipientEmail"]</th>
+                                    <th>@L["Common.Status"]</th>
+                                    <th>@L["Common.Title"]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!Model.RecentMails.Any())
+                                {
+                                    <tr><td colspan="6" class="text-muted">@L["Iris.RecentEmpty"]</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (var mail in Model.RecentMails)
+                                    {
+                                        <tr>
+                                            <td class="small text-muted">@mail.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                                            <td>@mail.ApplicationName</td>
+                                            <td>@mail.ProcessName</td>
+                                            <td>@mail.RecipientEmail</td>
+                                            <td><span class="status-pill @(mail.Status.Contains("error", StringComparison.OrdinalIgnoreCase) || mail.Status.Contains("fail", StringComparison.OrdinalIgnoreCase) ? "status-pill-muted" : "")">@mail.Status</span></td>
+                                            <td title="@mail.ArchivePath">@mail.Subject</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="tab-pane fade @(isKpiActive ? "show active" : "")" id="iris-kpi-pane" role="tabpanel" aria-labelledby="iris-kpi-tab" tabindex="0">
+                    <div class="hub-metrics mb-4">
+                        <div class="metric-card">
+                            <small>@L["Iris.Kpi.Total"]</small>
+                            <h4>@totalMails</h4>
+                            <span class="text-muted">@L["Iris.Kpi.RecentWindow"]</span>
+                        </div>
+                        <div class="metric-card">
+                            <small>@L["Iris.Kpi.Success"]</small>
+                            <h4>@successMails</h4>
+                            <span class="text-muted">@L["Iris.Kpi.SuccessHint"]</span>
+                        </div>
+                        <div class="metric-card">
+                            <small>@L["Iris.Kpi.Errors"]</small>
+                            <h4>@errorMails</h4>
+                            <span class="text-muted">@L["Iris.Kpi.ErrorsHint"]</span>
+                        </div>
+                        <div class="metric-card">
+                            <small>@L["Iris.Kpi.Last"]</small>
+                            <h4>@(lastMail is null ? "-" : lastMail.CreatedAt.ToString("MM-dd HH:mm"))</h4>
+                            <span class="text-muted">@(lastMail is null ? L["Iris.RecentEmpty"] : lastMail.Status)</span>
+                        </div>
+                    </div>
+
+                    <section class="argus-panel mb-4">
+                        <div class="section-title-row compact">
+                            <h3>@L["Iris.Kpi.StatusBreakdown"]</h3>
+                            <span class="status-pill-muted">@totalMails</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle exchange-table">
+                                <thead>
+                                    <tr>
+                                        <th>@L["Common.Status"]</th>
+                                        <th>@L["Iris.Kpi.Count"]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var group in Model.RecentMails.GroupBy(mail => mail.Status).OrderByDescending(group => group.Count()))
+                                    {
+                                        <tr>
+                                            <td>@group.Key</td>
+                                            <td>@group.Count()</td>
+                                        </tr>
+                                    }
+                                    @if (!Model.RecentMails.Any())
+                                    {
+                                        <tr><td colspan="2" class="text-muted">@L["Iris.RecentEmpty"]</td></tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </section>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

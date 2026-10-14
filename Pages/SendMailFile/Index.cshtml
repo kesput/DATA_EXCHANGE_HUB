@@ -1,0 +1,129 @@
+@page
+@model DATA_EXCHANGE_HUB.Pages.SendMailFile.IndexModel
+@{
+    ViewData["Title"] = "Send Mail File";
+}
+
+<div class="container-fluid exchange-page pt-4">
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
+                    Send Mail File <small class="badge bg-secondary ms-2">SMF</small>
+                </h3>
+                <p class="mb-0 text-dark-green">@L["SendMailFile.Subtitle"]</p>
+            </div>
+
+            <div class="access-panel stacked mb-3">
+                <div>
+                    <span class="field-label">@L["SendMailFile.Countries"]</span>
+                    <strong>@Model.Countries.Count</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["Common.Status"]</span>
+                    <strong>@(Model.CanOpen ? L["Status.Active"] : L["SendMailFile.NoAccess"])</strong>
+                </div>
+            </div>
+
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">@L["Common.BackToHub"]</a>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            @if (!Model.CanOpen)
+            {
+                <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
+                    <h2 class="fw-bold text-dark-green">@L["Common.AccessDenied"]</h2>
+                    <p class="mb-0">@L["SendMailFile.AccessDeniedBody"]</p>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mb-4" role="status">@L["SendMailFile.RefreshHint"]</div>
+
+                <div class="hub-metrics mb-4">
+                    @foreach (var country in Model.Countries)
+                    {
+                        <div class="metric-card">
+                            <small>@country.Country</small>
+                            <h4>@country.Files.Count</h4>
+                            <span class="text-muted small">@string.Format(L["SendMailFile.UsedSpace"], Model.FormatFileSize(country.Files.Sum(file => file.SizeBytes)))</span>
+                        </div>
+                    }
+                </div>
+
+                @foreach (var country in Model.Countries)
+                {
+                    var searchGroup = $"sendMailFiles-{country.Country}";
+                    <section class="tool-section mb-3">
+                        <div class="section-title-row">
+                            <h2>@country.Country</h2>
+                            <span class="status-pill @(country.DirectoryExists ? "" : "status-pill-muted")">
+                                @(country.DirectoryExists ? L["SendMailFile.DirectoryFound"] : L["SendMailFile.DirectoryMissing"])
+                            </span>
+                        </div>
+
+                        <div class="file-note mb-3">@country.DirectoryPath</div>
+
+                        @if (country.DirectoryExists && country.Files.Count > 0)
+                        {
+                            <form class="input-group search-box mb-3" onsubmit="return false;">
+                                <span class="input-group-text">
+                                    <img src="/icons/search.svg" alt="Search" style="width: 18px; height: 18px;" />
+                                </span>
+                                <input type="search"
+                                       class="form-control"
+                                       placeholder="@L["SendMailFile.SearchPlaceholder"]"
+                                       autocomplete="off"
+                                       data-list-search
+                                       data-search-groups="@searchGroup" />
+                            </form>
+                        }
+
+                        @if (!country.DirectoryExists)
+                        {
+                            <div class="empty-state">@L["SendMailFile.DirectoryUnavailable"]</div>
+                        }
+                        else if (country.Files.Count == 0)
+                        {
+                            <div class="empty-state">@L["SendMailFile.Empty"]</div>
+                        }
+                        else
+                        {
+                            <div class="exchange-table-wrap file-upload-table-wrap">
+                                <table class="table table-sm exchange-table mb-0" data-search-list="@searchGroup">
+                                    <thead>
+                                        <tr>
+                                            <th>@L["Common.File"]</th>
+                                            <th>@L["SendMailFile.Size"]</th>
+                                            <th>@L["SendMailFile.Time"]</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var file in country.Files)
+                                        {
+                                            <tr data-search-item data-search-text="@file.FileName">
+                                                <td class="file-name">@file.FileName</td>
+                                                <td>@Model.FormatFileSize(file.SizeBytes)</td>
+                                                <td>@UiFormat.DateTime(file.LastWriteTime)</td>
+                                                <td class="text-end">
+                                                    <a class="btn btn-sm btn-outline-secondary"
+                                                       asp-page-handler="Download"
+                                                       asp-route-country="@file.Country"
+                                                       asp-route-fileName="@file.FileName">
+                                                        @L["SendMailFile.Download"]
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="empty-state mt-3" data-search-empty="@searchGroup" hidden>@L["SendMailFile.SearchEmpty"]</div>
+                        }
+                    </section>
+                }
+            }
+        </section>
+    </div>
+</div>

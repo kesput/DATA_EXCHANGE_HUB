@@ -1,0 +1,295 @@
+﻿@page
+@model DATA_EXCHANGE_HUB.Pages.Oracul.IndexModel
+@{
+    ViewData["Title"] = "ORACUL";
+}
+
+<div class="container-fluid exchange-page pt-4">
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
+                    ORACUL <small class="badge bg-secondary ms-2">OR</small>
+                </h3>
+                <p class="mb-0 text-dark-green">@L["App.Oracul.Description"]</p>
+            </div>
+
+            <div class="access-panel stacked mb-3">
+                <div>
+                    <span class="field-label">@L["Common.User"]</span>
+                    <strong>@Model.UserName</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["Common.Application"]</span>
+                    <strong>ORACUL</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["Themis.Access"]</span>
+                    <strong>@(Model.HasAccess ? L["Themis.AccessGranted"] : L["Themis.AccessDenied"])</strong>
+                </div>
+            </div>
+
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">@L["Common.BackToHub"]</a>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+            }
+
+            @if (!Model.HasAccess)
+            {
+                <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
+                    <h2 class="fw-bold text-dark-green">@L["Common.AccessDenied"]</h2>
+                    <p class="mb-0">@L["Oracul.AccessDeniedBody"]</p>
+                </div>
+            }
+            else
+            {
+                <section class="tool-section mb-3">
+                    <div class="section-title-row">
+                        <h2>@L["Oracul.Parameters"]</h2>
+                    </div>
+
+                    <form method="post" class="oracul-form" id="oraculQueryForm" data-busy-form data-busy-title="ORACUL uzklausa vykdoma">
+                        <div class="oracul-mode">
+                            <span class="form-label">@L["Oracul.QueryMode"]</span>
+                            <label class="form-check">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       asp-for="QueryMode"
+                                       value="weekday"
+                                       data-oracul-mode />
+                                <span class="form-check-label">@L["Oracul.ByWeekday"]</span>
+                            </label>
+                            <label class="form-check">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       asp-for="QueryMode"
+                                       value="date"
+                               data-oracul-mode />
+                                <span class="form-check-label">@L["Oracul.ByDate"]</span>
+                            </label>
+                        </div>
+
+                        <div class="oracul-params">
+                            <div data-oracul-weekday>
+                                <label class="form-label" for="DayNumber">@L["Oracul.Weekday"]</label>
+                                <input class="form-control"
+                                       id="DayNumber"
+                                       asp-for="DayNumber"
+                                       type="number"
+                                       min="1"
+                                       max="7" />
+                            </div>
+
+                            <div data-oracul-date>
+                                <label class="form-label" for="DateText">@L["Oracul.Date"]</label>
+                                <input class="form-control"
+                                       id="DateText"
+                                       asp-for="DateText"
+                                       type="date" />
+                            </div>
+
+                            <div>
+                                <label class="form-label" for="ReportName">KPI</label>
+                                <select class="form-select" id="ReportName" asp-for="ReportName">
+                                    @foreach (var report in Model.Reports)
+                                    {
+                                        <option value="@report">@report</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="oracul-actions">
+                                <button type="submit" asp-page-handler="Execute" class="btn btn-orange" data-busy-label="Vykdoma...">EXECUTE</button>
+                                <button type="submit" asp-page-handler="ExportExcel" class="btn btn-outline-primary" data-busy-title="Excel failas ruosiamas" data-busy-label="Ruosiamas Excel..." data-busy-auto-reset-ms="5000">Export Excel</button>
+                                    <button type="submit" asp-page-handler="ExportCsv" class="btn btn-outline-success" data-busy-title="CSV failas ruosiamas" data-busy-label="Ruosiamas CSV..." data-busy-auto-reset-ms="5000">Export CSV</button>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                @if (Model.Result is not null)
+                {
+                    <div class="oracul-metrics mb-3">
+                        <div class="metric-card">
+                            <small>KPI Name</small>
+                            <h4>@Model.ReportName</h4>
+                        </div>
+                        <div class="metric-card">
+                            <small>@L["Oracul.Rows"]</small>
+                            <h4>@Model.Result.Rows.Count</h4>
+                        </div>
+                        <div class="metric-card">
+                            <small>BRUTTO, t</small>
+                            <h4>@Model.BruttoTotalText</h4>
+                        </div>
+                        <div class="metric-card">
+                            <small>EPL</small>
+                            <h4>@Model.EplTotalText</h4>
+                        </div>
+                    </div>
+
+                    <section class="tool-section">
+                        <div class="section-title-row">
+                            <h2>@L["Oracul.Results"]</h2>
+                        </div>
+
+                                    @if (Model.HasResultPaging)
+                            {
+                                <div class="d-flex align-items-center gap-2 flex-wrap mb-3" data-result-pager>
+                                    <span class="status-pill">Rodoma @Model.ResultPageStartRow-@Model.ResultPageEndRow is @Model.ResultTotalRows</span>
+                                    <button type="submit" form="oraculQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Max(1, Model.ResultPageValue - 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue <= 1)">Ankstesnis</button>
+                                    <span class="small text-muted">Puslapis @Model.ResultPageValue / @Model.ResultTotalPages</span>
+                                    <button type="submit" form="oraculQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Min(Model.ResultTotalPages, Model.ResultPageValue + 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue >= Model.ResultTotalPages)">Kitas</button>
+                                </div>
+                            }
+                @if (Model.Result.Rows.Count == 0)
+                        {
+                            <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
+                                @L["Oracul.NoRows"]
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive exchange-table-wrap">
+                                <table class="table align-middle exchange-table" id="oraculResultTable">
+                                    <thead>
+                                        <tr>
+                                            @foreach (var column in Model.Result.Columns)
+                                            {
+                                                <th class="sortable-header" data-sort-column="@column">
+                                                    <span>@column</span>
+                                                </th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var row in Model.DisplayRows)
+                                        {
+                                            <tr class="data-row">
+                                                @foreach (var column in Model.Result.Columns)
+                                                {
+                                                    <td data-column-name="@column">
+                                                        @(row.TryGetValue(column, out var value) ? value : string.Empty)
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </section>
+                }
+                else if (Model.HasExecuted)
+                {
+                    <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
+                        @L["Oracul.LoadFailed"]
+                    </div>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const sortDirections = {};
+
+        document.querySelectorAll("#oraculResultTable th[data-sort-column]").forEach((header) => {
+            header.addEventListener("dblclick", () => sortTableByColumn(header));
+        });
+
+        function sortTableByColumn(header) {
+            const table = document.getElementById("oraculResultTable");
+            const tbody = table?.querySelector("tbody");
+            const columnName = header.getAttribute("data-sort-column");
+            if (!table || !tbody || !columnName) {
+                return;
+            }
+
+            const nextDirection = sortDirections[columnName] === "asc" ? "desc" : "asc";
+            Object.keys(sortDirections).forEach((key) => delete sortDirections[key]);
+            sortDirections[columnName] = nextDirection;
+
+            table.querySelectorAll("th[data-sort-column]").forEach((item) => {
+                item.classList.remove("sort-asc", "sort-desc");
+            });
+            header.classList.add(nextDirection === "asc" ? "sort-asc" : "sort-desc");
+
+            const rows = Array.from(tbody.querySelectorAll("tr.data-row"));
+            rows.sort((leftRow, rightRow) => compareCellValues(
+                getSortValue(leftRow, columnName),
+                getSortValue(rightRow, columnName),
+                nextDirection));
+
+            rows.forEach((row) => tbody.appendChild(row));
+        }
+
+        function getSortValue(row, columnName) {
+            return row
+                .querySelector(`td[data-column-name="${cssEscape(columnName)}"]`)
+                ?.textContent
+                ?.trim() ?? "";
+        }
+
+        function compareCellValues(leftValue, rightValue, direction) {
+            const directionMultiplier = direction === "asc" ? 1 : -1;
+            const leftNumber = parseNumber(leftValue);
+            const rightNumber = parseNumber(rightValue);
+            if (!Number.isNaN(leftNumber) && !Number.isNaN(rightNumber)) {
+                return (leftNumber - rightNumber) * directionMultiplier;
+            }
+
+            const leftDate = Date.parse(leftValue);
+            const rightDate = Date.parse(rightValue);
+            if (!Number.isNaN(leftDate) && !Number.isNaN(rightDate)) {
+                return (leftDate - rightDate) * directionMultiplier;
+            }
+
+            return leftValue.localeCompare(rightValue, "lt", {
+                numeric: true,
+                sensitivity: "base"
+            }) * directionMultiplier;
+        }
+
+        function parseNumber(value) {
+            const normalized = value
+                .replace(/\s/g, "")
+                .replace(",", ".");
+
+            return normalized === "" ? Number.NaN : Number(normalized);
+        }
+
+        function cssEscape(value) {
+            if (window.CSS?.escape) {
+                return CSS.escape(value);
+            }
+
+            return value.replace(/["\\]/g, "\\$&");
+        }
+
+        document.querySelectorAll("[data-oracul-mode]").forEach((input) => {
+            input.addEventListener("change", updateOraculModeFields);
+        });
+        updateOraculModeFields();
+
+        function updateOraculModeFields() {
+            const selectedMode = document.querySelector("[data-oracul-mode]:checked")?.value ?? "weekday";
+            document.querySelectorAll("[data-oracul-weekday]").forEach((item) => {
+                item.hidden = selectedMode === "date";
+            });
+            document.querySelectorAll("[data-oracul-date]").forEach((item) => {
+                item.hidden = selectedMode !== "date";
+            });
+        }
+    </script>
+}
+
+
+
+
+

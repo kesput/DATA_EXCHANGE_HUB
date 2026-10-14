@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 75" role="img" aria-label="Jumbo truck">
+  <g fill="#f7fbf4" stroke="#27451f" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M8 14h98v32H8z"/>
+    <path d="M106 17h24l16 15 8 23h-48z"/>
+    <path d="M118 23h12l9 8h-21z" fill="#dff6ff" stroke-width="3"/>
+    <path d="M10 49h96"/>
+    <path d="M152 48h8"/>
+    <circle cx="28" cy="58" r="8"/>
+    <circle cx="44" cy="58" r="8"/>
+    <circle cx="124" cy="58" r="8"/>
+    <circle cx="143" cy="58" r="8"/>
+  </g>
+  <g fill="#27451f">
+    <circle cx="28" cy="58" r="3"/>
+    <circle cx="44" cy="58" r="3"/>
+    <circle cx="124" cy="58" r="3"/>
+    <circle cx="143" cy="58" r="3"/>
+    <rect x="136" y="39" width="10" height="4" rx="2"/>
+  </g>
+</svg>

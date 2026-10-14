@@ -1,0 +1,200 @@
+@page
+@model DATA_EXCHANGE_HUB.Pages.Hub.IndexModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Hub";
+    var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+    string StatusLabel(string status) => status.Equals("Aktyvu", StringComparison.OrdinalIgnoreCase)
+        ? L["Status.Active"]
+        : status;
+    string DescriptionLabel(string title) => title switch
+    {
+        "Data exchange" => L["App.DataExchange.Description"],
+        "ORACUL" => L["App.Oracul.Description"],
+        "KAIROS" => L["App.Kairos.Description"],
+        "ATLAS" => L["App.Atlas.Description"],
+        "HYDRA" => L["App.Hydra.Description"],
+        "DIKE" => "Klientu suderinimu, kontaktu ir sutartu salygu registras.",
+        "ARETE" => L["App.Arete.Description"],
+        "APIS" => L["App.Apis.Description"],
+        "ARGUS" => L["App.Argus.Description"],
+        "THEMIS" => L["App.Themis.Description"],
+        "File upload" => L["App.FileUpload.Description"],
+        "Send Mail File" => L["App.SendMailFile.Description"],
+        "Klientu info" => L["App.ClientInfo.Description"],
+        "SPHINX" => L["App.Sphinx.Description"],
+        "SESHAT" => L["App.Seshat.Description"],
+        "IRIS" => "Informaciniu rodikliu issiuntimo sistema.",
+        "SEND MAIL" => "El. laisku ruosimas, HTML sablonai ir issiuntimo auditas.",
+        _ => title
+    };
+    string AcronymSearchText(string title) => Model.AcronymByTitle.TryGetValue(title, out var acronym)
+        ? $"{acronym.SymbolLt} {acronym.SymbolEn} {acronym.MeaningLt} {acronym.MeaningEn} {acronym.TooltipLt} {acronym.TooltipEn} {string.Join(" ", acronym.Terms.Select(term => $"{term.Letter} {term.Lt} {term.LtDescription} {term.En} {term.EnDescription}"))}"
+        : string.Empty;
+    string AcronymTooltip(DATA_EXCHANGE_HUB.Models.HubApplicationAcronym acronym)
+    {
+        var symbol = isEnglish && !string.IsNullOrWhiteSpace(acronym.SymbolEn)
+            ? acronym.SymbolEn
+            : acronym.SymbolLt;
+        var tooltip = isEnglish && !string.IsNullOrWhiteSpace(acronym.TooltipEn)
+            ? acronym.TooltipEn
+            : acronym.TooltipLt;
+        var rows = acronym.Terms
+            .Where(term => !string.IsNullOrWhiteSpace(term.Letter))
+            .Select(term =>
+            {
+                var primary = isEnglish ? term.En : term.Lt;
+                var secondary = isEnglish ? term.EnDescription : term.LtDescription;
+                return string.IsNullOrWhiteSpace(secondary)
+                    ? $"<div class=\"acronym-tooltip-row\"><strong>{term.Letter}</strong><span>{primary}</span></div>"
+                    : $"<div class=\"acronym-tooltip-row\"><strong>{term.Letter}</strong><span><b>{primary}</b><small>{secondary}</small></span></div>";
+            });
+        var terms = string.Join("", rows);
+        var body = string.Join(
+            "",
+            new[] { symbol, terms, tooltip.Replace("\r\n", "\n").Replace("\n", "<br>") }
+                .Where(part => !string.IsNullOrWhiteSpace(part))
+                .Select(part => $"<div class=\"acronym-tooltip-block\">{part}</div>"));
+        return $"<div class=\"acronym-tooltip\"><strong>{acronym.Title}</strong>{body}</div>";
+    }
+}
+
+<div class="container-fluid hub-page pt-4">
+    <div class="hub-hero mb-4">
+        <div>
+            <span class="hub-eyebrow">@L["Header.Subtitle"]</span>
+            <h1>Data Exchange Hub</h1>
+            <p>@L["Hub.HeroText"]</p>
+        </div>
+        <a class="btn btn-orange hub-hero-action" asp-page="/DataExchange/Index">@L["Hub.OpenDataExchange"]</a>
+    </div>
+
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 hub-sidebar">
+            <form method="get" class="input-group search-box mb-3">
+                <span class="input-group-text">
+                    <img src="/icons/search.svg" alt="Search" style="width: 18px; height: 18px;" />
+                </span>
+                <input type="search"
+                       class="form-control"
+                       name="SearchTerm"
+                       value="@Model.SearchTerm"
+                       placeholder="@L["Hub.SearchPlaceholder"]"
+                       autocomplete="off"
+                       data-list-search
+                       data-search-groups="hubApplications" />
+            </form>
+
+            <div class="hub-app-list">
+                <div class="side-panel-title">@L["Common.Applications"]</div>
+                <div class="list-group" data-search-list="hubApplications">
+                    @foreach (var application in Model.Applications)
+                    {
+                        <a class="list-group-item list-group-item-action active list-with-details"
+                           href="@application.Page"
+                           data-search-item
+                           data-search-text="@($"{application.Title} {DescriptionLabel(application.Title)} {StatusLabel(application.Status)} {application.IconText} {AcronymSearchText(application.Title)}")">
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <strong class="app-title-with-info">
+                                    @application.Title
+                                    @if (Model.AcronymByTitle.TryGetValue(application.Title, out var acronym))
+                                    {
+                                        <span class="app-info-icon"
+                                              tabindex="0"
+                                              role="img"
+                                              aria-label="@AcronymTooltip(acronym)"
+                                              data-bs-toggle="tooltip"
+                                              data-bs-placement="right"
+                                              data-bs-html="true"
+                                              title="@AcronymTooltip(acronym)">i</span>
+                                    }
+                                </strong>
+                                <span class="text-muted small">@application.IconText</span>
+                            </div>
+
+                            <div class="d-flex justify-content-end align-items-center mt-1 client-kpis">
+                                <div class="kpi-item text-success">
+                                    <div class="fw-bold">WEB</div>
+                                    <small>@L["Common.Type"]</small>
+                                </div>
+                                <div class="kpi-item text-success">
+                                    <div class="fw-bold">@StatusLabel(application.Status)</div>
+                                    <small>@L["Common.Status"]</small>
+                                </div>
+                            </div>
+                        </a>
+                    }
+
+                    <div class="p-4 text-center text-muted border border-dashed rounded-lg bg-light-green" data-search-empty="hubApplications" hidden>
+                        @L["Hub.EmptySearch"]
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9">
+            <div class="hub-metrics mb-4">
+                <div class="metric-card">
+                    <small>@L["Common.Applications"]</small>
+                    <h4>@Model.Applications.Count</h4>
+                </div>
+                <div class="metric-card">
+                    <small>@L["Hub.ActiveApplications"]</small>
+                    <h4>@Model.Applications.Count(app => app.Status == "Aktyvu")</h4>
+                </div>
+                <div class="metric-card">
+                    <small>@L["Common.ContactForAccess"]</small>
+                    <h4 class="contact-email">kestutis.p@bls.lt</h4>
+                </div>
+            </div>
+
+            <div class="hub-board">
+                <div class="section-title-row">
+                    <h2>@L["Hub.ApplicationList"]</h2>
+                </div>
+                <div class="hub-app-grid" data-search-list="hubApplications">
+                    @foreach (var application in Model.Applications)
+                    {
+                        <a class="app-tile"
+                           href="@application.Page"
+                           data-search-item
+                           data-search-text="@($"{application.Title} {DescriptionLabel(application.Title)} {StatusLabel(application.Status)} {application.IconText} {AcronymSearchText(application.Title)}")">
+                            <span class="app-tile-rail">
+                                <span class="app-tile-icon">@application.IconText</span>
+                                <span class="app-status">@StatusLabel(application.Status)</span>
+                            </span>
+                            <span class="app-tile-body">
+                                <span class="app-tile-title app-title-with-info">
+                                    @application.Title
+                                    @if (Model.AcronymByTitle.TryGetValue(application.Title, out var acronym))
+                                    {
+                                        <span class="app-info-icon"
+                                              tabindex="0"
+                                              role="img"
+                                              aria-label="@AcronymTooltip(acronym)"
+                                              data-bs-toggle="tooltip"
+                                              data-bs-placement="top"
+                                              data-bs-html="true"
+                                              title="@AcronymTooltip(acronym)">i</span>
+                                    }
+                                </span>
+                                <span class="app-tile-desc">@DescriptionLabel(application.Title)</span>
+                            </span>
+                        </a>
+                    }
+                </div>
+                <div class="p-4 text-center text-muted border border-dashed rounded-lg bg-light-green mt-3" data-search-empty="hubApplications" hidden>
+                    @L["Hub.EmptySearch"]
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+
+
+
+
+

@@ -1,0 +1,235 @@
+[
+  {
+    "term": "3PL",
+    "titleLt": "Third-Party Logistics",
+    "titleEn": "Third-Party Logistics",
+    "descriptionLt": "Logistikos partneris, kuris koordinuoja platesni paslaugu paketa, pvz. sandeliavima, transporta ir uzsakymu valdyma.",
+    "descriptionEn": "A logistics partner coordinating a broader service package, such as warehousing, transport and order management.",
+    "synonyms": ["trecios salies logistika", "logistikos partneris", "outsourced logistics", "3PL"]
+  },
+  {
+    "term": "BOM",
+    "titleLt": "Bill of Materials",
+    "titleEn": "Bill of Materials",
+    "descriptionLt": "Medziagu ar komponentu sarasas, reikalingas produktui, rinkiniui, pakavimui ar kitai operacijai atlikti.",
+    "descriptionEn": "A list of materials or components required to make a product, kit, packing setup or another operation.",
+    "synonyms": ["medziagu sarasas", "komplektacija", "receptura", "components list"]
+  },
+  {
+    "term": "FTL",
+    "titleLt": "Full Truckload",
+    "titleEn": "Full Truckload",
+    "descriptionLt": "Pilnas krovinys, kai masina ar priekaba skiriama vienam klientui, marsrutui ar siuntai.",
+    "descriptionEn": "A full load where a vehicle or trailer is dedicated to one customer, route or shipment.",
+    "synonyms": ["pilnas krovinys", "pilna masina", "full load", "dedicated truck"]
+  },
+  {
+    "term": "DROP",
+    "titleLt": "Pristatymo taskas",
+    "titleEn": "Delivery stop",
+    "descriptionLt": "Marsruto sustojimas, kuriame iskraunama, perduodama arba paimama siunta.",
+    "descriptionEn": "A route stop where a shipment is unloaded, handed over or collected.",
+    "synonyms": ["iskrovimas", "pristatymas", "delivery", "unloading", "Drop"]
+  },
+    {
+    "term": "POI",
+    "titleLt": "Pristatymo taskas",
+    "titleEn": "Point of interest",
+    "descriptionLt": "Svarbi marsruto arba proceso vieta, pvz. klientas, rampa, sandelis ar tarpinis sustojimas.",
+    "descriptionEn": "An important route or process location, such as a customer, dock, warehouse or intermediate stop.",
+    "synonyms": ["lokacija", "rampa", "klientas", "point of interest", "delivery point"]
+  },
+  {
+    "term": "POD",
+    "titleLt": "Proof of Delivery",
+    "titleEn": "Proof of Delivery",
+    "descriptionLt": "Pristatymo patvirtinimas: dokumentas, parasas, skaitmeninis irasas ar kitas irodymas, kad krovinys pristatytas.",
+    "descriptionEn": "Delivery confirmation: a document, signature, digital record or other evidence that the load was delivered.",
+    "synonyms": ["pristatymo patvirtinimas", "gavimo irodymai", "delivery proof"]
+  },
+  {
+    "term": "ERP",
+    "titleLt": "Enterprise Resource Planning",
+    "titleEn": "Enterprise Resource Planning",
+    "descriptionLt": "Imones verslo sistema, jungianti finansus, pirkimus, pardavimus, atsargas, gamyba ar kitus pagrindinius procesus.",
+    "descriptionEn": "A business system connecting finance, purchasing, sales, inventory, production or other core company processes.",
+    "synonyms": ["PREFSTOCK", "", "imones resursu planavimas", "business system"]
+  },
+  {
+    "term": "PREFSTOCK",
+    "titleLt": "Sandelio buhalterinis kodas",
+    "titleEn": "Warehouse accounting code",
+    "descriptionLt": "Sandelio buhalterinis kodas pagal kuri galima suprasti kokiu statusu yra laikoma preke.",
+    "descriptionEn": "Warehouse accounting code, which allows you to understand the status of the product.",
+    "synonyms": ["PREFSTOCK", "ERP", "WSTATUS"]
+  },
+  {
+    "term": "ETA",
+    "titleLt": "Estimated Time of Arrival",
+    "titleEn": "Estimated Time of Arrival",
+    "descriptionLt": "Numatomas transporto, siuntos ar prekiu atvykimo laikas.",
+    "descriptionEn": "The expected arrival time of a vehicle, shipment or goods.",
+    "synonyms": ["atvykimo laikas", "numatomas atvykimas", "arrival time"]
+  },
+  {
+    "term": "FIFO",
+    "titleLt": "First In, First Out",
+    "titleEn": "First In, First Out",
+    "descriptionLt": "Atsargu naudojimo logika, kai pirmiausia isduodama seniausiai gauta preke ar partija. Daznai svarbu galiojimams ir rotacijai.",
+    "descriptionEn": "An inventory logic where the earliest received goods or batch are issued first. Often important for expiry and stock rotation.",
+    "synonyms": ["pirmas iejo pirmas isejo", "rotacija", "galiojimai", "stock rotation"]
+  },
+    {
+    "term": "LIFO",
+    "titleLt": "Last In, First Out",
+    "titleEn": "Last In, First Out",
+    "descriptionLt": "Atsargu naudojimo logika, kai pirmiausia isduodama veliausiai gauta preke ar partija.",
+    "descriptionEn": "An inventory logic where the latest received goods or batch are issued first.",
+    "synonyms": ["paskutinis iejo pirmas isejo", "atsargu metodas", "inventory method"]
+  },
+  {
+    "term": "GRN",
+    "titleLt": "Goods Receipt Note",
+    "titleEn": "Goods Receipt Note",
+    "descriptionLt": "Prekiu priemimo irasas arba dokumentas, patvirtinantis, kad prekes gautos ir uzregistruotos sandelyje.",
+    "descriptionEn": "A goods receipt record or document confirming that goods were received and registered in the warehouse.",
+    "synonyms": ["prekiu priemimas", "gavimo dokumentas", "receipt", "goods receipt"]
+  },
+  {
+    "term": "KPI",
+    "titleLt": "Rodiklis",
+    "titleEn": "Indicator",
+    "descriptionLt": "Matuojama proceso busena arba rezultatas.",
+    "descriptionEn": "A measured process state or result.",
+    "synonyms": ["rodiklis", "metrika", "performance metric", "indicator"]
+  },
+  {
+    "term": "LTL",
+    "titleLt": "Less Than Truckload",
+    "titleEn": "Less Than Truckload",
+    "descriptionLt": "Dalinis krovinys, kai viena siunta neuzpildo visos masinos ir gali buti konsoliduojama su kitomis siuntomis.",
+    "descriptionEn": "A partial load where one shipment does not fill the whole truck and may be consolidated with other shipments.",
+    "synonyms": ["dalinis krovinys", "nepilna masina", "konsolidacija", "partial load"]
+  },
+  {
+    "term": "Purchase",
+    "titleLt": "Purchase Order",
+    "titleEn": "Purchase Order",
+    "descriptionLt": "Pirkimo uzsakymas, kuriame nurodoma ka, kiek, uz kokia kaina ir kokiomis salygomis perkama.",
+    "descriptionEn": "A purchasing document stating what is bought, in what quantity, at what price and under which conditions.",
+    "synonyms": ["pirkimo uzsakymas", "uzsakymo dokumentas", "purchase document"]
+  },
+  {
+    "term": "SKU",
+    "titleLt": "Stock Keeping Unit",
+    "titleEn": "Stock Keeping Unit",
+    "descriptionLt": "Unikalus prekes ar artikulo identifikatorius, pagal kuri valdoma atsarga, judejimas, kainos ir uzsakymai.",
+    "descriptionEn": "A unique product or item identifier used to manage stock, movement, prices and orders.",
+    "synonyms": ["prekes kodas", "artikulas", "item", "product code"]
+  },
+  {
+    "term": "SL",
+    "titleLt": "Paslaugos lygis",
+    "titleEn": "Service level",
+    "descriptionLt": "Sutarti kokybes, laiko ar aptarnavimo isipareigojimai.",
+    "descriptionEn": "Agreed commitments for quality, time or service delivery.",
+    "synonyms": ["paslaugos lygis", "susitarimas", "service level agreement", "commitment"]
+  },
+  {
+    "term": "WMS",
+    "titleLt": "Sandelio valdymo sistema",
+    "titleEn": "Warehouse Management System",
+    "descriptionLt": "Sandelio valdymo sistema, valdanti lokacijas, atsargas, priemima, surinkima, papildyma ir isvezima.(Senoji)",
+    "descriptionEn": "A warehouse management system controlling locations, stock, receiving, picking, replenishment and outbound dispatch.(OLD)",
+    "synonyms": ["sandelio sistema", "sandelio valdymas", "lokacijos", "atsargos", "WMS"]
+  },
+  {
+    "term": "MNH",
+    "titleLt": "Sandelio valdymo sistema",
+    "titleEn": "Warehouse Management System",
+    "descriptionLt": "Manhatan. Sandelio valdymo sistema, valdanti lokacijas, atsargas, priemima, surinkima, papildyma ir isvezima.",
+    "descriptionEn": "Manhatan. A warehouse management system controlling locations, stock, receiving, picking, replenishment and outbound dispatch.",
+    "synonyms": ["sandelio sistema", "sandelio valdymas", "lokacijos", "atsargos", "MNH", "WMS", "Manhatan"]
+  },
+  {
+    "term": "Paragon",
+    "titleLt": "Marsrutizavimo programa",
+    "titleEn": "Routing program",
+    "descriptionLt": "Marsrutizavimo programa naudojama distribucinio transporto pristatymo grafikams generuoti.",
+    "descriptionEn": "The routing program is used to generate delivery schedules for distribution vehicles.",
+    "synonyms": ["Paragonas"]
+  },
+  {
+    "term": "Orderbase",
+    "titleLt": "Marsrutizavimo programos duombaze",
+    "titleEn": "Routing application database",
+    "descriptionLt": "Marsrutizavimo programos suformuota duombaze .",
+    "descriptionEn": "Routing programs are built in a database.",
+    "synonyms": ["Orderbase", "Orderbaze"]
+  },
+  {
+    "term": "EPL",
+    "titleLt": "Europalete",
+    "titleEn": "Euro pallet",
+    "descriptionLt": "Europaletė 80x120, standartine, prekems gabenti skirta palete",
+    "descriptionEn": "Euro pallet 80x120, standard pallet for transporting goods",
+    "synonyms": ["EPL", "Euro padas", "Eurine"]
+  },
+  {
+    "term": "FIN",
+    "titleLt": "Industrine palete",
+    "titleEn": "Industrial pallet",
+    "descriptionLt": "Industrine palete 100x120",
+    "descriptionEn": "Industrial pallet 100x120",
+    "synonyms": ["FIN", "Industrinis", "Industrine"]
+  },
+  {
+    "term": "DC",
+    "titleLt": "Paskirstymo centras",
+    "titleEn": "Distribution Center",
+    "descriptionLt": "Tai yra sandelio tipo logistinis mazgas, i kuri pristatome prekes tiketina IBL transportu",
+    "descriptionEn": "This is a warehouse-type logistics hub to which we deliver goods via reliable IBL transport.",
+    "synonyms": ["DC", "Distribution Center", "Cenriniai sandeliai", "Distribucijos centras"]
+  },
+  {
+    "term": "CD",
+    "titleLt": "Perskirstymo vieta",
+    "titleEn": "Cross-Docking",
+    "descriptionLt": "Cross-dock: tai procesas, kai prekės atvyksta i terminalą ar sandeli ir be ilgalaikio sandėliavimo greitai perkraunamos i kita transport.",
+    "descriptionEn": "Cross-docking is a process where goods arrive at a terminal or warehouse and are quickly transferred to another vehicle without long-term storage.",
+    "synonyms": ["CD", "Cross-Dock", "Cross-Docking", "CrossDock", "Crosdokas", "Krosdokas"]
+  },
+  {
+    "term": "OWNER",
+    "titleLt": "Prekiu savininkas",
+    "titleEn": "Goods owner",
+    "descriptionLt": "Prekių savininko kodas",
+    "descriptionEn": "Goods owner code",
+    "synonyms": ["OWNER", "OWNERIS", "Savininkas"]
+  },
+  {
+    "term": "TRAVERSAS",
+    "titleLt": "Stelazo skersine sija",
+    "titleEn": "rack crossbar",
+    "descriptionLt": "Stelazo skersine sija, ant kuriu sudetos paletes",
+    "descriptionEn": "The rack crossbar on which the pallets are placed",
+    "synonyms": ["Traversas", "Stanga", "Skersinis"]
+  },
+  {
+    "term": "PRALIOTAS",
+    "titleLt": "vieta tarp stelazu",
+    "titleEn": "rack crossbar",
+    "descriptionLt": "vieta tarp stelazu, skirta krautuvui manevruoti ir paimti / padeti paletes / atrinkti prekes.",
+    "descriptionEn": "space between racks for a forklift to maneuver and pick up/place pallets/select goods.",
+    "synonyms": ["ALIA", "Praliotas", "AISLE"]
+  },
+  {
+    "term": "MEZANINAS",
+    "titleLt": "Aukštas sandėlio viduje",
+    "titleEn": "Aditional floor built inside a warehouse",
+    "descriptionLt": "tai papildoma tarpine platforma arba aukštas sandelio viduje, įrengiamas virs esamos grindu zonos. Jis leidzia efektyviau isnaudoti sandelio aukšti ir padidinti naudinga plota, nereikalaujant plesti pastato.",
+    "descriptionEn": "is an intermediate platform or additional floor built inside a warehouse, usually above the existing ground floor area. It allows companies to use the vertical space of the warehouse more efficiently and increase usable floor space without expanding the building..",
+    "synonyms": ["MEZANINE", "MEZANINAS", "BALKONAS"]
+  } 
+
+]

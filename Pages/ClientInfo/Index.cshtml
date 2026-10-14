@@ -1,0 +1,365 @@
+﻿@page
+@model DATA_EXCHANGE_HUB.Pages.ClientInfo.IndexModel
+@{
+    ViewData["Title"] = "Klientu info";
+}
+
+<div class="container-fluid exchange-page pt-4">
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
+                    Klientu info <small class="badge bg-secondary ms-2">CI</small>
+                </h3>
+                <p class="mb-0 text-dark-green">STAT3 klientu ir poziciju informacija.</p>
+            </div>
+
+            <div class="access-panel stacked mb-3">
+                <div>
+                    <span class="field-label">Serveris</span>
+                    <strong>STAT3</strong>
+                </div>
+                <div>
+                    <span class="field-label">Privalomas filtras</span>
+                    <strong>@Model.RequiredFilterName</strong>
+                </div>
+                <div>
+                    <span class="field-label">Operatoriai</span>
+                    <strong>@string.Join(", ", Model.RequiredFilterOperators.Select(IndexModel.GetOperatorLabel))</strong>
+                </div>
+            </div>
+
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">@L["Common.BackToHub"]</a>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+            }
+
+            <div class="hub-hero mb-4">
+                <div>
+                    <span class="hub-eyebrow">CLIENT INFO</span>
+                    <h1>Klientu info</h1>
+                    <p>Paieska pagal @Model.RequiredFilterName is STAT3 serverio. IN operatoriui reiksmes atskirkite kableliu, tarpu arba is naujos eilutes.</p>
+                </div>
+            </div>
+
+            <section class="tool-section mb-3">
+                <div class="section-title-row">
+                    <h2>Paieska</h2>
+                    <span class="status-pill">@Model.RequiredFilterName *</span>
+                </div>
+
+                <form method="post" class="hydra-query-form" id="clientInfoQueryForm" data-busy-form data-busy-title="Klientu info uzklausa vykdoma">
+                    @{
+                        var requiredFilter = Model.RequiredFilterRow;
+                    }
+                    <div class="exchange-filter-row hydra-first-filter-row">
+                        <div class="filter-connector">
+                            <span class="filter-connector-placeholder">WHERE</span>
+                            <input type="hidden" name="FilterConnectors" value="@ExchangeTableFilter.AndConnector" />
+                        </div>
+                        @if (requiredFilter is not null)
+                        {
+                            <input type="hidden" name="FilterColumns" value="@requiredFilter.Definition.Name" />
+                            <span class="form-control form-control-sm hydra-locked-filter">@requiredFilter.Definition.Name *</span>
+                            <select name="FilterOperators" class="form-select form-select-sm" aria-label="@Model.RequiredFilterName operatorius" data-hydra-filter-operator>
+                                @foreach (var operatorName in requiredFilter.Definition.AllowedOperators)
+                                {
+                                    <option value="@operatorName" selected="@(requiredFilter.Operator.Equals(operatorName, StringComparison.OrdinalIgnoreCase))">@IndexModel.GetOperatorLabel(operatorName)</option>
+                                }
+                            </select>
+                            <input class="form-control form-control-sm filter-value-input"
+                                   name="FilterValues"
+                                   value="@requiredFilter.Value"
+                                   type="@IndexModel.GetFilterInputType(requiredFilter.Definition)"
+                                   inputmode="@IndexModel.GetFilterInputMode(requiredFilter.Definition)"
+                                   data-hydra-filter-type="@requiredFilter.Definition.DataType"
+                                   required
+                                   placeholder="pvz. 12345 arba 12345, 67890" />
+                        }
+                    </div>
+
+                    @if (Model.OptionalFilters.Count > 0)
+                    {
+                        <div class="exchange-filter-form hydra-filter-form">
+                            <div class="exchange-filter-header">
+                                <h3>@L["DataExchange.Filters"]</h3>
+                                <span class="status-pill">@Model.RequiredFilterName *</span>
+                            </div>
+                            <div class="exchange-filter-rows" id="clientInfoFilterRows">
+                                @foreach (var filter in Model.OptionalFilterRows)
+                                {
+                                    <div class="exchange-filter-row">
+                                        <div class="filter-connector">
+                                            <select name="FilterConnectors" class="form-select form-select-sm" aria-label="@L["DataExchange.FilterConnector"]">
+                                                <option value="@ExchangeTableFilter.AndConnector" selected="@(filter.Connector.Equals(ExchangeTableFilter.AndConnector, StringComparison.OrdinalIgnoreCase))">AND</option>
+                                                <option value="@ExchangeTableFilter.OrConnector" selected="@(filter.Connector.Equals(ExchangeTableFilter.OrConnector, StringComparison.OrdinalIgnoreCase))">OR</option>
+                                            </select>
+                                        </div>
+                                        <select name="FilterColumns" class="form-select form-select-sm" aria-label="@L["DataExchange.FilterColumn"]" data-client-info-filter-column>
+                                            <option value="">@L["DataExchange.FilterColumn"]</option>
+                                            @foreach (var definition in Model.OptionalFilters)
+                                            {
+                                                <option value="@definition.Name"
+                                                        data-type="@definition.DataType"
+                                                        data-operators="@string.Join(",", definition.AllowedOperators)"
+                                                                                                                data-description="@definition.Description"
+                                                        selected="@(filter.ColumnName.Equals(definition.Name, StringComparison.OrdinalIgnoreCase))">
+                                                    @definition.Name
+                                                </option>
+                                            }
+                                        </select>
+                                        <select name="FilterOperators" class="form-select form-select-sm" aria-label="@L["DataExchange.FilterOperator"]" data-hydra-filter-operator>
+                                            @{
+                                                var filterDefinition = Model.OptionalFilters.FirstOrDefault(definition =>
+                                                    definition.Name.Equals(filter.ColumnName, StringComparison.OrdinalIgnoreCase)) ??
+                                                    Model.OptionalFilters.FirstOrDefault();
+                                            }
+                                            @foreach (var operatorName in filterDefinition?.AllowedOperators ?? [])
+                                            {
+                                                <option value="@operatorName" selected="@(filter.Operator.Equals(operatorName, StringComparison.OrdinalIgnoreCase))">@IndexModel.GetOperatorLabel(operatorName)</option>
+                                            }
+                                        </select>
+                                        <input class="form-control form-control-sm filter-value-input"
+                                               name="FilterValues"
+                                               value="@filter.Value"
+                                               type="@(Model.OptionalFilters.FirstOrDefault(definition => definition.Name.Equals(filter.ColumnName, StringComparison.OrdinalIgnoreCase)) is { } selectedDefinition ? IndexModel.GetFilterInputType(selectedDefinition) : "text")"
+                                               inputmode="@(Model.OptionalFilters.FirstOrDefault(definition => definition.Name.Equals(filter.ColumnName, StringComparison.OrdinalIgnoreCase)) is { } inputDefinition ? IndexModel.GetFilterInputMode(inputDefinition) : "text")"
+                                               placeholder="@L["DataExchange.FilterValue"]" />
+                                        <button type="button" class="btn btn-sm btn-outline-secondary filter-remove-button" data-remove-client-info-filter>@L["DataExchange.ClearFilters"]</button>
+                                        <div class="form-text filter-description-line" data-client-info-filter-description>@(filterDefinition?.Description ?? string.Empty)</div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="exchange-filter-actions">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="addClientInfoFilterButton">@L["DataExchange.AddFilter"]</button>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="form-actions">
+                        <button type="submit" asp-page-handler="Execute" class="btn btn-orange" data-busy-label="Vykdoma...">EXECUTE</button>
+                        <button type="submit" asp-page-handler="ExportExcel" class="btn btn-outline-primary" data-busy-title="Excel failas ruosiamas" data-busy-label="Ruosiamas Excel..." data-busy-auto-reset-ms="5000">Export Excel</button>
+                                    <button type="submit" asp-page-handler="ExportCsv" class="btn btn-outline-success" data-busy-title="CSV failas ruosiamas" data-busy-label="Ruosiamas CSV..." data-busy-auto-reset-ms="5000">Export CSV</button>
+                    </div>
+                </form>
+            </section>
+
+            @if (Model.Result is not null)
+            {
+                <div class="hub-metrics my-4">
+                    <div class="metric-card">
+                        <small>Eilutes</small>
+                        <h4>@Model.Result.Rows.Count</h4>
+                    </div>
+                    <div class="metric-card">
+                        <small>Stulpeliai</small>
+                        <h4>@Model.Result.Columns.Count</h4>
+                    </div>
+                    <div class="metric-card">
+                        <small>Saltinis</small>
+                        <h4>ORGALL / ORGPOS</h4>
+                    </div>
+                </div>
+
+                            @if (Model.HasResultPaging)
+                            {
+                                <div class="d-flex align-items-center gap-2 flex-wrap mb-3" data-result-pager>
+                                    <span class="status-pill">Rodoma @Model.ResultPageStartRow-@Model.ResultPageEndRow is @Model.ResultTotalRows</span>
+                                    <button type="submit" form="clientInfoQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Max(1, Model.ResultPageValue - 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue <= 1)">Ankstesnis</button>
+                                    <span class="small text-muted">Puslapis @Model.ResultPageValue / @Model.ResultTotalPages</span>
+                                    <button type="submit" form="clientInfoQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Min(Model.ResultTotalPages, Model.ResultPageValue + 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue >= Model.ResultTotalPages)">Kitas</button>
+                                </div>
+                            }
+                @if (Model.Result.Rows.Count == 0)
+                {
+                    <div class="empty-state">@L["DataExchange.NoData"]</div>
+                }
+                else
+                {
+                    <div class="table-responsive exchange-table-wrap">
+                        <table class="table align-middle exchange-table">
+                            <thead>
+                                <tr>
+                                    @foreach (var column in Model.Result.Columns)
+                                    {
+                                        <th>@column</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var row in Model.DisplayRows)
+                                {
+                                    <tr>
+                                        @foreach (var column in Model.Result.Columns)
+                                        {
+                                            <td>@(row.TryGetValue(column, out var value) ? value : string.Empty)</td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const filters = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.OptionalFilters.Select(filter => new { filter.Name, filter.DataType, filter.AllowedOperators, filter.Description })));
+            const rows = document.getElementById("clientInfoFilterRows");
+            const addButton = document.getElementById("addClientInfoFilterButton");
+
+            if (!rows || !addButton) {
+                return;
+            }
+
+            addButton.addEventListener("click", () => {
+                rows.appendChild(createRow());
+            });
+
+            rows.addEventListener("click", event => {
+                const button = event.target.closest("[data-remove-client-info-filter]");
+                if (!button) {
+                    return;
+                }
+
+                button.closest(".exchange-filter-row")?.remove();
+            });
+
+            document.querySelectorAll("[data-client-info-filter-column]").forEach(wireRow);
+
+            function createRow() {
+                const row = document.createElement("div");
+                row.className = "exchange-filter-row";
+
+                const connectorSlot = document.createElement("div");
+                connectorSlot.className = "filter-connector";
+                const connectorSelect = document.createElement("select");
+                connectorSelect.name = "FilterConnectors";
+                connectorSelect.className = "form-select form-select-sm";
+                connectorSelect.appendChild(createOption("and", "AND"));
+                connectorSelect.appendChild(createOption("or", "OR"));
+                connectorSlot.appendChild(connectorSelect);
+                row.appendChild(connectorSlot);
+
+                const columnSelect = document.createElement("select");
+                columnSelect.name = "FilterColumns";
+                columnSelect.className = "form-select form-select-sm";
+                columnSelect.dataset.clientInfoFilterColumn = "";
+                columnSelect.appendChild(createOption("", "Stulpelis"));
+                filters.forEach(filter => {
+                    const name = filter.name ?? filter.Name;
+                    const option = createOption(name, name);
+                    option.dataset.type = filter.dataType ?? filter.DataType ?? "text";
+                    option.dataset.operators = (filter.allowedOperators ?? filter.AllowedOperators ?? ["eq"]).join(",");
+                    columnSelect.appendChild(option);
+                });
+                row.appendChild(columnSelect);
+
+                const operatorSelect = document.createElement("select");
+                operatorSelect.name = "FilterOperators";
+                operatorSelect.className = "form-select form-select-sm";
+                row.appendChild(operatorSelect);
+
+                const valueInput = document.createElement("input");
+                valueInput.name = "FilterValues";
+                valueInput.className = "form-control form-control-sm filter-value-input";
+                valueInput.placeholder = "Reiksme";
+                row.appendChild(valueInput);
+
+                const removeButton = document.createElement("button");
+                removeButton.type = "button";
+                removeButton.className = "btn btn-sm btn-outline-secondary filter-remove-button";
+                removeButton.dataset.removeClientInfoFilter = "";
+                removeButton.textContent = "Valyti";
+                row.appendChild(removeButton);
+
+                wireRow(columnSelect);
+                return row;
+            }
+
+            function wireRow(columnSelect) {
+                const row = columnSelect.closest(".exchange-filter-row");
+                const operatorSelect = row?.querySelector("select[name='FilterOperators']");
+                const valueInput = row?.querySelector("input[name='FilterValues']");
+                if (!operatorSelect || !valueInput) {
+                    return;
+                }
+
+                columnSelect.addEventListener("change", () => {
+                    updateOperatorOptions(columnSelect, operatorSelect);
+                    updateInputType(columnSelect, operatorSelect, valueInput);
+                });
+                operatorSelect.addEventListener("change", () => updateInputType(columnSelect, operatorSelect, valueInput));
+                updateOperatorOptions(columnSelect, operatorSelect);
+                updateInputType(columnSelect, operatorSelect, valueInput);
+            }
+
+            function createOption(value, text) {
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent = text;
+                return option;
+            }
+
+            function updateOperatorOptions(columnSelect, operatorSelect) {
+                const currentValue = operatorSelect.value;
+                const operators = (columnSelect.selectedOptions[0]?.dataset.operators ?? "eq")
+                    .split(",")
+                    .map(operator => operator.trim())
+                    .filter(Boolean);
+
+                operatorSelect.replaceChildren();
+                operators.forEach(operator => operatorSelect.appendChild(createOption(operator, getOperatorText(operator))));
+
+                if (operators.includes(currentValue)) {
+                    operatorSelect.value = currentValue;
+                }
+            }
+
+            function updateInputType(columnSelect, operatorSelect, valueInput) {
+                const dataType = columnSelect.selectedOptions[0]?.dataset.type ?? "text";
+                const operatorValue = operatorSelect.value;
+                valueInput.type = operatorValue === "in" || operatorValue === "like"
+                    ? "text"
+                    : dataType === "number"
+                        ? "number"
+                        : "text";
+                valueInput.inputMode = dataType === "number" ? "decimal" : "text";
+                valueInput.step = dataType === "number" ? "any" : "1";
+            }
+
+            function getOperatorText(value) {
+                return value === "eq"
+                    ? "="
+                    : value === "ne"
+                        ? "!="
+                        : value === "like"
+                            ? "LIKE"
+                            : value === "in"
+                                ? "IN"
+                                : value === "gte"
+                                    ? ">="
+                                    : value === "lte"
+                                        ? "<="
+                                        : value;
+            }
+        })();
+    </script>
+}
+
+
+
+
+
+
+
+
+

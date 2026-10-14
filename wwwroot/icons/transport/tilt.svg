@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 90" width="180" height="90" role="img" aria-label="Truck icon">
+  <g fill="none" stroke="#555" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- cargo box -->
+    <path d="M20 22h93v42H20z"/>
+    <path d="M20 64h93"/>
+
+    <!-- connector / rear of cab -->
+    <path d="M113 28h7v35h-7"/>
+    <path d="M120 34h6v29h-6"/>
+
+    <!-- cab outline -->
+    <path d="M126 36h20l15 17v22h-11"/>
+    <path d="M126 36v39h-12"/>
+    <path d="M126 75h-12"/>
+
+    <!-- front hood / bumper -->
+    <path d="M161 58h8c3 0 5 2 5 5v9h-7"/>
+    <path d="M160 75h7"/>
+
+    <!-- windshield -->
+    <path d="M133 42h12l10 12h-22z"/>
+
+    <!-- door and cabin details -->
+    <path d="M132 58h17v16h-17z"/>
+    <path d="M148 64h4"/>
+    <path d="M131 52h-5"/>
+    <path d="M128 75v-8"/>
+
+    <!-- lower chassis -->
+    <path d="M20 70h15"/>
+    <path d="M51 70h48"/>
+    <path d="M126 70h8"/>
+    <path d="M149 70h11"/>
+
+    <!-- under-box wheels -->
+    <circle cx="38" cy="73" r="8"/>
+    <circle cx="38" cy="73" r="3"/>
+    <circle cx="58" cy="73" r="8"/>
+    <circle cx="58" cy="73" r="3"/>
+
+    <!-- mid wheel -->
+    <circle cx="109" cy="73" r="8"/>
+    <circle cx="109" cy="73" r="3"/>
+
+    <!-- front wheel -->
+    <circle cx="143" cy="73" r="8"/>
+    <circle cx="143" cy="73" r="3"/>
+
+    <!-- rear axle detail -->
+    <path d="M45 73h6"/>
+    <path d="M66 73h34"/>
+    <path d="M116 73h19"/>
+
+    <!-- small vertical side stripes behind cab -->
+    <path d="M101 64v9"/>
+    <path d="M106 64v9"/>
+    <path d="M116 64v9"/>
+  </g>
+</svg>

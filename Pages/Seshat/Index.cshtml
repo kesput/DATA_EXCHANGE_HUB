@@ -1,0 +1,789 @@
+@page
+@model DATA_EXCHANGE_HUB.Pages.Seshat.IndexModel
+@{
+    ViewData["Title"] = "SESHAT";
+}
+
+<div class="container-fluid exchange-page pt-4">
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
+                    SESHAT <small class="badge bg-secondary ms-2">SH</small>
+                </h3>
+                <p class="mb-0 text-dark-green">Susitarimu ir dokumentacijos registras.</p>
+            </div>
+
+            <div class="access-panel stacked mb-3">
+                <div>
+                    <span class="field-label">Vartotojas</span>
+                    <strong>@(string.IsNullOrWhiteSpace(Model.Access.UserName) ? "-" : Model.Access.UserName)</strong>
+                </div>
+                <div>
+                    <span class="field-label">Role</span>
+                    <strong>@Model.Access.RoleLabel</strong>
+                </div>
+                <div>
+                    <span class="field-label">CONTRIBUTE</span>
+                    <strong>@(Model.Access.IsAdmin ? "ALL" : string.Join(", ", Model.Access.ContributeCountries))</strong>
+                </div>
+                <div>
+                    <span class="field-label">VIEW</span>
+                    <strong>@(Model.Access.IsAdmin ? "ALL" : string.Join(", ", Model.Access.ViewCountries))</strong>
+                </div>
+            </div>
+
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">Grizti i HUB</a>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+            {
+                <div class="alert alert-success" role="status">@Model.SuccessMessage</div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+            }
+
+            @if (!Model.Access.CanOpen)
+            {
+                <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
+                    <h2 class="fw-bold text-dark-green">Prieiga nesuteikta</h2>
+                    <p class="mb-0">SESHAT teises suteikiamos per BS_APP_ACCESS pagal sali ir role.</p>
+                </div>
+            }
+            else
+            {
+                <div class="hub-metrics mb-3">
+                    <div class="metric-card">
+                        <small>Irasai</small>
+                        <h4>@Model.Documents.Count</h4>
+                    </div>
+                    <div class="metric-card">
+                        <small>Role</small>
+                        <h4>@Model.Access.RoleLabel</h4>
+                    </div>
+                    <div class="metric-card">
+                        <small>Pasirinktas</small>
+                        <h4>@(Model.Details?.Document.Id.ToString() ?? "-")</h4>
+                    </div>
+                </div>
+
+
+                @if (Model.Details is not null)
+                {
+                    <section class="tool-section mb-3 seshat-agreement-view">
+                        <div class="section-title-row">
+                            <h2>@Model.Details.Document.Title</h2>
+                            <span class="status-pill @(Model.Details.Document.IsActive ? "" : "status-pill-muted")">@Model.Details.Document.Status</span>
+                        </div>
+                        <div class="seshat-agreement-meta">
+                            <span>@string.Join(", ", Model.Details.Document.Countries)</span>
+                            <span>@IndexModel.FormatDate(Model.Details.Document.ValidFrom) - @IndexModel.FormatDate(Model.Details.Document.ValidTo)</span>
+                            <span>@Model.Details.Document.UpdatedBy @IndexModel.FormatDateTime(Model.Details.Document.UpdateTime)</span>
+                        </div>
+                        <div class="seshat-agreement-text">@Model.Details.Document.Description</div>
+                        <div class="seshat-inline-files">
+                            <h3>Pranesimai apie termino pabaiga</h3>
+                            <div class="alert alert-info py-2 px-3 small" role="status">EMAIL pranesimai bus siunciami pagal nustatyta grafika nuo @Model.ReminderSendTimeText. Testini pranesima galite issiusti iskart i nurodyta el. pasta.</div>
+                            @if (!Model.Details.Document.ValidTo.HasValue)
+                            {
+                                <div class="empty-state compact">Priminimams reikia uzpildyti susitarimo data "Galioja iki".</div>
+                            }
+                            else
+                            {
+                                @if (!Model.Details.Reminders.Any())
+                                {
+                                    <div class="empty-state compact">Pranesimu poreikiu dar nera.</div>
+                                }
+                                else
+                                {
+                                    @foreach (var reminder in Model.Details.Reminders)
+                                    {
+                                        var reminderIsEmail = reminder.NotifyChannel == "EMAIL";
+                                        var reminderContact = reminderIsEmail ? reminder.Email : reminder.PhoneNo;
+                                        <div class="seshat-file-strip">
+                                            <div>
+                                                <strong>@reminder.NotifyChannel � @reminder.DaysBefore d. iki termino</strong>
+                                                <div class="text-muted">@reminderContact</div>
+                                                <div class="text-muted">Bus siunciama @Model.FormatReminderSendAt(Model.Details.Document.ValidTo, reminder.DaysBefore)</div>
+                                                <small>@reminder.KpiName � @reminder.Subject</small>
+                                            </div>
+                                            <div class="seshat-file-actions">
+                                                <form method="post" asp-page-handler="SendReminderTest" class="d-inline"><input type="hidden" name="DocumentId" value="@Model.Details.Document.Id" /><input type="hidden" name="reminderId" value="@reminder.Id" /><button class="btn btn-sm btn-outline-secondary" type="submit">Siusti testini</button></form>
+                                                <span class="status-pill @(reminder.Active ? "" : "status-pill-muted")">@(reminder.Active ? "Active" : "Inactive")</span>
+                                                @if (Model.CanEditSelected && reminder.Active)
+                                                {
+                                                    <form method="post" asp-page-handler="CancelReminder" onsubmit="return confirm('Atsisakyti sio pranesimo poreikio?');">
+                                                        <input type="hidden" asp-for="DocumentId" />
+                                                        <input type="hidden" name="reminderId" value="@reminder.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">Atsisakyti</button>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </div>
+                                        @if (Model.CanEditSelected && reminder.Active)
+                                        {
+                                            <details class="seshat-edit-panel">
+                                                <summary>Pakeisti pranesimo poreiki</summary>
+                                                <form method="post" class="seshat-section-form" asp-page-handler="SaveReminder">
+                                                    <input type="hidden" asp-for="DocumentId" />
+                                                    <div>
+                                                        <label class="form-label" for="reminderChannel-@reminder.Id">Pranesimo budas</label>
+                                                        <select id="reminderChannel-@reminder.Id" class="form-select" name="ReminderChannel">
+                                                            <option value="EMAIL" selected="@reminderIsEmail">EMAIL</option>
+                                                            <option value="SMS" selected="@(!reminderIsEmail)">SMS</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label" for="reminderContact-@reminder.Id">El. pastas arba telefono nr.</label>
+                                                        <input id="reminderContact-@reminder.Id" class="form-control" name="ReminderContact" value="@reminderContact" maxlength="320" pattern="([^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]{2,})|(\+370-?\d{8})" title="Iveskite email adresa, pvz. user&#64;bls.lt, arba lietuviska telefono numeri, pvz. +37061234567." required />
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label" for="reminderDays-@reminder.Id">Pranesti pries dienu</label>
+                                                        <input id="reminderDays-@reminder.Id" class="form-control" name="ReminderNotifyDaysBefore" value="@reminder.DaysBefore" type="number" min="1" max="365" required />
+                                                    </div>
+                                                    @if (!reminderIsEmail && Model.HasPendingSmsVerification(Model.Details.Document.Id, reminderContact, reminder.DaysBefore))
+                                                    {
+                                                        <div>
+                                                            <label class="form-label" for="smsCode-@reminder.Id">SMS patvirtinimo kodas</label>
+                                                            <input id="smsCode-@reminder.Id" class="form-control" name="SmsVerificationCode" maxlength="6" minlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="one-time-code" required />
+                                                        </div>
+                                                    }
+                                                    <div class="kairos-actions">
+                                                        @if (!reminderIsEmail && Model.HasPendingSmsVerification(Model.Details.Document.Id, reminderContact, reminder.DaysBefore))
+                                                        {
+                                                            <button type="submit" class="btn btn-orange">Patvirtinti ir issaugoti</button>
+                                                            <button type="submit" class="btn btn-outline-secondary" name="ResendSmsVerification" value="true" formnovalidate>Siusti koda dar karta</button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button type="submit" class="btn btn-orange">Issaugoti pakeitima</button>
+                                                        }
+                                                    </div>
+                                                </form>
+                                            </details>
+                                        }
+                                    }
+                                }
+
+                                @if (Model.CanEditSelected)
+                                {
+                                    <form method="post" class="seshat-section-form" asp-page-handler="SaveReminder">
+                                        <input type="hidden" asp-for="DocumentId" />
+                                        <div>
+                                            <label class="form-label" asp-for="ReminderChannel">Pranesimo budas</label>
+                                            <select class="form-select" asp-for="ReminderChannel">
+                                                <option value="EMAIL">EMAIL</option>
+                                                <option value="SMS">SMS</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="form-label" asp-for="ReminderContact">El. pastas arba telefono nr.</label>
+                                            <input class="form-control" asp-for="ReminderContact" maxlength="320" placeholder="user&#64;bls.lt arba +37061234567" pattern="([^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]{2,})|(\+370-?\d{8})" title="Iveskite email adresa, pvz. user&#64;bls.lt, arba lietuviska telefono numeri, pvz. +37061234567." required />
+                                        </div>
+                                        <div>
+                                            <label class="form-label" asp-for="ReminderNotifyDaysBefore">Pranesti pries dienu</label>
+                                            <input class="form-control" asp-for="ReminderNotifyDaysBefore" type="number" min="1" max="365" required />
+                                        </div>
+                                        @if (Model.ReminderChannel == "SMS" && Model.HasPendingSmsVerification(Model.Details.Document.Id, Model.ReminderContact, Model.ReminderNotifyDaysBefore))
+                                        {
+                                            <div>
+                                                <label class="form-label" asp-for="SmsVerificationCode">SMS patvirtinimo kodas</label>
+                                                <input class="form-control" asp-for="SmsVerificationCode" maxlength="6" minlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="one-time-code" required />
+                                            </div>
+                                        }
+                                        <div class="kairos-actions">
+                                            @if (Model.ReminderChannel == "SMS" && Model.HasPendingSmsVerification(Model.Details.Document.Id, Model.ReminderContact, Model.ReminderNotifyDaysBefore))
+                                            {
+                                                <button type="submit" class="btn btn-orange">Patvirtinti ir issaugoti</button>
+                                                <button type="submit" class="btn btn-outline-secondary" name="ResendSmsVerification" value="true" formnovalidate>Siusti koda dar karta</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit" class="btn btn-orange">Issaugoti pranesimo poreiki</button>
+                                            }
+                                        </div>
+                                    </form>
+                                }
+                            }
+                        </div>
+
+                        <div class="seshat-inline-files">
+                            <h3>Susitarimo priedai</h3>
+                            @if (Model.CanEditSelected)
+                            {
+                                <form method="post" enctype="multipart/form-data" class="file-upload-form mb-3" asp-page-handler="Upload" data-clipboard-file-form>
+                                    <input type="hidden" asp-for="DocumentId" />
+                                    <div>
+                                        <label class="field-label" for="agreementReplacementFiles">Prideti arba pakeisti prieda</label>
+                                        <input id="agreementReplacementFiles" name="uploadFiles" type="file" multiple class="form-control" required data-clipboard-file-input />
+                                        <div class="seshat-clipboard-status" data-clipboard-file-status></div>
+                                    </div>
+                                    <div>
+                                        <label class="field-label" asp-for="FileDescription">Aprasymas</label>
+                                        <textarea class="form-control" asp-for="FileDescription" rows="2" maxlength="1000" placeholder="Pvz. nauja versija vietoje seno priedo"></textarea>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-orange">Prikabinti nauja prieda</button>
+                                    </div>
+                                </form>
+                                <div class="text-muted small mb-2">Norint pakeisti prieda kitu: istrinkite sena prieda ir prikabinkite nauja faila.</div>
+                            }
+                            @if (!Model.Details.AgreementFiles.Any())
+                            {
+                                <div class="empty-state compact">Priedu dar nera.</div>
+                            }
+                            else
+                            {
+                                @foreach (var file in Model.Details.AgreementFiles)
+                                {
+                                    <div class="seshat-file-strip">
+                                        <div>
+                                            <strong>@file.OriginalFileName</strong>
+                                            <div class="text-muted">@file.Description</div>
+                                            <small>@file.FileKind � @IndexModel.FormatFileSize(file.FileSizeBytes) � @IndexModel.FormatDateTime(file.UploadedAt)</small>
+                                        </div>
+                                        <div class="seshat-file-actions">
+                                            @if (IndexModel.CanPreview(file))
+                                            {
+                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">Perziureti</a>
+                                            }
+                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">Parsisiusti</a>
+                                            @if (Model.CanEditSelected)
+                                            {
+                                                <form method="post" asp-page-handler="DeleteFile" onsubmit="return confirm('Perkelti faila i Deleted kataloga?');">
+                                                    <input type="hidden" asp-for="DocumentId" />
+                                                    <input type="hidden" name="fileId" value="@file.Id" />
+                                                    <input type="hidden" name="DeleteReason" value="User delete" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Trinti</button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </div>
+                                    @if (IndexModel.CanPreview(file))
+                                    {
+                                        <details class="seshat-preview-panel">
+                                            <summary>Greita perziura</summary>
+                                            <iframe class="seshat-preview-frame" src='@Url.Page(null, "Preview", new { fileId = file.Id })' title="@file.OriginalFileName"></iframe>
+                                        </details>
+                                    }
+                                }
+                            }
+                        </div>
+
+                        <div class="seshat-inline-files">
+                            <h3>Susitarimo punktai</h3>
+                            @if (!Model.Details.Sections.Any())
+                            {
+                                <div class="empty-state compact">Papildomu punktu dar nera.</div>
+                            }
+                            else
+                            {
+                                @foreach (var agreementSection in Model.Details.Sections)
+                                {
+                                    <div class="seshat-section-card">
+                                        <div class="seshat-mail-head">
+                                            <strong>@(string.IsNullOrWhiteSpace(agreementSection.Title) ? "Punktas #" + agreementSection.Id : agreementSection.Title)</strong>
+                                            <span class="status-pill">@IndexModel.FormatDateTime(agreementSection.CreatedAt)</span>
+                                        </div>
+                                        <div class="seshat-agreement-text">@agreementSection.Body</div>
+                                        @if (Model.CanEditSelected)
+                                        {
+                                            <details class="seshat-edit-panel">
+                                                <summary>Koreguoti punkta</summary>
+                                                <form method="post" enctype="multipart/form-data" class="seshat-section-form" asp-page-handler="UpdateSection" data-clipboard-file-form>
+                                                    <input type="hidden" asp-for="DocumentId" />
+                                                    <input type="hidden" name="sectionId" value="@agreementSection.Id" />
+                                                    <div>
+                                                        <label class="form-label" for="sectionTitle-@agreementSection.Id">Punkto pavadinimas</label>
+                                                        <input id="sectionTitle-@agreementSection.Id" class="form-control" name="sectionTitle" value="@agreementSection.Title" maxlength="200" />
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label" for="sectionBody-@agreementSection.Id">Punkto aprasas</label>
+                                                        <textarea id="sectionBody-@agreementSection.Id" class="form-control" name="sectionBody" rows="4" required>@agreementSection.Body</textarea>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label" for="sectionUploadFiles-@agreementSection.Id">Papildomi punkto failai</label>
+                                                        <input id="sectionUploadFiles-@agreementSection.Id" name="sectionUploadFiles" type="file" class="form-control" multiple data-clipboard-file-input />
+                                                        <div class="seshat-clipboard-status" data-clipboard-file-status></div>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label" for="sectionFileDescription-@agreementSection.Id">Failu aprasymas</label>
+                                                        <textarea id="sectionFileDescription-@agreementSection.Id" class="form-control" name="sectionFileDescription" rows="2" maxlength="1000"></textarea>
+                                                    </div>
+                                                    <div class="kairos-actions">
+                                                        <button type="submit" class="btn btn-orange">Issaugoti punkta</button>
+                                                    </div>
+                                                </form>
+                                            </details>
+                                        }
+                                        @foreach (var file in agreementSection.Files.Where(file => !file.IsDeleted))
+                                        {
+                                            <div class="seshat-file-strip mt-2">
+                                                <div>
+                                                    <strong>@file.OriginalFileName</strong>
+                                                    <div class="text-muted">@file.Description</div>
+                                                    <small>@file.FileKind � @IndexModel.FormatFileSize(file.FileSizeBytes)</small>
+                                                </div>
+                                                <div class="seshat-file-actions">
+                                            @if (IndexModel.CanPreview(file))
+                                            {
+                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">Perziureti</a>
+                                            }
+                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">Parsisiusti</a>
+                                            @if (Model.CanEditSelected)
+                                            {
+                                                <form method="post" asp-page-handler="DeleteFile" onsubmit="return confirm('Perkelti faila i Deleted kataloga?');">
+                                                    <input type="hidden" asp-for="DocumentId" />
+                                                    <input type="hidden" name="fileId" value="@file.Id" />
+                                                    <input type="hidden" name="DeleteReason" value="User delete" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Trinti</button>
+                                                </form>
+                                            }
+                                        </div>
+                                            </div>
+                                            @if (IndexModel.CanPreview(file))
+                                            {
+                                                <details class="seshat-preview-panel compact">
+                                                    <summary>Greita perziura</summary>
+                                                    <iframe class="seshat-preview-frame" src='@Url.Page(null, "Preview", new { fileId = file.Id })' title="@file.OriginalFileName"></iframe>
+                                                </details>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        @if (Model.CanEditSelected)
+                        {
+                            <form method="post" enctype="multipart/form-data" class="seshat-section-form" asp-page-handler="CreateSection" data-clipboard-file-form>
+                                <input type="hidden" asp-for="DocumentId" />
+                                <div>
+                                    <label class="form-label" asp-for="SectionTitle">Punkto pavadinimas</label>
+                                    <input class="form-control" asp-for="SectionTitle" maxlength="200" />
+                                </div>
+                                <div>
+                                    <label class="form-label" asp-for="SectionBody">Punkto aprasas</label>
+                                    <textarea class="form-control" asp-for="SectionBody" rows="4" required></textarea>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="sectionUploadFile">Punkto failai</label>
+                                    <input id="sectionUploadFile" name="sectionUploadFiles" type="file" multiple class="form-control" data-clipboard-file-input />
+                                    <div class="seshat-clipboard-status" data-clipboard-file-status></div>
+                                </div>
+                                <div>
+                                    <label class="form-label" asp-for="SectionFileDescription">Failu aprasymas</label>
+                                    <textarea class="form-control" asp-for="SectionFileDescription" rows="3" maxlength="1000"></textarea>
+                                </div>
+                                <div class="kairos-actions">
+                                    <button type="submit" class="btn btn-orange">Prideti punkta</button>
+                                </div>
+                            </form>
+                        }
+
+                        <div class="seshat-inline-files">
+                            <h3>Papildomi punktai ir laiskai</h3>
+                            @if (!Model.Details.MailFiles.Any())
+                            {
+                                <div class="empty-state compact">Outlook / el. pasto punktu dar nera.</div>
+                            }
+                            else
+                            {
+                                @foreach (var file in Model.Details.MailFiles)
+                                {
+                                    var mail = Model.GetMailPreview(file);
+                                    <div class="seshat-mail-card">
+                                        <div class="seshat-mail-head">
+                                            <strong>@(string.IsNullOrWhiteSpace(mail.Subject) ? file.OriginalFileName : mail.Subject)</strong>
+                                            <span class="status-pill">@file.FileKind</span>
+                                        </div>
+                                        <dl class="seshat-mail-meta">
+                                            <dt>Failas</dt><dd>@file.OriginalFileName</dd>
+                                            <dt>Nuo</dt><dd>@(string.IsNullOrWhiteSpace(mail.From) ? "-" : mail.From)</dd>
+                                            <dt>Kam</dt><dd>@(string.IsNullOrWhiteSpace(mail.To) ? "-" : mail.To)</dd>
+                                            <dt>Data</dt><dd>@(string.IsNullOrWhiteSpace(mail.Date) ? IndexModel.FormatDateTime(file.UploadedAt) : mail.Date)</dd>
+                                        </dl>
+                                        @if (!string.IsNullOrWhiteSpace(file.Description))
+                                        {
+                                            <div class="text-muted">@file.Description</div>
+                                        }
+                                        <div class="seshat-file-actions">
+                                            @if (IndexModel.CanPreview(file))
+                                            {
+                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">Perziureti</a>
+                                            }
+                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">Parsisiusti</a>
+                                        </div>
+                                    @if (IndexModel.CanPreview(file))
+                                        {
+                                            <details class="seshat-preview-panel compact" open>
+                                                <summary>Greita perziura</summary>
+                                                <iframe class="seshat-preview-frame" src='@Url.Page(null, "Preview", new { fileId = file.Id })' title="@file.OriginalFileName"></iframe>
+                                            </details>
+                                        }
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </section>
+                }                <section class="tool-section mb-3">
+                    <div class="section-title-row">
+                        <h2>Paieska</h2>
+                    </div>
+                    <form method="get" class="kairos-form">
+                        <div>
+                            <label class="form-label" asp-for="Search">Tekstas</label>
+                            <input class="form-control" asp-for="Search" placeholder="Pavadinimas, paaiskinimas, raktazodziai, autorius, failas" />
+                        </div>
+                        <div>
+                            <label class="form-label" asp-for="Country">Salis</label>
+                            <input class="form-control" asp-for="Country" maxlength="10" placeholder="LT" />
+                        </div>
+                        <div>
+                            <label class="form-label" asp-for="Status">Statusas</label>
+                            <select class="form-select" asp-for="Status">
+                                <option value="">Visi</option>
+                                <option value="DRAFT">DRAFT</option>
+                                <option value="ACTIVE">ACTIVE</option>
+                                <option value="EXPIRED">EXPIRED</option>
+                                <option value="REPLACED">REPLACED</option>
+                                <option value="ARCHIVED">ARCHIVED</option>
+                            </select>
+                        </div>
+                        <div class="kairos-actions">
+                            <button type="submit" class="btn btn-orange">Ieskoti</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="tool-section mb-3">
+                    <div class="section-title-row">
+                        <h2>@(Model.DocumentId.HasValue ? "Koreguoti irasa" : "Naujas SESHAT irasas")</h2>
+                        @if (Model.Details is not null)
+                        {
+                            <span class="status-pill">@string.Join(", ", Model.Details.Document.Countries)</span>
+                        }
+                    </div>
+
+                    @if (Model.Access.CanCreate || Model.CanEditSelected)
+                    {
+                        <form method="post" enctype="multipart/form-data" class="kairos-form" asp-page-handler="Save">
+                            <input type="hidden" asp-for="DocumentId" />
+                            <div>
+                                <label class="form-label" asp-for="Title">Pavadinimas</label>
+                                <input class="form-control" asp-for="Title" maxlength="200" required />
+                            </div>
+                            <div>
+                                <label class="form-label" asp-for="CountriesText">Salys</label>
+                                <input class="form-control" asp-for="CountriesText" maxlength="100" placeholder="LT, LV" required />
+                            </div>
+                            <div>
+                                <label class="form-label" asp-for="EditStatus">Statusas</label>
+                                <select class="form-select" asp-for="EditStatus">
+                                    <option value="DRAFT">DRAFT</option>
+                                    <option value="ACTIVE">ACTIVE</option>
+                                    <option value="EXPIRED">EXPIRED</option>
+                                    <option value="REPLACED">REPLACED</option>
+                                    <option value="ARCHIVED">ARCHIVED</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label" asp-for="ValidFrom">Galioja nuo</label>
+                                <div class="localized-date-field">
+                                    <input class="form-control localized-date-native" asp-for="ValidFrom" type="date" data-localized-date-native />
+                                    <input class="form-control localized-date-display" type="text" value="@IndexModel.FormatDateInput(Model.ValidFrom)" readonly data-localized-date-display aria-label="Galioja nuo" />
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label" asp-for="ValidTo">Galioja iki</label>
+                                <div class="localized-date-field">
+                                    <input class="form-control localized-date-native" asp-for="ValidTo" type="date" data-localized-date-native />
+                                    <input class="form-control localized-date-display" type="text" value="@IndexModel.FormatDateInput(Model.ValidTo)" readonly data-localized-date-display aria-label="Galioja iki" />
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label" asp-for="Keywords">Raktazodziai</label>
+                                <input class="form-control" asp-for="Keywords" maxlength="500" />
+                            </div>
+                            <div class="kairos-comment-field">
+                                <label class="form-label" asp-for="Description">Paaiskinimas / susitarimas</label>
+                                <textarea class="form-control" asp-for="Description" rows="5" required></textarea>
+                            </div>
+                            <div>
+                                <label class="form-label" for="saveUploadFile">Failas</label>
+                                <input id="saveUploadFile" name="uploadFiles" type="file" multiple class="form-control" data-clipboard-file-input />
+                                <div class="seshat-clipboard-status" data-clipboard-file-status></div>
+                            </div>
+                            <div>
+                                <label class="form-label" asp-for="FileDescription">Failu aprasymas</label>
+                                <textarea class="form-control" asp-for="FileDescription" rows="3" maxlength="1000"></textarea>
+                            </div>
+                            <div class="kairos-actions">
+                                <button type="submit" class="btn btn-orange">Issaugoti</button>
+                                @if (Model.DocumentId.HasValue)
+                                {
+                                    <a class="btn btn-outline-secondary" asp-page="/Seshat/Index">Naujas irasas</a>
+                                }
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="empty-state compact">Turite tik perziuros teise.</div>
+                    }
+                </section>
+
+                <section class="tool-section mb-3">
+                    <div class="section-title-row">
+                        <h2>SESHAT irasai</h2>
+                        <span class="status-pill">@Model.Documents.Count naujausi</span>
+                    </div>
+                    @if (Model.Documents.Count == 0)
+                    {
+                        <div class="empty-state">Irasu nerasta.</div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive exchange-table-wrap">
+                            <table class="table align-middle exchange-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Pavadinimas</th>
+                                        <th>Salys</th>
+                                        <th>Statusas</th>
+                                        <th>Galiojimas</th>
+                                        <th>Failai</th>
+                                        <th>Autorius</th>
+                                        <th>Atnaujino</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var document in Model.Documents)
+                                    {
+                                        <tr>
+                                            <td>@document.Id</td>
+                                            <td>
+                                                <strong>@document.Title</strong>
+                                                <div class="text-muted">@document.Keywords</div>
+                                            </td>
+                                            <td>@string.Join(", ", document.Countries)</td>
+                                            <td><span class="status-pill @(document.IsActive ? "" : "status-pill-muted")">@document.Status</span></td>
+                                            <td>@IndexModel.FormatDate(document.ValidFrom) - @IndexModel.FormatDate(document.ValidTo)</td>
+                                            <td>@document.FileCount</td>
+                                            <td>@document.CreatedBy<br /><span class="text-muted">@IndexModel.FormatDateTime(document.CreatedAt)</span></td>
+                                            <td>@document.UpdatedBy<br /><span class="text-muted">@IndexModel.FormatDateTime(document.UpdateTime)</span></td>
+                                            <td class="text-end">
+                                                <a class="btn btn-sm btn-outline-secondary"
+                                                   asp-page="/Seshat/Index"
+                                                   asp-route-DocumentId="@document.Id"
+                                                   asp-route-Search="@Model.Search"
+                                                   asp-route-Status="@Model.Status"
+                                                   asp-route-Country="@Model.Country">Atidaryti</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </section>
+
+                @if (Model.Details is not null)
+                {
+                    <section class="tool-section mb-3">
+                        <div class="section-title-row">
+                            <h2>Prisegti failai</h2>
+                            <span class="status-pill">@Model.Details.Files.Count</span>
+                        </div>
+
+                        @if (Model.CanEditSelected)
+                        {
+                            <form method="post" enctype="multipart/form-data" class="file-upload-form mb-3" asp-page-handler="Upload" data-clipboard-file-form>
+                                <input type="hidden" asp-for="DocumentId" />
+                                <div>
+                                    <label class="field-label" for="uploadFile">Failas</label>
+                                    <input id="uploadFile" name="uploadFiles" type="file" multiple class="form-control" required data-clipboard-file-input />
+                                    <div class="seshat-clipboard-status" data-clipboard-file-status></div>
+                                </div>
+                                <div>
+                                    <label class="field-label" asp-for="FileDescription">Aprasymas</label>
+                                    <textarea class="form-control" asp-for="FileDescription" rows="3" maxlength="1000"></textarea>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-orange">Prikabinti</button>
+                                </div>
+                            </form>
+                        }
+
+                        @if (Model.Details.Files.Count == 0)
+                        {
+                            <div class="empty-state compact">Failu dar nera.</div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive exchange-table-wrap">
+                                <table class="table align-middle exchange-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Failas</th>
+                                            <th>Tipas</th>
+                                            <th>Dydis</th>
+                                            <th>Ikele</th>
+                                            <th>Busena</th>
+                                            <th>Veiksmai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var file in Model.Details.Files)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <strong>@file.OriginalFileName</strong>
+                                                    <div class="text-muted">@file.Description</div>
+                                                </td>
+                                                <td>@file.FileKind</td>
+                                                <td>@IndexModel.FormatFileSize(file.FileSizeBytes)</td>
+                                                <td>@file.UploadedBy<br /><span class="text-muted">@IndexModel.FormatDateTime(file.UploadedAt)</span></td>
+                                                <td>
+                                                    @if (file.IsDeleted)
+                                                    {
+                                                        <span class="status-pill status-pill-muted">Deleted</span>
+                                                        <div class="text-muted">@file.DeletedBy @file.DeletedAt?.LocalDateTime.ToString("yyyy-MM-dd HH:mm")</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="status-pill">Active</span>
+                                                    }
+                                                </td>
+                                                <td class="row-actions">
+                                                    @if (!file.IsDeleted)
+                                                    {
+                                                        <div class="seshat-file-actions">
+                                            @if (IndexModel.CanPreview(file))
+                                            {
+                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">Perziureti</a>
+                                            }
+                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">Parsisiusti</a>
+                                        </div>
+                                                        @if (Model.CanEditSelected)
+                                                        {
+                                                            <form method="post" asp-page-handler="DeleteFile" onsubmit="return confirm('Perkelti faila i Deleted kataloga?');">
+                                                                <input type="hidden" asp-for="DocumentId" />
+                                                                <input type="hidden" name="fileId" value="@file.Id" />
+                                                                <input type="hidden" name="DeleteReason" value="User delete" />
+                                                                <button type="submit" class="btn btn-sm btn-outline-danger">Trinti</button>
+                                                            </form>
+                                                        }
+                                                    }
+                                                    else if (Model.CanEditSelected)
+                                                    {
+                                                        <form method="post" asp-page-handler="RestoreFile">
+                                                            <input type="hidden" asp-for="DocumentId" />
+                                                            <input type="hidden" name="fileId" value="@file.Id" />
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary">Atstatyti</button>
+                                                        </form>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </section>
+
+                    <section class="tool-section">
+                        <div class="section-title-row">
+                            <h2>Pakeitimu istorija</h2>
+                            <span class="status-pill">@Model.Details.Logs.Count</span>
+                        </div>
+                        @if (Model.Details.Logs.Count == 0)
+                        {
+                            <div class="empty-state compact">Istorijos dar nera.</div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive exchange-table-wrap">
+                                <table class="table align-middle exchange-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Laikas</th>
+                                            <th>Veiksmas</th>
+                                            <th>Vartotojas</th>
+                                            <th>Santrauka</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var log in Model.Details.Logs)
+                                        {
+                                            <tr>
+                                                <td>@IndexModel.FormatDateTime(log.EventAt)</td>
+                                                <td>@log.ActionType</td>
+                                                <td>@log.ActorUser</td>
+                                                <td>@log.Summary</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </section>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@if (!string.IsNullOrWhiteSpace(Model.SuccessMessage) && Model.SuccessMessage.Contains("SMS", StringComparison.OrdinalIgnoreCase) && Model.SuccessMessage.Contains("kod", StringComparison.OrdinalIgnoreCase))
+{
+    <div class="modal fade" id="smsVerificationModal" tabindex="-1" aria-labelledby="smsVerificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="smsVerificationModalLabel">SMS kodas issiustas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Uzdaryti"></button>
+                </div>
+                <div class="modal-body">
+                    Iveskite gauta 6 simboliu koda SMS patvirtinimo lauke. Jei kodo negavote, galite issiusti nauja koda.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-orange" data-bs-dismiss="modal">Gerai</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modalElement = document.getElementById('smsVerificationModal');
+            if (modalElement && window.bootstrap) {
+                new bootstrap.Modal(modalElement).show();
+            }
+        });
+    </script>
+}
+

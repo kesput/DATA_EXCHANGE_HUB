@@ -1,0 +1,527 @@
+@page
+@model DATA_EXCHANGE_HUB.Pages.Atlas.IndexModel
+@{
+    ViewData["Title"] = "ATLAS";
+    var weekdayKeys = new[]
+    {
+        "Atlas.Weekday.Monday",
+        "Atlas.Weekday.Tuesday",
+        "Atlas.Weekday.Wednesday",
+        "Atlas.Weekday.Thursday",
+        "Atlas.Weekday.Friday",
+        "Atlas.Weekday.Saturday",
+        "Atlas.Weekday.Sunday"
+    };
+}
+
+<div class="container-fluid exchange-page atlas-page pt-4">
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
+                    ATLAS <small class="badge bg-secondary ms-2">AT</small>
+                </h3>
+                <p class="mb-0 text-dark-green">@L["Atlas.Subtitle"]</p>
+            </div>
+
+            <div class="access-panel stacked mb-3">
+                <div>
+                    <span class="field-label">@L["Common.User"]</span>
+                    <strong>@Model.UserName</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["Themis.Access"]</span>
+                    <strong>@(Model.HasAccess ? L["Themis.AccessGranted"] : L["Themis.AccessDenied"])</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["Atlas.Month"]</span>
+                    <strong>@Model.RangeLabel</strong>
+                </div>
+            </div>
+
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">@L["Common.BackToHub"]</a>
+
+            @if (Model.HasAccess && Model.AtlasUsers.Count > 0)
+            {
+                <div class="atlas-users-panel mt-3">
+                    <div class="side-panel-title">@L["Atlas.Users"]</div>
+                    <form method="get" id="atlasUserFilterForm" class="atlas-user-filter-form">
+                        <input type="hidden" name="Year" value="@Model.CurrentMonth.Year" />
+                        <input type="hidden" name="Month" value="@Model.CurrentMonth.Month" />
+                        <input type="hidden" name="ViewMonths" value="@Model.ViewMonthCount" />
+                        <input type="hidden" name="ViewMode" value="@Model.ViewMode" />
+                        <input type="hidden" name="UserFilterApplied" value="true" />
+                        @foreach (var type in Model.ShowTypes)
+                        {
+                            <input type="hidden" name="ShowTypes" value="@type" />
+                        }
+                        <label class="atlas-user-row atlas-user-row-all">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   data-atlas-users-all
+                                   checked="@(Model.AtlasUsers.All(user => Model.IsUserVisible(user.UserName)))" />
+                            <span class="atlas-user-name">@L["Atlas.Users.All"]</span>
+                        </label>
+                    </form>
+                    <div class="atlas-user-list">
+                        @foreach (var user in Model.AtlasUsers)
+                        {
+                            <div class="atlas-user-row">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="ShowUsers"
+                                       value="@user.UserName"
+                                       form="atlasUserFilterForm"
+                                       checked="@Model.IsUserVisible(user.UserName)"
+                                       data-atlas-user-filter
+                                       onchange="document.getElementById('atlasUserFilterForm')?.submit()" />
+                                <span class="atlas-user-swatch" style="background-color: @user.Color"></span>
+                                <span class="atlas-user-name">@user.UserName</span>
+                                @if (user.IsCurrentUser)
+                                {
+                                    <form method="post" asp-page-handler="Color" class="atlas-color-form">
+                                        @foreach (var type in Model.ShowTypes)
+                                        {
+                                            <input type="hidden" name="ShowTypes" value="@type" />
+                                        }
+                                        <input type="hidden" name="Year" value="@Model.CurrentMonth.Year" />
+                                        <input type="hidden" name="Month" value="@Model.CurrentMonth.Month" />
+                                        <input type="hidden" name="ViewMonths" value="@Model.ViewMonthCount" />
+                                        <input type="hidden" name="ViewMode" value="@Model.ViewMode" />
+                                        <input type="hidden" name="UserFilterApplied" value="@Model.UserFilterApplied" />
+                                        @foreach (var visibleUser in Model.ShowUsers)
+                                        {
+                                            <input type="hidden" name="ShowUsers" value="@visibleUser" />
+                                        }
+                                        <input class="atlas-color-input"
+                                               type="color"
+                                               name="UserColor"
+                                               value="@user.Color"
+                                               onchange="this.form.submit()"
+                                               aria-label="@L["Atlas.Color"]" />
+                                    </form>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+            {
+                <div class="alert alert-success" role="status">@Model.SuccessMessage</div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+            }
+
+            @if (!Model.HasAccess)
+            {
+                <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
+                    <h2 class="fw-bold text-dark-green">@L["Common.AccessDenied"]</h2>
+                    <p class="mb-0">@L["Atlas.AccessDeniedBody"]</p>
+                </div>
+            }
+            else
+            {
+                <div class="hub-metrics mb-4">
+                    <div class="metric-card">
+                        <small>@L["Atlas.VisiblePlans"]</small>
+                        <h4>@Model.CalendarDays.Sum(day => day.Plans.Count)</h4>
+                    </div>
+                    <div class="metric-card">
+                        <small>@L["Atlas.Holidays"]</small>
+                        <h4>@Model.CalendarDays.Count(day => day.IsCurrentMonth && day.Holiday is not null)</h4>
+                    </div>
+                    <div class="metric-card">
+                        <small>@L["Atlas.Today"]</small>
+                        <h4>@UiFormat.Date(DateTime.Today)</h4>
+                    </div>
+                </div>
+
+                <section class="tool-section mb-3">
+                    <div class="atlas-toolbar">
+                        <div class="atlas-month-nav">
+                            <a class="btn btn-sm btn-outline-secondary" href="@Model.PreviousMonthUrl">&laquo; @L["DataExchange.Previous"]</a>
+                            <h2>@Model.RangeLabel</h2>
+                            <a class="btn btn-sm btn-outline-secondary" href="@Model.NextMonthUrl">@L["DataExchange.Next"] &raquo;</a>
+                        </div>
+
+                        <form method="get" class="atlas-watchlist">
+                            <input type="hidden" name="Year" value="@Model.CurrentMonth.Year" />
+                            <input type="hidden" name="Month" value="@Model.CurrentMonth.Month" />
+                            <input type="hidden" name="UserFilterApplied" value="@Model.UserFilterApplied" />
+                            @foreach (var userName in Model.ShowUsers)
+                            {
+                                <input type="hidden" name="ShowUsers" value="@userName" />
+                            }
+                            <label class="atlas-range-select">
+                                <span class="field-label">@L["Atlas.Display"]</span>
+                                <select class="form-select form-select-sm" name="ViewMode" onchange="this.form.submit()">
+                                    <option value="calendar" selected="@(!Model.IsMatrixView)">@L["Atlas.Display.Calendar"]</option>
+                                    <option value="matrix" selected="@Model.IsMatrixView">@L["Atlas.Display.Matrix"]</option>
+                                </select>
+                            </label>
+                            <label class="atlas-range-select">
+                                <span class="field-label">@L["Atlas.View"]</span>
+                                <select class="form-select form-select-sm" name="ViewMonths" onchange="this.form.submit()">
+                                    <option value="1" selected="@(Model.ViewMonthCount == 1)">1 @L["Atlas.MonthShort"]</option>
+                                    <option value="3" selected="@(Model.ViewMonthCount == 3)">3 @L["Atlas.MonthShort"]</option>
+                                    <option value="6" selected="@(Model.ViewMonthCount == 6)">6 @L["Atlas.MonthShort"]</option>
+                                    <option value="12" selected="@(Model.ViewMonthCount == 12)">12 @L["Atlas.MonthShort"]</option>
+                                </select>
+                            </label>
+                            <span class="field-label">@L["Atlas.Watch"]</span>
+                            <label class="form-check">
+                                <input class="form-check-input" type="checkbox" name="ShowTypes" value="LEAVE" checked="@Model.IsTypeVisible("LEAVE")" onchange="this.form.submit()" />
+                                <span class="form-check-label">@L["Atlas.Type.Leave"]</span>
+                            </label>
+                            <label class="form-check">
+                                <input class="form-check-input" type="checkbox" name="ShowTypes" value="WORK_FROM_HOME" checked="@Model.IsTypeVisible("WORK_FROM_HOME")" onchange="this.form.submit()" />
+                                <span class="form-check-label">@L["Atlas.Type.WorkFromHome"]</span>
+                            </label>
+                            <label class="form-check">
+                                <input class="form-check-input" type="checkbox" name="ShowTypes" value="MEETING" checked="@Model.IsTypeVisible("MEETING")" onchange="this.form.submit()" />
+                                <span class="form-check-label">@L["Atlas.Type.Meeting"]</span>
+                            </label>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="tool-section mb-3">
+                    <div class="section-title-row">
+                        <h2>@L["Atlas.NewPlan"]</h2>
+                        <span class="status-pill">@L["Atlas.FutureOnly"]</span>
+                    </div>
+
+                    <form method="post" asp-page-handler="Create" class="atlas-plan-form">
+                        @foreach (var type in Model.ShowTypes)
+                        {
+                            <input type="hidden" name="ShowTypes" value="@type" />
+                        }
+                        <input type="hidden" name="Year" value="@Model.CurrentMonth.Year" />
+                        <input type="hidden" name="Month" value="@Model.CurrentMonth.Month" />
+                        <input type="hidden" name="ViewMonths" value="@Model.ViewMonthCount" />
+                        <input type="hidden" name="ViewMode" value="@Model.ViewMode" />
+                        <input type="hidden" name="UserFilterApplied" value="@Model.UserFilterApplied" />
+                        @foreach (var userName in Model.ShowUsers)
+                        {
+                            <input type="hidden" name="ShowUsers" value="@userName" />
+                        }
+                        <div>
+                            <label class="form-label" asp-for="StartDateText">@L["Atlas.DateFrom"]</label>
+                            <input class="form-control"
+                                   asp-for="StartDateText"
+                                   type="text"
+                                   inputmode="numeric"
+                                   data-atlas-date-input
+                                   data-atlas-start-date
+                                   placeholder="@Model.DatePlaceholder"
+                                   autocomplete="off"
+                                   required />
+                        </div>
+                        <div>
+                            <label class="form-label" asp-for="EndDateText">@L["Atlas.DateTo"]</label>
+                            <input class="form-control"
+                                   asp-for="EndDateText"
+                                   type="text"
+                                   inputmode="numeric"
+                                   data-atlas-date-input
+                                   data-atlas-end-date
+                                   placeholder="@Model.DatePlaceholder"
+                                   autocomplete="off"
+                                   required />
+                        </div>
+                        <div>
+                            <label class="form-label" asp-for="PlanType">@L["Common.Type"]</label>
+                            <select class="form-select" asp-for="PlanType">
+                                <option value="LEAVE">@L["Atlas.Type.Leave"]</option>
+                                <option value="WORK_FROM_HOME">@L["Atlas.Type.WorkFromHome"]</option>
+                                <option value="MEETING">@L["Atlas.Type.Meeting"]</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label" asp-for="Title">@L["Atlas.Title"]</label>
+                            <input class="form-control" asp-for="Title" maxlength="200" />
+                        </div>
+                        <div class="atlas-notes-field">
+                            <label class="form-label" asp-for="Notes">@L["Atlas.Notes"]</label>
+                            <input class="form-control" asp-for="Notes" maxlength="1000" />
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-orange">@L["Common.Add"]</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="tool-section">
+                    @if (Model.IsMatrixView)
+                    {
+                        <div class="atlas-matrix-wrap">
+                            <table class="atlas-matrix">
+                                <thead>
+                                    <tr>
+                                        <th class="matrix-sticky matrix-user-head" rowspan="3">@L["Common.User"]</th>
+                                        @foreach (var monthGroup in Model.MatrixDays.GroupBy(day => new DateTime(day.Year, day.Month, 1)))
+                                        {
+                                            <th class="matrix-month" colspan="@monthGroup.Count()">@monthGroup.Key.ToString("yyyy-MM")</th>
+                                        }
+                                    </tr>
+                                    <tr>
+                                        @foreach (var day in Model.MatrixDays)
+                                        {
+                                            var holiday = Model.HolidayFor(day);
+                                            <th class="matrix-day-name @(day.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? "is-weekend" : "") @(holiday is not null ? "is-holiday" : "")"
+                                                title="@(holiday is null ? day.ToString("yyyy-MM-dd") : Model.HolidayName(holiday))">
+                                                @L[weekdayKeys[((int)day.DayOfWeek + 6) % 7]]
+                                            </th>
+                                        }
+                                    </tr>
+                                    <tr>
+                                        @foreach (var day in Model.MatrixDays)
+                                        {
+                                            var holiday = Model.HolidayFor(day);
+                                            <th class="matrix-day-number @(day.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? "is-weekend" : "") @(holiday is not null ? "is-holiday" : "")"
+                                                title="@(holiday is null ? day.ToString("yyyy-MM-dd") : Model.HolidayName(holiday))">
+                                                @day.Day
+                                            </th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model.AtlasUsers.Where(user => Model.IsUserVisible(user.UserName)))
+                                    {
+                                        <tr>
+                                            <th class="matrix-sticky matrix-user">
+                                                <span class="atlas-user-swatch" style="background-color: @user.Color"></span>
+                                                <span>@user.UserName</span>
+                                            </th>
+                                            @foreach (var day in Model.MatrixDays)
+                                            {
+                                                var holiday = Model.HolidayFor(day);
+                                                var plans = Model.MatrixPlansFor(user.UserName, day);
+                                                <td class="matrix-cell @(day.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? "is-weekend" : "") @(holiday is not null ? "is-holiday" : "") @(plans.Count > 0 ? "has-plan" : "")">
+                                                    @foreach (var plan in plans)
+                                                    {
+                                                        <span class="matrix-plan-dot @Model.TypeCssClass(plan.PlanType)"
+                                                              style="--atlas-user-color: @plan.UserColor"
+                                                              title="@($"{Model.TypeLabel(plan.PlanType)} - {plan.CreatedBy} - {day:yyyy-MM-dd}")"></span>
+                                                    }
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="atlas-calendar-board atlas-view-@Model.ViewMonthCount">
+                            @foreach (var calendarMonth in Model.CalendarMonths)
+                            {
+                                <div class="atlas-month-card">
+                                    <h3>@calendarMonth.MonthStart.ToString("yyyy-MM")</h3>
+                                    <div class="atlas-calendar">
+                                        @for (var i = 0; i < weekdayKeys.Length; i++)
+                                        {
+                                            <div class="atlas-weekday @(i >= 5 ? "is-weekend" : "")">@L[weekdayKeys[i]]</div>
+                                        }
+
+                                        @foreach (var day in calendarMonth.Days)
+                                        {
+                                            <div class="atlas-day @(day.IsCurrentMonth ? "" : "is-outside-month") @(day.IsPast ? "is-past" : "") @(day.IsWeekend ? "is-weekend" : "") @(day.Holiday is not null ? "is-holiday" : "")">
+                                                <div class="atlas-day-head">
+                                                    <span>@day.Date.Day</span>
+                                                    @if (day.Holiday is not null)
+                                                    {
+                                                        <small>@Model.HolidayName(day.Holiday)</small>
+                                                    }
+                                                </div>
+
+                                                <div class="atlas-day-plans">
+                                                    @foreach (var plan in day.Plans)
+                                                    {
+                                                        <div class="atlas-plan @Model.TypeCssClass(plan.PlanType)" style="--atlas-user-color: @plan.UserColor">
+                                                            <div class="atlas-plan-full">
+                                                                <span>@plan.CreatedBy</span>
+                                                            </div>
+                                                            <div class="atlas-plan-compact" title="@plan.CreatedBy">
+                                                                <span class="atlas-plan-dot"></span>
+                                                            </div>
+                                                            @if (plan.CanDelete)
+                                                            {
+                                                                <form method="post"
+                                                                      asp-page-handler="Delete"
+                                                                      onsubmit="return confirm('@L["Atlas.ConfirmDelete"]');">
+                                                                    @foreach (var type in Model.ShowTypes)
+                                                                    {
+                                                                        <input type="hidden" name="ShowTypes" value="@type" />
+                                                                    }
+                                                                    <input type="hidden" name="Year" value="@Model.CurrentMonth.Year" />
+                                                                    <input type="hidden" name="Month" value="@Model.CurrentMonth.Month" />
+                                                                    <input type="hidden" name="ViewMonths" value="@Model.ViewMonthCount" />
+                                                                    <input type="hidden" name="ViewMode" value="@Model.ViewMode" />
+                                                                    <input type="hidden" name="UserFilterApplied" value="@Model.UserFilterApplied" />
+                                                                    @foreach (var userName in Model.ShowUsers)
+                                                                    {
+                                                                        <input type="hidden" name="ShowUsers" value="@userName" />
+                                                                    }
+                                                                    <input type="hidden" name="planId" value="@plan.Id" />
+                                                                    <button type="submit" class="btn btn-sm btn-outline-danger">@L["Common.Delete"]</button>
+                                                                </form>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </section>
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const inputs = Array.from(document.querySelectorAll('[data-atlas-date-input]'));
+            if (inputs.length === 0) return;
+
+            const usesSlashFormat = inputs[0].placeholder.includes('/');
+            let activeInput = null;
+            let visibleMonth = new Date();
+            visibleMonth.setDate(1);
+
+            const picker = document.createElement('div');
+            picker.className = 'atlas-date-picker';
+            picker.hidden = true;
+            document.body.appendChild(picker);
+
+            inputs.forEach((input) => {
+                input.addEventListener('focus', () => openPicker(input));
+                input.addEventListener('click', () => openPicker(input));
+                input.addEventListener('change', syncDateRange);
+            });
+
+            const userFilterForm = document.getElementById('atlasUserFilterForm');
+            const allUsersToggle = document.querySelector('[data-atlas-users-all]');
+            const userToggles = Array.from(document.querySelectorAll('[data-atlas-user-filter]'));
+            allUsersToggle?.addEventListener('change', () => {
+                userToggles.forEach((input) => {
+                    input.checked = allUsersToggle.checked;
+                });
+                userFilterForm?.submit();
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!picker.contains(event.target) && !inputs.includes(event.target)) {
+                    picker.hidden = true;
+                }
+            });
+
+            function openPicker(input) {
+                activeInput = input;
+                visibleMonth = parseDate(input.value) ?? new Date();
+                visibleMonth.setDate(1);
+                renderPicker();
+
+                const rect = input.getBoundingClientRect();
+                picker.style.left = `${window.scrollX + rect.left}px`;
+                picker.style.top = `${window.scrollY + rect.bottom + 6}px`;
+                picker.hidden = false;
+            }
+
+            function renderPicker() {
+                const year = visibleMonth.getFullYear();
+                const month = visibleMonth.getMonth();
+                const first = new Date(year, month, 1);
+                const startOffset = (first.getDay() + 6) % 7;
+                const start = new Date(year, month, 1 - startOffset);
+                const monthLabel = `${year}-${String(month + 1).padStart(2, '0')}`;
+                const weekdays = ['Pr', 'An', 'Tr', 'Kt', 'Pn', 'St', 'Sk'];
+
+                picker.innerHTML = `
+                    <div class="atlas-date-picker-head">
+                        <button type="button" data-prev>&laquo;</button>
+                        <strong>${monthLabel}</strong>
+                        <button type="button" data-next>&raquo;</button>
+                    </div>
+                    <div class="atlas-date-picker-grid">
+                        ${weekdays.map((day, index) => `<span class="${index >= 5 ? 'is-weekend' : ''}">${day}</span>`).join('')}
+                        ${Array.from({ length: 42 }, (_, offset) => {
+                            const date = new Date(start);
+                            date.setDate(start.getDate() + offset);
+                            const isOutside = date.getMonth() !== month;
+                            const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                            return `<button type="button" class="${isOutside ? 'is-outside' : ''} ${isWeekend ? 'is-weekend' : ''}" data-date="${toIso(date)}">${date.getDate()}</button>`;
+                        }).join('')}
+                    </div>`;
+
+                picker.querySelector('[data-prev]')?.addEventListener('click', () => {
+                    visibleMonth.setMonth(visibleMonth.getMonth() - 1);
+                    renderPicker();
+                });
+                picker.querySelector('[data-next]')?.addEventListener('click', () => {
+                    visibleMonth.setMonth(visibleMonth.getMonth() + 1);
+                    renderPicker();
+                });
+                picker.querySelectorAll('[data-date]').forEach((button) => {
+                    button.addEventListener('click', () => {
+                        if (!activeInput) return;
+                        const date = parseIso(button.dataset.date);
+                        activeInput.value = formatDate(date);
+                        syncDateRange();
+                        picker.hidden = true;
+                    });
+                });
+            }
+
+            function parseDate(value) {
+                const trimmed = value.trim();
+                let match = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+                if (match) return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+                match = trimmed.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+                if (match) return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
+                return null;
+            }
+
+            function parseIso(value) {
+                const [year, month, day] = value.split('-').map(Number);
+                return new Date(year, month - 1, day);
+            }
+
+            function toIso(date) {
+                return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            }
+
+            function formatDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return usesSlashFormat ? `${day}/${month}/${year}` : `${year}-${month}-${day}`;
+            }
+
+            function syncDateRange() {
+                const startInput = document.querySelector('[data-atlas-start-date]');
+                const endInput = document.querySelector('[data-atlas-end-date]');
+                if (!startInput || !endInput) return;
+
+                const startDate = parseDate(startInput.value);
+                const endDate = parseDate(endInput.value);
+                if (startDate && endDate && endDate < startDate) {
+                    endInput.value = formatDate(startDate);
+                }
+            }
+        })();
+    </script>
+}

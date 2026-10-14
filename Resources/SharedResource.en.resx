@@ -1,0 +1,663 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Header.Subtitle" xml:space="preserve">
+    <value>Internal applications hub</value>
+  </data>
+  <data name="Language.Lithuanian" xml:space="preserve">
+    <value>Lithuanian</value>
+  </data>
+  <data name="Language.English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Common.Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Common.AccessDenied" xml:space="preserve"><value>Access denied</value></data>
+  <data name="Common.Applications" xml:space="preserve"><value>Applications</value></data>
+  <data name="Common.Application" xml:space="preserve"><value>Application</value></data>
+  <data name="Common.BackToHub" xml:space="preserve"><value>Back to HUB</value></data>
+  <data name="Common.ContactForAccess" xml:space="preserve"><value>Access contact</value></data>
+  <data name="Common.File" xml:space="preserve"><value>File</value></data>
+  <data name="Common.No" xml:space="preserve"><value>No</value></data>
+  <data name="Common.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Common.Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Common.User" xml:space="preserve"><value>User</value></data>
+  <data name="Common.Yes" xml:space="preserve"><value>Yes</value></data>
+  <data name="Common.Add" xml:space="preserve"><value>Add</value></data>
+  <data name="Common.Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Common.Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Common.Empty" xml:space="preserve"><value>Empty</value></data>
+  <data name="Common.SaveChanges" xml:space="preserve"><value>Save changes</value></data>
+  <data name="Common.Title" xml:space="preserve"><value>Title</value></data>
+  <data name="Sphinx.CreateSurvey" xml:space="preserve"><value>Create survey</value></data>
+  <data name="Sphinx.TotalSurveys" xml:space="preserve"><value>Total surveys</value></data>
+  <data name="Sphinx.ManagementList" xml:space="preserve"><value>Management list</value></data>
+  <data name="Sphinx.NoSurveys" xml:space="preserve"><value>No surveys created yet.</value></data>
+  <data name="Sphinx.LimitMode" xml:space="preserve"><value>Survey availability</value></data>
+  <data name="Sphinx.Limit.None" xml:space="preserve"><value>Indefinitely</value></data>
+  <data name="Sphinx.Limit.Count" xml:space="preserve"><value>Until respondent count</value></data>
+  <data name="Sphinx.Limit.Date" xml:space="preserve"><value>Until a date</value></data>
+  <data name="Sphinx.MaxResponses" xml:space="preserve"><value>Maximum respondent count</value></data>
+  <data name="Sphinx.ExpiresAt" xml:space="preserve"><value>Available until</value></data>
+  <data name="Sphinx.QuestionCount" xml:space="preserve"><value>Questions</value></data>
+  <data name="Sphinx.ResponseCount" xml:space="preserve"><value>Responses</value></data>
+  <data name="Sphinx.Limit" xml:space="preserve"><value>Limit</value></data>
+  <data name="Sphinx.Respondents" xml:space="preserve"><value>respondents</value></data>
+  <data name="Sphinx.CreatedAt" xml:space="preserve"><value>Created</value></data>
+  <data name="Sphinx.Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Sphinx.ConfirmClose" xml:space="preserve"><value>Are you sure you want to close this survey?</value></data>
+  <data name="Sphinx.Status.Closed" xml:space="preserve"><value>Closed</value></data>
+  <data name="Sphinx.Guide.Single" xml:space="preserve"><value>Single answer</value></data>
+  <data name="Sphinx.Guide.Multi" xml:space="preserve"><value>Multiple answers</value></data>
+  <data name="Sphinx.Guide.SubQuestion" xml:space="preserve"><value>Sub-question</value></data>
+  <data name="Sphinx.Guide.Contacts" xml:space="preserve"><value>Contacts</value></data>
+  <data name="Sphinx.Guide.Chair" xml:space="preserve"><value>Chair</value></data>
+  <data name="Sphinx.Guide.Monitor" xml:space="preserve"><value>Monitor</value></data>
+  <data name="Sphinx.Guide.Quiet" xml:space="preserve"><value>Quiet</value></data>
+  <data name="Sphinx.Guide.ErgonomicChair" xml:space="preserve"><value>Ergonomic chair</value></data>
+  <data name="Sphinx.Guide.AdditionalMonitor" xml:space="preserve"><value>Additional monitor</value></data>
+  <data name="Sphinx.ExcelTemplate" xml:space="preserve"><value>Excel template</value></data>
+  <data name="Sphinx.SurveyKind" xml:space="preserve"><value>Type</value></data>
+  <data name="Sphinx.SurveyKind.Survey" xml:space="preserve"><value>Full survey</value></data>
+  <data name="Sphinx.SurveyKind.Poll" xml:space="preserve"><value>Quick poll</value></data>
+  <data name="Sphinx.Anonymity" xml:space="preserve"><value>Response anonymity</value></data>
+  <data name="Sphinx.Anonymity.Anonymous" xml:space="preserve"><value>Anonymous responses</value></data>
+  <data name="Sphinx.Anonymity.Named" xml:space="preserve"><value>Named responses</value></data>
+  <data name="Sphinx.Anonymity.Help" xml:space="preserve"><value>An anonymous survey uses the user only to prevent repeated submissions, while the exported results anonymize the name.</value></data>
+  <data name="Sphinx.Import.Title" xml:space="preserve"><value>Import from Excel</value></data>
+  <data name="Sphinx.Import.Submit" xml:space="preserve"><value>Import as a new survey</value></data>
+  <data name="Sphinx.Import.Help" xml:space="preserve"><value>The import uses the same Excel template structure. Title, type, limits and anonymity are taken from the form fields above.</value></data>
+  <data name="Sphinx.Results" xml:space="preserve"><value>Results</value></data>
+  <data name="Sphinx.Validation.Text" xml:space="preserve"><value>Text</value></data>
+  <data name="Sphinx.Validation.Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Sphinx.Validation.Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Sphinx.Validation.Number" xml:space="preserve"><value>Number</value></data>
+  <data name="Sphinx.Error.TitleRequired" xml:space="preserve"><value>Survey title is required.</value></data>
+  <data name="Sphinx.Error.QuestionRequired" xml:space="preserve"><value>The survey must contain at least one question.</value></data>
+  <data name="Sphinx.Error.SelectExcelFile" xml:space="preserve"><value>Select an Excel file for import.</value></data>
+  <data name="Sphinx.Error.InvalidExcelFile" xml:space="preserve"><value>Use an .xlsx or .xlsm Excel file for import.</value></data>
+  <data name="Sphinx.Error.ImportTitleRequired" xml:space="preserve"><value>Enter the new survey title before importing.</value></data>
+  <data name="Sphinx.Success.Created" xml:space="preserve"><value>Survey created.</value></data>
+  <data name="Sphinx.Success.Closed" xml:space="preserve"><value>Survey closed.</value></data>
+  <data name="Sphinx.Success.Imported" xml:space="preserve"><value>Survey imported.</value></data>
+  <data name="Spinkx.Questions" xml:space="preserve"><value>questions</value></data>
+  <data name="Spinkx.Respondents" xml:space="preserve"><value>respondents</value></data>
+  <data name="Spinkx.Until" xml:space="preserve"><value>until</value></data>
+  <data name="Spinkx.FillSurvey" xml:space="preserve"><value>Fill survey</value></data>
+  <data name="Spinkx.EditAnswer" xml:space="preserve"><value>Edit answer</value></data>
+  <data name="Spinkx.AlreadyFilled" xml:space="preserve"><value>Completed</value></data>
+  <data name="Spinkx.CanUpdate" xml:space="preserve"><value>you can update</value></data>
+  <data name="Spinkx.BackToList" xml:space="preserve"><value>Survey list</value></data>
+  <data name="Spinkx.SurveyClosed" xml:space="preserve"><value>This survey is closed and no longer accepting responses.</value></data>
+  <data name="Spinkx.Submit" xml:space="preserve"><value>Submit answers</value></data>
+  <data name="Spinkx.UpdateAnswer" xml:space="preserve"><value>Update answers</value></data>
+  <data name="Spinkx.TextPlaceholder" xml:space="preserve"><value>Enter your answer...</value></data>
+  <data name="Spinkx.AnswerAtLeastOne" xml:space="preserve"><value>Please answer at least one question.</value></data>
+  <data name="DataExchange.AccessMode" xml:space="preserve"><value>Mode</value></data>
+  <data name="DataExchange.AddFilter" xml:space="preserve"><value>Add filter</value></data>
+  <data name="DataExchange.AddRow" xml:space="preserve"><value>Add row</value></data>
+  <data name="DataExchange.ActiveStatus" xml:space="preserve"><value>Active</value></data>
+  <data name="DataExchange.AuditLog" xml:space="preserve"><value>Audit log</value></data>
+  <data name="DataExchange.AuditStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="DataExchange.ChangedColumns" xml:space="preserve"><value>Columns</value></data>
+  <data name="DataExchange.CanReceive" xml:space="preserve"><value>Can receive</value></data>
+  <data name="DataExchange.CanUpload" xml:space="preserve"><value>Can upload</value></data>
+  <data name="DataExchange.ClearFilters" xml:space="preserve"><value>Clear filters</value></data>
+  <data name="DataExchange.Column" xml:space="preserve"><value>Column</value></data>
+  <data name="DataExchange.ConfirmDeleteFiltered" xml:space="preserve"><value>Delete {0} rows matching the active filters?</value></data>
+  <data name="DataExchange.ConfirmDeleteRow" xml:space="preserve"><value>Delete this permission row?</value></data>
+  <data name="DataExchange.ConfirmRevertLog" xml:space="preserve"><value>Revert audit record #{0}?</value></data>
+  <data name="DataExchange.ConfirmFilteredDelete" xml:space="preserve"><value>Confirm delete</value></data>
+  <data name="DataExchange.DeleteByFilter" xml:space="preserve"><value>Delete by filter</value></data>
+  <data name="DataExchange.DeleteByFilterTitle" xml:space="preserve"><value>First counts rows selected by the active filters</value></data>
+  <data name="DataExchange.DeletePreviewBody" xml:space="preserve"><value>Confirm only if the filters exactly match the intended block.</value></data>
+  <data name="DataExchange.DeletePreviewTitle" xml:space="preserve"><value>Active filters will delete: {0} rows.</value></data>
+  <data name="DataExchange.EmptySearch" xml:space="preserve"><value>No tables match the search.</value></data>
+  <data name="DataExchange.ExportExcel" xml:space="preserve"><value>Export Excel</value></data>
+  <data name="DataExchange.Filters" xml:space="preserve"><value>Filters</value></data>
+  <data name="DataExchange.Filter" xml:space="preserve"><value>Filter</value></data>
+  <data name="DataExchange.FilterValidationBetween" xml:space="preserve"><value>For a BETWEEN filter, enter two values in from..to format.</value></data>
+  <data name="DataExchange.FilterValidationIn" xml:space="preserve"><value>For an IN filter, enter at least one value.</value></data>
+  <data name="DataExchange.FilterValidationRequired" xml:space="preserve"><value>Select a column and value for each active filter.</value></data>
+  <data name="DataExchange.NoInsertableColumns" xml:space="preserve"><value>This table has no columns that can be filled manually.</value></data>
+  <data name="DataExchange.ImportExcel" xml:space="preserve"><value>Upload Excel</value></data>
+  <data name="DataExchange.NoAccess" xml:space="preserve"><value>This Windows user has no active Data Exchange permissions in [BLS_LOGIT_STAT].[dbo].[BS_EXCHANGE_ACCESS].</value></data>
+  <data name="DataExchange.NoData" xml:space="preserve"><value>The table has no data for the selected mode.</value></data>
+  <data name="DataExchange.NoReceive" xml:space="preserve"><value>This table has no receive permission. Only adding new rows is available.</value></data>
+  <data name="DataExchange.SearchPlaceholder" xml:space="preserve"><value>Search tables</value></data>
+  <data name="DataExchange.Select" xml:space="preserve"><value>Select</value></data>
+  <data name="DataExchange.Subtitle" xml:space="preserve"><value>SQL tables available to the user based on assigned permissions.</value></data>
+  <data name="DataExchange.Tables" xml:space="preserve"><value>Tables</value></data>
+  <data name="DataExchange.Time" xml:space="preserve"><value>Time</value></data>
+  <data name="DataExchange.TopRows" xml:space="preserve"><value>Top row count</value></data>
+  <data name="DataExchange.Upload" xml:space="preserve"><value>Upload</value></data>
+  <data name="DataExchange.PageInfo" xml:space="preserve"><value>Page {0}, showing up to {1} rows.</value></data>
+  <data name="DataExchange.Previous" xml:space="preserve"><value>Previous</value></data>
+  <data name="DataExchange.Next" xml:space="preserve"><value>Next</value></data>
+  <data name="DataExchange.RecentCount" xml:space="preserve"><value>{0} latest</value></data>
+  <data name="DataExchange.RevertedStatus" xml:space="preserve"><value>Reverted</value></data>
+  <data name="DataExchange.Revert" xml:space="preserve"><value>Revert</value></data>
+  <data name="DataExchange.SortTitle" xml:space="preserve"><value>Double-click to sort</value></data>
+  <data name="DataExchange.Value" xml:space="preserve"><value>Value</value></data>
+  <data name="DataExchange.ViewAllFiltered" xml:space="preserve"><value>All filtered rows</value></data>
+  <data name="DataExchange.Action" xml:space="preserve"><value>Action</value></data>
+  <data name="DataExchange.Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="DataExchange.Key" xml:space="preserve"><value>Key</value></data>
+  <data name="DataExchange.GeneralAccess" xml:space="preserve"><value>General access</value></data>
+  <data name="DataExchange.TestModeUnlimited" xml:space="preserve"><value>Testing without restrictions</value></data>
+  <data name="DataExchange.NoTablesAssigned" xml:space="preserve"><value>No tables are assigned to this user.</value></data>
+  <data name="DataExchange.LoadFailed" xml:space="preserve"><value>Could not load table data.</value></data>
+  <data name="DataExchange.Template" xml:space="preserve"><value>Template</value></data>
+  <data name="DataExchange.UniqueRules" xml:space="preserve"><value>Unique rules</value></data>
+  <data name="DataExchange.ImportPreview" xml:space="preserve"><value>Excel import preview</value></data>
+  <data name="DataExchange.ConfirmImport" xml:space="preserve"><value>Confirm import</value></data>
+  <data name="DataExchange.Ignored" xml:space="preserve"><value>Ignored</value></data>
+  <data name="DataExchange.RowCountShort" xml:space="preserve"><value>{0} rows</value></data>
+  <data name="DataExchange.ActiveFilters" xml:space="preserve"><value>{0} active</value></data>
+  <data name="DataExchange.FilterConnector" xml:space="preserve"><value>Filter connector</value></data>
+  <data name="DataExchange.FilterColumn" xml:space="preserve"><value>Filter column</value></data>
+  <data name="DataExchange.FilterOperator" xml:space="preserve"><value>Filter operator</value></data>
+  <data name="DataExchange.ChangesSaved" xml:space="preserve"><value>Changes saved.</value></data>
+  <data name="DataExchange.ChangesSaveFailed" xml:space="preserve"><value>Could not save changes.</value></data>
+  <data name="DataExchange.Error.TableNotAssigned" xml:space="preserve"><value>The selected table is not assigned to this user.</value></data>
+  <data name="DataExchange.Error.CorrectionInsertDisabled" xml:space="preserve"><value>New rows cannot be added to this table. Only existing values can be edited.</value></data>
+  <data name="DataExchange.Error.NoInsertPermission" xml:space="preserve"><value>Add and edit permission is not granted for this table.</value></data>
+  <data name="DataExchange.Error.ExportNoReceive" xml:space="preserve"><value>This table has no receive permission, so data export is not available.</value></data>
+  <data name="DataExchange.Error.ImportNoAccess" xml:space="preserve"><value>Upload permission is not granted for this table.</value></data>
+  <data name="DataExchange.Error.NoImportColumns" xml:space="preserve"><value>This table has no columns available for Excel import.</value></data>
+  <data name="DataExchange.Error.SelectExcelFile" xml:space="preserve"><value>Select an Excel file to upload.</value></data>
+  <data name="DataExchange.Error.InvalidExcelFile" xml:space="preserve"><value>Invalid file format. Use an .xlsx or .xlsm Excel file for upload.</value></data>
+  <data name="DataExchange.Error.EmptyExcelFile" xml:space="preserve"><value>No data was found in the Excel file for upload.</value></data>
+  <data name="DataExchange.Error.PreviewMissing" xml:space="preserve"><value>The import preview was not found or has expired. Upload the Excel file again.</value></data>
+  <data name="DataExchange.Error.PreviewTableMismatch" xml:space="preserve"><value>The import preview does not match the selected table.</value></data>
+  <data name="DataExchange.Error.EmptyImportRows" xml:space="preserve"><value>The Excel file has no rows with fillable data.</value></data>
+  <data name="DataExchange.Error.DeleteAccessDenied" xml:space="preserve"><value>Rows can be deleted only by users who have receive and upload permissions.</value></data>
+  <data name="DataExchange.Error.DeleteRowKeyMissing" xml:space="preserve"><value>Could not identify the row to delete.</value></data>
+  <data name="DataExchange.Error.DeletePreviewRequiresFilter" xml:space="preserve"><value>At least one active filter is required for bulk delete preview.</value></data>
+  <data name="DataExchange.Error.DeleteRequiresFilter" xml:space="preserve"><value>At least one active filter is required for bulk delete.</value></data>
+  <data name="DataExchange.Error.DeletePreviewRequired" xml:space="preserve"><value>First run the bulk delete preview using the current filters.</value></data>
+  <data name="DataExchange.Error.RevertAccessDenied" xml:space="preserve"><value>Records can be reverted only by users who have receive and upload permissions.</value></data>
+  <data name="DataExchange.Error.ImportAccessDenied" xml:space="preserve"><value>The server does not have write permission to the import preview directory: {0}. Grant Modify permission to the IIS AppPool user for App_Data\DataExchange.</value></data>
+  <data name="DataExchange.Success.RowAdded" xml:space="preserve"><value>Row added to table {0}.</value></data>
+  <data name="DataExchange.Success.RowDeleted" xml:space="preserve"><value>Row deleted.</value></data>
+  <data name="DataExchange.Success.ImportPreviewPrepared" xml:space="preserve"><value>Import preview prepared: {0} rows.</value></data>
+  <data name="DataExchange.Success.ImportPreviewPreparedIgnored" xml:space="preserve"><value>Import preview prepared: {0} rows. Ignored system fields: {1}.</value></data>
+  <data name="DataExchange.Success.ImportRowInserted" xml:space="preserve"><value>1 row was uploaded to table {0}.</value></data>
+  <data name="DataExchange.Success.ImportRowsInserted" xml:space="preserve"><value>Uploaded rows: {0}. Table: {1}.</value></data>
+  <data name="DataExchange.Success.DeletePreviewFound" xml:space="preserve"><value>Rows found by active filters: {0}. Check and confirm deletion.</value></data>
+  <data name="DataExchange.Success.FilteredRowDeleted" xml:space="preserve"><value>1 row was deleted by active filters.</value></data>
+  <data name="DataExchange.Success.FilteredRowsDeleted" xml:space="preserve"><value>Rows deleted by active filters: {0}.</value></data>
+  <data name="DataExchange.Success.AuditReverted" xml:space="preserve"><value>Audit record #{0} was reverted.</value></data>
+  <data name="DataExchange.Excel.EmptyHeader" xml:space="preserve"><value>Invalid file. The Excel header row cannot contain empty columns.</value></data>
+  <data name="DataExchange.Excel.DuplicateHeaders" xml:space="preserve"><value>Invalid file. Duplicate headers: {0}.</value></data>
+  <data name="DataExchange.Excel.MissingHeaders" xml:space="preserve"><value>missing: {0}</value></data>
+  <data name="DataExchange.Excel.ExtraHeaders" xml:space="preserve"><value>extra: {0}</value></data>
+  <data name="DataExchange.Excel.StructureMismatch" xml:space="preserve"><value>Invalid file. Excel columns do not match the table structure ({0}).</value></data>
+  <data name="DataExchange.CorrectionContextRequired" xml:space="preserve"><value>Required information is missing: CORRECTION_TYPE (DISCOUNT or COMPENSATION) and CORRECTION_YEARMONTH in YYYYMM format.</value></data>
+  <data name="FileUpload.AccessDeniedBody" xml:space="preserve"><value>This Windows user must have an active BS_APP_ACCESS permission with APP_NAME = FILE_UPLOAD.</value></data>
+  <data name="FileUpload.Directory" xml:space="preserve"><value>Directory</value></data>
+  <data name="FileUpload.DirectorySpace" xml:space="preserve"><value>Directory space</value></data>
+  <data name="FileUpload.Empty" xml:space="preserve"><value>No files were found in this directory, or the directory is not available yet.</value></data>
+  <data name="FileUpload.MaxFile" xml:space="preserve"><value>Max. file</value></data>
+  <data name="FileUpload.RecentFiles" xml:space="preserve"><value>Recent files</value></data>
+  <data name="FileUpload.Size" xml:space="preserve"><value>Size</value></data>
+  <data name="FileUpload.StorageLimit" xml:space="preserve"><value>Storage limit</value></data>
+  <data name="FileUpload.StorageLimitReached" xml:space="preserve"><value>The upload directory limit has been reached. Ask an administrator to free up space for file uploads.</value></data>
+  <data name="FileUpload.StorageReady" xml:space="preserve"><value>Available</value></data>
+  <data name="FileUpload.StorageWillBeCreated" xml:space="preserve"><value>Will be created on upload</value></data>
+  <data name="FileUpload.Subtitle" xml:space="preserve"><value>Upload files to the server directory.</value></data>
+  <data name="FileUpload.Time" xml:space="preserve"><value>Time</value></data>
+  <data name="FileUpload.Upload" xml:space="preserve"><value>Upload</value></data>
+  <data name="FileUpload.UploadFile" xml:space="preserve"><value>Upload file</value></data>
+  <data name="FileUpload.UploadNote" xml:space="preserve"><value>The file will be saved to {0}.</value></data>
+  <data name="FileUpload.Error.AccessDenied" xml:space="preserve"><value>This user does not have FILE_UPLOAD permission.</value></data>
+  <data name="FileUpload.Error.Cancelled" xml:space="preserve"><value>The file upload was cancelled.</value></data>
+  <data name="FileUpload.Error.EmptyFile" xml:space="preserve"><value>Select a file to upload.</value></data>
+  <data name="FileUpload.Error.MaxFile" xml:space="preserve"><value>The file is too large. Maximum size: {0} MB.</value></data>
+  <data name="FileUpload.Error.NoStoragePath" xml:space="preserve"><value>The file upload directory is not configured.</value></data>
+  <data name="FileUpload.Error.StorageFull" xml:space="preserve"><value>The upload directory limit has been reached. Ask an administrator to free up space for file uploads.</value></data>
+  <data name="FileUpload.Error.StorageWouldOverflow" xml:space="preserve"><value>The file was not uploaded because it would exceed the upload directory limit. Ask an administrator to free up space.</value></data>
+  <data name="FileUpload.Error.Unauthorized" xml:space="preserve"><value>The server does not have write permission to the directory: {0}. Grant Modify permission to the IIS AppPool user.</value></data>
+  <data name="FileUpload.Error.WriteFailed" xml:space="preserve"><value>Could not write the file to {0}: {1}</value></data>
+  <data name="FileUpload.Success.Uploaded" xml:space="preserve"><value>File uploaded: {0} ({1}).</value></data>
+  <data name="FileUpload.Used" xml:space="preserve"><value>Used</value></data>
+  <data name="Hub.ActiveApplications" xml:space="preserve"><value>Active</value></data>
+  <data name="Hub.ApplicationList" xml:space="preserve"><value>Application list</value></data>
+  <data name="Hub.EmptySearch" xml:space="preserve"><value>No applications match the search.</value></data>
+  <data name="Hub.HeroText" xml:space="preserve"><value>One familiar environment for data exchange and internal web applications.</value></data>
+  <data name="Hub.OpenDataExchange" xml:space="preserve"><value>Open Data exchange</value></data>
+  <data name="Hub.SearchPlaceholder" xml:space="preserve"><value>Search applications</value></data>
+  <data name="Landing.Eyebrow" xml:space="preserve"><value>INTERNAL APPLICATIONS HUB</value></data>
+  <data name="Landing.HeroText" xml:space="preserve"><value>An internal logistics knowledge and application access space. The work HUB is available only with a password and assigned permissions.</value></data>
+  <data name="Landing.LoginToHub" xml:space="preserve"><value>Sign in to HUB</value></data>
+  <data name="Landing.AccessRequest" xml:space="preserve"><value>Access request</value></data>
+  <data name="Landing.WindowsUser" xml:space="preserve"><value>Windows user</value></data>
+  <data name="Landing.AccessType" xml:space="preserve"><value>Access type</value></data>
+  <data name="Landing.Comment" xml:space="preserve"><value>Comment</value></data>
+  <data name="Landing.SubmitRequest" xml:space="preserve"><value>Submit request</value></data>
+  <data name="Landing.Metric.Access" xml:space="preserve"><value>Access</value></data>
+  <data name="Landing.Metric.DomainUsers" xml:space="preserve"><value>Domain users</value></data>
+  <data name="Landing.Metric.Workspace" xml:space="preserve"><value>Workspace</value></data>
+  <data name="Landing.Metric.HubPermissions" xml:space="preserve"><value>HUB + permissions</value></data>
+  <data name="Landing.Metric.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="Landing.LogisticsModels" xml:space="preserve"><value>Logistics operating models</value></data>
+  <data name="Landing.Logistics.1PL" xml:space="preserve"><value>The company manages its own logistics: warehouses, transport and operational processes.</value></data>
+  <data name="Landing.Logistics.2PL" xml:space="preserve"><value>Separate service providers handle specific parts of transport or warehousing.</value></data>
+  <data name="Landing.Logistics.3PL" xml:space="preserve"><value>One logistics partner coordinates a broader package of logistics services.</value></data>
+  <data name="Landing.Logistics.4PL" xml:space="preserve"><value>The full supply chain model is managed by connecting processes, partners and data.</value></data>
+  <data name="Landing.Glossary" xml:space="preserve"><value>Terms glossary</value></data>
+  <data name="Landing.Status.Filling" xml:space="preserve"><value>In progress</value></data>
+  <data name="Landing.Glossary.Kpi.Title" xml:space="preserve"><value>Indicator</value></data>
+  <data name="Landing.Glossary.Kpi.Body" xml:space="preserve"><value>A measured process state or result.</value></data>
+  <data name="Landing.Glossary.Sla.Title" xml:space="preserve"><value>Service level</value></data>
+  <data name="Landing.Glossary.Sla.Body" xml:space="preserve"><value>Agreed commitments for quality, time or service delivery.</value></data>
+  <data name="Landing.Glossary.Throughput.Title" xml:space="preserve"><value>Throughput</value></data>
+  <data name="Landing.Glossary.Throughput.Body" xml:space="preserve"><value>The number of operations or units processed per unit of time.</value></data>
+  <data name="Landing.KnowledgeSectors" xml:space="preserve"><value>Knowledge sectors</value></data>
+  <data name="Landing.Sector.LogisticsModels" xml:space="preserve"><value>Differences between 1PL, 2PL, 3PL and 4PL operating models.</value></data>
+  <data name="Landing.Sector.Transport" xml:space="preserve"><value>Transport types, route points and delivery terms.</value></data>
+  <data name="Landing.Sector.DistributionModel" xml:space="preserve"><value>How goods move from the central warehouse to branches and customers.</value></data>
+  <data name="Landing.Sector.Warehousing" xml:space="preserve"><value>Warehouse flow from receiving to outbound dispatch.</value></data>
+  <data name="Landing.Sector.Packing" xml:space="preserve"><value>Packing service, controls and operational flow principles.</value></data>
+  <data name="Landing.Sector.Glossary" xml:space="preserve"><value>Short terms used in logistics and internal systems.</value></data>
+  <data name="Landing.Sector.Kpi" xml:space="preserve"><value>Indicators, targets and how they turn into actions.</value></data>
+  <data name="Landing.Transport" xml:space="preserve"><value>Transport</value></data>
+  <data name="Landing.Transport.Jumbo.Title" xml:space="preserve"><value>High-volume vehicle</value></data>
+  <data name="Landing.Transport.Jumbo.Body" xml:space="preserve"><value>JUMBO is used when cargo volume matters as much as weight. It suits lighter goods that take more space.</value></data>
+  <data name="Landing.Transport.Tilt.Title" xml:space="preserve"><value>Curtain-side trailer</value></data>
+  <data name="Landing.Transport.Tilt.Body" xml:space="preserve"><value>TILT is a curtain-side vehicle that can be loaded from the side, rear or top when goods do not require temperature control.</value></data>
+  <data name="Landing.Transport.Multitemp.Title" xml:space="preserve"><value>Multi-temperature vehicle</value></data>
+  <data name="Landing.Transport.Multitemp.Body" xml:space="preserve"><value>MULTITEMP allows goods with different temperature requirements to move in one vehicle by separating zones.</value></data>
+  <data name="Landing.Transport.SmallTruck.Title" xml:space="preserve"><value>Distribution box truck</value></data>
+  <data name="Landing.Transport.SmallTruck.Body" xml:space="preserve"><value>A small distribution truck is used for city and regional deliveries where flexibility, frequent stops and limited cargo volume matter.</value></data>
+  <data name="Landing.Transport.Van.Title" xml:space="preserve"><value>Small cargo van</value></data>
+  <data name="Landing.Transport.Van.Body" xml:space="preserve"><value>A small cargo van suits small consignments and tobacco distribution. It usually fits around 1-2 EUR pallets, so it works well on routes with many delivery points.</value></data>
+  <data name="Landing.Transport.Poi.Title" xml:space="preserve"><value>Point of interest</value></data>
+  <data name="Landing.Transport.Poi.Body" xml:space="preserve"><value>POI is a specific point on a route: a customer, ramp, warehouse or another location where an action happens.</value></data>
+  <data name="Landing.Transport.Drop.Title" xml:space="preserve"><value>Delivery or unloading action</value></data>
+  <data name="Landing.Transport.Drop.Body" xml:space="preserve"><value>DROP marks a delivery or unloading action at a specific point. A route may contain one or many DROP points.</value></data>
+  <data name="Landing.DistributionModel" xml:space="preserve"><value>Goods dispatch model</value></data>
+  <data name="Landing.Distribution.MapLabel" xml:space="preserve"><value>Lithuania distribution model diagram</value></data>
+  <data name="Landing.Distribution.CentralShort" xml:space="preserve"><value>Alsenu st. 10</value></data>
+  <data name="Landing.Distribution.Ibl" xml:space="preserve"><value>IBL red routes to branches</value></data>
+  <data name="Landing.Distribution.Dst" xml:space="preserve"><value>DST green distribution routes</value></data>
+  <data name="Landing.Distribution.Ibl.Title" xml:space="preserve"><value>Inter-branch logistics</value></data>
+  <data name="Landing.Distribution.Ibl.Body" xml:space="preserve"><value>IBL truck flow moves goods from the central warehouse in Kaunas district to branches: Vilnius, Panevezys, Utena, Siauliai and Klaipeda.</value></data>
+  <data name="Landing.Distribution.Dst.Title" xml:space="preserve"><value>Distribution delivery</value></data>
+  <data name="Landing.Distribution.Dst.Body" xml:space="preserve"><value>DST flow uses smaller vehicles from Kaunas and the branches to deliver goods to customers by routes and delivery points.</value></data>
+  <data name="Landing.Warehousing" xml:space="preserve"><value>Warehousing</value></data>
+  <data name="Landing.Warehousing.Inbound.Title" xml:space="preserve"><value>Goods receiving</value></data>
+  <data name="Landing.Warehousing.Inbound.Body" xml:space="preserve"><value>Inbound covers checking arriving goods, registration, quality control and preparation for storage.</value></data>
+  <data name="Landing.Warehousing.Storage.Title" xml:space="preserve"><value>Storage</value></data>
+  <data name="Landing.Warehousing.Storage.Body" xml:space="preserve"><value>Storage depends on location control, batches, expiry dates, turnover and goods availability for operations.</value></data>
+  <data name="Landing.Warehousing.Outbound.Title" xml:space="preserve"><value>Picking and dispatch</value></data>
+  <data name="Landing.Warehousing.Outbound.Body" xml:space="preserve"><value>Outbound covers order picking, checking, loading and handover to transport according to the delivery plan.</value></data>
+  <data name="Landing.Packing" xml:space="preserve"><value>Packing</value></data>
+  <data name="Landing.Packing.Service.Title" xml:space="preserve"><value>Value-added service</value></data>
+  <data name="Landing.Packing.Service.Body" xml:space="preserve"><value>Packing can include repacking, kit assembly, sticker work, labeling and other product preparation operations.</value></data>
+  <data name="Landing.Packing.Control.Title" xml:space="preserve"><value>Quality control</value></data>
+  <data name="Landing.Packing.Control.Body" xml:space="preserve"><value>Clear standards, material accounting, quantity confirmation and error tracking are important for control.</value></data>
+  <data name="Landing.Packing.Flow.Title" xml:space="preserve"><value>Operational flow</value></data>
+  <data name="Landing.Packing.Flow.Body" xml:space="preserve"><value>Packing work is planned by demand, work standard, people capacity and the final delivery deadline.</value></data>
+  <data name="Landing.Kpi" xml:space="preserve"><value>KPI explanation</value></data>
+  <data name="Landing.Kpi.What.Title" xml:space="preserve"><value>What a KPI is</value></data>
+  <data name="Landing.Kpi.What.Body" xml:space="preserve"><value>A KPI is an agreed indicator that helps show whether a process is moving in the intended direction.</value></data>
+  <data name="Landing.Kpi.Target.Title" xml:space="preserve"><value>Target and actual</value></data>
+  <data name="Landing.Kpi.Target.Body" xml:space="preserve"><value>An indicator needs a clear calculation rule, target and actual value so the deviation can be assessed.</value></data>
+  <data name="Landing.Kpi.Action.Title" xml:space="preserve"><value>Action after the number</value></data>
+  <data name="Landing.Kpi.Action.Body" xml:space="preserve"><value>A KPI is not only a number. It should help make a decision, adjust a process or confirm that the direction is good.</value></data>
+  <data name="Landing.KnowledgeEmpty" xml:space="preserve"><value>Select a knowledge sector. The selected topic will open here with explanations, diagrams and terms.</value></data>
+  <data name="Landing.Sector.Sphinx" xml:space="preserve"><value>Build branching surveys and collect community insights.</value></data>
+  <data name="Landing.Sphinx.Eyebrow" xml:space="preserve"><value>Survey Platform for Human Insights Networked Xchange</value></data>
+  <data name="Landing.Sphinx.Description" xml:space="preserve"><value>SPHINX lets you build branching survey forms: define answer options, attach sub-questions, and control the participant's path through the survey based on their answers.</value></data>
+  <data name="Landing.Sphinx.SurveyTitle" xml:space="preserve"><value>Survey title</value></data>
+  <data name="Landing.Sphinx.SurveyTitlePlaceholder" xml:space="preserve"><value>e.g. Work environment assessment 2026</value></data>
+  <data name="Landing.Sphinx.SurveyDescription" xml:space="preserve"><value>Description (optional)</value></data>
+  <data name="Landing.Sphinx.SurveyDescriptionPlaceholder" xml:space="preserve"><value>Briefly describe the purpose of the survey</value></data>
+  <data name="Landing.Sphinx.Questions" xml:space="preserve"><value>Questions</value></data>
+  <data name="Landing.Sphinx.AddQuestion" xml:space="preserve"><value>Add question</value></data>
+  <data name="Landing.Sphinx.QuestionPlaceholder" xml:space="preserve"><value>Enter your question...</value></data>
+  <data name="Landing.Sphinx.AddOption" xml:space="preserve"><value>Add option</value></data>
+  <data name="Landing.Sphinx.OptionPlaceholder" xml:space="preserve"><value>Answer option...</value></data>
+  <data name="Landing.Sphinx.AddSubQuestion" xml:space="preserve"><value>Sub-question</value></data>
+  <data name="Landing.Sphinx.Skip.Next" xml:space="preserve"><value>Next</value></data>
+  <data name="Landing.Sphinx.Skip.End" xml:space="preserve"><value>End survey</value></data>
+  <data name="Landing.Sphinx.Skip.Jump" xml:space="preserve"><value>Jump to...</value></data>
+  <data name="Landing.Sphinx.Type.Text" xml:space="preserve"><value>Open text</value></data>
+  <data name="Landing.Sphinx.Type.Single" xml:space="preserve"><value>Single choice</value></data>
+  <data name="Landing.Sphinx.Type.Multi" xml:space="preserve"><value>Multiple choice</value></data>
+  <data name="Landing.Sphinx.Creator" xml:space="preserve"><value>Created by</value></data>
+  <data name="Landing.Sphinx.Submit" xml:space="preserve"><value>Create survey</value></data>
+  <data name="Landing.Sphinx.Hint" xml:space="preserve"><value>For SINGLE and MULTI questions you can add answer options, set skip logic, or attach a sub-question to any answer.</value></data>
+  <data name="Landing.Glossary.SearchPlaceholder" xml:space="preserve"><value>Search for a term, synonym or action</value></data>
+  <data name="Landing.Glossary.NoResults" xml:space="preserve"><value>No terms match the search.</value></data>
+  <data name="Landing.Glossary.Synonyms" xml:space="preserve"><value>Synonyms</value></data>
+  <data name="Landing.Feedback.Eyebrow" xml:space="preserve"><value>Open space</value></data>
+  <data name="Landing.Feedback.Title" xml:space="preserve"><value>Help us improve</value></data>
+  <data name="Landing.Feedback.Description" xml:space="preserve"><value>Join active surveys, leave a suggestion, or vote quickly on what matters most to you.</value></data>
+  <data name="Landing.Feedback.ActiveSurveysShort" xml:space="preserve"><value>active</value></data>
+  <data name="Landing.Feedback.Surveys" xml:space="preserve"><value>Active surveys</value></data>
+  <data name="Landing.Feedback.AllSurveys" xml:space="preserve"><value>All surveys</value></data>
+  <data name="Landing.Feedback.SuggestionTitle" xml:space="preserve"><value>Suggestion</value></data>
+  <data name="Landing.Feedback.SuggestionPlaceholder" xml:space="preserve"><value>Write an idea, observation, or problem...</value></data>
+  <data name="Landing.Feedback.SendSuggestion" xml:space="preserve"><value>Send suggestion</value></data>
+  <data name="Landing.Feedback.QuickPoll" xml:space="preserve"><value>Quick vote</value></data>
+  <data name="Landing.Feedback.PollUnavailable" xml:space="preserve"><value>Voting is unavailable at the moment.</value></data>
+  <data name="Landing.Feedback.Vote" xml:space="preserve"><value>Vote</value></data>
+  <data name="Landing.Feedback.UpdateVote" xml:space="preserve"><value>Update vote</value></data>
+  <data name="Landing.Glossary.Sku.Title" xml:space="preserve"><value>Stock Keeping Unit</value></data>
+  <data name="Landing.Glossary.Sku.Body" xml:space="preserve"><value>A unique product or item identifier used to manage stock, movement, prices and orders.</value></data>
+  <data name="Landing.Glossary.Lifo.Title" xml:space="preserve"><value>Last In, First Out</value></data>
+  <data name="Landing.Glossary.Lifo.Body" xml:space="preserve"><value>An inventory logic where the latest received goods or batch are issued first.</value></data>
+  <data name="Landing.Glossary.Fifo.Title" xml:space="preserve"><value>First In, First Out</value></data>
+  <data name="Landing.Glossary.Fifo.Body" xml:space="preserve"><value>An inventory logic where the earliest received goods or batch are issued first. Often important for expiry and stock rotation.</value></data>
+  <data name="Landing.Glossary.Asn.Title" xml:space="preserve"><value>Advanced Shipping Notice</value></data>
+  <data name="Landing.Glossary.Asn.Body" xml:space="preserve"><value>An advance message about an incoming shipment: what is arriving, in what quantities, when and under which documents.</value></data>
+  <data name="Landing.Glossary.Grn.Title" xml:space="preserve"><value>Goods Receipt Note</value></data>
+  <data name="Landing.Glossary.Grn.Body" xml:space="preserve"><value>A goods receipt record or document confirming that goods were received and registered in the warehouse.</value></data>
+  <data name="Landing.Glossary.Po.Title" xml:space="preserve"><value>Purchase Order</value></data>
+  <data name="Landing.Glossary.Po.Body" xml:space="preserve"><value>A purchasing document stating what is bought, in what quantity, at what price and under which conditions.</value></data>
+  <data name="Landing.Glossary.Rfid.Title" xml:space="preserve"><value>Radio Frequency Identification</value></data>
+  <data name="Landing.Glossary.Rfid.Body" xml:space="preserve"><value>Identification by radio frequency, where goods, pallets or locations are read through RFID tags without direct barcode scanning.</value></data>
+  <data name="Landing.Glossary.Bom.Title" xml:space="preserve"><value>Bill of Materials</value></data>
+  <data name="Landing.Glossary.Bom.Body" xml:space="preserve"><value>A list of materials or components required to make a product, kit, packing setup or another operation.</value></data>
+  <data name="Landing.Glossary.Erp.Title" xml:space="preserve"><value>Enterprise Resource Planning</value></data>
+  <data name="Landing.Glossary.Erp.Body" xml:space="preserve"><value>A business system connecting finance, purchasing, sales, inventory, production or other core company processes.</value></data>
+  <data name="Landing.Glossary.Wms.Title" xml:space="preserve"><value>Warehouse Management System</value></data>
+  <data name="Landing.Glossary.Wms.Body" xml:space="preserve"><value>A warehouse management system controlling locations, stock, receiving, picking, replenishment and outbound dispatch.</value></data>
+  <data name="Landing.Glossary.Abc.Title" xml:space="preserve"><value>ABC Analysis</value></data>
+  <data name="Landing.Glossary.Abc.Body" xml:space="preserve"><value>Grouping stock or products by importance, turnover or value so control effort is focused on the most important items.</value></data>
+  <data name="Landing.Glossary.Ltl.Title" xml:space="preserve"><value>Less Than Truckload</value></data>
+  <data name="Landing.Glossary.Ltl.Body" xml:space="preserve"><value>A partial load where one shipment does not fill the whole truck and may be consolidated with other shipments.</value></data>
+  <data name="Landing.Glossary.Ftl.Title" xml:space="preserve"><value>Full Truckload</value></data>
+  <data name="Landing.Glossary.Ftl.Body" xml:space="preserve"><value>A full load where a vehicle or trailer is dedicated to one customer, route or shipment.</value></data>
+  <data name="Landing.Glossary.ThirdPl.Title" xml:space="preserve"><value>Third-Party Logistics</value></data>
+  <data name="Landing.Glossary.ThirdPl.Body" xml:space="preserve"><value>A logistics partner coordinating a broader service package, such as warehousing, transport and order management.</value></data>
+  <data name="Landing.Glossary.Otif.Title" xml:space="preserve"><value>On-Time In-Full</value></data>
+  <data name="Landing.Glossary.Otif.Body" xml:space="preserve"><value>A metric showing whether an order was delivered on time and in the full agreed quantity.</value></data>
+  <data name="Landing.Glossary.Eta.Title" xml:space="preserve"><value>Estimated Time of Arrival</value></data>
+  <data name="Landing.Glossary.Eta.Body" xml:space="preserve"><value>The expected arrival time of a vehicle, shipment or goods.</value></data>
+  <data name="Landing.Glossary.Pod.Title" xml:space="preserve"><value>Proof of Delivery</value></data>
+  <data name="Landing.Glossary.Pod.Body" xml:space="preserve"><value>Delivery confirmation: a document, signature, digital record or other evidence that the load was delivered.</value></data>
+  <data name="Landing.Glossary.Mrp.Title" xml:space="preserve"><value>Material Requirements Planning</value></data>
+  <data name="Landing.Glossary.Mrp.Body" xml:space="preserve"><value>Planning material needs based on demand, production, inventory and purchasing lead times.</value></data>
+  <data name="Landing.Glossary.Rfq.Title" xml:space="preserve"><value>Request for Quotation</value></data>
+  <data name="Landing.Glossary.Rfq.Body" xml:space="preserve"><value>A request to a supplier or partner to provide price, terms and availability for a specific service or product.</value></data>
+  <data name="Landing.Warehousing.LayoutTitle" xml:space="preserve"><value>Warehouse site layout diagram</value></data>
+  <data name="Landing.Warehousing.Layout.Gate" xml:space="preserve"><value>Gate</value></data>
+  <data name="Landing.Warehousing.Layout.GateBody" xml:space="preserve"><value>Vehicle arrival, check-in and routing to the dock.</value></data>
+  <data name="Landing.Warehousing.Layout.Inbound" xml:space="preserve"><value>Inbound</value></data>
+  <data name="Landing.Warehousing.Layout.InboundBody" xml:space="preserve"><value>Documents, quantities, quality and initial flow control.</value></data>
+  <data name="Landing.Warehousing.Layout.Storage" xml:space="preserve"><value>Storage area</value></data>
+  <data name="Landing.Warehousing.Layout.StorageBody" xml:space="preserve"><value>Locations, batches, expiry dates and goods availability.</value></data>
+  <data name="Landing.Warehousing.Layout.Packing" xml:space="preserve"><value>Packing</value></data>
+  <data name="Landing.Warehousing.Layout.PackingBody" xml:space="preserve"><value>Repacking, sticker work, kit assembly and quality control.</value></data>
+  <data name="Landing.Warehousing.Layout.Outbound" xml:space="preserve"><value>Outbound</value></data>
+  <data name="Landing.Warehousing.Layout.OutboundBody" xml:space="preserve"><value>Picking, checking, loading and handover to transport.</value></data>
+  <data name="App.DataExchange.Description" xml:space="preserve"><value>File and data exchange with SQL Server storage.</value></data>
+  <data name="App.Sphinx.Description" xml:space="preserve"><value>Build branching survey forms with answer skip logic.</value></data>
+  <data name="Spinkx.ActiveSurveys" xml:space="preserve"><value>Active surveys</value></data>
+  <data name="Spinkx.NoSurveys" xml:space="preserve"><value>No active surveys at this time.</value></data>
+  <data name="App.FileUpload.Description" xml:space="preserve"><value>Upload files to the server directory.</value></data>
+  <data name="App.ClientInfo.Description" xml:space="preserve"><value>STAT3 client and position information by FIRMID.</value></data>
+  <data name="App.Kairos.Description" xml:space="preserve"><value>Register special work demand under the 11:00 rule.</value></data>
+  <data name="App.Oracul.Description" xml:space="preserve"><value>KPI query by weekday and selected client group.</value></data>
+  <data name="App.Themis.Description" xml:space="preserve"><value>Configuration table management.</value></data>
+  <data name="App.Hydra.Description" xml:space="preserve"><value>Labeling, sticker operations, demand, KPI, productivity and wage calculation model.</value></data>
+  <data name="Hydra.Subtitle" xml:space="preserve"><value>Labeling process, productivity and wage model.</value></data>
+  <data name="Hydra.Eyebrow" xml:space="preserve"><value>Handling, Yield, Demand, Results, Attendance</value></data>
+  <data name="Hydra.HeroText" xml:space="preserve"><value>One workspace for product labeling and sticker operations: demand calculation, volume planning, KPI monitoring, productivity analysis and wage logic.</value></data>
+  <data name="Hydra.Status.Design" xml:space="preserve"><value>In design</value></data>
+  <data name="Hydra.Metric.Scope" xml:space="preserve"><value>Areas</value></data>
+  <data name="Hydra.Metric.Process" xml:space="preserve"><value>Process</value></data>
+  <data name="Hydra.Metric.ProcessValue" xml:space="preserve"><value>Labeling</value></data>
+  <data name="Hydra.Metric.Output" xml:space="preserve"><value>Output</value></data>
+  <data name="Hydra.Pillars" xml:space="preserve"><value>HYDRA areas</value></data>
+  <data name="Hydra.Pillar.Handling.Title" xml:space="preserve"><value>Handling operations</value></data>
+  <data name="Hydra.Pillar.Handling.Body" xml:space="preserve"><value>Control of product labeling, sticker operations and operational flow.</value></data>
+  <data name="Hydra.Pillar.Yield.Title" xml:space="preserve"><value>Yield &amp; productivity tracking</value></data>
+  <data name="Hydra.Pillar.Yield.Body" xml:space="preserve"><value>Tracking productivity, standards, hours and completed quantities.</value></data>
+  <data name="Hydra.Pillar.Demand.Title" xml:space="preserve"><value>Demand &amp; volume planning</value></data>
+  <data name="Hydra.Pillar.Demand.Body" xml:space="preserve"><value>Calculation of demand, quantities, planned volumes and workload.</value></data>
+  <data name="Hydra.Pillar.Results.Title" xml:space="preserve"><value>Results &amp; KPI monitoring</value></data>
+  <data name="Hydra.Pillar.Results.Body" xml:space="preserve"><value>Measurement of operational results, KPIs and deviations in one place.</value></data>
+  <data name="Hydra.Pillar.Attendance.Title" xml:space="preserve"><value>Attendance &amp; wage calculation</value></data>
+  <data name="Hydra.Pillar.Attendance.Body" xml:space="preserve"><value>Attendance, working time, productivity and wage calculation logic for people in the process.</value></data>
+  <data name="Hydra.Workstreams" xml:space="preserve"><value>Initial workstreams</value></data>
+  <data name="Hydra.Query.Select" xml:space="preserve"><value>Query</value></data>
+  <data name="Hydra.Query.Empty" xml:space="preserve"><value>No HYDRA SQL queries were found in the query catalog.</value></data>
+  <data name="Hydra.Query.Rows" xml:space="preserve"><value>Rows</value></data>
+  <data name="Hydra.Workstream.Labeling" xml:space="preserve"><value>Labeling and sticker tasks</value></data>
+  <data name="Hydra.Workstream.Planning" xml:space="preserve"><value>Demand and volume planning</value></data>
+  <data name="Hydra.Workstream.Productivity" xml:space="preserve"><value>Productivity and KPI monitoring</value></data>
+  <data name="Hydra.Workstream.Wages" xml:space="preserve"><value>Attendance and wage calculation</value></data>
+  <data name="Oracul.AccessDeniedBody" xml:space="preserve"><value>The SQL access procedure did not grant ORACUL application access to this Windows user.</value></data>
+  <data name="Oracul.AccessDeniedError" xml:space="preserve"><value>This Windows user does not have ORACUL application access.</value></data>
+  <data name="Oracul.Parameters" xml:space="preserve"><value>Parameters</value></data>
+  <data name="Oracul.QueryMode" xml:space="preserve"><value>Query type</value></data>
+  <data name="Oracul.ByWeekday" xml:space="preserve"><value>By weekday</value></data>
+  <data name="Oracul.ByDate" xml:space="preserve"><value>By date</value></data>
+  <data name="Oracul.Weekday" xml:space="preserve"><value>Weekday</value></data>
+  <data name="Oracul.Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Oracul.Rows" xml:space="preserve"><value>Rows</value></data>
+  <data name="Oracul.Results" xml:space="preserve"><value>Results</value></data>
+  <data name="Oracul.NoRows" xml:space="preserve"><value>No rows were found for the selected parameters.</value></data>
+  <data name="Oracul.LoadFailed" xml:space="preserve"><value>Could not load data.</value></data>
+  <data name="Oracul.Error.WeekdayRange" xml:space="preserve"><value>Weekday must be from 1 to 7.</value></data>
+  <data name="Oracul.Error.InvalidDate" xml:space="preserve"><value>Select a valid date.</value></data>
+  <data name="Oracul.Error.EmptyReports" xml:space="preserve"><value>The KPI list is empty. Check the LSP_ORDERS_BY_WEEKDAY_POS table.</value></data>
+  <data name="Oracul.Error.InvalidReport" xml:space="preserve"><value>The selected KPI is invalid.</value></data>
+  <data name="App.Atlas.Description" xml:space="preserve"><value>Absence, time and leave planning calendar.</value></data>
+  <data name="Status.Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Atlas.Subtitle" xml:space="preserve"><value>Absence, Time and Leave Administration System.</value></data>
+  <data name="Atlas.AccessDeniedBody" xml:space="preserve"><value>This Windows user has no ATLAS access in BS_APP_ACCESS.</value></data>
+  <data name="Atlas.Month" xml:space="preserve"><value>Month</value></data>
+  <data name="Atlas.View" xml:space="preserve"><value>View</value></data>
+  <data name="Atlas.Display" xml:space="preserve"><value>Type</value></data>
+  <data name="Atlas.Display.Calendar" xml:space="preserve"><value>Calendar</value></data>
+  <data name="Atlas.Display.Matrix" xml:space="preserve"><value>Matrix</value></data>
+  <data name="Atlas.MonthShort" xml:space="preserve"><value>mo.</value></data>
+  <data name="Atlas.VisiblePlans" xml:space="preserve"><value>Visible plans</value></data>
+  <data name="Atlas.Holidays" xml:space="preserve"><value>Public holidays</value></data>
+  <data name="Atlas.Today" xml:space="preserve"><value>Today</value></data>
+  <data name="Atlas.Watch" xml:space="preserve"><value>Watch</value></data>
+  <data name="Atlas.NewPlan" xml:space="preserve"><value>New plan</value></data>
+  <data name="Atlas.FutureOnly" xml:space="preserve"><value>Only own current/future plans can be changed</value></data>
+  <data name="Atlas.Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Atlas.DateFrom" xml:space="preserve"><value>From</value></data>
+  <data name="Atlas.DateTo" xml:space="preserve"><value>To</value></data>
+  <data name="Atlas.Title" xml:space="preserve"><value>Title</value></data>
+  <data name="Atlas.Notes" xml:space="preserve"><value>Notes</value></data>
+  <data name="Atlas.Users" xml:space="preserve"><value>ATLAS users</value></data>
+  <data name="Atlas.Users.All" xml:space="preserve"><value>All users</value></data>
+  <data name="Atlas.Color" xml:space="preserve"><value>Color</value></data>
+  <data name="Atlas.Type.Leave" xml:space="preserve"><value>Vacation / parent day</value></data>
+  <data name="Atlas.Type.WorkFromHome" xml:space="preserve"><value>Work from home</value></data>
+  <data name="Atlas.Type.Meeting" xml:space="preserve"><value>Meeting</value></data>
+  <data name="Atlas.ConfirmDelete" xml:space="preserve"><value>Delete this ATLAS plan?</value></data>
+  <data name="Atlas.Success.Created" xml:space="preserve"><value>ATLAS plan saved: {0} days.</value></data>
+  <data name="Atlas.Success.Deleted" xml:space="preserve"><value>ATLAS plan deleted.</value></data>
+  <data name="Atlas.Success.ColorSaved" xml:space="preserve"><value>ATLAS color saved.</value></data>
+  <data name="Atlas.Error.InvalidDate" xml:space="preserve"><value>Enter the date in this format: {0}.</value></data>
+  <data name="Atlas.Error.EndBeforeStart" xml:space="preserve"><value>The period end cannot be earlier than the start.</value></data>
+  <data name="Atlas.Weekday.Monday" xml:space="preserve"><value>Mon</value></data>
+  <data name="Atlas.Weekday.Tuesday" xml:space="preserve"><value>Tue</value></data>
+  <data name="Atlas.Weekday.Wednesday" xml:space="preserve"><value>Wed</value></data>
+  <data name="Atlas.Weekday.Thursday" xml:space="preserve"><value>Thu</value></data>
+  <data name="Atlas.Weekday.Friday" xml:space="preserve"><value>Fri</value></data>
+  <data name="Atlas.Weekday.Saturday" xml:space="preserve"><value>Sat</value></data>
+  <data name="Atlas.Weekday.Sunday" xml:space="preserve"><value>Sun</value></data>
+  <data name="Themis.Subtitle" xml:space="preserve"><value>Configuration table management.</value></data>
+  <data name="Themis.Access" xml:space="preserve"><value>Access</value></data>
+  <data name="Themis.AccessGranted" xml:space="preserve"><value>Granted</value></data>
+  <data name="Themis.AccessDenied" xml:space="preserve"><value>Not granted</value></data>
+  <data name="Themis.AccessDeniedBody" xml:space="preserve"><value>This Windows user has no THEMIS access (APPLICATION_GetUserAccess).</value></data>
+  <data name="Themis.LogTable" xml:space="preserve"><value>Log table</value></data>
+  <data name="Themis.NoTables" xml:space="preserve"><value>No allowed tables are configured.</value></data>
+  <data name="Themis.LoadFailed" xml:space="preserve"><value>Could not load table data.</value></data>
+  <data name="Themis.UniqueRules" xml:space="preserve"><value>Unique rules</value></data>
+  <data name="Themis.ImportPreview" xml:space="preserve"><value>Excel import preview</value></data>
+  <data name="Themis.Ignored" xml:space="preserve"><value>Ignored</value></data>
+  <data name="Themis.ConfirmImport" xml:space="preserve"><value>Confirm import</value></data>
+  <data name="Themis.ConfirmImportMessage" xml:space="preserve"><value>Upload {0} rows to {1}?</value></data>
+  <data name="Themis.ActiveFilters" xml:space="preserve"><value>{0} active</value></data>
+  <data name="Themis.ConfirmDeleteRow" xml:space="preserve"><value>Delete this row?</value></data>
+  <data name="Themis.ConfirmDeleteFiltered" xml:space="preserve"><value>Delete {0} rows matching the active filters?</value></data>
+  <data name="Themis.AddNewRow" xml:space="preserve"><value>Add new row</value></data>
+  <data name="Themis.NoInsertableColumns" xml:space="preserve"><value>This table has no columns that can be filled.</value></data>
+  <data name="Themis.ChangeHistory" xml:space="preserve"><value>Change history</value></data>
+  <data name="Themis.Source" xml:space="preserve"><value>Source</value></data>
+  <data name="Themis.Select" xml:space="preserve"><value>Select</value></data>
+  <data name="Themis.Saving" xml:space="preserve"><value>Saving...</value></data>
+  <data name="Themis.ErrorPrefix" xml:space="preserve"><value>Error:</value></data>
+  <data name="Themis.ConnectionFailed" xml:space="preserve"><value>Could not connect.</value></data>
+  <data name="Themis.Error.TableNotFound" xml:space="preserve"><value>The selected table was not found in the THEMIS configuration.</value></data>
+  <data name="Themis.Error.NoImportColumns" xml:space="preserve"><value>This table has no columns available for Excel import.</value></data>
+  <data name="Themis.Error.SelectExcelFile" xml:space="preserve"><value>Select an Excel file to upload.</value></data>
+  <data name="Themis.Error.InvalidExcelFile" xml:space="preserve"><value>Invalid file format. Use an .xlsx or .xlsm Excel file for upload.</value></data>
+  <data name="Themis.Error.EmptyExcelFile" xml:space="preserve"><value>No data was found in the Excel file for upload.</value></data>
+  <data name="Themis.Error.PreviewMissing" xml:space="preserve"><value>The import preview was not found or has expired. Upload the Excel file again.</value></data>
+  <data name="Themis.Error.PreviewTableMismatch" xml:space="preserve"><value>The import preview does not match the selected table.</value></data>
+  <data name="Themis.Error.EmptyImportRows" xml:space="preserve"><value>The Excel file has no rows with fillable data.</value></data>
+  <data name="Themis.Error.DeleteRowKeyMissing" xml:space="preserve"><value>Could not identify the row to delete.</value></data>
+  <data name="Themis.Error.DeletePreviewRequiresFilter" xml:space="preserve"><value>At least one active filter is required for bulk delete preview.</value></data>
+  <data name="Themis.Error.DeleteRequiresFilter" xml:space="preserve"><value>At least one active filter is required for bulk delete.</value></data>
+  <data name="Themis.Error.DeletePreviewRequired" xml:space="preserve"><value>First run the bulk delete preview using the current filters.</value></data>
+  <data name="Themis.Error.ImportAccessDenied" xml:space="preserve"><value>The server does not have write permission to the THEMIS import preview directory: {0}. Grant Modify permission to the IIS AppPool user for App_Data.</value></data>
+  <data name="Themis.Success.ImportPreviewPrepared" xml:space="preserve"><value>Import preview prepared: {0} rows.</value></data>
+  <data name="Themis.Success.ImportPreviewPreparedIgnored" xml:space="preserve"><value>Import preview prepared: {0} rows. Ignored system fields: {1}.</value></data>
+  <data name="Themis.Success.ImportRowInserted" xml:space="preserve"><value>1 row was imported to {0}.</value></data>
+  <data name="Themis.Success.ImportRowsInserted" xml:space="preserve"><value>{0} rows were imported to {1}.</value></data>
+  <data name="Themis.Success.RowAdded" xml:space="preserve"><value>Row added to {0}.</value></data>
+  <data name="Themis.Success.RowDeleted" xml:space="preserve"><value>Row deleted.</value></data>
+  <data name="Themis.Success.DeletePreviewFound" xml:space="preserve"><value>Rows found by active filters: {0}. Check and confirm deletion.</value></data>
+  <data name="Themis.Success.FilteredRowDeleted" xml:space="preserve"><value>1 row was deleted by active filters.</value></data>
+  <data name="Themis.Success.FilteredRowsDeleted" xml:space="preserve"><value>Rows deleted by active filters: {0}.</value></data>
+  <data name="Themis.Success.AuditReverted" xml:space="preserve"><value>Audit record #{0} was reverted.</value></data>
+  <data name="Themis.Placeholder.Boolean" xml:space="preserve"><value>Yes or No</value></data>
+  <data name="Themis.Placeholder.Number" xml:space="preserve"><value>number</value></data>
+  <data name="Themis.Excel.EmptyHeader" xml:space="preserve"><value>Invalid file. The Excel header row cannot contain empty columns.</value></data>
+  <data name="Themis.Excel.DuplicateHeaders" xml:space="preserve"><value>Invalid file. Duplicate headers: {0}.</value></data>
+  <data name="Themis.Excel.MissingHeaders" xml:space="preserve"><value>missing: {0}</value></data>
+  <data name="Themis.Excel.ExtraHeaders" xml:space="preserve"><value>extra: {0}</value></data>
+  <data name="Themis.Excel.StructureMismatch" xml:space="preserve"><value>Invalid file. Excel columns do not match the table structure ({0}).</value></data>
+  <data name="App.Arete.Description" xml:space="preserve"><value>Assurance, reporting and excellence tracking environment.</value></data>
+  <data name="Arete.Subtitle" xml:space="preserve"><value>Assurance, reporting and excellence tracking environment.</value></data>
+  <data name="Arete.Eyebrow" xml:space="preserve"><value>Assurance, Reporting, Excellence, Tracking</value></data>
+  <data name="Arete.HeroText" xml:space="preserve"><value>ARETE - Assurance, Reporting and Excellence Tracking Environment: one workspace for SQL queries, filters, reporting and operational control.</value></data>
+  <data name="Arete.Status.Design" xml:space="preserve"><value>In design</value></data>
+  <data name="Arete.Pillars" xml:space="preserve"><value>ARETE areas</value></data>
+  <data name="Arete.Pillar.Handling.Title" xml:space="preserve"><value>Assurance</value></data>
+  <data name="Arete.Pillar.Handling.Body" xml:space="preserve"><value>Compliance and control query management.</value></data>
+  <data name="Arete.Pillar.Yield.Title" xml:space="preserve"><value>Reporting</value></data>
+  <data name="Arete.Pillar.Yield.Body" xml:space="preserve"><value>Reports, summaries and KPI monitoring.</value></data>
+  <data name="Arete.Pillar.Demand.Title" xml:space="preserve"><value>Excellence</value></data>
+  <data name="Arete.Pillar.Demand.Body" xml:space="preserve"><value>Efficiency, quality and improvement areas.</value></data>
+  <data name="Arete.Pillar.Results.Title" xml:space="preserve"><value>Tracking</value></data>
+  <data name="Arete.Pillar.Results.Body" xml:space="preserve"><value>Tracking results, deviations and actions.</value></data>
+  <data name="Arete.Pillar.Attendance.Title" xml:space="preserve"><value>Environment</value></data>
+  <data name="Arete.Pillar.Attendance.Body" xml:space="preserve"><value>A shared workspace for queries and operational controls.</value></data>
+  <data name="Arete.Workstreams" xml:space="preserve"><value>Initial workstreams</value></data>
+  <data name="Arete.Query.Select" xml:space="preserve"><value>Query</value></data>
+  <data name="Arete.Query.Empty" xml:space="preserve"><value>No ARETE SQL queries were found in the query catalog.</value></data>
+  <data name="Arete.Query.Rows" xml:space="preserve"><value>Rows</value></data>
+  <data name="Arete.Pillar.Assurance.Title" xml:space="preserve"><value>Assurance</value></data>
+  <data name="Arete.Pillar.Assurance.Body" xml:space="preserve"><value>Compliance and control query management.</value></data>
+  <data name="Arete.Pillar.Reporting.Title" xml:space="preserve"><value>Reporting</value></data>
+  <data name="Arete.Pillar.Reporting.Body" xml:space="preserve"><value>Reports, summaries and KPI monitoring.</value></data>
+  <data name="Arete.Pillar.Excellence.Title" xml:space="preserve"><value>Excellence</value></data>
+  <data name="Arete.Pillar.Excellence.Body" xml:space="preserve"><value>Efficiency, quality and improvement areas.</value></data>
+  <data name="Arete.Pillar.Tracking.Title" xml:space="preserve"><value>Tracking</value></data>
+  <data name="Arete.Pillar.Tracking.Body" xml:space="preserve"><value>Tracking results, deviations and actions.</value></data>
+  <data name="Arete.Pillar.Environment.Title" xml:space="preserve"><value>Environment</value></data>
+  <data name="Arete.Pillar.Environment.Body" xml:space="preserve"><value>A shared workspace for queries and operational controls.</value></data>  <data name="Arete.Workstream.Labeling" xml:space="preserve"><value>Assurance checks</value></data>
+  <data name="Arete.Workstream.Planning" xml:space="preserve"><value>Reporting planning</value></data>
+  <data name="Arete.Workstream.Productivity" xml:space="preserve"><value>Excellence KPIs</value></data>
+  <data name="Arete.Workstream.Wages" xml:space="preserve"><value>Action tracking</value></data>
+  <data name="App.Argus.Description" xml:space="preserve"><value>Statistical server operations, processes, reports and KPI monitoring dashboard.</value></data>
+  <data name="Argus.Subtitle" xml:space="preserve"><value>Statistical server operations monitoring.</value></data>
+  <data name="Argus.Eyebrow" xml:space="preserve"><value>Server, processes, reports, KPI</value></data>
+  <data name="Argus.HeroText" xml:space="preserve"><value>ARGUS is a statistical server operations dashboard for processes, saved reports, KPIs and administrative actions in one workspace.</value></data>
+  <data name="Argus.Navigation" xml:space="preserve"><value>ARGUS navigation</value></data>
+  <data name="Argus.Dashboard" xml:space="preserve"><value>Operations dashboard</value></data>
+  <data name="Argus.Status.Pending" xml:space="preserve"><value>Pending</value></data>
+  <data name="Argus.Metric.ActiveProcesses" xml:space="preserve"><value>Active processes</value></data>
+  <data name="Argus.Metric.ActiveProcessesHint" xml:space="preserve"><value>Will connect to statistical server processes.</value></data>
+  <data name="Argus.Metric.SavedReports" xml:space="preserve"><value>Saved reports</value></data>
+  <data name="Argus.Metric.SavedReportsHint" xml:space="preserve"><value>Will show report save history.</value></data>
+  <data name="Argus.Metric.FailedJobs" xml:space="preserve"><value>Failures</value></data>
+  <data name="Argus.Metric.FailedJobsHint" xml:space="preserve"><value>Will track failed calculations.</value></data>
+  <data name="Argus.Metric.ServerLoad" xml:space="preserve"><value>Server load</value></data>
+  <data name="Argus.Metric.ServerLoadHint" xml:space="preserve"><value>Will include load indicators.</value></data>
+  <data name="Argus.Panel.Processes.Title" xml:space="preserve"><value>Process monitoring</value></data>
+  <data name="Argus.Panel.Processes.Body" xml:space="preserve"><value>Which process is running, duration and current state.</value></data>
+  <data name="Argus.Panel.Reports.Title" xml:space="preserve"><value>Report history</value></data>
+  <data name="Argus.Panel.Reports.Body" xml:space="preserve"><value>Which reports were saved, when and with what state.</value></data>
+  <data name="Argus.Panel.Kpi.Title" xml:space="preserve"><value>KPI metrics</value></data>
+  <data name="Argus.Panel.Kpi.Body" xml:space="preserve"><value>Quality and efficiency indicators for statistical server operations.</value></data>
+  <data name="Argus.Admin.Title" xml:space="preserve"><value>Administrative actions</value></data>
+  <data name="Argus.Admin.Body" xml:space="preserve"><value>Safe administrator commands will live here, for example task-based process termination.</value></data>
+  <data name="App.Apis.Description" xml:space="preserve"><value>Analytics, process monitoring, indicators and statistics powered by SQL.</value></data>
+  <data name="App.Seshat.Description" xml:space="preserve"><value>Department expert agreements, documents and evidence of execution register.</value></data>  <data name="App.SendMailFile.Description" xml:space="preserve"><value>Send Mail file downloads by country directory permissions.</value></data>
+  <data name="SendMailFile.Subtitle" xml:space="preserve"><value>File downloads by country directory permissions.</value></data>
+  <data name="SendMailFile.Countries" xml:space="preserve"><value>Countries</value></data>
+  <data name="SendMailFile.NoAccess" xml:space="preserve"><value>No access</value></data>
+  <data name="SendMailFile.AccessDeniedBody" xml:space="preserve"><value>You do not have access to any Send Mail file directory.</value></data>
+  <data name="SendMailFile.CountryFiles" xml:space="preserve"><value>{0} files</value></data>
+  <data name="SendMailFile.DirectoryFound" xml:space="preserve"><value>Directory found</value></data>
+  <data name="SendMailFile.DirectoryMissing" xml:space="preserve"><value>Directory missing</value></data>
+  <data name="SendMailFile.SearchPlaceholder" xml:space="preserve"><value>Search by file name</value></data>
+  <data name="SendMailFile.DirectoryUnavailable" xml:space="preserve"><value>The directory is not available yet.</value></data>
+  <data name="SendMailFile.Empty" xml:space="preserve"><value>No files found.</value></data>
+  <data name="SendMailFile.Size" xml:space="preserve"><value>Size</value></data>
+  <data name="SendMailFile.Time" xml:space="preserve"><value>Time</value></data>
+  <data name="SendMailFile.Download" xml:space="preserve"><value>Download</value></data>
+  <data name="SendMailFile.SearchEmpty" xml:space="preserve"><value>No files match the search.</value></data>  <data name="SendMailFile.UsedSpace" xml:space="preserve"><value>Used space: {0}</value></data>
+  <data name="SendMailFile.RefreshHint" xml:space="preserve"><value>To see newly generated files, refresh the page, for example press F5.</value></data>
+  <data name="Iris.Subtitle" xml:space="preserve"><value>Information and reports issued on schedule.</value></data>
+  <data name="Iris.Eyebrow" xml:space="preserve"><value>Mail reports</value></data>
+  <data name="Iris.HeroHtml" xml:space="preserve"><value>&lt;strong&gt;I&lt;/strong&gt;nformation &amp;amp; &lt;strong&gt;R&lt;/strong&gt;eports &lt;strong&gt;I&lt;/strong&gt;ssued on &lt;strong&gt;S&lt;/strong&gt;chedule</value></data>
+  <data name="Iris.Tab.Builder" xml:space="preserve"><value>Composer</value></data>
+  <data name="Iris.Tab.Control" xml:space="preserve"><value>Control panel</value></data>
+  <data name="Iris.Tab.Kpi" xml:space="preserve"><value>KPI monitor</value></data>
+  <data name="Iris.Senders" xml:space="preserve"><value>Senders</value></data>
+  <data name="Iris.Archive" xml:space="preserve"><value>Archive</value></data>
+  <data name="Iris.Recent" xml:space="preserve"><value>Recent</value></data>
+  <data name="Iris.DraftSaved" xml:space="preserve"><value>Draft saved</value></data>
+  <data name="Iris.FormTitle" xml:space="preserve"><value>Message composer</value></data>
+  <data name="Iris.BusyTitle" xml:space="preserve"><value>Preparing message</value></data>
+  <data name="Iris.BusyMessage" xml:space="preserve"><value>Please wait while the action is running. Do not close the page or press the button again.</value></data>
+  <data name="Iris.BusyPreview" xml:space="preserve"><value>Preparing preview...</value></data>
+  <data name="Iris.BusySave" xml:space="preserve"><value>Saving...</value></data>
+  <data name="Iris.Sender" xml:space="preserve"><value>Sender</value></data>
+  <data name="Iris.Application" xml:space="preserve"><value>Application</value></data>
+  <data name="Iris.Process" xml:space="preserve"><value>Process / topic</value></data>
+  <data name="Iris.RecipientEmail" xml:space="preserve"><value>Recipient email</value></data>
+  <data name="Iris.RecipientName" xml:space="preserve"><value>Recipient name</value></data>
+  <data name="Iris.Message" xml:space="preserve"><value>Message</value></data>
+  <data name="Iris.Preview" xml:space="preserve"><value>Preview</value></data>
+  <data name="Iris.SaveDraft" xml:space="preserve"><value>Save draft</value></data>
+  <data name="Iris.PreviewEmpty" xml:space="preserve"><value>Fill in the fields and press preview.</value></data>
+  <data name="Iris.ControlEyebrow" xml:space="preserve"><value>Archive and history</value></data>
+  <data name="Iris.CreatedAt" xml:space="preserve"><value>Created</value></data>
+  <data name="Iris.RecentEmpty" xml:space="preserve"><value>No records yet.</value></data>
+  <data name="Iris.Kpi.Total" xml:space="preserve"><value>Total records</value></data>
+  <data name="Iris.Kpi.RecentWindow" xml:space="preserve"><value>Recent archive records</value></data>
+  <data name="Iris.Kpi.Success" xml:space="preserve"><value>Successful</value></data>
+  <data name="Iris.Kpi.SuccessHint" xml:space="preserve"><value>Draft / saved / sent statuses</value></data>
+  <data name="Iris.Kpi.Errors" xml:space="preserve"><value>Errors</value></data>
+  <data name="Iris.Kpi.ErrorsHint" xml:space="preserve"><value>Error / fail statuses</value></data>
+  <data name="Iris.Kpi.Last" xml:space="preserve"><value>Last action</value></data>
+  <data name="Iris.Kpi.StatusBreakdown" xml:space="preserve"><value>Status breakdown</value></data>
+  <data name="Iris.Kpi.Count" xml:space="preserve"><value>Count</value></data></root>
+

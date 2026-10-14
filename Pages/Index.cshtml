@@ -1,0 +1,673 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Data Exchange Hub";
+}
+
+<div class="container-fluid hub-page pt-4">
+    @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+    {
+        <div class="alert alert-success" role="alert">@Model.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+    }
+
+    <div class="hub-hero mb-4">
+        <div>
+            <span class="hub-eyebrow">@L["Landing.Eyebrow"]</span>
+            <h1>Data Exchange Hub</h1>
+            <p>@L["Landing.HeroText"]</p>
+        </div>
+        <a class="btn btn-orange hub-hero-action" asp-page="/Hub/Login">@L["Landing.LoginToHub"]</a>
+    </div>
+
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-3 col-xl-3 col-lg-4 hub-sidebar">
+            <section class="hub-board mb-4">
+                <div class="section-title-row">
+                    <h2>@L["Landing.AccessRequest"]</h2>
+                </div>
+                <div class="alert alert-info py-2 px-3 small" role="status">
+                    @Model.AuthorizationNotice
+                </div>
+                <form method="post" class="d-grid gap-3">
+                    <div>
+                        <label class="form-label" asp-for="DomainUser">@L["Landing.WindowsUser"]</label>
+                        <input class="form-control" asp-for="DomainUser" readonly="@Model.IsDomainUserResolved" />
+                    </div>
+                    <div>
+                        <label class="form-label" asp-for="AppName">@L["Common.Application"]</label>
+                        <select class="form-select" asp-for="AppName">
+                            @foreach (var appName in Model.RequestableApps)
+                            {
+                                <option value="@appName">@appName</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label" asp-for="RequestedAccess">@L["Landing.AccessType"]</label>
+                        <select class="form-select" asp-for="RequestedAccess">
+                            <option value="USER">USER</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label" asp-for="Comment">@L["Landing.Comment"]</label>
+                        <textarea class="form-control" asp-for="Comment" rows="4" maxlength="1000"></textarea>
+                    </div>
+                    <button class="btn btn-orange" type="submit">@L["Landing.SubmitRequest"]</button>
+                </form>
+            </section>
+        </aside>
+
+        <section class="col-xxl-9 col-xl-9 col-lg-8">
+            <div class="hub-metrics mb-4">
+                <div class="metric-card">
+                    <small>@L["Landing.Metric.Access"]</small>
+                    <h4>@L["Landing.Metric.DomainUsers"]</h4>
+                </div>
+                <div class="metric-card">
+                    <small>@L["Landing.Metric.Workspace"]</small>
+                    <h4>@L["Landing.Metric.HubPermissions"]</h4>
+                </div>
+                <div class="metric-card">
+                    <small>@L["Landing.Metric.Version"]</small>
+                    <h4>v7.1</h4>
+                </div>
+            </div>
+
+            <section class="hub-board mb-4 public-feedback" id="feedback">
+                <div class="section-title-row">
+                    <div>
+                        <span class="hub-eyebrow">@L["Landing.Feedback.Eyebrow"]</span>
+                        <h2>@L["Landing.Feedback.Title"]</h2>
+                    </div>
+                    <span class="status-pill">@Model.ActiveSurveys.Count @L["Landing.Feedback.ActiveSurveysShort"]</span>
+                </div>
+                <p class="public-feedback-intro">@L["Landing.Feedback.Description"]</p>
+                <div class="alert alert-info py-2 px-3 small" role="status">
+                    Dalyvaujant apklausoje ar balsavime bus paprasyta Windows autorizacijos, kad atsakymas butu priskirtas jusu domeno vartotojui.
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.FeedbackSuccessMessage))
+                {
+                    <div class="alert alert-success" role="alert">@Model.FeedbackSuccessMessage</div>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.FeedbackErrorMessage))
+                {
+                    <div class="alert alert-danger" role="alert">@Model.FeedbackErrorMessage</div>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.PublicFeedbackLoadError))
+                {
+                    <div class="alert alert-warning" role="alert">@Model.PublicFeedbackLoadError</div>
+                }
+
+                <div class="public-feedback-grid">
+                    <article class="public-feedback-panel">
+                        <div class="section-title-row compact">
+                            <h3>@L["Landing.Feedback.Surveys"]</h3>
+                            <span class="status-pill-muted">@Model.ActiveSurveys.Count</span>
+                        </div>
+                        @if (Model.ActiveSurveys.Count == 0)
+                        {
+                            <div class="empty-state compact">@L["Spinkx.NoSurveys"]</div>
+                        }
+                        else
+                        {
+                            <div class="public-survey-list">
+                                @foreach (var survey in Model.ActiveSurveys.Take(3))
+                                {
+                                    <a class="public-survey-row" asp-page="/Spinkx/Survey" asp-route-id="@survey.Id">
+                                        <span>
+                                            <strong>@survey.Title</strong>
+                                            @if (!string.IsNullOrWhiteSpace(survey.Description))
+                                            {
+                                                <small>@survey.Description</small>
+                                            }
+                                            <small>@(survey.IsAnonymous ? "Anonimine apklausa" : "Neanonimine apklausa")</small>
+                                        </span>
+                                        <span class="status-pill-muted">@survey.ResponseCount</span>
+                                    </a>
+                                }
+                            </div>
+                            <a class="btn btn-sm btn-outline-success mt-3" asp-page="/Spinkx/Index">
+                                @L["Landing.Feedback.AllSurveys"]
+                            </a>
+                        }
+                    </article>
+
+                    <article class="public-feedback-panel">
+                        <h3>@L["Landing.Feedback.SuggestionTitle"]</h3>
+                        <form method="post" asp-page-handler="Suggestion" class="d-grid gap-2">
+                            <textarea class="form-control" asp-for="SuggestionMessage" rows="4" maxlength="2000"
+                                      placeholder="@L["Landing.Feedback.SuggestionPlaceholder"]"></textarea>
+                            <button class="btn btn-orange" type="submit">@L["Landing.Feedback.SendSuggestion"]</button>
+                        </form>
+                    </article>
+
+                    <article class="public-feedback-panel">
+                        <div class="section-title-row compact">
+                            <h3>@L["Landing.Feedback.QuickPoll"]</h3>
+                            <span class="status-pill-muted">@Model.QuickPolls.Count</span>
+                        </div>
+                        @if (Model.QuickPoll is null)
+                        {
+                            <div class="empty-state compact">@L["Landing.Feedback.PollUnavailable"]</div>
+                        }
+                        else
+                        {
+                            @if (Model.QuickPolls.Count > 1)
+                            {
+                                <div class="quick-poll-nav">
+                                    <a class="btn btn-sm btn-outline-success" asp-page="/Index" asp-fragment="feedback" asp-route-poll="@Model.PreviousQuickPollId">&lsaquo;</a>
+                                    <span>@(Model.QuickPollIndex + 1) / @Model.QuickPolls.Count</span>
+                                    <a class="btn btn-sm btn-outline-success" asp-page="/Index" asp-fragment="feedback" asp-route-poll="@Model.NextQuickPollId">&rsaquo;</a>
+                                </div>
+                            }
+                            <form method="post" asp-page-handler="QuickPoll" class="quick-poll-form">
+                                @{
+                                    var pollQuestion = Model.QuickPoll.TopLevelQuestions.FirstOrDefault();
+                                    var totalVotes = Model.QuickPollResults.Values.Sum();
+                                }
+                                <input type="hidden" asp-for="QuickPollId" value="@Model.QuickPoll.Survey.Id" />
+                                <div class="quick-poll-meta">
+                                    <span>@Model.QuickPoll.Survey.Title</span>
+                                    <span>@Model.QuickPoll.ResponseCount dalyvavo</span>
+                                    @if (Model.QuickPoll.HasResponded)
+                                    {
+                                        <span>Atsakyta</span>
+                                    }
+                                </div>
+                                <p class="quick-poll-question">@(pollQuestion?.Text ?? Model.QuickPoll.Survey.Title)</p>
+                                @if (!string.IsNullOrWhiteSpace(Model.QuickPoll.Survey.Description))
+                                {
+                                    <small class="text-muted">@Model.QuickPoll.Survey.Description</small>
+                                }
+                                <div class="alert alert-info py-2 px-3 small mb-2" role="status">
+                                    @(Model.QuickPoll.Survey.IsAnonymous
+                                        ? "Anoniminis balsavimas: rezultatuose respondentas bus nuasmenintas."
+                                        : "Neanoniminis balsavimas: atsakymas bus siejamas su vartotojo identifikatoriumi.")
+                                </div>
+                                @foreach (var option in pollQuestion?.Options ?? [])
+                                {
+                                    var voteCount = Model.QuickPollResults.TryGetValue(option.Id, out var count) ? count : 0;
+                                    var percentage = totalVotes <= 0 ? 0 : (int)Math.Round(voteCount * 100m / totalVotes);
+                                    <label class="quick-poll-option">
+                                        <span class="quick-poll-choice">
+                                            <input type="radio" asp-for="QuickPollOption" value="@option.Id" />
+                                            <span>@option.Text</span>
+                                        </span>
+                                        <span class="quick-poll-result">
+                                            <span style="width: @percentage%"></span>
+                                        </span>
+                                        <small>@percentage% &middot; @voteCount</small>
+                                    </label>
+                                }
+                                <button class="btn btn-sm btn-orange" type="submit">
+                                    @(Model.QuickPoll.HasResponded ? L["Landing.Feedback.UpdateVote"] : L["Landing.Feedback.Vote"])
+                                </button>
+                            </form>
+                        }
+                    </article>
+                </div>
+            </section>
+
+            <section class="hub-board mb-4">
+                <div class="section-title-row">
+                    <h2>@L["Landing.KnowledgeSectors"]</h2>
+                </div>
+                <div class="hub-app-grid">
+                    <a class="app-tile" href="#logistics-models" data-knowledge-trigger="logistics-models">
+                        <span class="app-tile-icon">LM</span>
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">@L["Landing.LogisticsModels"]</span>
+                            <span class="app-tile-desc">@L["Landing.Sector.LogisticsModels"]</span>
+                        </span>
+                    </a>
+                    <a class="app-tile" href="#transport" data-knowledge-trigger="transport">
+                        <span class="app-tile-icon">TR</span>
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">@L["Landing.Transport"]</span>
+                            <span class="app-tile-desc">@L["Landing.Sector.Transport"]</span>
+                        </span>
+                    </a>
+                    <a class="app-tile" href="#distribution-model" data-knowledge-trigger="distribution-model">
+                        <span class="app-tile-icon">DS</span>
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">@L["Landing.DistributionModel"]</span>
+                            <span class="app-tile-desc">@L["Landing.Sector.DistributionModel"]</span>
+                        </span>
+                    </a>
+                    <a class="app-tile" href="#warehousing" data-knowledge-trigger="warehousing">
+                        <span class="app-tile-icon">WH</span>
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">@L["Landing.Warehousing"]</span>
+                            <span class="app-tile-desc">@L["Landing.Sector.Warehousing"]</span>
+                        </span>
+                    </a>
+                    <a class="app-tile" href="#packing" data-knowledge-trigger="packing">
+                        <span class="app-tile-icon">PK</span>
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">@L["Landing.Packing"]</span>
+                            <span class="app-tile-desc">@L["Landing.Sector.Packing"]</span>
+                        </span>
+                    </a>
+                    <a class="app-tile" href="#glossary" data-knowledge-trigger="glossary">
+                        <span class="app-tile-icon">AZ</span>
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">@L["Landing.Glossary"]</span>
+                            <span class="app-tile-desc">@L["Landing.Sector.Glossary"]</span>
+                        </span>
+                    </a>
+                    <a class="app-tile" href="#kpi" data-knowledge-trigger="kpi">
+                        <span class="app-tile-icon">K</span>
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">@L["Landing.Kpi"]</span>
+                            <span class="app-tile-desc">@L["Landing.Sector.Kpi"]</span>
+                        </span>
+                    </a>
+                    <a class="app-tile" asp-page="/ClientInfo/Index">
+                        <span class="app-tile-icon">CI</span>
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">Klientu info</span>
+                            <span class="app-tile-desc">Paieska pagal FIRMID is STAT3 klientu informacijos.</span>
+                        </span>
+                    </a>
+                </div>
+            </section>
+
+            <div class="empty-state mb-4" data-knowledge-empty>
+                @L["Landing.KnowledgeEmpty"]
+            </div>
+
+            <section class="hub-board mb-4 knowledge-detail" id="logistics-models" data-knowledge-section="logistics-models">
+                <div class="section-title-row">
+                    <h2>@L["Landing.LogisticsModels"]</h2>
+                </div>
+                <div class="hub-app-grid">
+                    <article class="metric-card">
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">1PL</span>
+                            <span class="app-tile-desc">@L["Landing.Logistics.1PL"]</span>
+                        </span>
+                    </article>
+                    <article class="metric-card">
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">2PL</span>
+                            <span class="app-tile-desc">@L["Landing.Logistics.2PL"]</span>
+                        </span>
+                    </article>
+                    <article class="metric-card">
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">3PL</span>
+                            <span class="app-tile-desc">@L["Landing.Logistics.3PL"]</span>
+                        </span>
+                    </article>
+                    <article class="metric-card">
+                        <span class="app-tile-body">
+                            <span class="app-tile-title">4PL</span>
+                            <span class="app-tile-desc">@L["Landing.Logistics.4PL"]</span>
+                        </span>
+                    </article>
+                </div>
+            </section>
+
+            <section class="hub-board mb-4 knowledge-detail" id="transport" data-knowledge-section="transport">
+                <div class="section-title-row">
+                    <h2>@L["Landing.Transport"]</h2>
+                </div>
+                <div class="hub-app-grid">
+                    <article class="metric-card">
+                        <small>JUMBO</small>
+                        <img class="vehicle-icon" src="~/icons/transport/jumbo.svg" alt="" aria-hidden="true" />
+                        <h4>@L["Landing.Transport.Jumbo.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Transport.Jumbo.Body"]</span>
+                    </article>
+                    <article class="metric-card">
+                        <small>TILT</small>
+                        <img class="vehicle-icon" src="~/icons/transport/tilt.svg" alt="" aria-hidden="true" />
+                        <h4>@L["Landing.Transport.Tilt.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Transport.Tilt.Body"]</span>
+                    </article>
+                    <article class="metric-card">
+                        <small>MULTITEMP</small>
+                        <img class="vehicle-icon" src="~/icons/transport/multitemp.svg" alt="" aria-hidden="true" />
+                        <h4>@L["Landing.Transport.Multitemp.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Transport.Multitemp.Body"]</span>
+                    </article>
+                    <article class="metric-card">
+                        <small>DISTRI</small>
+                        <img class="vehicle-icon" src="~/icons/transport/small-truck.svg" alt="" aria-hidden="true" />
+                        <h4>@L["Landing.Transport.SmallTruck.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Transport.SmallTruck.Body"]</span>
+                    </article>
+                    <article class="metric-card">
+                        <small>VAN</small>
+                        <img class="vehicle-icon" src="~/icons/transport/van.svg" alt="" aria-hidden="true" />
+                        <h4>@L["Landing.Transport.Van.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Transport.Van.Body"]</span>
+                    </article>
+                </div>
+            </section>
+
+            <section class="hub-board mb-4 knowledge-detail" id="distribution-model" data-knowledge-section="distribution-model">
+                <div class="section-title-row">
+                    <h2>@L["Landing.DistributionModel"]</h2>
+                </div>
+                <div class="distribution-controls" aria-label="@L["Landing.DistributionModel"]">
+                    <label class="form-check">
+                        <input class="form-check-input" type="checkbox" checked data-distribution-toggle="ibl" />
+                        <span class="form-check-label">@L["Landing.Distribution.Ibl"]</span>
+                    </label>
+                    <label class="form-check">
+                        <input class="form-check-input" type="checkbox" checked data-distribution-toggle="dst" />
+                        <span class="form-check-label">@L["Landing.Distribution.Dst"]</span>
+                    </label>
+                </div>
+                <div class="distribution-map" data-distribution-map>
+                    <svg viewBox="0 0 720 520" role="img" aria-label="@L["Landing.Distribution.MapLabel"]">
+                        <defs>
+                            <marker id="arrowIbl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" class="route-arrow-ibl" />
+                            </marker>
+                            <marker id="arrowDst" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" class="route-arrow-dst" />
+                            </marker>
+                        </defs>
+                        <path class="lt-outline" d="M82 150 L118 110 L168 88 L204 58 L250 86 L306 74 L360 54 L408 84 L470 88 L516 120 L582 126 L630 174 L662 230 L626 270 L654 324 L604 364 L574 420 L510 402 L454 438 L394 420 L334 456 L276 424 L226 444 L176 400 L128 396 L98 338 L56 316 L86 266 L52 222 Z" />
+                        <g class="lt-districts" aria-hidden="true">
+                            <path d="M82 150 L176 168 L204 58" />
+                            <path d="M176 168 L284 126 L306 74" />
+                            <path d="M284 126 L432 144 L408 84" />
+                            <path d="M432 144 L542 184 L582 126" />
+                            <path d="M542 184 L626 270 L662 230" />
+                            <path d="M542 184 L432 144 L438 248 L356 294" />
+                            <path d="M176 168 L206 252 L356 294 L284 126" />
+                            <path d="M52 222 L206 252 L98 338" />
+                            <path d="M98 338 L226 444 L286 382 L206 252" />
+                            <path d="M286 382 L334 456 L394 420 L356 294" />
+                            <path d="M356 294 L438 248 L522 346 L454 438 L394 420" />
+                            <path d="M438 248 L626 270 L654 324 L522 346" />
+                            <path d="M522 346 L604 364 L574 420 L510 402" />
+                            <path d="M176 400 L286 382 L276 424 L226 444" />
+                        </g>
+
+                        <g class="route route-ibl">
+                            <path class="route-line route-line-ibl" d="M356 294 L286 126" />
+                            <path class="route-line route-line-ibl" d="M356 294 L542 184" />
+                            <path class="route-line route-line-ibl" d="M356 294 L432 144" />
+                            <path class="route-line route-line-ibl" d="M356 294 L522 346" />
+                            <path class="route-line route-line-ibl" d="M356 294 L88 184" />
+                        </g>
+
+                        <g class="route route-dst">
+                            <path class="route-line route-line-dst" d="M356 294 L320 272" />
+                            <path class="route-line route-line-dst" d="M356 294 L396 270" />
+                            <path class="route-line route-line-dst" d="M356 294 L334 336" />
+                            <path class="route-line route-line-dst" d="M356 294 L398 326" />
+                            <path class="route-line route-line-dst" d="M286 126 L248 104" />
+                            <path class="route-line route-line-dst" d="M286 126 L326 104" />
+                            <path class="route-line route-line-dst" d="M286 126 L252 158" />
+                            <path class="route-line route-line-dst" d="M286 126 L326 158" />
+                            <path class="route-line route-line-dst" d="M88 184 L58 152" />
+                            <path class="route-line route-line-dst" d="M88 184 L132 164" />
+                            <path class="route-line route-line-dst" d="M88 184 L70 226" />
+                            <path class="route-line route-line-dst" d="M88 184 L130 218" />
+                            <path class="route-line route-line-dst" d="M432 144 L392 120" />
+                            <path class="route-line route-line-dst" d="M432 144 L474 122" />
+                            <path class="route-line route-line-dst" d="M432 144 L402 178" />
+                            <path class="route-line route-line-dst" d="M432 144 L470 180" />
+                            <path class="route-line route-line-dst" d="M542 184 L506 158" />
+                            <path class="route-line route-line-dst" d="M542 184 L584 166" />
+                            <path class="route-line route-line-dst" d="M542 184 L512 220" />
+                            <path class="route-line route-line-dst" d="M542 184 L584 216" />
+                            <path class="route-line route-line-dst" d="M522 346 L484 320" />
+                            <path class="route-line route-line-dst" d="M522 346 L564 326" />
+                            <path class="route-line route-line-dst" d="M522 346 L486 380" />
+                            <path class="route-line route-line-dst" d="M522 346 L560 382" />
+                        </g>
+
+                        <g class="map-node central" transform="translate(356 294)">
+                            <circle r="12" />
+                            <text y="-20">Kaunas DC</text>
+                            <text y="32">@L["Landing.Distribution.CentralShort"]</text>
+                        </g>
+
+                        <g class="map-node branch" transform="translate(286 126)"><circle r="9" /><text y="-15">Siauliai</text></g>
+                        <g class="map-node branch" transform="translate(542 184)"><circle r="9" /><text y="-15">Utena</text></g>
+                        <g class="map-node branch" transform="translate(432 144)"><circle r="9" /><text y="-15">Panevezys</text></g>
+                        <g class="map-node branch" transform="translate(522 346)"><circle r="9" /><text y="24">Vilnius</text></g>
+                        <g class="map-node branch" transform="translate(88 184)"><circle r="9" /><text y="-15">Klaipeda</text></g>
+                        <g class="map-node branch" transform="translate(190 136)"><circle r="6" /><text y="-12">Telsiai</text></g>
+                        <g class="map-node branch" transform="translate(206 252)"><circle r="6" /><text y="22">Taurage</text></g>
+                        <g class="map-node branch" transform="translate(286 382)"><circle r="6" /><text y="22">Marijampole</text></g>
+                        <g class="map-node branch" transform="translate(410 398)"><circle r="6" /><text y="22">Alytus</text></g>
+                    </svg>
+                </div>
+                <div class="hub-app-grid mt-3">
+                    <article class="metric-card">
+                        <small>IBL</small>
+                        <h4>@L["Landing.Distribution.Ibl.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Distribution.Ibl.Body"]</span>
+                    </article>
+                    <article class="metric-card">
+                        <small>DST</small>
+                        <h4>@L["Landing.Distribution.Dst.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Distribution.Dst.Body"]</span>
+                    </article>
+                </div>
+            </section>
+
+            <section class="hub-board mb-4 knowledge-detail" id="warehousing" data-knowledge-section="warehousing">
+                <div class="section-title-row">
+                    <h2>@L["Landing.Warehousing"]</h2>
+                </div>
+                <div class="hub-app-grid">
+                    <article class="metric-card">
+                        <small>INBOUND</small>
+                        <h4>@L["Landing.Warehousing.Inbound.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Warehousing.Inbound.Body"]</span>
+                    </article>
+                    <article class="metric-card">
+                        <small>STORAGE</small>
+                        <h4>@L["Landing.Warehousing.Storage.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Warehousing.Storage.Body"]</span>
+                    </article>
+                    <article class="metric-card">
+                        <small>OUTBOUND</small>
+                        <h4>@L["Landing.Warehousing.Outbound.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Warehousing.Outbound.Body"]</span>
+                    </article>
+                </div>
+                <div class="warehouse-map mt-4" aria-label="@L["Landing.Warehousing.LayoutTitle"]">
+                    <div class="warehouse-zone warehouse-zone-gate">
+                        <strong>@L["Landing.Warehousing.Layout.Gate"]</strong>
+                        <span>@L["Landing.Warehousing.Layout.GateBody"]</span>
+                    </div>
+                    <div class="warehouse-zone warehouse-zone-inbound">
+                        <strong>@L["Landing.Warehousing.Layout.Inbound"]</strong>
+                        <span>@L["Landing.Warehousing.Layout.InboundBody"]</span>
+                    </div>
+                    <div class="warehouse-zone warehouse-zone-storage">
+                        <strong>@L["Landing.Warehousing.Layout.Storage"]</strong>
+                        <span>@L["Landing.Warehousing.Layout.StorageBody"]</span>
+                    </div>
+                    <div class="warehouse-zone warehouse-zone-packing">
+                        <strong>@L["Landing.Warehousing.Layout.Packing"]</strong>
+                        <span>@L["Landing.Warehousing.Layout.PackingBody"]</span>
+                    </div>
+                    <div class="warehouse-zone warehouse-zone-outbound">
+                        <strong>@L["Landing.Warehousing.Layout.Outbound"]</strong>
+                        <span>@L["Landing.Warehousing.Layout.OutboundBody"]</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="hub-board mb-4 knowledge-detail" id="packing" data-knowledge-section="packing">
+                <div class="section-title-row">
+                    <h2>@L["Landing.Packing"]</h2>
+                </div>
+                <div class="hub-app-grid">
+                    <article class="metric-card">
+                        <small>PACK</small>
+                        <h4>@L["Landing.Packing.Service.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Packing.Service.Body"]</span>
+                    </article>
+                    <article class="metric-card">
+                        <small>CONTROL</small>
+                        <h4>@L["Landing.Packing.Control.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Packing.Control.Body"]</span>
+                    </article>
+                    <article class="metric-card">
+                        <small>FLOW</small>
+                        <h4>@L["Landing.Packing.Flow.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Packing.Flow.Body"]</span>
+                    </article>
+                </div>
+            </section>
+
+            <section class="tool-section mb-4 knowledge-detail" id="glossary" data-knowledge-section="glossary">
+                <div class="section-title-row">
+                    <h2>@L["Landing.Glossary"]</h2>
+                    <span class="status-pill">@L["Landing.Status.Filling"]</span>
+                </div>
+                <div class="mb-3">
+                    <input class="form-control"
+                           type="search"
+                           placeholder="@L["Landing.Glossary.SearchPlaceholder"]"
+                           aria-label="@L["Landing.Glossary.SearchPlaceholder"]"
+                           data-glossary-search />
+                </div>
+                <div class="glossary-list">
+                    @foreach (var term in Model.GlossaryTerms)
+                    {
+                        <article class="glossary-row" data-glossary-term="@term.SearchText">
+                            <div class="glossary-term">
+                                <small>@term.Term</small>
+                                <h4>@term.Title</h4>
+                            </div>
+                            <p class="glossary-description">@term.Description</p>
+                            @if (term.Synonyms.Count > 0)
+                            {
+                                <div class="glossary-synonyms" aria-label="@L["Landing.Glossary.Synonyms"]">
+                                    <span class="glossary-synonyms-label">@L["Landing.Glossary.Synonyms"]</span>
+                                    @foreach (var synonym in term.Synonyms)
+                                    {
+                                        <span class="glossary-synonym">@synonym</span>
+                                    }
+                                </div>
+                            }
+                        </article>
+                    }
+                </div>
+                <div class="empty-state compact mt-3 d-none" data-glossary-empty>
+                    @L["Landing.Glossary.NoResults"]
+                </div>
+            </section>
+
+            <section class="tool-section knowledge-detail" id="kpi" data-knowledge-section="kpi">
+                <div class="section-title-row">
+                    <h2>@L["Landing.Kpi"]</h2>
+                </div>
+                <div class="hub-app-grid">
+                    <article class="metric-card">
+                        <small>KPI</small>
+                        <h4>@L["Landing.Kpi.What.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Kpi.What.Body"]</span>
+                    </article>
+                    <article class="metric-card">
+                        <small>TARGET</small>
+                        <h4>@L["Landing.Kpi.Target.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Kpi.Target.Body"]</span>
+                    </article>
+                    <article class="metric-card">
+                        <small>ACTION</small>
+                        <h4>@L["Landing.Kpi.Action.Title"]</h4>
+                        <span class="text-muted">@L["Landing.Kpi.Action.Body"]</span>
+                    </article>
+                </div>
+            </section>
+
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const triggers = Array.from(document.querySelectorAll("[data-knowledge-trigger]"));
+            const sections = Array.from(document.querySelectorAll("[data-knowledge-section]"));
+            const emptyState = document.querySelector("[data-knowledge-empty]");
+
+            function showSection(sectionId, scrollIntoView) {
+                const selected = sections.find(section => section.dataset.knowledgeSection === sectionId);
+                if (!selected) {
+                    sections.forEach(section => section.classList.remove("is-active"));
+                    triggers.forEach(trigger => trigger.classList.remove("is-selected"));
+                    emptyState?.classList.remove("d-none");
+                    return;
+                }
+
+                sections.forEach(section => {
+                    section.classList.toggle("is-active", section === selected);
+                });
+                triggers.forEach(trigger => {
+                    trigger.classList.toggle("is-selected", trigger.dataset.knowledgeTrigger === sectionId);
+                });
+                emptyState?.classList.add("d-none");
+
+                if (scrollIntoView) {
+                    selected.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }
+
+            triggers.forEach(trigger => {
+                trigger.addEventListener("click", event => {
+                    event.preventDefault();
+                    const sectionId = trigger.dataset.knowledgeTrigger;
+                    history.replaceState(null, "", `#${sectionId}`);
+                    showSection(sectionId, true);
+                });
+            });
+
+            const initialSection = window.location.hash.replace("#", "");
+            showSection(initialSection, false);
+
+            const glossarySearch = document.querySelector("[data-glossary-search]");
+            const glossaryEmpty = document.querySelector("[data-glossary-empty]");
+            const glossaryCards = Array.from(document.querySelectorAll("[data-glossary-term]"));
+
+            glossarySearch?.addEventListener("input", () => {
+                const query = glossarySearch.value.trim().toLocaleLowerCase();
+                let visibleCount = 0;
+
+                glossaryCards.forEach(card => {
+                    const searchable = `${card.dataset.glossaryTerm ?? ""} ${card.textContent ?? ""}`.toLocaleLowerCase();
+                    const isVisible = query.length === 0 || searchable.includes(query);
+                    card.classList.toggle("d-none", !isVisible);
+                    if (isVisible) {
+                        visibleCount += 1;
+                    }
+                });
+
+                glossaryEmpty?.classList.toggle("d-none", visibleCount > 0);
+            });
+
+            document.querySelectorAll("[data-distribution-toggle]").forEach(toggle => {
+                toggle.addEventListener("change", () => {
+                    const routeName = toggle.dataset.distributionToggle;
+                    document.querySelectorAll(`.route-${routeName}`).forEach(route => {
+                        route.classList.toggle("d-none", !toggle.checked);
+                    });
+                });
+            });
+
+        })();
+    </script>
+}
+
+
+
+

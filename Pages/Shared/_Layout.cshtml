@@ -1,0 +1,78 @@
+@using System.Globalization
+@{
+    var currentCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var returnUrl = Context.Request.PathBase + Context.Request.Path + Context.Request.QueryString;
+    var currentPath = Context.Request.Path.Value ?? "/";
+    var showBackToHub =
+        !currentPath.Equals("/", StringComparison.OrdinalIgnoreCase) &&
+        !currentPath.Equals("/Index", StringComparison.OrdinalIgnoreCase) &&
+        !currentPath.StartsWith("/Hub", StringComparison.OrdinalIgnoreCase) &&
+        !currentPath.StartsWith("/Culture", StringComparison.OrdinalIgnoreCase);
+    if ((Context.Request.Path.Value ?? string.Empty).StartsWith("/SendMailFile", StringComparison.OrdinalIgnoreCase))
+    {
+        var separator = returnUrl.Contains('?', StringComparison.Ordinal) ? "&" : "?";
+        returnUrl = $"{returnUrl}{separator}languageOnly=1";
+    }
+}
+<!DOCTYPE html>
+<html lang="@currentCulture">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Data Exchange Hub</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="min-h-screen logi-page">
+        <header class="border-b border-border header-bar">
+            <div class="container-md mx-auto px-4 py-2 d-flex align-items-center justify-content-between">
+                <a class="header-brand" asp-area="" asp-page="/Index">
+                    <span class="header-icon">
+                        <img src="/icons/package.svg" class="header-icon-img" alt="Package Icon" />
+                    </span>
+                    <span>
+                        <span class="header-title">Data Exchange Hub</span>
+                        <span class="header-subtitle">@L["Header.Subtitle"]</span>
+                    </span>
+                </a>
+                <div class="header-actions">
+                    @if (showBackToHub)
+                    {
+                        <a class="btn btn-orange header-hub-back" asp-page="/Hub/Index">@L["Common.BackToHub"]</a>
+                    }
+                    <nav class="language-switcher" aria-label="Language">
+                        <a class="language-option @(currentCulture == "lt" ? "active" : null)"
+                           asp-page="/Culture"
+                           asp-route-culture="lt"
+                           asp-route-returnUrl="@returnUrl"
+                           title="@L["Language.Lithuanian"]"
+                           aria-current="@(currentCulture == "lt" ? "true" : null)">LT</a>
+                        <a class="language-option @(currentCulture == "en" ? "active" : null)"
+                           asp-page="/Culture"
+                           asp-route-culture="en"
+                           asp-route-returnUrl="@returnUrl"
+                           title="@L["Language.English"]"
+                           aria-current="@(currentCulture == "en" ? "true" : null)">EN</a>
+                    </nav>
+                    <span class="header-version">v7.1</span>
+                </div>
+            </div>
+        </header>
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+
+
+

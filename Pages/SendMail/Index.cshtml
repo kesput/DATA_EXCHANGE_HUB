@@ -1,0 +1,132 @@
+@page
+@model DATA_EXCHANGE_HUB.Pages.SendMail.IndexModel
+@{
+    ViewData["Title"] = "SEND MAIL";
+}
+
+<div class="container-fluid hub-page pt-4">
+    <div class="hub-hero mb-4">
+        <div>
+            <span class="hub-eyebrow">Email</span>
+            <h1>SEND MAIL</h1>
+            <p>Laisku ruosimas, subject formavimas, HTML sablonas ir laikinas issiustu laisku archyvas.</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+    }
+    @if (Model.ArchiveResult is not null)
+    {
+        <div class="alert alert-success" role="status">
+            Draft issaugotas: <strong>@Model.ArchiveResult.Subject</strong><br />
+            <span class="small">@Model.ArchiveResult.ArchivePath</span>
+        </div>
+    }
+
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-3 col-xl-4">
+            <section class="hub-board mb-4">
+                <div class="section-title-row">
+                    <h2>Laisko duomenys</h2>
+                </div>
+                <form method="post" class="d-grid gap-3" data-busy-form data-busy-title="Laiskas ruosiamas" data-busy-message="Palaukite, veiksmas vykdomas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.">
+                    <div>
+                        <label class="form-label" asp-for="ApplicationName">Aplikacija</label>
+                        <input class="form-control" asp-for="ApplicationName" maxlength="80" />
+                    </div>
+                    <div>
+                        <label class="form-label" asp-for="ProcessName">Procesas / tema</label>
+                        <input class="form-control" asp-for="ProcessName" maxlength="160" />
+                    </div>
+                    <div>
+                        <label class="form-label" asp-for="RecipientEmail">Gavejo el. pastas</label>
+                        <input class="form-control" asp-for="RecipientEmail" maxlength="320" />
+                    </div>
+                    <div>
+                        <label class="form-label" asp-for="RecipientName">Gavejo vardas</label>
+                        <input class="form-control" asp-for="RecipientName" maxlength="160" />
+                    </div>
+                    <div>
+                        <label class="form-label" asp-for="Message">Tekstas</label>
+                        <textarea class="form-control" asp-for="Message" rows="7" maxlength="4000"></textarea>
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-outline-success" type="submit" asp-page-handler="Preview" data-busy-label="Rengiama perziura...">Perziureti</button>
+                        <button class="btn btn-orange" type="submit" asp-page-handler="SaveDraft" data-busy-label="Issaugoma...">Issaugoti draft</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="hub-board">
+                <div class="section-title-row">
+                    <h2>Archyvas</h2>
+                </div>
+                <p class="text-muted small mb-0">@Model.ArchiveRoot</p>
+            </section>
+        </aside>
+
+        <section class="col-xxl-9 col-xl-8">
+            <section class="hub-board mb-4">
+                <div class="section-title-row">
+                    <h2>Preview</h2>
+                    @if (Model.Draft is not null)
+                    {
+                        <span class="status-pill">@Model.Draft.Subject</span>
+                    }
+                </div>
+                @if (Model.Draft is null)
+                {
+                    <div class="empty-state compact">Uzpildykite duomenis ir spauskite perziura.</div>
+                }
+                else
+                {
+                    <div class="mail-preview-frame">
+                        @Html.Raw(Model.Draft.BodyHtml)
+                    </div>
+                }
+            </section>
+
+            <section class="hub-board">
+                <div class="section-title-row">
+                    <h2>Paskutiniai irasai</h2>
+                    <span class="status-pill-muted">@Model.RecentMails.Count</span>
+                </div>
+                @if (Model.RecentMails.Count == 0)
+                {
+                    <div class="empty-state compact">SQL log irasu kol kas nera arba lentele dar nesukurta.</div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Kam</th>
+                                    <th>Subject</th>
+                                    <th>Status</th>
+                                    <th>Failas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var row in Model.RecentMails)
+                                {
+                                    <tr>
+                                        <td class="small">@row.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                                        <td>@row.RecipientEmail</td>
+                                        <td>@row.Subject</td>
+                                        <td><span class="status-pill-muted">@row.Status</span></td>
+                                        <td class="small text-muted">@row.ArchivePath</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </section>
+        </section>
+    </div>
+</div>
+

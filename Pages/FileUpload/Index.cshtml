@@ -1,0 +1,268 @@
+@page
+@model DATA_EXCHANGE_HUB.Pages.FileUpload.IndexModel
+@{
+    ViewData["Title"] = "File upload";
+}
+
+<div class="container-fluid exchange-page pt-4">
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
+                    File upload <small class="badge bg-secondary ms-2">FU</small>
+                </h3>
+                <p class="mb-0 text-dark-green">@L["FileUpload.Subtitle"]</p>
+            </div>
+
+            <div class="access-panel stacked mb-3">
+                <div>
+                    <span class="field-label">@L["FileUpload.Directory"]</span>
+                    <strong class="file-path">@Model.StoragePath</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["FileUpload.MaxFile"]</span>
+                    <strong>@Model.MaxFileSizeMb MB</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["FileUpload.StorageLimit"]</span>
+                    <strong>@Model.MaxStorageSizeGb GB</strong>
+                </div>
+                <div>
+                    <span class="field-label">@L["Common.Status"]</span>
+                    <strong>@(Model.StorageExists ? L["FileUpload.StorageReady"] : L["FileUpload.StorageWillBeCreated"])</strong>
+                </div>
+            </div>
+
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">@L["Common.BackToHub"]</a>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+            {
+                <div class="alert alert-success" role="status" data-auto-dismiss-alert>@Model.SuccessMessage</div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+            }
+
+            @if (!Model.CanOpen)
+            {
+                <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
+                    <h2 class="fw-bold text-dark-green">@L["Common.AccessDenied"]</h2>
+                    <p class="mb-0">@L["FileUpload.AccessDeniedBody"]</p>
+                </div>
+            }
+            else
+            {
+            <div class="hub-metrics mb-4">
+                <div class="metric-card">
+                    <small>@L["FileUpload.Directory"]</small>
+                    <h4>@(Model.StorageExists ? "OK" : "Nera")</h4>
+                </div>
+                <div class="metric-card">
+                    <small>@L["FileUpload.Used"]</small>
+                    <h4>@Model.FormatFileSize(Model.UsedStorageBytes)</h4>
+                </div>
+                <div class="metric-card">
+                    <small>@L["FileUpload.StorageLimit"]</small>
+                    <h4>@Model.MaxStorageSizeGb GB</h4>
+                </div>
+            </div>
+
+            <section class="tool-section mb-3">
+                <div class="section-title-row">
+                    <h2>@L["FileUpload.DirectorySpace"]</h2>
+                    <span class="status-pill @(Model.IsStorageLimitReached ? "status-pill-muted" : "")">@Model.UsedStoragePercent%</span>
+                </div>
+                <div class="progress file-upload-progress" role="progressbar" aria-label="Katalogo vietos naudojimas" aria-valuenow="@Model.UsedStoragePercent" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar @(Model.IsStorageLimitReached ? "bg-danger" : "bg-success")" style="width: @Model.UsedStoragePercent%"></div>
+                </div>
+                @if (Model.IsStorageLimitReached)
+                {
+                    <div class="alert alert-danger mt-3 mb-0" role="alert">
+                        @L["FileUpload.StorageLimitReached"]
+                    </div>
+                }
+            </section>
+
+            <section class="tool-section mb-3">
+                <div class="section-title-row">
+                    <h2>@L["FileUpload.UploadFile"]</h2>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" class="file-upload-form">
+                    <div>
+                        <label class="field-label" for="uploadFile">@L["Common.File"]</label>
+                        <input id="uploadFile"
+                               name="uploadFile"
+                               type="file"
+                               class="form-control"
+                               required
+                               disabled="@Model.IsStorageLimitReached" />
+                        <div class="file-note">@string.Format(L["FileUpload.UploadNote"], Model.StoragePath)</div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-orange" disabled="@Model.IsStorageLimitReached">@L["FileUpload.Upload"]</button>
+                    </div>
+                </form>
+            </section>            <section class="tool-section mb-3">
+                <div class="section-title-row">
+                    <h2>EXCHANGE_UPLOAD pranesimai</h2>
+                </div>
+
+                <form method="post" asp-page-handler="SaveNotification" class="row g-3 align-items-end">
+                    <div class="col-xl-3 col-md-6">
+                        <label class="field-label" for="NotificationPattern">Failo sablonas</label>
+                        <input id="NotificationPattern" name="NotificationPattern" class="form-control" placeholder="%ORDER_BASE_2026%" value="@Model.NotificationPattern" required />
+                    </div>
+                    <div class="col-xl-2 col-md-6">
+                        <label class="field-label" for="NotificationTriggerType">Ivykis</label>
+                        <select id="NotificationTriggerType" name="NotificationTriggerType" class="form-select">
+                            <option value="ANY_UPLOAD" selected="@(Model.NotificationTriggerType == "ANY_UPLOAD")">Bet koks ikelimas</option>
+                            <option value="NEW_UPLOAD" selected="@(Model.NotificationTriggerType == "NEW_UPLOAD")">Naujas failas</option>
+                            <option value="REPLACE_UPLOAD" selected="@(Model.NotificationTriggerType == "REPLACE_UPLOAD")">Atnaujintas failas</option>
+                        </select>
+                    </div>
+                    <div class="col-xl-2 col-md-6">
+                        <label class="field-label" for="NotificationChannel">Kanalas</label>
+                        <select id="NotificationChannel" name="NotificationChannel" class="form-select">
+                            <option value="EMAIL" selected="@(Model.NotificationChannel == "EMAIL")">Email</option>
+                            <option value="SMS" selected="@(Model.NotificationChannel == "SMS")">SMS</option>
+                        </select>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <label class="field-label" for="NotificationContact">Kontaktas</label>
+                        <input id="NotificationContact" name="NotificationContact" class="form-control" value="@Model.NotificationContact" maxlength="320" pattern="([^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]{2,})|(\+370-?\d{8})" title="Iveskite email adresa, pvz. user&#64;bls.lt, arba lietuviska telefono numeri, pvz. +37061234567." required />
+                    </div>
+                    <div class="col-xl-2 col-md-6">
+                        <label class="field-label" for="NotificationVerificationCode">Kodas</label>
+                        <input id="NotificationVerificationCode" name="NotificationVerificationCode" class="form-control" value="@Model.NotificationVerificationCode" autocomplete="one-time-code" />
+                    </div>
+                    <div class="col-12 d-flex gap-2 flex-wrap">
+                        <span title="Uzpildzius forma pirma atsisiuskite koda. Kodas galios 10 min.; tik ji ivedus galima issaugoti pranesima."><button type="submit" class="btn btn-dark-green" data-notification-save disabled>Issaugoti</button></span>
+                        <button type="submit" name="ResendNotificationVerification" value="true" class="btn btn-outline-secondary">Siusti koda</button>
+                    </div>
+                    <div class="col-12">
+                        <div class="text-muted small">Uzpildzius forma pirma atsisiuskite patvirtinimo koda. Kodas galios 10 min.; tik ji ivedus galima issaugoti pranesima.</div>
+                    </div>
+                </form>
+
+                @if (Model.NotificationSubscriptions.Count > 0)
+                {
+                    <div class="exchange-table-wrap file-upload-table-wrap mt-3">
+                        <table class="table table-sm exchange-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Sablonas</th>
+                                    <th>Ivykis</th>
+                                    <th>Kanalas</th>
+                                    <th>Kontaktas</th>
+                                    <th>Busena</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var notification in Model.NotificationSubscriptions)
+                                {
+                                    <tr>
+                                        <td>@notification.FileNamePattern</td>
+                                        <td>@Model.NotificationTriggerLabel(notification.TriggerType)</td>
+                                        <td>@notification.NotifyChannel</td>
+                                        <td>@Model.NotificationContactFor(notification)</td>
+                                        <td>@(notification.Active ? "Aktyvus" : "Atsauktas")</td>
+                                        <td class="text-end">
+                                            @if (notification.Active)
+                                            {
+                                                <form method="post" asp-page-handler="CancelNotification" class="d-inline">
+                                                    <input type="hidden" name="notificationId" value="@notification.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-secondary">Atsaukti</button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </section>
+            <section class="tool-section">
+                <div class="section-title-row">
+                    <h2>@L["FileUpload.RecentFiles"]</h2>
+                </div>
+
+                @if (Model.RecentFiles.Count == 0)
+                {
+                    <div class="empty-state">@L["FileUpload.Empty"]</div>
+                }
+                else
+                {
+                    <div class="exchange-table-wrap file-upload-table-wrap">
+                        <table class="table table-sm exchange-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>@L["Common.File"]</th>
+                                    <th>@L["FileUpload.Size"]</th>
+                                    <th>@L["FileUpload.Time"]</th>
+                                    <th>Ikele</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var file in Model.RecentFiles)
+                                {
+                                    <tr>
+                                        <td class="file-name">@file.FileName</td>
+                                        <td>@Model.FormatFileSize(file.SizeBytes)</td>
+                                        <td>@(file.UploadedAt.HasValue ? UiFormat.DateTime(file.UploadedAt.Value.LocalDateTime) : UiFormat.DateTime(file.LastWriteTime))</td>
+                                        <td>@(string.IsNullOrWhiteSpace(file.UploadedBy) ? "-" : file.UploadedBy)</td>
+                                        <td class="text-end">
+                                            <a class="btn btn-sm btn-outline-secondary"
+                                               asp-page-handler="Download"
+                                               asp-route-fileName="@file.FileName">
+                                                Parsisiusti
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </section>
+            }
+        </section>
+    </div>
+</div>
+
+
+
+<script>
+    (() => {
+        const codeInput = document.getElementById('NotificationVerificationCode');
+        const saveButton = document.querySelector('[data-notification-save]');
+        if (!codeInput || !saveButton) {
+            return;
+        }
+
+        const updateSaveState = () => {
+            saveButton.disabled = codeInput.value.trim().length === 0;
+        };
+
+        codeInput.addEventListener('input', updateSaveState);
+        updateSaveState();
+        const autoDismissAlert = document.querySelector('[data-auto-dismiss-alert]');
+        if (autoDismissAlert) {
+            setTimeout(() => {
+                autoDismissAlert.style.transition = 'opacity 250ms ease';
+                autoDismissAlert.style.opacity = '0';
+                setTimeout(() => autoDismissAlert.remove(), 300);
+            }, 4500);
+        }    })();
+</script>
+
+
+
+

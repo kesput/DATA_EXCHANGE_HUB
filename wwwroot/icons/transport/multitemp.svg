@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 75" role="img" aria-label="Multi-temperature truck">
+  <g fill="#f7fbf4" stroke="#27451f" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M8 17h90v32H8z"/>
+    <path d="M98 20h22l16 15v14H98z"/>
+    <path d="M111 25h9l9 9h-18z" fill="#dff6ff" stroke-width="3"/>
+    <path d="M52 17v32"/>
+    <path d="M18 28h24" stroke="#5bb6d6" stroke-width="3"/>
+    <path d="M62 28h24" stroke="#df8b21" stroke-width="3"/>
+    <circle cx="28" cy="58" r="8"/>
+    <circle cx="45" cy="58" r="8"/>
+    <circle cx="119" cy="58" r="8"/>
+  </g>
+  <g fill="#27451f">
+    <circle cx="28" cy="58" r="3"/>
+    <circle cx="45" cy="58" r="3"/>
+    <circle cx="119" cy="58" r="3"/>
+  </g>
+</svg>

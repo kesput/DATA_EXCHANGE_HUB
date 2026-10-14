@@ -1,0 +1,300 @@
+@page "{id:int}"
+@model DATA_EXCHANGE_HUB.Pages.Spinkx.SurveyModel
+@{
+    ViewData["Title"] = Model.Survey?.Survey.Title ?? "SPINKX";
+
+    void RenderQuestion(DATA_EXCHANGE_HUB.Models.SphinxQuestionNode q, bool isSub = false)
+    {
+        var indent = isSub ? "ps-3 border-start border-secondary border-opacity-25" : "";
+        <div class="survey-question mb-4 @indent"
+             data-question-id="@q.Id"
+             data-question-type="@q.Type">
+            <div class="form-label fw-semibold mb-2">
+                @if (!isSub) { <span class="badge bg-secondary me-1">Q</span> }
+                @q.Text
+            </div>
+
+            @if (q.Type == "TEXT")
+            {
+                if (q.TextValidation == "EMAIL")
+                {
+                    <input class="form-control survey-text-answer"
+                           type="email"
+                           data-question-id="@q.Id"
+                           placeholder="tekstas@tekstas.lt" />
+                }
+                else if (q.TextValidation == "PHONE")
+                {
+                    <input class="form-control survey-text-answer"
+                           type="tel"
+                           pattern="^\+370-?\d{8}$"
+                           data-question-id="@q.Id"
+                           placeholder="+37060000000 arba +370-60000000" />
+                }
+                else if (q.TextValidation == "NUMBER")
+                {
+                    <input class="form-control survey-text-answer"
+                           type="number"
+                           step="any"
+                           data-question-id="@q.Id"
+                           placeholder="pvz. 10 arba 10.5" />
+                }
+                else
+                {
+                    <textarea class="form-control survey-text-answer" rows="3"
+                              data-question-id="@q.Id"
+                              placeholder="@L["Spinkx.TextPlaceholder"]"></textarea>
+                }
+            }
+            else
+            {
+                var inputType = q.Type == "SINGLE" ? "radio" : "checkbox";
+                var groupName = $"q_{q.Id}";
+                <div class="survey-options d-grid gap-1">
+                    @foreach (var opt in q.Options)
+                    {
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input survey-option-input"
+                                       type="@inputType"
+                                       name="@groupName"
+                                       id="opt_@(opt.Id)"
+                                       value="@opt.Id"
+                                       data-question-id="@q.Id"
+                                       data-option-id="@opt.Id"
+                                       data-skip-action="@opt.SkipAction"
+                                       data-skip-to="@(opt.SkipToQuestionId?.ToString() ?? "")" />
+                                <label class="form-check-label" for="opt_@(opt.Id)">@opt.Text</label>
+                            </div>
+                            @if (opt.SubQuestions.Count > 0)
+                            {
+                                <div class="survey-sub-questions d-none ms-4" data-parent-option="@opt.Id">
+                                    @foreach (var sub in opt.SubQuestions)
+                                    {
+                                        RenderQuestion(sub, true);
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+}
+
+<div class="container-fluid hub-page pt-4">
+    @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+    {
+        <div class="alert alert-success mb-3" role="alert">@Model.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger mb-3" role="alert">@Model.ErrorMessage</div>
+    }
+
+    <div class="row g-4 align-items-start">
+        <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
+            <div class="p-4 mb-3 exchange-panel">
+                <h3 class="mb-0 fw-bold text-dark-green">SPINKX</h3>
+                <p class="mb-0 text-dark-green small">@Model.Survey!.Survey.Title</p>
+            </div>
+            @if (Model.Survey.HasResponded)
+            {
+                <div class="alert alert-success p-2 small mb-3">
+                    @L["Spinkx.AlreadyFilled"] — @L["Spinkx.CanUpdate"]
+                </div>
+            }
+            <div class="hub-app-list mb-3">
+                <div class="side-panel-title">@L["Common.Status"]</div>
+                <div class="list-group">
+                    <div class="list-group-item active list-with-details">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <strong>@Model.Survey.Survey.Status</strong>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center mt-1 client-kpis">
+                            <div class="kpi-item text-success">
+                                <div class="fw-bold">@Model.Survey.TopLevelQuestions.Count</div>
+                                <small>@L["Spinkx.Questions"]</small>
+                            </div>
+                            <div class="kpi-item text-success">
+                                <div class="fw-bold">@Model.Survey.ResponseCount</div>
+                                <small>@L["Spinkx.Respondents"]</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="btn btn-outline-secondary w-100" asp-page="/Spinkx/Index">← @L["Spinkx.BackToList"]</a>
+        </aside>
+
+        <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
+            <div class="hub-hero mb-4">
+                <div>
+                    <span class="hub-eyebrow">SPINKX</span>
+                    <h1>@Model.Survey.Survey.Title</h1>
+                    @if (!string.IsNullOrWhiteSpace(Model.Survey.Survey.Description))
+                    {
+                        <p>@Model.Survey.Survey.Description</p>
+                    }
+                    <div class="alert alert-info py-2 px-3 small mb-0" role="status">
+                        @(Model.Survey.Survey.IsAnonymous
+                            ? "Anonimine apklausa: rezultatuose respondentas bus nuasmenintas."
+                            : "Neanonimine apklausa: atsakymas bus siejamas su vartotojo identifikatoriumi.")
+                    </div>
+                </div>
+            </div>
+
+            @if (!Model.Survey.IsActive || (Model.Survey.Survey.IsAnonymous && Model.Survey.HasResponded))
+            {
+                <div class="alert alert-warning">
+                    @(Model.Survey.Survey.IsAnonymous && Model.Survey.HasResponded
+                        ? "Anonimine apklausa jau uzpildyta. Pakartotinai pildyti negalima."
+                        : L["Spinkx.SurveyClosed"])
+                </div>
+            }
+            else
+            {
+                <div class="hub-board mb-4">
+                    <div class="alert alert-info py-2 px-3 small" role="status">
+                        @Model.AuthorizationNotice
+                    </div>
+                    <form method="post" id="survey-form">
+                        <input type="hidden" asp-for="AnswersJson" id="answers-json" />
+                        <div id="survey-questions">
+                            @foreach (var q in Model.Survey.TopLevelQuestions)
+                            {
+                                RenderQuestion(q);
+                            }
+                        </div>
+                        <div class="mt-4 d-flex gap-3">
+                            <button type="submit" class="btn btn-orange">
+                                @(Model.Survey.HasResponded ? L["Spinkx.UpdateAnswer"] : L["Spinkx.Submit"])
+                            </button>
+                            <a class="btn btn-outline-secondary" asp-page="/Spinkx/Index">@L["Common.BackToHub"]</a>
+                        </div>
+                    </form>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const form = document.getElementById("survey-form");
+            const jsonIn = document.getElementById("answers-json");
+            if (!form || !jsonIn) return;
+
+            // ── Sub-question visibility ──────────────────────────────────────
+            function updateSubQuestions(optInput) {
+                const qBlock = optInput.closest(".survey-question");
+                if (!qBlock) return;
+                const isRadio = optInput.type === "radio";
+
+                // For radio: hide all sub-question groups in this question, show only selected
+                if (isRadio) {
+                    qBlock.querySelectorAll(".survey-sub-questions").forEach(sub => {
+                        sub.classList.add("d-none");
+                    });
+                }
+
+                const subArea = qBlock.querySelector(`.survey-sub-questions[data-parent-option="${optInput.dataset.optionId}"]`);
+                if (subArea) {
+                    subArea.classList.toggle("d-none", !optInput.checked);
+                }
+            }
+
+            // ── Skip logic (SINGLE questions only) ──────────────────────────
+            const allTopQuestions = Array.from(
+                document.querySelectorAll("#survey-questions > .survey-question")
+            );
+
+            function applySkipLogic(qBlock) {
+                const qId = parseInt(qBlock.dataset.questionId);
+                if (qBlock.dataset.questionType !== "SINGLE") return;
+
+                const selected = qBlock.querySelector(".survey-option-input:checked");
+                if (!selected) return;
+
+                const skipAction = selected.dataset.skipAction;
+                const skipTo = selected.dataset.skipTo ? parseInt(selected.dataset.skipTo) : null;
+
+                const qIdx = allTopQuestions.indexOf(qBlock);
+                if (qIdx < 0) return;
+
+                if (skipAction === "END") {
+                    // Hide all questions after this one
+                    allTopQuestions.forEach((q, i) => {
+                        if (i > qIdx) q.classList.add("survey-skipped");
+                    });
+                } else if (skipAction === "JUMP" && skipTo) {
+                    // Hide questions between current and target
+                    const targetIdx = allTopQuestions.findIndex(
+                        q => parseInt(q.dataset.questionId) === skipTo
+                    );
+                    allTopQuestions.forEach((q, i) => {
+                        if (i > qIdx && i < targetIdx) q.classList.add("survey-skipped");
+                        else if (i >= targetIdx) q.classList.remove("survey-skipped");
+                    });
+                } else {
+                    // NEXT: restore visibility of next question, clear downstream skips
+                    allTopQuestions.forEach((q, i) => {
+                        if (i > qIdx) q.classList.remove("survey-skipped");
+                    });
+                    // Re-apply skip logic for subsequent answered questions
+                    for (let i = qIdx + 1; i < allTopQuestions.length; i++) {
+                        if (!allTopQuestions[i].classList.contains("survey-skipped")) {
+                            applySkipLogic(allTopQuestions[i]);
+                        }
+                    }
+                }
+            }
+
+            // Wire option inputs
+            document.querySelectorAll(".survey-option-input").forEach(input => {
+                input.addEventListener("change", () => {
+                    updateSubQuestions(input);
+                    const qBlock = input.closest(".survey-question");
+                    if (qBlock && allTopQuestions.includes(qBlock)) applySkipLogic(qBlock);
+                });
+            });
+
+            // ── Serialise answers on submit ──────────────────────────────────
+            form.addEventListener("submit", e => {
+                const answers = [];
+
+                document.querySelectorAll(".survey-question").forEach(qBlock => {
+                    if (qBlock.classList.contains("survey-skipped")) return;
+                    const parentSub = qBlock.closest(".survey-sub-questions");
+                    if (parentSub && parentSub.classList.contains("d-none")) return;
+
+                    const qId = parseInt(qBlock.dataset.questionId);
+                    const type = qBlock.dataset.questionType;
+
+                    if (type === "TEXT") {
+                        const txt = qBlock.querySelector(".survey-text-answer")?.value?.trim();
+                        if (txt) answers.push({ questionId: qId, text: txt, optionIds: [] });
+                    } else {
+                        const checked = Array.from(
+                            qBlock.querySelectorAll(":scope > .survey-options .survey-option-input:checked")
+                        ).map(i => parseInt(i.value));
+                        if (checked.length > 0) answers.push({ questionId: qId, text: null, optionIds: checked });
+                    }
+                });
+
+                if (answers.length === 0) {
+                    e.preventDefault();
+                    alert("@L["Spinkx.AnswerAtLeastOne"]");
+                    return;
+                }
+
+                jsonIn.value = JSON.stringify(answers);
+            });
+        })();
+    </script>
+    <style>
+        .survey-skipped { display: none !important; }
+    </style>
+}
