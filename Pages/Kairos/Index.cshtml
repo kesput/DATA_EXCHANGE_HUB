@@ -11,47 +11,47 @@
                 <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
                     KAIROS <small class="badge bg-secondary ms-2">KA</small>
                 </h3>
-                <p class="mb-0 text-dark-green">Specialiu darbu poreikiu registravimas.</p>
+                <p class="mb-0 text-dark-green">@L["Specialiu darbu poreikiu registravimas."]</p>
             </div>
 
             <div class="access-panel stacked mb-3">
                 <div>
-                    <span class="field-label">Vartotojas</span>
+                    <span class="field-label">@L["Vartotojas"]</span>
                     <strong>@Model.UserName</strong>
                 </div>
                 <div>
-                    <span class="field-label">Aplikacija</span>
+                    <span class="field-label">@L["Aplikacija"]</span>
                     <strong>KAIROS</strong>
                 </div>
                 <div>
-                    <span class="field-label">Prieiga</span>
+                    <span class="field-label">@L["Prieiga"]</span>
                     <strong>@(Model.HasAccess ? "Suteikta" : "Nesuteikta")</strong>
                 </div>
                 <div>
-                    <span class="field-label">Min. poreikio data</span>
+                    <span class="field-label">@L["Min. poreikio data"]</span>
                     <strong>@Model.MinimumNeedDateLabel</strong>
                 </div>
             </div>
 
-            <a class="btn btn-orange w-100" asp-page="/Hub/Index">Grizti i HUB</a>
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">@L["Grizti i HUB"]</a>
         </aside>
 
         <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
             @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
             {
-                <div class="alert alert-success" role="status">@Model.SuccessMessage</div>
+                <div class="alert alert-success" role="status">@L[Model.SuccessMessage ?? string.Empty]</div>
             }
 
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
-                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+                <div class="alert alert-danger" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
             }
 
             @if (!Model.HasAccess)
             {
                 <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
-                    <h2 class="fw-bold text-dark-green">Prieiga nesuteikta</h2>
-                    <p class="mb-0">Siam Windows vartotojui SQL teisiu procedura nesuteike KAIROS aplikacijos prieigos.</p>
+                    <h2 class="fw-bold text-dark-green">@L["Prieiga nesuteikta"]</h2>
+                    <p class="mb-0">@L["Siam Windows vartotojui SQL teisiu procedura nesuteike KAIROS aplikacijos prieigos."]</p>
                 </div>
             }
             else
@@ -103,58 +103,58 @@
                          tabindex="0">
                         <div class="kairos-metrics mb-3">
                     <div class="metric-card">
-                        <small>Rodoma poreikiu</small>
+                        <small>@L["Rodoma poreikiu"]</small>
                         <h4>@Model.Requests.Count</h4>
                     </div>
                     <div class="metric-card">
-                        <small>Aktyvus keitimui</small>
+                        <small>@L["Aktyvus keitimui"]</small>
                         <h4>@Model.ActiveRequestCount</h4>
                     </div>
                     <div class="metric-card">
-                        <small>Uzrakinti</small>
+                        <small>@L["Uzrakinti"]</small>
                         <h4>@Model.LockedRequestCount</h4>
                     </div>
                     <div class="metric-card">
-                        <small>11:00 taisykle</small>
+                        <small>@L["11:00 taisykle"]</small>
                         <h4 class="kairos-rule-metric">@Model.MinimumNeedDateLabel</h4>
                     </div>
                 </div>
 
                         <section class="tool-section mb-3">
                     <div class="section-title-row">
-                        <h2>Dokumentacija</h2>
+                        <h2>@L["Dokumentacija"]</h2>
                         <span class="status-pill">EXTRA JOB TILL 11:00</span>
                     </div>
                     <div class="kairos-rules">
-                        <div>Tabas skirtas vienetiniams specialiu darbu poreikiams registruoti, kai prekei reikia papildomo veiksmo ar atskiro kiekio planavimo.</div>
-                        <div>Irasai saugomi SQL serveryje su vartotojo, sukurimo ir pakeitimo informacija, kad butu galima sekti veiksmus ir atstatyti klaidas per audit log.</div>
-                        <div>11:00 taisykle riboja, kokiai artimiausiai poreikio datai vartotojas gali kurti arba keisti irasa.</div>
+                        <div>@L["Tabas skirtas vienetiniams specialiu darbu poreikiams registruoti, kai prekei reikia papildomo veiksmo ar atskiro kiekio planavimo."]</div>
+                        <div>@L["Irasai saugomi SQL serveryje su vartotojo, sukurimo ir pakeitimo informacija, kad butu galima sekti veiksmus ir atstatyti klaidas per audit log."]</div>
+                        <div>@L["11:00 taisykle riboja, kokiai artimiausiai poreikio datai vartotojas gali kurti arba keisti irasa."]</div>
                     </div>
                 </section>
 
                         <section class="tool-section mb-3">
                     <div class="section-title-row">
-                        <h2>Duomenu vedimo taisykles</h2>
+                        <h2>@L["Duomenu vedimo taisykles"]</h2>
                         <span class="status-pill">@Model.CutoffRuleText</span>
                     </div>
                     <div class="kairos-rules">
-                        <div>INF_PREK privalomas ir turi buti tiksliai 7 simboliai.</div>
-                        <div>Kiekis privalomas ir turi buti didesnis uz 0.</div>
+                        <div>@L["INF_PREK privalomas ir turi buti tiksliai 7 simboliai."]</div>
+                        <div>@L["Kiekis privalomas ir turi buti didesnis uz 0."]</div>
                         <div>Poreikio data negali buti ankstesne nei @Model.MinimumNeedDateLabel.</div>
-                        <div>Minimalus galiojimas negali buti ankstesnis uz poreikio data.</div>
-                        <div>Tinklas / klientas ir paaiskinimas yra privalomi.</div>
-                        <div>Irasai, kurie nebeatitinka 11:00 taisykles, uzrakinami trynimui ir atstatymui.</div>
+                        <div>@L["Minimalus galiojimas negali buti ankstesnis uz poreikio data."]</div>
+                        <div>@L["Tinklas / klientas ir paaiskinimas yra privalomi."]</div>
+                        <div>@L["Irasai, kurie nebeatitinka 11:00 taisykles, uzrakinami trynimui ir atstatymui."]</div>
                     </div>
                 </section>
 
                         <section class="tool-section mb-3">
                     <div class="section-title-row">
-                        <h2>Naujas poreikis</h2>
+                        <h2>@L["Naujas poreikis"]</h2>
                     </div>
 
                     <form method="post" class="kairos-form" asp-page-handler="Create">
                         <div>
-                            <label class="form-label" asp-for="Title">Pavadinimas</label>
+                            <label class="form-label" asp-for="Title">@L["Pavadinimas"]</label>
                             <input class="form-control" asp-for="Title" maxlength="200" required />
                         </div>
 
@@ -164,12 +164,12 @@
                         </div>
 
                         <div>
-                            <label class="form-label" asp-for="QuantityRequestText">Kiekis</label>
+                            <label class="form-label" asp-for="QuantityRequestText">@L["Kiekis"]</label>
                             <input class="form-control" asp-for="QuantityRequestText" inputmode="decimal" required />
                         </div>
 
                         <div>
-                            <label class="form-label" asp-for="NeedDate">Poreikio data</label>
+                            <label class="form-label" asp-for="NeedDate">@L["Poreikio data"]</label>
                             <input class="form-control"
                                    asp-for="NeedDate"
                                    type="date"
@@ -178,7 +178,7 @@
                         </div>
 
                         <div>
-                            <label class="form-label" asp-for="MinExpirationRequest">Minimalus galiojimas</label>
+                            <label class="form-label" asp-for="MinExpirationRequest">@L["Minimalus galiojimas"]</label>
                             <input class="form-control"
                                    asp-for="MinExpirationRequest"
                                    type="date"
@@ -187,31 +187,31 @@
                         </div>
 
                         <div>
-                            <label class="form-label" asp-for="NetworkClient">Tinklas / klientas</label>
+                            <label class="form-label" asp-for="NetworkClient">@L["Tinklas / klientas"]</label>
                             <input class="form-control" asp-for="NetworkClient" maxlength="200" required />
                         </div>
 
                         <div class="kairos-comment-field">
-                            <label class="form-label" asp-for="Comment">Paaiskinimas</label>
+                            <label class="form-label" asp-for="Comment">@L["Paaiskinimas"]</label>
                             <textarea class="form-control" asp-for="Comment" rows="3" maxlength="1000" required></textarea>
                         </div>
 
                         <div class="kairos-actions">
-                            <button type="submit" class="btn btn-orange">Issaugoti poreiki</button>
+                            <button type="submit" class="btn btn-orange">@L["Issaugoti poreiki"]</button>
                         </div>
                     </form>
                 </section>
 
                         <section class="tool-section mb-3">
                     <div class="section-title-row">
-                        <h2>KAIROS poreikiai</h2>
+                        <h2>@L["KAIROS poreikiai"]</h2>
                         <span class="status-pill">@Model.Requests.Count naujausi</span>
                     </div>
 
                     @if (Model.Requests.Count == 0)
                     {
                         <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
-                            KAIROS poreikiu dar nera.
+                            @L["KAIROS poreikiu dar nera."]
                         </div>
                     }
                     else
@@ -221,17 +221,17 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Pavadinimas</th>
+                                        <th>@L["Pavadinimas"]</th>
                                         <th>INF_PREK</th>
-                                        <th>Kiekis</th>
-                                        <th>Poreikio data</th>
-                                        <th>Min. galiojimas</th>
-                                        <th>Tinklas / klientas</th>
-                                        <th>Paaiskinimas</th>
-                                        <th>Statusas</th>
-                                        <th>Sukurta</th>
-                                        <th>Rakinimas</th>
-                                        <th>Veiksmai</th>
+                                        <th>@L["Kiekis"]</th>
+                                        <th>@L["Poreikio data"]</th>
+                                        <th>@L["Min. galiojimas"]</th>
+                                        <th>@L["Tinklas / klientas"]</th>
+                                        <th>@L["Paaiskinimas"]</th>
+                                        <th>@L["Statusas"]</th>
+                                        <th>@L["Sukurta"]</th>
+                                        <th>@L["Rakinimas"]</th>
+                                        <th>@L["Veiksmai"]</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -260,12 +260,12 @@
                                                           asp-page-handler="Delete"
                                                           onsubmit="return confirm('Ar tikrai trinti KAIROS poreiki #@request.Id?');">
                                                         <input type="hidden" name="requestId" value="@request.Id" />
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger">Trinti</button>
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">@L["Trinti"]</button>
                                                     </form>
                                                 }
                                                 else
                                                 {
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled>Uzrakinta</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled>@L["Uzrakinta"]</button>
                                                 }
                                             </td>
                                         </tr>
@@ -278,13 +278,13 @@
 
                         <section class="tool-section">
                     <div class="section-title-row">
-                        <h2>KAIROS audit log</h2>
+                        <h2>@L["KAIROS audit log"]</h2>
                         <span class="status-pill">@Model.Logs.Count naujausi</span>
                     </div>
 
                     @if (Model.Logs.Count == 0)
                     {
-                        <div class="empty-state compact">Audit irasu dar nera.</div>
+                        <div class="empty-state compact">@L["Audit irasu dar nera."]</div>
                     }
                     else
                     {
@@ -293,14 +293,14 @@
                                 <thead>
                                     <tr>
                                         <th>LOG_ID</th>
-                                        <th>Laikas</th>
-                                        <th>Veiksmas</th>
+                                        <th>@L["Laikas"]</th>
+                                        <th>@L["Veiksmas"]</th>
                                         <th>ID</th>
-                                        <th>Vartotojas</th>
-                                        <th>Pavadinimas</th>
-                                        <th>Poreikio data</th>
-                                        <th>Busena</th>
-                                        <th>Veiksmai</th>
+                                        <th>@L["Vartotojas"]</th>
+                                        <th>@L["Pavadinimas"]</th>
+                                        <th>@L["Poreikio data"]</th>
+                                        <th>@L["Busena"]</th>
+                                        <th>@L["Veiksmai"]</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -317,15 +317,15 @@
                                             <td>
                                                 @if (log.IsReverted)
                                                 {
-                                                    <span class="status-pill status-pill-muted">Atstatyta</span>
+                                                    <span class="status-pill status-pill-muted">@L["Atstatyta"]</span>
                                                 }
                                                 else if (log.IsLocked)
                                                 {
-                                                    <span class="status-pill status-pill-muted">Uzrakinta</span>
+                                                    <span class="status-pill status-pill-muted">@L["Uzrakinta"]</span>
                                                 }
                                                 else
                                                 {
-                                                    <span class="status-pill">Aktyvu</span>
+                                                    <span class="status-pill">@L["Aktyvu"]</span>
                                                 }
                                             </td>
                                             <td class="row-actions">
@@ -335,7 +335,7 @@
                                                           asp-page-handler="Restore"
                                                           onsubmit="return confirm('Ar tikrai atstatyti KAIROS audit irasa #@log.LogId?');">
                                                         <input type="hidden" name="logId" value="@log.LogId" />
-                                                        <button type="submit" class="btn btn-sm btn-outline-primary">Atstatyti</button>
+                                                        <button type="submit" class="btn btn-sm btn-outline-primary">@L["Atstatyti"]</button>
                                                     </form>
                                                 }
                                             </td>
@@ -354,37 +354,37 @@
                          tabindex="0">
                         <section class="tool-section mb-3">
                             <div class="section-title-row">
-                                <h2>Dokumentacija</h2>
+                                <h2>@L["Dokumentacija"]</h2>
                                 <span class="status-pill">PROMO FORECAST</span>
                             </div>
                             <div class="kairos-rules">
-                                <div>Tabas skirtas is naudojamu Excel failu ikelti PROMO FORECAST duomenis i SQL serveri.</div>
-                                <div>SQL duomenys veliau bus naudojami analizems, KPI rodikliams, akciju poreikiu formavimui ir palyginimams su kitomis duomenu bazemis.</div>
-                                <div>Ikelimo metu Excel stulpeliu pavadinimai konvertuojami i trumpus SQL laukus, kad vartotojas galetu naudoti iprasta forma, o modelis saugotu standartizuota struktura.</div>
-                                <div>Unikalus iraso raktas formuojamas is CLIENT, INF_PREK, PROMO_START ir PROMO_END; INF_PREK visada turi buti 7 simboliu.</div>
+                                <div>@L["Tabas skirtas is naudojamu Excel failu ikelti PROMO FORECAST duomenis i SQL serveri."]</div>
+                                <div>@L["SQL duomenys veliau bus naudojami analizems, KPI rodikliams, akciju poreikiu formavimui ir palyginimams su kitomis duomenu bazemis."]</div>
+                                <div>@L["Ikelimo metu Excel stulpeliu pavadinimai konvertuojami i trumpus SQL laukus, kad vartotojas galetu naudoti iprasta forma, o modelis saugotu standartizuota struktura."]</div>
+                                <div>@L["Unikalus iraso raktas formuojamas is CLIENT, INF_PREK, PROMO_START ir PROMO_END; INF_PREK visada turi buti 7 simboliu."]</div>
                             </div>
                         </section>
 
                         <section class="tool-section mb-3">
                             <div class="section-title-row">
-                                <h2>PROMO FORECAST importas</h2>
+                                <h2>@L["PROMO FORECAST importas"]</h2>
                                 <span class="status-pill">Excel -> SQL</span>
                             </div>
                             <form method="post" enctype="multipart/form-data" class="kairos-form" asp-page-handler="ImportPromoForecast">
                                 <div class="kairos-comment-field">
-                                    <label class="form-label" asp-for="PromoForecastFile">Excel failas</label>
+                                    <label class="form-label" asp-for="PromoForecastFile">@L["Excel failas"]</label>
                                     <input class="form-control" asp-for="PromoForecastFile" type="file" accept="@ExcelFileNames.UploadAccept" required />
                                 </div>
                                 <div class="kairos-actions">
-                                    <button type="submit" class="btn btn-orange">Ikrauti PROMO FORECAST</button>
+                                    <button type="submit" class="btn btn-orange">@L["Ikrauti PROMO FORECAST"]</button>
                                 </div>
                             </form>
                         </section>
 
                         <section class="tool-section mb-3">
                             <div class="section-title-row">
-                                <h2>Stulpeliu konverteris</h2>
-                                <span class="status-pill">pertekliniai ignoruojami</span>
+                                <h2>@L["Stulpeliu konverteris"]</h2>
+                                <span class="status-pill">@L["pertekliniai ignoruojami"]</span>
                             </div>
                             <div class="kairos-rules">
                                 <div>Klientas -> CLIENT</div>
@@ -398,15 +398,15 @@
                                 <div>Dienos apyvarta pries akcija -> DAILY_SALES</div>
                             </div>
                             <div class="kairos-rules mt-3">
-                                <div>Ignoruojami Excel laukai: logistas, tiekejas, x, calc, likutis po akcijos, prioritetas, vieneto barkodas, prekes pavadinimas.</div>
-                                <div>Sie laukai nekraunami i PROMO FORECAST lentele, nes yra pertekliniai arba gali buti prijungti is kitu SQL lenteliu pagal turimus raktus.</div>
-                                <div>Jei Excel faile atsiranda papildomu nereikalingu stulpeliu, jie nera saugomi SQL lenteleje ir netrukdo importui.</div>
+                                <div>@L["Ignoruojami Excel laukai: logistas, tiekejas, x, calc, likutis po akcijos, prioritetas, vieneto barkodas, prekes pavadinimas."]</div>
+                                <div>@L["Sie laukai nekraunami i PROMO FORECAST lentele, nes yra pertekliniai arba gali buti prijungti is kitu SQL lenteliu pagal turimus raktus."]</div>
+                                <div>@L["Jei Excel faile atsiranda papildomu nereikalingu stulpeliu, jie nera saugomi SQL lenteleje ir netrukdo importui."]</div>
                             </div>
                         </section>
 
                         <section class="tool-section mb-3">
                             <div class="section-title-row">
-                                <h2>PROMO FORECAST irasai</h2>
+                                <h2>@L["PROMO FORECAST irasai"]</h2>
                                 <span class="status-pill">@(Model.IsPromoForecastAllRows ? "Visi" : $"Top {Model.PromoForecastRowLimitValue}")</span>
                             </div>
                             @if (Model.PromoForecastTableData is not null)
@@ -427,20 +427,20 @@
                                                     }
                                                     else
                                                     {
-                                                        <select name="FilterConnectors" class="form-select form-select-sm" aria-label="Filtro jungiklis">
+                                                        <select name="FilterConnectors" class="form-select form-select-sm" aria-label="@L["Filtro jungiklis"]">
                                                             <option value="and" selected="@(filter.Connector.Equals(ExchangeTableFilter.AndConnector, StringComparison.OrdinalIgnoreCase))">AND</option>
                                                             <option value="or" selected="@(filter.Connector.Equals(ExchangeTableFilter.OrConnector, StringComparison.OrdinalIgnoreCase))">OR</option>
                                                         </select>
                                                     }
                                                 </div>
-                                                <select name="FilterColumns" class="form-select form-select-sm" aria-label="Stulpelis">
-                                                    <option value="">Stulpelis</option>
+                                                <select name="FilterColumns" class="form-select form-select-sm" aria-label="@L["Stulpelis"]">
+                                                    <option value="">@L["Stulpelis"]</option>
                                                     @foreach (var column in Model.PromoForecastTableData.Columns.Where(column => IndexModel.IsPromoVisibleColumn(column.Name)))
                                                     {
-                                                        <option value="@column.Name" selected="@(filter.ColumnName.Equals(column.Name, StringComparison.OrdinalIgnoreCase))">@column.Name</option>
+                                                        <option value="@column.Name" data-type="@column.DataType" selected="@(filter.ColumnName.Equals(column.Name, StringComparison.OrdinalIgnoreCase))">@column.Name</option>
                                                     }
                                                 </select>
-                                                <select name="FilterOperators" class="form-select form-select-sm" aria-label="Operatorius">
+                                                <select name="FilterOperators" class="form-select form-select-sm" aria-label="@L["Operatorius"]">
                                                     <option value="eq" selected="@(filter.Operator.Equals(ExchangeTableFilter.EqualsOperator, StringComparison.OrdinalIgnoreCase))">=</option>
                                                     <option value="ne" selected="@(filter.Operator.Equals(ExchangeTableFilter.NotEqualsOperator, StringComparison.OrdinalIgnoreCase))">!=</option>
                                                     <option value="gt" selected="@(filter.Operator.Equals(ExchangeTableFilter.GreaterThanOperator, StringComparison.OrdinalIgnoreCase))">&gt;</option>
@@ -451,20 +451,20 @@
                                                     <option value="in" selected="@(filter.Operator.Equals(ExchangeTableFilter.InOperator, StringComparison.OrdinalIgnoreCase))">IN</option>
                                                     <option value="between" selected="@(filter.Operator.Equals(ExchangeTableFilter.BetweenOperator, StringComparison.OrdinalIgnoreCase))">BETWEEN</option>
                                                 </select>
-                                                <input class="form-control form-control-sm filter-value-input" name="FilterValues" value="@filter.Value" placeholder="Reiksme" />
-                                                <button type="button" class="btn btn-sm btn-outline-secondary filter-remove-button" data-promo-remove-filter>Valyti</button>
+                                                <input class="form-control form-control-sm filter-value-input" name="FilterValues" value="@filter.Value" placeholder="@L["Reiksme"]" />
+                                                <button type="button" class="btn btn-sm btn-outline-secondary filter-remove-button" data-promo-remove-filter>@L["Valyti"]</button>
                                             </div>
                                         }
                                     </div>
                                     <div class="exchange-filter-actions">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary" id="promoForecastAddFilterButton">Prideti filtra</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" id="promoForecastAddFilterButton">@L["Prideti filtra"]</button>
                                         <div class="exchange-filter-submit">
                                             @if (Model.HasActiveFilters)
                                             {
-                                                <button type="submit" class="btn btn-sm btn-outline-secondary" asp-page-handler="ClearPromoForecastFilters">Isvalyti</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-secondary" asp-page-handler="ClearPromoForecastFilters">@L["Isvalyti"]</button>
                                             }
-                                            <button type="submit" class="btn btn-sm btn-dark-green">Filtruoti</button>
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" asp-page-handler="PreviewDeletePromoForecastFiltered" disabled="@(!Model.HasActiveFilters)">Trinti pagal filtra</button>
+                                            <button type="submit" class="btn btn-sm btn-dark-green">@L["Filtruoti"]</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" asp-page-handler="PreviewDeletePromoForecastFiltered" disabled="@(!Model.HasActiveFilters)">@L["Trinti pagal filtra"]</button>
                                         </div>
                                     </div>
                                 </form>
@@ -474,7 +474,7 @@
                                     <div class="delete-preview-panel mb-3">
                                         <div>
                                             <strong>Pagal filtrus rasta irasu: @Model.PromoDeletePreviewCount</strong>
-                                            <div class="text-muted small">Patvirtinus bus istrintos tik dabar aktyvius filtrus atitinkancios eilutes.</div>
+                                            <div class="text-muted small">@L["Patvirtinus bus istrintos tik dabar aktyvius filtrus atitinkancios eilutes."]</div>
                                         </div>
                                         <form method="post" class="delete-preview-actions" asp-page-handler="DeletePromoForecastFiltered" onsubmit="return confirm('Ar tikrai trinti @Model.PromoDeletePreviewCount PROMO FORECAST irasus pagal filtrus?');">
                                             <input type="hidden" name="deletePreviewKey" value="@Model.CurrentPromoDeleteFilterKey" />
@@ -486,14 +486,14 @@
                                                 <input type="hidden" name="FilterValues[@filterIndex]" value="@filter.Value" />
                                                 <input type="hidden" name="FilterConnectors[@filterIndex]" value="@filter.Connector" />
                                             }
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">Patvirtinti trynima</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">@L["Patvirtinti trynima"]</button>
                                         </form>
                                     </div>
                                 }
                             }
                             @if (Model.PromoForecastTableData is null || Model.PromoForecastTableData.Rows.Count == 0)
                             {
-                                <div class="empty-state compact">PROMO FORECAST irasu dar nera.</div>
+                                <div class="empty-state compact">@L["PROMO FORECAST irasu dar nera."]</div>
                             }
                             else
                             {
@@ -504,7 +504,7 @@
 
                                 <div class="exchange-table-header mb-3">
                                     <div class="exchange-table-title">
-                                        <small>Atvaizdavimas</small>
+                                        <small>@L["Atvaizdavimas"]</small>
                                         <h2>PROMO FORECAST</h2>
                                     </div>
                                     <div class="exchange-table-controls">
@@ -518,10 +518,10 @@
                                                 <input type="hidden" name="FilterConnectors[@filterIndex]" value="@filter.Connector" />
                                             }
                                             <input type="hidden" name="PromoAnalysisRowLimit" value="@Model.PromoAnalysisRowLimit" />
-                                            <select class="form-select form-select-sm" name="PromoForecastRowLimit" onchange="this.form.action = window.location.pathname + window.location.search + '#kairos-promo-forecast'; this.form.submit()" aria-label="PROMO FORECAST eiluciu kiekis">
-                                                <option value="10" selected="@(Model.PromoForecastRowLimit == "10")">Top 10</option>
-                                                <option value="100" selected="@(Model.PromoForecastRowLimit == "100")">Top 100</option>
-                                                <option value="all" selected="@(Model.IsPromoForecastAllRows)">Visi</option>
+                                            <select class="form-select form-select-sm" name="PromoForecastRowLimit" onchange="this.form.action = window.location.pathname + window.location.search + '#kairos-promo-forecast'; this.form.submit()" aria-label="@L["PROMO FORECAST eiluciu kiekis"]">
+                                                <option value="10" selected="@(Model.PromoForecastRowLimit == "10")">@L["Top 10"]</option>
+                                                <option value="100" selected="@(Model.PromoForecastRowLimit == "100")">@L["Top 100"]</option>
+                                                <option value="all" selected="@(Model.IsPromoForecastAllRows)">@L["Visi"]</option>
                                             </select>
                                         </form>
                                         <form method="get" class="d-inline">
@@ -537,7 +537,7 @@
                                                 <input type="hidden" name="FilterValues[@filterIndex]" value="@filter.Value" />
                                                 <input type="hidden" name="FilterConnectors[@filterIndex]" value="@filter.Connector" />
                                             }
-                                            <button type="submit" class="btn btn-sm btn-outline-success">Eksportuoti rodoma</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-success">@L["Eksportuoti rodoma"]</button>
                                         </form>
                                         <form method="get" class="d-inline">
                                             <input type="hidden" name="handler" value="ExportPromoForecastExcel" />
@@ -552,12 +552,12 @@
                                                 <input type="hidden" name="FilterValues[@filterIndex]" value="@filter.Value" />
                                                 <input type="hidden" name="FilterConnectors[@filterIndex]" value="@filter.Connector" />
                                             }
-                                            <button type="submit" class="btn btn-sm btn-outline-success">Eksportuoti viska</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-success">@L["Eksportuoti viska"]</button>
                                         </form>
                                     </div>
                                 </div>
                                 <div class="kairos-actions mb-2">
-                                    <button type="button" class="btn btn-sm btn-orange" id="promoForecastSaveButton" style="display:none;">Issaugoti pakeitimus</button>
+                                    <button type="button" class="btn btn-sm btn-orange" id="promoForecastSaveButton" style="display:none;">@L["Issaugoti pakeitimus"]</button>
                                     <span class="text-muted small" id="promoForecastUpdateStatus"></span>
                                 </div>
 
@@ -569,7 +569,7 @@
                                                 {
                                                     <th data-promo-sort-column="@column.Name">@column.Name</th>
                                                 }
-                                                <th>Veiksmai</th>
+                                                <th>@L["Veiksmai"]</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -586,7 +586,7 @@
                                                     <td class="row-actions">
                                                         <form method="post" asp-page-handler="DeletePromoForecast" onsubmit="return confirm('Ar tikrai trinti PROMO FORECAST irasa #@row.KeyValue?');">
                                                             <input type="hidden" name="id" value="@row.KeyValue" />
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger">Trinti</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">@L["Trinti"]</button>
                                                         </form>
                                                     </td>
                                                 </tr>
@@ -599,12 +599,12 @@
 
                         <section class="tool-section">
                             <div class="section-title-row">
-                                <h2>PROMO FORECAST audit log</h2>
+                                <h2>@L["PROMO FORECAST audit log"]</h2>
                                 <span class="status-pill">@Model.PromoForecastAuditLogs.Count naujausi</span>
                             </div>
                             @if (Model.PromoForecastAuditLogs.Count == 0)
                             {
-                                <div class="empty-state compact">Audit irasu dar nera.</div>
+                                <div class="empty-state compact">@L["Audit irasu dar nera."]</div>
                             }
                             else
                             {
@@ -613,13 +613,13 @@
                                         <thead>
                                             <tr>
                                                 <th>LOG_ID</th>
-                                                <th>Laikas</th>
-                                                <th>Veiksmas</th>
-                                                <th>Raktas</th>
-                                                <th>Vartotojas</th>
-                                                <th>Stulpeliai</th>
-                                                <th>Busena</th>
-                                                <th>Veiksmai</th>
+                                                <th>@L["Laikas"]</th>
+                                                <th>@L["Veiksmas"]</th>
+                                                <th>@L["Raktas"]</th>
+                                                <th>@L["Vartotojas"]</th>
+                                                <th>@L["Stulpeliai"]</th>
+                                                <th>@L["Busena"]</th>
+                                                <th>@L["Veiksmai"]</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -635,11 +635,11 @@
                                                     <td>
                                                         @if (log.IsReverted)
                                                         {
-                                                            <span class="status-pill status-pill-muted">Atstatyta</span>
+                                                            <span class="status-pill status-pill-muted">@L["Atstatyta"]</span>
                                                         }
                                                         else
                                                         {
-                                                            <span class="status-pill">Aktyvu</span>
+                                                            <span class="status-pill">@L["Aktyvu"]</span>
                                                         }
                                                     </td>
                                                     <td class="row-actions">
@@ -647,7 +647,7 @@
                                                         {
                                                             <form method="post" asp-page-handler="RevertPromoForecastLog" onsubmit="return confirm('Ar tikrai atstatyti PROMO FORECAST audit irasa #@log.LogId?');">
                                                                 <input type="hidden" name="logId" value="@log.LogId" />
-                                                                <button type="submit" class="btn btn-sm btn-outline-primary">Atstatyti</button>
+                                                                <button type="submit" class="btn btn-sm btn-outline-primary">@L["Atstatyti"]</button>
                                                             </form>
                                                         }
                                                     </td>
@@ -666,36 +666,36 @@
                          tabindex="0">
                         <section class="tool-section mb-3">
                             <div class="section-title-row">
-                                <h2>Dokumentacija</h2>
+                                <h2>@L["Dokumentacija"]</h2>
                                 <span class="status-pill">PROMO ANALYSIS</span>
                             </div>
                             <div class="kairos-rules">
-                                <div>Tabas skirtas atvaizduoti is PROMO FORECAST ir kitu SQL saltiniu skaiciuojamus rodiklius.</div>
-                                <div>Cia desime KPI, akciju kiekio poreikius, pjuvius pagal klienta, preke, akcijos laikotarpi ir statusa.</div>
-                                <div>Analize remsis standartizuotais SQL laukais, todel Excel formos skirtumai bus suvaldyti importo konverteryje.</div>
+                                <div>@L["Tabas skirtas atvaizduoti is PROMO FORECAST ir kitu SQL saltiniu skaiciuojamus rodiklius."]</div>
+                                <div>@L["Cia desime KPI, akciju kiekio poreikius, pjuvius pagal klienta, preke, akcijos laikotarpi ir statusa."]</div>
+                                <div>@L["Analize remsis standartizuotais SQL laukais, todel Excel formos skirtumai bus suvaldyti importo konverteryje."]</div>
                             </div>
                         </section>
 
                         <section class="tool-section mb-3">
                             <div class="section-title-row">
-                                <h2>PROMO ANALYSIS rodikliai</h2>
+                                <h2>@L["PROMO ANALYSIS rodikliai"]</h2>
                                 <span class="status-pill">@(Model.IsPromoAnalysisAllRows ? "Visi" : $"Top {Model.PromoAnalysisRowLimitValue}")</span>
                             </div>
                             <div class="kairos-metrics mb-3">
                                 <div class="metric-card">
-                                    <small>PROMO eilutes</small>
+                                    <small>@L["PROMO eilutes"]</small>
                                     <h4>@(Model.PromoForecastTableData?.Rows.Count ?? 0)</h4>
                                 </div>
                                 <div class="metric-card">
-                                    <small>Aktyvus filtrai</small>
+                                    <small>@L["Aktyvus filtrai"]</small>
                                     <h4>@Model.ActiveFilters.Count</h4>
                                 </div>
                                 <div class="metric-card">
-                                    <small>Audit irasai</small>
+                                    <small>@L["Audit irasai"]</small>
                                     <h4>@Model.PromoForecastAuditLogs.Count</h4>
                                 </div>
                                 <div class="metric-card">
-                                    <small>BUY nuo siandien</small>
+                                    <small>@L["BUY nuo siandien"]</small>
                                     <h4 class="kairos-rule-metric">@Model.PromoBuyFromTodayAnalysisRows.Count</h4>
                                 </div>
                             </div>
@@ -703,23 +703,23 @@
 
                         <section class="tool-section">
                             <div class="section-title-row">
-                                <h2>Analizes zona</h2>
-                                <span class="status-pill">PROMO FORECAST pjuviai</span>
+                                <h2>@L["Analizes zona"]</h2>
+                                <span class="status-pill">@L["PROMO FORECAST pjuviai"]</span>
                             </div>
 
                             
                             <div class="exchange-table-header mb-3">
                                 <div class="exchange-table-title">
-                                    <small>Atvaizdavimas</small>
+                                    <small>@L["Atvaizdavimas"]</small>
                                     <h2>PROMO ANALYSIS</h2>
                                 </div>
                                 <div class="exchange-table-controls">
                                     <form method="get" class="d-flex gap-2 align-items-center">
                                         <input type="hidden" name="PromoForecastRowLimit" value="@Model.PromoForecastRowLimit" />
-                                        <select class="form-select form-select-sm" name="PromoAnalysisRowLimit" onchange="this.form.action = window.location.pathname + window.location.search + '#kairos-promo-analysis'; this.form.submit()" aria-label="PROMO ANALYSIS eiluciu kiekis">
-                                            <option value="10" selected="@(Model.PromoAnalysisRowLimit == "10")">Top 10</option>
-                                            <option value="100" selected="@(Model.PromoAnalysisRowLimit == "100")">Top 100</option>
-                                            <option value="all" selected="@(Model.IsPromoAnalysisAllRows)">Visi</option>
+                                        <select class="form-select form-select-sm" name="PromoAnalysisRowLimit" onchange="this.form.action = window.location.pathname + window.location.search + '#kairos-promo-analysis'; this.form.submit()" aria-label="@L["PROMO ANALYSIS eiluciu kiekis"]">
+                                            <option value="10" selected="@(Model.PromoAnalysisRowLimit == "10")">@L["Top 10"]</option>
+                                            <option value="100" selected="@(Model.PromoAnalysisRowLimit == "100")">@L["Top 100"]</option>
+                                            <option value="all" selected="@(Model.IsPromoAnalysisAllRows)">@L["Visi"]</option>
                                         </select>
                                     </form>
                                 </div>
@@ -734,7 +734,7 @@
                                             role="tab"
                                             aria-controls="promo-analysis-buy-from-today"
                                             aria-selected="true">
-                                        PROMO by BUY from TODAY
+                                        @L["PROMO by BUY from TODAY"]
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
@@ -746,7 +746,7 @@
                                             role="tab"
                                             aria-controls="promo-analysis-products-from-today"
                                             aria-selected="false">
-                                        PROMO from TODAY (PRODUCTS view)
+                                        @L["PROMO from TODAY (PRODUCTS view)"]
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
@@ -758,7 +758,7 @@
                                             role="tab"
                                             aria-controls="promo-analysis-daily-qty-flow"
                                             aria-selected="false">
-                                        Daily QTY flow
+                                        @L["Daily QTY flow"]
                                     </button>
                                 </li>
                             </ul>
@@ -775,13 +775,13 @@
                                     </div>
                                     @if (Model.PromoBuyFromTodayAnalysisRows.Count == 0)
                                     {
-                                        <div class="empty-state compact">Nera PROMO FORECAST irasu, kuriu BUY_START yra siandien arba veliau.</div>
+                                        <div class="empty-state compact">@L["Nera PROMO FORECAST irasu, kuriu BUY_START yra siandien arba veliau."]</div>
                                     }
                                     else
                                     {
                                         <div class="kairos-actions mb-2">
-                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="buy" asp-route-PromoAnalysisRowLimit="@Model.PromoAnalysisRowLimit" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">Eksportuoti rodoma</a>
-                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="buy" asp-route-PromoAnalysisRowLimit="all" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">Eksportuoti viska</a>
+                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="buy" asp-route-PromoAnalysisRowLimit="@Model.PromoAnalysisRowLimit" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">@L["Eksportuoti rodoma"]</a>
+                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="buy" asp-route-PromoAnalysisRowLimit="all" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">@L["Eksportuoti viska"]</a>
                                         </div>
                                         <div class="table-responsive exchange-table-wrap kairos-table-wrap">
                                             <table class="table align-middle exchange-table">
@@ -820,18 +820,18 @@
                                      aria-labelledby="promo-analysis-products-from-today-tab"
                                      tabindex="0">
                                     <div class="section-title-row compact-title-row">
-                                        <h2>Akcijos nuo siandienos produktu pjuviu</h2>
+                                        <h2>@L["Akcijos nuo siandienos produktu pjuviu"]</h2>
                                         <span class="status-pill">@Model.PromoFromTodayProductsAnalysisRows.Count / @Model.PromoFromTodayProductsAnalysisTotalCount produktai</span>
                                     </div>
                                     @if (Model.PromoFromTodayProductsAnalysisRows.Count == 0)
                                     {
-                                        <div class="empty-state compact">Nera PROMO FORECAST produktu, kuriu akcijos laikotarpis tesiasi arba prasideda nuo siandien.</div>
+                                        <div class="empty-state compact">@L["Nera PROMO FORECAST produktu, kuriu akcijos laikotarpis tesiasi arba prasideda nuo siandien."]</div>
                                     }
                                     else
                                     {
                                         <div class="kairos-actions mb-2">
-                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="products" asp-route-PromoAnalysisRowLimit="@Model.PromoAnalysisRowLimit" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">Eksportuoti rodoma</a>
-                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="products" asp-route-PromoAnalysisRowLimit="all" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">Eksportuoti viska</a>
+                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="products" asp-route-PromoAnalysisRowLimit="@Model.PromoAnalysisRowLimit" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">@L["Eksportuoti rodoma"]</a>
+                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="products" asp-route-PromoAnalysisRowLimit="all" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">@L["Eksportuoti viska"]</a>
                                         </div>
                                         <div class="table-responsive exchange-table-wrap kairos-table-wrap">
                                             <table class="table align-middle exchange-table">
@@ -880,18 +880,18 @@
                                      aria-labelledby="promo-analysis-daily-qty-flow-tab"
                                      tabindex="0">
                                     <div class="section-title-row compact-title-row">
-                                        <h2>Ateinanciu dienu srautas pagal BUY_START</h2>
+                                        <h2>@L["Ateinanciu dienu srautas pagal BUY_START"]</h2>
                                         <span class="status-pill">@Model.PromoDailyQtyFlowAnalysisRows.Count / @Model.PromoDailyQtyFlowAnalysisTotalCount dienos</span>
                                     </div>
                                     @if (Model.PromoDailyQtyFlowAnalysisRows.Count == 0)
                                     {
-                                        <div class="empty-state compact">Nera ateinanciu dienu PROMO FORECAST QTY srauto.</div>
+                                        <div class="empty-state compact">@L["Nera ateinanciu dienu PROMO FORECAST QTY srauto."]</div>
                                     }
                                     else
                                     {
                                         <div class="kairos-actions mb-2">
-                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="daily" asp-route-PromoAnalysisRowLimit="@Model.PromoAnalysisRowLimit" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">Eksportuoti rodoma</a>
-                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="daily" asp-route-PromoAnalysisRowLimit="all" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">Eksportuoti viska</a>
+                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="daily" asp-route-PromoAnalysisRowLimit="@Model.PromoAnalysisRowLimit" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">@L["Eksportuoti rodoma"]</a>
+                                            <a class="btn btn-sm btn-outline-success" asp-page-handler="ExportPromoAnalysisExcel" asp-route-query="daily" asp-route-PromoAnalysisRowLimit="all" asp-route-PromoForecastRowLimit="@Model.PromoForecastRowLimit">@L["Eksportuoti viska"]</a>
                                         </div>
                                         <div class="table-responsive exchange-table-wrap kairos-table-wrap">
                                             <table class="table align-middle exchange-table">
@@ -1070,7 +1070,7 @@
 
                 if (response.ok) {
                     if (status) {
-                        status.textContent = "Pakeitimai issaugoti.";
+                        status.textContent = window.HubI18n.t("Pakeitimai issaugoti.");
                     }
                     window.location.href = "#kairos-promo-forecast";
                     window.location.reload();
@@ -1079,7 +1079,7 @@
 
                 const message = await response.text();
                 if (status) {
-                    status.textContent = message || "Pakeitimu issaugoti nepavyko.";
+                    status.textContent = message || window.HubI18n.t("Pakeitimu issaugoti nepavyko.");
                 }
             }
         })();

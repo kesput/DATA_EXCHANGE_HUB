@@ -9,22 +9,22 @@
         <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
             <div class="p-4 mb-3 exchange-panel">
                 <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
-                    Klientu info <small class="badge bg-secondary ms-2">CI</small>
+                    @L["Klientu info"] <small class="badge bg-secondary ms-2">CI</small>
                 </h3>
-                <p class="mb-0 text-dark-green">STAT3 klientu ir poziciju informacija.</p>
+                <p class="mb-0 text-dark-green">@L["STAT3 klientu ir poziciju informacija."]</p>
             </div>
 
             <div class="access-panel stacked mb-3">
                 <div>
-                    <span class="field-label">Serveris</span>
+                    <span class="field-label">@L["Serveris"]</span>
                     <strong>STAT3</strong>
                 </div>
                 <div>
-                    <span class="field-label">Privalomas filtras</span>
+                    <span class="field-label">@L["Privalomas filtras"]</span>
                     <strong>@Model.RequiredFilterName</strong>
                 </div>
                 <div>
-                    <span class="field-label">Operatoriai</span>
+                    <span class="field-label">@L["Operatoriai"]</span>
                     <strong>@string.Join(", ", Model.RequiredFilterOperators.Select(IndexModel.GetOperatorLabel))</strong>
                 </div>
             </div>
@@ -35,24 +35,24 @@
         <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
-                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+                <div class="alert alert-danger" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
             }
 
             <div class="hub-hero mb-4">
                 <div>
                     <span class="hub-eyebrow">CLIENT INFO</span>
-                    <h1>Klientu info</h1>
+                    <h1>@L["Klientu info"]</h1>
                     <p>Paieska pagal @Model.RequiredFilterName is STAT3 serverio. IN operatoriui reiksmes atskirkite kableliu, tarpu arba is naujos eilutes.</p>
                 </div>
             </div>
 
             <section class="tool-section mb-3">
                 <div class="section-title-row">
-                    <h2>Paieska</h2>
+                    <h2>@L["Paieska"]</h2>
                     <span class="status-pill">@Model.RequiredFilterName *</span>
                 </div>
 
-                <form method="post" class="hydra-query-form" id="clientInfoQueryForm" data-busy-form data-busy-title="Klientu info uzklausa vykdoma">
+                <form method="post" class="hydra-query-form" id="clientInfoQueryForm" data-busy-form data-busy-title="@L["Klientu info uzklausa vykdoma"]">
                     @{
                         var requiredFilter = Model.RequiredFilterRow;
                     }
@@ -78,7 +78,7 @@
                                    inputmode="@IndexModel.GetFilterInputMode(requiredFilter.Definition)"
                                    data-hydra-filter-type="@requiredFilter.Definition.DataType"
                                    required
-                                   placeholder="pvz. 12345 arba 12345, 67890" />
+                                   placeholder="@L["pvz. 12345 arba 12345, 67890"]" />
                         }
                     </div>
 
@@ -106,7 +106,7 @@
                                                 <option value="@definition.Name"
                                                         data-type="@definition.DataType"
                                                         data-operators="@string.Join(",", definition.AllowedOperators)"
-                                                                                                                data-description="@definition.Description"
+                                                                                                                data-description="@L[definition.Description]"
                                                         selected="@(filter.ColumnName.Equals(definition.Name, StringComparison.OrdinalIgnoreCase))">
                                                     @definition.Name
                                                 </option>
@@ -130,7 +130,7 @@
                                                inputmode="@(Model.OptionalFilters.FirstOrDefault(definition => definition.Name.Equals(filter.ColumnName, StringComparison.OrdinalIgnoreCase)) is { } inputDefinition ? IndexModel.GetFilterInputMode(inputDefinition) : "text")"
                                                placeholder="@L["DataExchange.FilterValue"]" />
                                         <button type="button" class="btn btn-sm btn-outline-secondary filter-remove-button" data-remove-client-info-filter>@L["DataExchange.ClearFilters"]</button>
-                                        <div class="form-text filter-description-line" data-client-info-filter-description>@(filterDefinition?.Description ?? string.Empty)</div>
+                                        <div class="form-text filter-description-line" data-client-info-filter-description>@L[filterDefinition?.Description ?? string.Empty]</div>
                                     </div>
                                 }
                             </div>
@@ -141,9 +141,9 @@
                     }
 
                     <div class="form-actions">
-                        <button type="submit" asp-page-handler="Execute" class="btn btn-orange" data-busy-label="Vykdoma...">EXECUTE</button>
-                        <button type="submit" asp-page-handler="ExportExcel" class="btn btn-outline-primary" data-busy-title="Excel failas ruosiamas" data-busy-label="Ruosiamas Excel..." data-busy-auto-reset-ms="5000">Export Excel</button>
-                                    <button type="submit" asp-page-handler="ExportCsv" class="btn btn-outline-success" data-busy-title="CSV failas ruosiamas" data-busy-label="Ruosiamas CSV..." data-busy-auto-reset-ms="5000">Export CSV</button>
+                        <button type="submit" asp-page-handler="Execute" class="btn btn-orange" data-busy-label="@L["Vykdoma..."]">@L["EXECUTE"]</button>
+                        <button type="submit" asp-page-handler="ExportExcel" class="btn btn-outline-primary" data-busy-title="@L["Excel failas ruosiamas"]" data-busy-label="@L["Ruosiamas Excel..."]" data-busy-auto-reset-ms="5000">@L["Export Excel"]</button>
+                                    <button type="submit" asp-page-handler="ExportCsv" class="btn btn-outline-success" data-busy-title="@L["CSV failas ruosiamas"]" data-busy-label="@L["Ruosiamas CSV..."]" data-busy-auto-reset-ms="5000">@L["Export CSV"]</button>
                     </div>
                 </form>
             </section>
@@ -152,15 +152,15 @@
             {
                 <div class="hub-metrics my-4">
                     <div class="metric-card">
-                        <small>Eilutes</small>
+                        <small>@L["Eilutes"]</small>
                         <h4>@Model.Result.Rows.Count</h4>
                     </div>
                     <div class="metric-card">
-                        <small>Stulpeliai</small>
+                        <small>@L["Stulpeliai"]</small>
                         <h4>@Model.Result.Columns.Count</h4>
                     </div>
                     <div class="metric-card">
-                        <small>Saltinis</small>
+                        <small>@L["Saltinis"]</small>
                         <h4>ORGALL / ORGPOS</h4>
                     </div>
                 </div>
@@ -169,9 +169,9 @@
                             {
                                 <div class="d-flex align-items-center gap-2 flex-wrap mb-3" data-result-pager>
                                     <span class="status-pill">Rodoma @Model.ResultPageStartRow-@Model.ResultPageEndRow is @Model.ResultTotalRows</span>
-                                    <button type="submit" form="clientInfoQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Max(1, Model.ResultPageValue - 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue <= 1)">Ankstesnis</button>
+                                    <button type="submit" form="clientInfoQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Max(1, Model.ResultPageValue - 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue <= 1)">@L["Ankstesnis"]</button>
                                     <span class="small text-muted">Puslapis @Model.ResultPageValue / @Model.ResultTotalPages</span>
-                                    <button type="submit" form="clientInfoQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Min(Model.ResultTotalPages, Model.ResultPageValue + 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue >= Model.ResultTotalPages)">Kitas</button>
+                                    <button type="submit" form="clientInfoQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Min(Model.ResultTotalPages, Model.ResultPageValue + 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue >= Model.ResultTotalPages)">@L["Kitas"]</button>
                                 </div>
                             }
                 @if (Model.Result.Rows.Count == 0)
@@ -212,7 +212,7 @@
 @section Scripts {
     <script>
         (() => {
-            const filters = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.OptionalFilters.Select(filter => new { filter.Name, filter.DataType, filter.AllowedOperators, filter.Description })));
+            const filters = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.OptionalFilters.Select(filter => new { filter.Name, filter.DataType, filter.AllowedOperators, Description = L[filter.Description].Value })));
             const rows = document.getElementById("clientInfoFilterRows");
             const addButton = document.getElementById("addClientInfoFilterButton");
 
@@ -278,7 +278,7 @@
                 removeButton.type = "button";
                 removeButton.className = "btn btn-sm btn-outline-secondary filter-remove-button";
                 removeButton.dataset.removeClientInfoFilter = "";
-                removeButton.textContent = "Valyti";
+                removeButton.textContent = window.HubI18n.t("Valyti");
                 row.appendChild(removeButton);
 
                 wireRow(columnSelect);
@@ -327,9 +327,9 @@
             function updateInputType(columnSelect, operatorSelect, valueInput) {
                 const dataType = columnSelect.selectedOptions[0]?.dataset.type ?? "text";
                 const operatorValue = operatorSelect.value;
-                valueInput.type = operatorValue === "in" || operatorValue === "like"
+                valueInput.type = operatorValue === "in" || operatorValue === "like" || operatorValue === "between"
                     ? "text"
-                    : dataType === "number"
+                    : dataType === "date" ? "date" : dataType === "datetime" ? "datetime-local" : dataType === "number"
                         ? "number"
                         : "text";
                 valueInput.inputMode = dataType === "number" ? "decimal" : "text";

@@ -1,0 +1,14 @@
+@page
+@model DATA_EXCHANGE_HUB.Pages.Hub.AccessDeniedModel
+@{
+    ViewData["Title"] = "Hub.Security.NoAccessTitle";
+}
+<div class="container hub-page pt-4">
+    <section class="tool-section">
+        <h1>@L["Hub.Security.NoAccessTitle"]</h1>
+        <div class="alert alert-warning" role="alert">@L["Hub.Security.NoAccess"]</div>
+        <p>@L["Hub.Security.SharedTerminal"]</p>
+        <a class="btn btn-orange" asp-page="/Index" asp-route-AppName="@Model.Application" asp-fragment="access-request">@L["Hub.Security.RequestAccess"]</a>
+        <a class="btn btn-outline-secondary" asp-page="/Hub/Index">@L["Common.BackToHub"]</a>
+    </section>
+</div>

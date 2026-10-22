@@ -13,6 +13,9 @@ public sealed class IndexModel(
     IExcelWorkbookService excelWorkbookService,
     Microsoft.Extensions.Caching.Memory.IMemoryCache memoryCache) : PageModel
 {
+    [BindProperty(SupportsGet = true)]
+    public bool ExcelGridlines { get; set; }
+
     private const string ExcelContentType =
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private const string CsvContentType = "text/csv; charset=utf-8";
@@ -237,7 +240,7 @@ public IReadOnlyList<AreteRequiredFilterRow> RequiredFilterRows =>
             var file = excelWorkbookService.CreateWorkbook(
                 result.Columns,
                 result.Rows,
-                SelectedQuery.Name);
+                SelectedQuery.Name, ExcelGridlines);
 
             AddExportSummaryHeaders(result.Rows.Count, result.Columns.Count);
             return File(file, ExcelContentType, BuildExcelFileName(SelectedQuery));

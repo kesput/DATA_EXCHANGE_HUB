@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -659,5 +659,846 @@
   <data name="Iris.Kpi.ErrorsHint" xml:space="preserve"><value>Error / fail busenos</value></data>
   <data name="Iris.Kpi.Last" xml:space="preserve"><value>Paskutinis veiksmas</value></data>
   <data name="Iris.Kpi.StatusBreakdown" xml:space="preserve"><value>Busenu santrauka</value></data>
-  <data name="Iris.Kpi.Count" xml:space="preserve"><value>Kiekis</value></data></root>
+  <data name="Iris.Kpi.Count" xml:space="preserve"><value>Kiekis</value></data>  <data name="+37060000000 arba +370-60000000" xml:space="preserve"><value>+37060000000 arba +370-60000000</value></data>
+  <data name="11:00 taisykle" xml:space="preserve"><value>11:00 taisykle</value></data>
+  <data name="11:00 taisykle riboja, kokiai artimiausiai poreikio datai vartotojas gali kurti arba keisti irasa." xml:space="preserve"><value>11:00 taisykle riboja, kokiai artimiausiai poreikio datai vartotojas gali kurti arba keisti irasa.</value></data>
+  <data name="6 val. / 5 min" xml:space="preserve"><value>6 val. / 5 min</value></data>
+  <data name="ACTION" xml:space="preserve"><value>VEIKSMAS</value></data>
+  <data name="ARETE uzklausa vykdoma" xml:space="preserve"><value>ARETE uzklausa vykdoma</value></data>
+  <data name="Active" xml:space="preserve"><value>Aktyvu</value></data>
+  <data name="Adresatai" xml:space="preserve"><value>Adresatai</value></data>
+  <data name="Adresatu dar nera." xml:space="preserve"><value>Adresatu dar nera.</value></data>
+  <data name="Akcijos nuo siandienos produktu pjuviu" xml:space="preserve"><value>Akcijos nuo siandienos produktu pjuviu</value></data>
+  <data name="Aktyvu" xml:space="preserve"><value>Aktyvu</value></data>
+  <data name="Aktyvumas ir pakeitimu istorija" xml:space="preserve"><value>Aktyvumas ir pakeitimu istorija</value></data>
+  <data name="Aktyvumas, istorija ir pakeitimu logai." xml:space="preserve"><value>Aktyvumas, istorija ir pakeitimu logai.</value></data>
+  <data name="Aktyvus filtrai" xml:space="preserve"><value>Aktyvus filtrai</value></data>
+  <data name="Aktyvus keitimui" xml:space="preserve"><value>Aktyvus keitimui</value></data>
+  <data name="Aktyvus susitarimas" xml:space="preserve"><value>Aktyvus susitarimas</value></data>
+  <data name="An error occurred while processing your request." xml:space="preserve"><value>Apdorojant užklausą įvyko klaida.</value></data>
+  <data name="Analize remsis standartizuotais SQL laukais, todel Excel formos skirtumai bus suvaldyti importo konverteryje." xml:space="preserve"><value>Analize remsis standartizuotais SQL laukais, todel Excel formos skirtumai bus suvaldyti importo konverteryje.</value></data>
+  <data name="Analize, procesai, indikatoriai ir statistika vienoje SQL pagrindu valdomaje darbo erdveje." xml:space="preserve"><value>Analize, procesai, indikatoriai ir statistika vienoje SQL pagrindu valdomaje darbo erdveje.</value></data>
+  <data name="Analizes zona" xml:space="preserve"><value>Analizes zona</value></data>
+  <data name="Analysis platform" xml:space="preserve"><value>Analizės platforma</value></data>
+  <data name="Analytics - Processes - Indicators - Statistics" xml:space="preserve"><value>Analizė - Procesai - Indikatoriai - Statistika</value></data>
+  <data name="Ankstesne" xml:space="preserve"><value>Ankstesne</value></data>
+  <data name="Ankstesnis" xml:space="preserve"><value>Ankstesnis</value></data>
+  <data name="Aplikacija" xml:space="preserve"><value>Aplikacija</value></data>
+  <data name="Apr" xml:space="preserve"><value>Bal</value></data>
+  <data name="Aprasymas" xml:space="preserve"><value>Aprasymas</value></data>
+  <data name="Archyvas" xml:space="preserve"><value>Archyvas</value></data>
+  <data name="Arteja laikotarpis" xml:space="preserve"><value>Arteja laikotarpis</value></data>
+  <data name="Artejanciu derinimu sarasas bus prijungtas prie DIKE konfigracijos ir istorijos lentu." xml:space="preserve"><value>Artejanciu derinimu sarasas bus prijungtas prie DIKE konfigracijos ir istorijos lentu.</value></data>
+  <data name="Artejantys / aktyvus derinimai" xml:space="preserve"><value>Artejantys / aktyvus derinimai</value></data>
+  <data name="Ataskaitos pavadinimas" xml:space="preserve"><value>Ataskaitos pavadinimas</value></data>
+  <data name="Ateinanciu dienu srautas pagal BUY_START" xml:space="preserve"><value>Ateinanciu dienu srautas pagal BUY_START</value></data>
+  <data name="Atidaryti" xml:space="preserve"><value>Atidaryti</value></data>
+  <data name="Atnaujino" xml:space="preserve"><value>Atnaujino</value></data>
+  <data name="Atnaujintas failas" xml:space="preserve"><value>Atnaujintas failas</value></data>
+  <data name="Atnaujinti" xml:space="preserve"><value>Atnaujinti</value></data>
+  <data name="Atnaujinti grafika" xml:space="preserve"><value>Atnaujinti grafika</value></data>
+  <data name="Atnaujinti saltini" xml:space="preserve"><value>Atnaujinti saltini</value></data>
+  <data name="Atnaujinti taska" xml:space="preserve"><value>Atnaujinti taska</value></data>
+  <data name="Atsakyta" xml:space="preserve"><value>Atsakyta</value></data>
+  <data name="Atsaukti" xml:space="preserve"><value>Atsaukti</value></data>
+  <data name="Atsisakyti" xml:space="preserve"><value>Atsisakyti</value></data>
+  <data name="Atstatyta" xml:space="preserve"><value>Atstatyta</value></data>
+  <data name="Atstatyti" xml:space="preserve"><value>Atstatyti</value></data>
+  <data name="Atvaizdavimas" xml:space="preserve"><value>Atvaizdavimas</value></data>
+  <data name="Audit" xml:space="preserve"><value>Auditas</value></data>
+  <data name="Audit irasai" xml:space="preserve"><value>Audit irasai</value></data>
+  <data name="Audit irasu dar nera." xml:space="preserve"><value>Audit irasu dar nera.</value></data>
+  <data name="Aug" xml:space="preserve"><value>Rgp</value></data>
+  <data name="Autorius" xml:space="preserve"><value>Autorius</value></data>
+  <data name="BRUTTO, t" xml:space="preserve"><value>Bruto, t</value></data>
+  <data name="BUY nuo siandien" xml:space="preserve"><value>BUY nuo siandien</value></data>
+  <data name="Baigta" xml:space="preserve"><value>Baigta</value></data>
+  <data name="Baigtu darbu vidurkis" xml:space="preserve"><value>Baigtu darbu vidurkis</value></data>
+  <data name="Bet koks ikelimas" xml:space="preserve"><value>Bet koks ikelimas</value></data>
+  <data name="Busena" xml:space="preserve"><value>Busena</value></data>
+  <data name="CONTROL" xml:space="preserve"><value>KONTROLĖ</value></data>
+  <data name="CPU ir RAM kreives" xml:space="preserve"><value>CPU ir RAM kreives</value></data>
+  <data name="CPU ir RAM naudojimo kreives per paskutines 6 valandas" xml:space="preserve"><value>CPU ir RAM naudojimo kreives per paskutines 6 valandas</value></data>
+  <data name="CSV failas ruosiamas" xml:space="preserve"><value>CSV failas ruosiamas</value></data>
+  <data name="Cal" xml:space="preserve"><value>Kalendorius</value></data>
+  <data name="Cia desime KPI, akciju kiekio poreikius, pjuvius pagal klienta, preke, akcijos laikotarpi ir statusa." xml:space="preserve"><value>Cia desime KPI, akciju kiekio poreikius, pjuvius pagal klienta, preke, akcijos laikotarpi ir statusa.</value></data>
+  <data name="Command line" xml:space="preserve"><value>Komandų eilutė</value></data>
+  <data name="Config" xml:space="preserve"><value>Konfigūracija</value></data>
+  <data name="Create UTC" xml:space="preserve"><value>Sukurta UTC</value></data>
+  <data name="CreatorDoc:" xml:space="preserve"><value>Šaltinio dokumentas:</value></data>
+  <data name="UiHeading.Reconciliations" xml:space="preserve"><value>DERINIMAI</value></data>
+  <data name="DERINIMAI, INFORMACIJA, KONTAKTAI, ESAMI SUSITARIMAI" xml:space="preserve"><value>DERINIMAI, INFORMACIJA, KONTAKTAI, ESAMI SUSITARIMAI</value></data>
+  <data name="DIKE - klientu suderinimu, kontaktu, sutartu salygu ir pakeitimu istorijos valdymo erdve." xml:space="preserve"><value>DIKE - klientu suderinimu, kontaktu, sutartu salygu ir pakeitimu istorijos valdymo erdve.</value></data>
+  <data name="DIKE derinimu sritys" xml:space="preserve"><value>DIKE derinimu sritys</value></data>
+  <data name="DIKE sritys" xml:space="preserve"><value>DIKE sritys</value></data>
+  <data name="Daily" xml:space="preserve"><value>Kasdien</value></data>
+  <data name="Daily QTY flow" xml:space="preserve"><value>Kasdienis kiekio srautas</value></data>
+  <data name="Dalyvaujant apklausoje ar balsavime bus paprasyta Windows autorizacijos, kad atsakymas butu priskirtas jusu domeno vartotojui." xml:space="preserve"><value>Dalyvaujant apklausoje ar balsavime bus paprasyta Windows autorizacijos, kad atsakymas butu priskirtas jusu domeno vartotojui.</value></data>
+  <data name="Darbo erdve" xml:space="preserve"><value>Darbo erdve</value></data>
+  <data name="Darbu kalendorius" xml:space="preserve"><value>Darbu kalendorius</value></data>
+  <data name="Data" xml:space="preserve"><value>Data</value></data>
+  <data name="Data exchange" xml:space="preserve"><value>Duomenų mainai</value></data>
+  <data name="Day:" xml:space="preserve"><value>Diena:</value></data>
+  <data name="Daznis" xml:space="preserve"><value>Daznis</value></data>
+  <data name="Daznis, sutartas procentas ir srautas." xml:space="preserve"><value>Daznis, sutartas procentas ir srautas.</value></data>
+  <data name="Dec" xml:space="preserve"><value>Gru</value></data>
+  <data name="Deleted" xml:space="preserve"><value>Ištrintas</value></data>
+  <data name="Derinami INF_PREK kodai" xml:space="preserve"><value>Derinami INF_PREK kodai</value></data>
+  <data name="Derinimai" xml:space="preserve"><value>Derinimai</value></data>
+  <data name="Derinimo daznis" xml:space="preserve"><value>Derinimo daznis</value></data>
+  <data name="Derinimo ir informavimo adresatai" xml:space="preserve"><value>Derinimo ir informavimo adresatai</value></data>
+  <data name="Derinimo ir judejimo informavimo adresatai." xml:space="preserve"><value>Derinimo ir judejimo informavimo adresatai.</value></data>
+  <data name="Development" xml:space="preserve"><value>Kūrimo</value></data>
+  <data name="Development Mode" xml:space="preserve"><value>Kūrimo režimas</value></data>
+  <data name="Dienos" xml:space="preserve"><value>Dienos</value></data>
+  <data name="Dienu santrauka" xml:space="preserve"><value>Dienu santrauka</value></data>
+  <data name="Dokumentacija" xml:space="preserve"><value>Dokumentacija</value></data>
+  <data name="Double click to sort" xml:space="preserve"><value>Rūšiuoti dukart spustelėjus</value></data>
+  <data name="Draft issaugotas:" xml:space="preserve"><value>Draft issaugotas:</value></data>
+  <data name="Duomenu vedimo taisykles" xml:space="preserve"><value>Duomenu vedimo taisykles</value></data>
+  <data name="Duomenys atnaujinti:" xml:space="preserve"><value>Duomenys atnaujinti:</value></data>
+  <data name="Dydis" xml:space="preserve"><value>Dydis</value></data>
+  <data name="ERP / salis" xml:space="preserve"><value>ERP / salis</value></data>
+  <data name="UiHeading.ExistingAgreements" xml:space="preserve"><value>ESAMI SUSITARIMAI</value></data>
+  <data name="EXCHANGE_UPLOAD pranesimai" xml:space="preserve"><value>EXCHANGE_UPLOAD pranesimai</value></data>
+  <data name="EXECUTE" xml:space="preserve"><value>VYKDYTI</value></data>
+  <data name="Eilutes" xml:space="preserve"><value>Eilutes</value></data>
+  <data name="Eksportai" xml:space="preserve"><value>Eksportai</value></data>
+  <data name="Eksportuoti rodoma" xml:space="preserve"><value>Eksportuoti rodoma</value></data>
+  <data name="Eksportuoti viska" xml:space="preserve"><value>Eksportuoti viska</value></data>
+  <data name="El. pastas" xml:space="preserve"><value>El. pastas</value></data>
+  <data name="El. pastas arba telefono nr." xml:space="preserve"><value>El. pastas arba telefono nr.</value></data>
+  <data name="Email" xml:space="preserve"><value>El. pastas</value></data>
+  <data name="End by:" xml:space="preserve"><value>Baigti iki:</value></data>
+  <data name="End:" xml:space="preserve"><value>Pabaiga:</value></data>
+  <data name="Error." xml:space="preserve"><value>Klaida.</value></data>
+  <data name="Esami susitarimai" xml:space="preserve"><value>Esami susitarimai</value></data>
+  <data name="Excel failas" xml:space="preserve"><value>Excel failas</value></data>
+  <data name="Excel failas ruosiamas" xml:space="preserve"><value>Excel failas ruosiamas</value></data>
+  <data name="Export CSV" xml:space="preserve"><value>Eksportuoti CSV</value></data>
+  <data name="Export Excel" xml:space="preserve"><value>Eksportuoti Excel</value></data>
+  <data name="FLOW" xml:space="preserve"><value>SRAUTAS</value></data>
+  <data name="Failai" xml:space="preserve"><value>Failai</value></data>
+  <data name="Failas" xml:space="preserve"><value>Failas</value></data>
+  <data name="Failo sablonas" xml:space="preserve"><value>Failo sablonas</value></data>
+  <data name="Failu aprasymas" xml:space="preserve"><value>Failu aprasymas</value></data>
+  <data name="Failu dar nera." xml:space="preserve"><value>Failu dar nera.</value></data>
+  <data name="Feb" xml:space="preserve"><value>Vas</value></data>
+  <data name="Field" xml:space="preserve"><value>Laukas</value></data>
+  <data name="File upload" xml:space="preserve"><value>Failų įkėlimas</value></data>
+  <data name="Filtras" xml:space="preserve"><value>Filtras</value></data>
+  <data name="Filtro jungiklis" xml:space="preserve"><value>Filtro jungiklis</value></data>
+  <data name="Filtro jungtis" xml:space="preserve"><value>Filtro jungtis</value></data>
+  <data name="Filtruoti" xml:space="preserve"><value>Filtruoti</value></data>
+  <data name="Format" xml:space="preserve"><value>Formatas</value></data>
+  <data name="Friday" xml:space="preserve"><value>Penktadienis</value></data>
+  <data name="Galioja iki" xml:space="preserve"><value>Galioja iki</value></data>
+  <data name="Galioja nuo" xml:space="preserve"><value>Galioja nuo</value></data>
+  <data name="Galiojimas" xml:space="preserve"><value>Galiojimas</value></data>
+  <data name="Galiojimo datos kalendorius" xml:space="preserve"><value>Galiojimo datos kalendorius</value></data>
+  <data name="Gavejai" xml:space="preserve"><value>Gavejai</value></data>
+  <data name="Gavejo el. pastas" xml:space="preserve"><value>Gavejo el. pastas</value></data>
+  <data name="Gavejo vardas" xml:space="preserve"><value>Gavejo vardas</value></data>
+  <data name="Gerai" xml:space="preserve"><value>Gerai</value></data>
+  <data name="Grafiko dar nera." xml:space="preserve"><value>Grafiko dar nera.</value></data>
+  <data name="Greita perziura" xml:space="preserve"><value>Greita perziura</value></data>
+  <data name="Grizti" xml:space="preserve"><value>Grizti</value></data>
+  <data name="Grizti i HUB" xml:space="preserve"><value>Grizti i HUB</value></data>
+  <data name="Gyvas saltinis" xml:space="preserve"><value>Gyvas saltinis</value></data>
+  <data name="HYDRA uzklausa vykdoma" xml:space="preserve"><value>HYDRA uzklausa vykdoma</value></data>
+  <data name="INBOUND" xml:space="preserve"><value>PRIĖMIMAS</value></data>
+  <data name="INF_PREK kodas" xml:space="preserve"><value>INF_PREK kodas</value></data>
+  <data name="INF_PREK privalomas ir turi buti tiksliai 7 simboliai." xml:space="preserve"><value>INF_PREK privalomas ir turi buti tiksliai 7 simboliai.</value></data>
+  <data name="IRIS tasku dar nera." xml:space="preserve"><value>IRIS tasku dar nera.</value></data>
+  <data name="Ieskoti" xml:space="preserve"><value>Ieskoti</value></data>
+  <data name="Ignoruojami Excel laukai: logistas, tiekejas, x, calc, likutis po akcijos, prioritetas, vieneto barkodas, prekes pavadinimas." xml:space="preserve"><value>Ignoruojami Excel laukai: logistas, tiekejas, x, calc, likutis po akcijos, prioritetas, vieneto barkodas, prekes pavadinimas.</value></data>
+  <data name="Ikele" xml:space="preserve"><value>Ikele</value></data>
+  <data name="Ikelimo metu Excel stulpeliu pavadinimai konvertuojami i trumpus SQL laukus, kad vartotojas galetu naudoti iprasta forma, o modelis saugotu standartizuota struktura." xml:space="preserve"><value>Ikelimo metu Excel stulpeliu pavadinimai konvertuojami i trumpus SQL laukus, kad vartotojas galetu naudoti iprasta forma, o modelis saugotu standartizuota struktura.</value></data>
+  <data name="Ikrauti PROMO FORECAST" xml:space="preserve"><value>Ikrauti PROMO FORECAST</value></data>
+  <data name="Ilgiausi darbai" xml:space="preserve"><value>Ilgiausi darbai</value></data>
+  <data name="Ilgiausia" xml:space="preserve"><value>Ilgiausia</value></data>
+  <data name="Ilgiausia trukme" xml:space="preserve"><value>Ilgiausia trukme</value></data>
+  <data name="Ilgiausias baigtas darbas" xml:space="preserve"><value>Ilgiausias baigtas darbas</value></data>
+  <data name="Imones kodas" xml:space="preserve"><value>Imones kodas</value></data>
+  <data name="Indikatoriu pasirinkimas" xml:space="preserve"><value>Indikatoriu pasirinkimas</value></data>
+  <data name="Informacija" xml:space="preserve"><value>Informacija</value></data>
+  <data name="Informacija issiusta" xml:space="preserve"><value>Informacija issiusta</value></data>
+  <data name="Irasai" xml:space="preserve"><value>Irasai</value></data>
+  <data name="Irasai QVD" xml:space="preserve"><value>Irasai QVD</value></data>
+  <data name="Irasai saugomi SQL serveryje su vartotojo, sukurimo ir pakeitimo informacija, kad butu galima sekti veiksmus ir atstatyti klaidas per audit log." xml:space="preserve"><value>Irasai saugomi SQL serveryje su vartotojo, sukurimo ir pakeitimo informacija, kad butu galima sekti veiksmus ir atstatyti klaidas per audit log.</value></data>
+  <data name="Irasai, kurie nebeatitinka 11:00 taisykles, uzrakinami trynimui ir atstatymui." xml:space="preserve"><value>Irasai, kurie nebeatitinka 11:00 taisykles, uzrakinami trynimui ir atstatymui.</value></data>
+  <data name="Irasu nerasta." xml:space="preserve"><value>Irasu nerasta.</value></data>
+  <data name="Issaugoma..." xml:space="preserve"><value>Issaugoma...</value></data>
+  <data name="Issaugoti" xml:space="preserve"><value>Issaugoti</value></data>
+  <data name="Issaugoti draft" xml:space="preserve"><value>Issaugoti draft</value></data>
+  <data name="Issaugoti pakeitima" xml:space="preserve"><value>Issaugoti pakeitima</value></data>
+  <data name="Issaugoti pakeitimus" xml:space="preserve"><value>Issaugoti pakeitimus</value></data>
+  <data name="Issaugoti poreiki" xml:space="preserve"><value>Issaugoti poreiki</value></data>
+  <data name="Issaugoti pranesimo poreiki" xml:space="preserve"><value>Issaugoti pranesimo poreiki</value></data>
+  <data name="Issaugoti punkta" xml:space="preserve"><value>Issaugoti punkta</value></data>
+  <data name="Istorijos dar nera." xml:space="preserve"><value>Istorijos dar nera.</value></data>
+  <data name="Isvalyti" xml:space="preserve"><value>Isvalyti</value></data>
+  <data name="Iveskite email adresa, pvz. user&amp;#64;bls.lt, arba lietuviska telefono numeri, pvz. +37061234567." xml:space="preserve"><value>Iveskite email adresa, pvz. user@bls.lt, arba lietuviska telefono numeri, pvz. +37061234567.</value></data>
+  <data name="Iveskite galiojancia data formatu YYYY-MM-DD, pvz. 2026-10-15." xml:space="preserve"><value>Iveskite galiojancia data formatu YYYY-MM-DD, pvz. 2026-10-15.</value></data>
+  <data name="Iveskite galiojanti laikotarpi formatu YYYYMM, pvz. 202610." xml:space="preserve"><value>Iveskite galiojanti laikotarpi formatu YYYYMM, pvz. 202610.</value></data>
+  <data name="Iveskite gauta 6 simboliu koda SMS patvirtinimo lauke. Jei kodo negavote, galite issiusti nauja koda." xml:space="preserve"><value>Iveskite gauta 6 simboliu koda SMS patvirtinimo lauke. Jei kodo negavote, galite issiusti nauja koda.</value></data>
+  <data name="Iveskite tik vartotojo varda be domeno" xml:space="preserve"><value>Iveskite tik vartotojo varda be domeno</value></data>
+  <data name="Ivykis" xml:space="preserve"><value>Ivykis</value></data>
+  <data name="Jan" xml:space="preserve"><value>Sau</value></data>
+  <data name="Jei Excel faile atsiranda papildomu nereikalingu stulpeliu, jie nera saugomi SQL lenteleje ir netrukdo importui." xml:space="preserve"><value>Jei Excel faile atsiranda papildomu nereikalingu stulpeliu, jie nera saugomi SQL lenteleje ir netrukdo importui.</value></data>
+  <data name="Jul" xml:space="preserve"><value>Lie</value></data>
+  <data name="Jun" xml:space="preserve"><value>Bir</value></data>
+  <data name="Jungtis" xml:space="preserve"><value>Jungtis</value></data>
+  <data name="KAIROS audit log" xml:space="preserve"><value>KAIROS audito žurnalas</value></data>
+  <data name="KAIROS poreikiai" xml:space="preserve"><value>KAIROS poreikiai</value></data>
+  <data name="KAIROS poreikiu dar nera." xml:space="preserve"><value>KAIROS poreikiu dar nera.</value></data>
+  <data name="UiHeading.Contacts" xml:space="preserve"><value>KONTAKTAI</value></data>
+  <data name="KPI Name" xml:space="preserve"><value>KPI pavadinimas</value></data>
+  <data name="KPI taskas" xml:space="preserve"><value>KPI taskas</value></data>
+  <data name="KPI vardas" xml:space="preserve"><value>KPI vardas</value></data>
+  <data name="Kam" xml:space="preserve"><value>Kam</value></data>
+  <data name="Kam siusti prekiu judejima" xml:space="preserve"><value>Kam siusti prekiu judejima</value></data>
+  <data name="Kanalas" xml:space="preserve"><value>Kanalas</value></data>
+  <data name="Kas ketvirti" xml:space="preserve"><value>Kas ketvirti</value></data>
+  <data name="Kas menesi" xml:space="preserve"><value>Kas menesi</value></data>
+  <data name="Katalogas" xml:space="preserve"><value>Katalogas</value></data>
+  <data name="Katalogo vietos naudojimas" xml:space="preserve"><value>Katalogo vietos naudojimas</value></data>
+  <data name="Kiekis" xml:space="preserve"><value>Kiekis</value></data>
+  <data name="Kiekis privalomas ir turi buti didesnis uz 0." xml:space="preserve"><value>Kiekis privalomas ir turi buti didesnis uz 0.</value></data>
+  <data name="Kita" xml:space="preserve"><value>Kita</value></data>
+  <data name="Kitas" xml:space="preserve"><value>Kitas</value></data>
+  <data name="Kitas vykdymas" xml:space="preserve"><value>Kitas vykdymas</value></data>
+  <data name="Klientas" xml:space="preserve"><value>Klientas</value></data>
+  <data name="Klientas bus pasirenkamas tik is aktyviu STAT3 irasu:" xml:space="preserve"><value>Klientas bus pasirenkamas tik is aktyviu STAT3 irasu:</value></data>
+  <data name="Kliento derinimo email" xml:space="preserve"><value>Kliento derinimo email</value></data>
+  <data name="Kliento informacija" xml:space="preserve"><value>Kliento informacija</value></data>
+  <data name="Kliento paieska" xml:space="preserve"><value>Kliento paieska</value></data>
+  <data name="Klientu derinimai" xml:space="preserve"><value>Klientu derinimai</value></data>
+  <data name="Klientu info" xml:space="preserve"><value>Klientu info</value></data>
+  <data name="Klientu info uzklausa vykdoma" xml:space="preserve"><value>Klientu info uzklausa vykdoma</value></data>
+  <data name="Klientu pagal nurodyta paieska nerasta." xml:space="preserve"><value>Klientu pagal nurodyta paieska nerasta.</value></data>
+  <data name="Klientu suderinimu konfiguracija" xml:space="preserve"><value>Klientu suderinimu konfiguracija</value></data>
+  <data name="Klientu suderinimu registras." xml:space="preserve"><value>Klientu suderinimu registras.</value></data>
+  <data name="Kodas" xml:space="preserve"><value>Kodas</value></data>
+  <data name="Kodu dar neprideta." xml:space="preserve"><value>Kodu dar neprideta.</value></data>
+  <data name="Kontaktai" xml:space="preserve"><value>Kontaktai</value></data>
+  <data name="Kontaktas" xml:space="preserve"><value>Kontaktas</value></data>
+  <data name="Koreguoti punkta" xml:space="preserve"><value>Koreguoti punkta</value></data>
+  <data name="Kurti KPI siuntimo taska" xml:space="preserve"><value>Kurti KPI siuntimo taska</value></data>
+  <data name="Laikas" xml:space="preserve"><value>Laikas</value></data>
+  <data name="Laiskas ruosiamas" xml:space="preserve"><value>Laiskas ruosiamas</value></data>
+  <data name="Laisko duomenys" xml:space="preserve"><value>Laisko duomenys</value></data>
+  <data name="Laisko lentele" xml:space="preserve"><value>Laisko lentele</value></data>
+  <data name="Laisku ruosimas, subject formavimas, HTML sablonas ir laikinas issiustu laisku archyvas." xml:space="preserve"><value>Laisku ruosimas, subject formavimas, HTML sablonas ir laikinas issiustu laisku archyvas.</value></data>
+  <data name="Language" xml:space="preserve"><value>Kalba</value></data>
+  <data name="Last day of month" xml:space="preserve"><value>Paskutinė mėnesio diena</value></data>
+  <data name="Lenteles pavadinimas laiske" xml:space="preserve"><value>Lenteles pavadinimas laiske</value></data>
+  <data name="Lines" xml:space="preserve"><value>Eilutės</value></data>
+  <data name="Log" xml:space="preserve"><value>Žurnalas</value></data>
+  <data name="Log ID" xml:space="preserve"><value>Žurnalo ID</value></data>
+  <data name="Mail" xml:space="preserve"><value>Paštas</value></data>
+  <data name="Manual" xml:space="preserve"><value>Rankinis</value></data>
+  <data name="Mar" xml:space="preserve"><value>Kov</value></data>
+  <data name="May" xml:space="preserve"><value>Geg</value></data>
+  <data name="Min. galiojimas" xml:space="preserve"><value>Min. galiojimas</value></data>
+  <data name="Min. poreikio data" xml:space="preserve"><value>Min. poreikio data</value></data>
+  <data name="Minimalus galiojimas" xml:space="preserve"><value>Minimalus galiojimas</value></data>
+  <data name="Minimalus galiojimas negali buti ankstesnis uz poreikio data." xml:space="preserve"><value>Minimalus galiojimas negali buti ankstesnis uz poreikio data.</value></data>
+  <data name="Monday" xml:space="preserve"><value>Pirmadienis</value></data>
+  <data name="Monthly" xml:space="preserve"><value>Kas mėnesį</value></data>
+  <data name="Months:" xml:space="preserve"><value>Mėnesiai:</value></data>
+  <data name="Naujas failas" xml:space="preserve"><value>Naujas failas</value></data>
+  <data name="Naujas irasas" xml:space="preserve"><value>Naujas irasas</value></data>
+  <data name="Naujas poreikis" xml:space="preserve"><value>Naujas poreikis</value></data>
+  <data name="Naujausias uzbaigimas" xml:space="preserve"><value>Naujausias uzbaigimas</value></data>
+  <data name="Naujo sukurimas / koregavimas" xml:space="preserve"><value>Naujo sukurimas / koregavimas</value></data>
+  <data name="Nera PROMO FORECAST irasu, kuriu BUY_START yra siandien arba veliau." xml:space="preserve"><value>Nera PROMO FORECAST irasu, kuriu BUY_START yra siandien arba veliau.</value></data>
+  <data name="Nera PROMO FORECAST produktu, kuriu akcijos laikotarpis tesiasi arba prasideda nuo siandien." xml:space="preserve"><value>Nera PROMO FORECAST produktu, kuriu akcijos laikotarpis tesiasi arba prasideda nuo siandien.</value></data>
+  <data name="Nera ateinanciu dienu PROMO FORECAST QTY srauto." xml:space="preserve"><value>Nera ateinanciu dienu PROMO FORECAST QTY srauto.</value></data>
+  <data name="Neturi FINISH failo" xml:space="preserve"><value>Neturi FINISH failo</value></data>
+  <data name="No end date" xml:space="preserve"><value>Be pabaigos datos</value></data>
+  <data name="Norint pakeisti prieda kitu: istrinkite sena prieda ir prikabinkite nauja faila." xml:space="preserve"><value>Norint pakeisti prieda kitu: istrinkite sena prieda ir prikabinkite nauja faila.</value></data>
+  <data name="Nov" xml:space="preserve"><value>Lap</value></data>
+  <data name="Numatytas SQL serveris" xml:space="preserve"><value>Numatytas SQL serveris</value></data>
+  <data name="Nuo" xml:space="preserve"><value>Nuo</value></data>
+  <data name="ORACUL uzklausa vykdoma" xml:space="preserve"><value>ORACUL uzklausa vykdoma</value></data>
+  <data name="OUTBOUND" xml:space="preserve"><value>IŠDAVIMAS</value></data>
+  <data name="Oct" xml:space="preserve"><value>Spa</value></data>
+  <data name="One time" xml:space="preserve"><value>Vieną kartą</value></data>
+  <data name="Operatoriai" xml:space="preserve"><value>Operatoriai</value></data>
+  <data name="Operatorius" xml:space="preserve"><value>Operatorius</value></data>
+  <data name="Outlook / el. pasto punktu dar nera." xml:space="preserve"><value>Outlook / el. pasto punktu dar nera.</value></data>
+  <data name="PACK" xml:space="preserve"><value>PAKAVIMAS</value></data>
+  <data name="PCC_PICK_DELAY metrika" xml:space="preserve"><value>PCC_PICK_DELAY metrika</value></data>
+  <data name="PROMO ANALYSIS eiluciu kiekis" xml:space="preserve"><value>PROMO ANALYSIS eiluciu kiekis</value></data>
+  <data name="PROMO ANALYSIS rodikliai" xml:space="preserve"><value>PROMO ANALYSIS rodikliai</value></data>
+  <data name="PROMO FORECAST audit log" xml:space="preserve"><value>PROMO FORECAST audito žurnalas</value></data>
+  <data name="PROMO FORECAST eiluciu kiekis" xml:space="preserve"><value>PROMO FORECAST eiluciu kiekis</value></data>
+  <data name="PROMO FORECAST importas" xml:space="preserve"><value>PROMO FORECAST importas</value></data>
+  <data name="PROMO FORECAST irasai" xml:space="preserve"><value>PROMO FORECAST irasai</value></data>
+  <data name="PROMO FORECAST irasu dar nera." xml:space="preserve"><value>PROMO FORECAST irasu dar nera.</value></data>
+  <data name="PROMO FORECAST pjuviai" xml:space="preserve"><value>PROMO FORECAST pjuviai</value></data>
+  <data name="PROMO by BUY from TODAY" xml:space="preserve"><value>PROMO pagal pirkimus nuo šiandien</value></data>
+  <data name="PROMO eilutes" xml:space="preserve"><value>PROMO eilutes</value></data>
+  <data name="PROMO from TODAY (PRODUCTS view)" xml:space="preserve"><value>PROMO nuo šiandien (prekės)</value></data>
+  <data name="Paaiskinimas" xml:space="preserve"><value>Paaiskinimas</value></data>
+  <data name="Paaiskinimas / susitarimas" xml:space="preserve"><value>Paaiskinimas / susitarimas</value></data>
+  <data name="Pagal poreiki" xml:space="preserve"><value>Pagal poreiki</value></data>
+  <data name="Pagal sutarti" xml:space="preserve"><value>Pagal sutarti</value></data>
+  <data name="Pagal sutarties prieda" xml:space="preserve"><value>Pagal sutarties prieda</value></data>
+  <data name="Paieska" xml:space="preserve"><value>Paieska</value></data>
+  <data name="Paieska pagal FIRMID is STAT3 klientu informacijos." xml:space="preserve"><value>Paieska pagal FIRMID is STAT3 klientu informacijos.</value></data>
+  <data name="Pakeisti pranesimo poreiki" xml:space="preserve"><value>Pakeisti pranesimo poreiki</value></data>
+  <data name="Pakeitimu istorija" xml:space="preserve"><value>Pakeitimu istorija</value></data>
+  <data name="Pakeitimu istorija bus prijungta prie DIKE log lentos." xml:space="preserve"><value>Pakeitimu istorija bus prijungta prie DIKE log lentos.</value></data>
+  <data name="Palaukite, SQL skaiciavimas dar tesiasi. Neuzdarykite puslapio ir nespauskite mygtuko dar karta." xml:space="preserve"><value>Palaukite, SQL skaiciavimas dar tesiasi. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.</value></data>
+  <data name="Palaukite, veiksmas vykdomas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta." xml:space="preserve"><value>Palaukite, veiksmas vykdomas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.</value></data>
+  <data name="Paleista" xml:space="preserve"><value>Paleista</value></data>
+  <data name="Panaikinti" xml:space="preserve"><value>Panaikinti</value></data>
+  <data name="Papildomi punktai ir laiskai" xml:space="preserve"><value>Papildomi punktai ir laiskai</value></data>
+  <data name="Papildomi punkto failai" xml:space="preserve"><value>Papildomi punkto failai</value></data>
+  <data name="Papildomu punktu dar nera." xml:space="preserve"><value>Papildomu punktu dar nera.</value></data>
+  <data name="Parametrai" xml:space="preserve"><value>Parametrai</value></data>
+  <data name="Parent" xml:space="preserve"><value>Tėvinis klausimas</value></data>
+  <data name="Parsisiusti" xml:space="preserve"><value>Parsisiusti</value></data>
+  <data name="Pasirinkite klienta" xml:space="preserve"><value>Pasirinkite klienta</value></data>
+  <data name="Pasirinkta diena" xml:space="preserve"><value>Pasirinkta diena</value></data>
+  <data name="Pasirinktai dienai KPI irasu nerasta." xml:space="preserve"><value>Pasirinktai dienai KPI irasu nerasta.</value></data>
+  <data name="Pasirinktai dienai irasu nerasta." xml:space="preserve"><value>Pasirinktai dienai irasu nerasta.</value></data>
+  <data name="Pasirinktas" xml:space="preserve"><value>Pasirinktas</value></data>
+  <data name="Pasirinkti" xml:space="preserve"><value>Pasirinkti</value></data>
+  <data name="Pasirinkti data" xml:space="preserve"><value>Pasirinkti data</value></data>
+  <data name="Pasirinkti galiojimo data kalendoriuje" xml:space="preserve"><value>Pasirinkti galiojimo data kalendoriuje</value></data>
+  <data name="Pasirinkti menesi" xml:space="preserve"><value>Pasirinkti menesi</value></data>
+  <data name="Pasirinkti pabaigos dat�" xml:space="preserve"><value>Pasirinkti pabaigos datą</value></data>
+  <data name="Pasirinkti pirmo derinimo menesi" xml:space="preserve"><value>Pasirinkti pirmo derinimo menesi</value></data>
+  <data name="Pasirinkti start dat�" xml:space="preserve"><value>Pasirinkti pradžios datą</value></data>
+  <data name="Pasirinktiniai filtrai" xml:space="preserve"><value>Pasirinktiniai filtrai</value></data>
+  <data name="Pask. FINISH" xml:space="preserve"><value>Pask. FINISH</value></data>
+  <data name="Paskutiniai irasai" xml:space="preserve"><value>Paskutiniai irasai</value></data>
+  <data name="Paskutinis laikotarpis" xml:space="preserve"><value>Paskutinis laikotarpis</value></data>
+  <data name="Paskutiniu 14 dienu PCC_PICK_DELAY duomenu nera." xml:space="preserve"><value>Paskutiniu 14 dienu PCC_PICK_DELAY duomenu nera.</value></data>
+  <data name="Pastaba" xml:space="preserve"><value>Pastaba</value></data>
+  <data name="Patvirtinti ir issaugoti" xml:space="preserve"><value>Patvirtinti ir issaugoti</value></data>
+  <data name="Patvirtinti trynima" xml:space="preserve"><value>Patvirtinti trynima</value></data>
+  <data name="Patvirtinus bus istrintos tik dabar aktyvius filtrus atitinkancios eilutes." xml:space="preserve"><value>Patvirtinus bus istrintos tik dabar aktyvius filtrus atitinkancios eilutes.</value></data>
+  <data name="Pavadinimas" xml:space="preserve"><value>Pavadinimas</value></data>
+  <data name="Pavadinimas, paaiskinimas, raktazodziai, autorius, failas" xml:space="preserve"><value>Pavadinimas, paaiskinimas, raktazodziai, autorius, failas</value></data>
+  <data name="Pavadinimas, trumpinys arba imones kodas" xml:space="preserve"><value>Pavadinimas, trumpinys arba imones kodas</value></data>
+  <data name="Perkrauti QVD" xml:space="preserve"><value>Perkrauti QVD</value></data>
+  <data name="Perziureti" xml:space="preserve"><value>Perziureti</value></data>
+  <data name="Pirmas derinimas" xml:space="preserve"><value>Pirmas derinimas</value></data>
+  <data name="Pirmo derinimo laikotarpis formatu YYYYMM." xml:space="preserve"><value>Pirmo derinimo laikotarpis formatu YYYYMM.</value></data>
+  <data name="Pirmo derinimo menesio kalendorius" xml:space="preserve"><value>Pirmo derinimo menesio kalendorius</value></data>
+  <data name="Poreikio data" xml:space="preserve"><value>Poreikio data</value></data>
+  <data name="Pranesimai apie termino pabaiga" xml:space="preserve"><value>Pranesimai apie termino pabaiga</value></data>
+  <data name="Pranesimo budas" xml:space="preserve"><value>Pranesimo budas</value></data>
+  <data name="Pranesimu poreikiu dar nera." xml:space="preserve"><value>Pranesimu poreikiu dar nera.</value></data>
+  <data name="Pranesti pries dienu" xml:space="preserve"><value>Pranesti pries dienu</value></data>
+  <data name="Preview" xml:space="preserve"><value>Perziura</value></data>
+  <data name="Prideti" xml:space="preserve"><value>Prideti</value></data>
+  <data name="Prideti SQL saltini" xml:space="preserve"><value>Prideti SQL saltini</value></data>
+  <data name="Prideti adresata" xml:space="preserve"><value>Prideti adresata</value></data>
+  <data name="Prideti arba pakeisti prieda" xml:space="preserve"><value>Prideti arba pakeisti prieda</value></data>
+  <data name="Prideti filtra" xml:space="preserve"><value>Prideti filtra</value></data>
+  <data name="Prideti grafika" xml:space="preserve"><value>Prideti grafika</value></data>
+  <data name="Prideti punkta" xml:space="preserve"><value>Prideti punkta</value></data>
+  <data name="Prideti saltini" xml:space="preserve"><value>Prideti saltini</value></data>
+  <data name="Priedas, punktas arba papildomas tekstas" xml:space="preserve"><value>Priedas, punktas arba papildomas tekstas</value></data>
+  <data name="Priedu dar nera." xml:space="preserve"><value>Priedu dar nera.</value></data>
+  <data name="Prieiga" xml:space="preserve"><value>Prieiga</value></data>
+  <data name="Prieiga nesuteikta" xml:space="preserve"><value>Prieiga nesuteikta</value></data>
+  <data name="Prikabinti" xml:space="preserve"><value>Prikabinti</value></data>
+  <data name="Prikabinti nauja prieda" xml:space="preserve"><value>Prikabinti nauja prieda</value></data>
+  <data name='Priminimams reikia uzpildyti susitarimo data "Galioja iki".' xml:space="preserve"><value>Priminimams reikia uzpildyti susitarimo data "Galioja iki".</value></data>
+  <data name="Prisegti CSV" xml:space="preserve"><value>Prisegti CSV</value></data>
+  <data name="Prisegti Excel" xml:space="preserve"><value>Prisegti Excel</value></data>
+  <data name="Prisegti failai" xml:space="preserve"><value>Prisegti failai</value></data>
+  <data name="Prisijungimas prie HUB" xml:space="preserve"><value>Prisijungimas prie HUB</value></data>
+  <data name="Prisijungimo vardas" xml:space="preserve"><value>Prisijungimo vardas</value></data>
+  <data name="Privalomas filtras" xml:space="preserve"><value>Privalomas filtras</value></data>
+  <data name="Procedura" xml:space="preserve"><value>Procedura</value></data>
+  <data name="Procesas" xml:space="preserve"><value>Procesas</value></data>
+  <data name="Procesas / tema" xml:space="preserve"><value>Procesas / tema</value></data>
+  <data name="Punkto aprasas" xml:space="preserve"><value>Punkto aprasas</value></data>
+  <data name="Punkto failai" xml:space="preserve"><value>Punkto failai</value></data>
+  <data name="Punkto pavadinimas" xml:space="preserve"><value>Punkto pavadinimas</value></data>
+  <data name="Pvz. nauja versija vietoje seno priedo" xml:space="preserve"><value>Pvz. nauja versija vietoje seno priedo</value></data>
+  <data name="QV procesu paskutiniame serverio snapshot'e nerasta." xml:space="preserve"><value>QV procesu paskutiniame serverio snapshot'e nerasta.</value></data>
+  <data name="QVD failas" xml:space="preserve"><value>QVD failas</value></data>
+  <data name="QVD failu sukonfiguruotuose aplankuose nerasta." xml:space="preserve"><value>QVD failu sukonfiguruotuose aplankuose nerasta.</value></data>
+  <data name="QVD preview" xml:space="preserve"><value>QVD peržiūra</value></data>
+  <data name="QVD reader" xml:space="preserve"><value>QVD skaitytuvas</value></data>
+  <data name="QVD traukiklis" xml:space="preserve"><value>QVD traukiklis</value></data>
+  <data name="UiHeading.Register" xml:space="preserve"><value>REGISTRAS</value></data>
+  <data name="Rakinimas" xml:space="preserve"><value>Rakinimas</value></data>
+  <data name="Raktas" xml:space="preserve"><value>Raktas</value></data>
+  <data name="Raktazodziai" xml:space="preserve"><value>Raktazodziai</value></data>
+  <data name="Recur every:" xml:space="preserve"><value>Kartoti kas:</value></data>
+  <data name="Redaguojamas KPI siuntimo taskas" xml:space="preserve"><value>Redaguojamas KPI siuntimo taskas</value></data>
+  <data name="Redaguoti" xml:space="preserve"><value>Redaguoti</value></data>
+  <data name="Redaguoti SQL saltini" xml:space="preserve"><value>Redaguoti SQL saltini</value></data>
+  <data name="Registras" xml:space="preserve"><value>Registras</value></data>
+  <data name="Reiksme" xml:space="preserve"><value>Reiksme</value></data>
+  <data name="Rengiama perziura..." xml:space="preserve"><value>Rengiama perziura...</value></data>
+  <data name="Request ID:" xml:space="preserve"><value>Užklausos ID:</value></data>
+  <data name="Re�imas" xml:space="preserve"><value>Režimas</value></data>
+  <data name="Rodoma poreikiu" xml:space="preserve"><value>Rodoma poreikiu</value></data>
+  <data name="Rodyti" xml:space="preserve"><value>Rodyti</value></data>
+  <data name="Rodyti HTML lentele" xml:space="preserve"><value>Rodyti HTML lentele</value></data>
+  <data name="Role" xml:space="preserve"><value>Rolė</value></data>
+  <data name="Ruosiamas" xml:space="preserve"><value>Ruosiamas</value></data>
+  <data name="Ruosiamas CSV..." xml:space="preserve"><value>Ruosiamas CSV...</value></data>
+  <data name="Ruosiamas Excel..." xml:space="preserve"><value>Ruosiamas Excel...</value></data>
+  <data name="SESHAT irasai" xml:space="preserve"><value>SESHAT irasai</value></data>
+  <data name="SESHAT teises suteikiamos per BS_APP_ACCESS pagal sali ir role." xml:space="preserve"><value>SESHAT teises suteikiamos per BS_APP_ACCESS pagal sali ir role.</value></data>
+  <data name="SMS kodas issiustas" xml:space="preserve"><value>SMS kodas issiustas</value></data>
+  <data name="SMS patvirtinimo kodas" xml:space="preserve"><value>SMS patvirtinimo kodas</value></data>
+  <data name="SQL / file / SP" xml:space="preserve"><value>SQL / failas / SP</value></data>
+  <data name="SQL duomenys veliau bus naudojami analizems, KPI rodikliams, akciju poreikiu formavimui ir palyginimams su kitomis duomenu bazemis." xml:space="preserve"><value>SQL duomenys veliau bus naudojami analizems, KPI rodikliams, akciju poreikiu formavimui ir palyginimams su kitomis duomenu bazemis.</value></data>
+  <data name="SQL failas" xml:space="preserve"><value>SQL failas</value></data>
+  <data name="SQL failo kelias" xml:space="preserve"><value>SQL failo kelias</value></data>
+  <data name="SQL log irasu kol kas nera arba lentele dar nesukurta." xml:space="preserve"><value>SQL log irasu kol kas nera arba lentele dar nesukurta.</value></data>
+  <data name="SQL metrikos" xml:space="preserve"><value>SQL metrikos</value></data>
+  <data name="SQL select / procedura" xml:space="preserve"><value>SQL select / procedura</value></data>
+  <data name="SQL serveris" xml:space="preserve"><value>SQL serveris</value></data>
+  <data name="SQL tekstas" xml:space="preserve"><value>SQL tekstas</value></data>
+  <data name="START be FINISH" xml:space="preserve"><value>START be FINISH</value></data>
+  <data name="START pagrindu rasti darbai" xml:space="preserve"><value>START pagrindu rasti darbai</value></data>
+  <data name="STAT3 klientas pagal OWNER.ID." xml:space="preserve"><value>STAT3 klientas pagal OWNER.ID.</value></data>
+  <data name="STAT3 klientu ir poziciju informacija." xml:space="preserve"><value>STAT3 klientu ir poziciju informacija.</value></data>
+  <data name="STORAGE" xml:space="preserve"><value>SANDĖLIAVIMAS</value></data>
+  <data name="Sablonas" xml:space="preserve"><value>Sablonas</value></data>
+  <data name="Salis" xml:space="preserve"><value>Salis</value></data>
+  <data name="Saltiniai" xml:space="preserve"><value>Saltiniai</value></data>
+  <data name="Saltinis" xml:space="preserve"><value>Saltinis</value></data>
+  <data name="Salys" xml:space="preserve"><value>Salys</value></data>
+  <data name="Santrauka" xml:space="preserve"><value>Santrauka</value></data>
+  <data name="Saturday" xml:space="preserve"><value>Šeštadienis</value></data>
+  <data name="Send Mail File" xml:space="preserve"><value>Siųsti pašto failą</value></data>
+  <data name="Senderis" xml:space="preserve"><value>Senderis</value></data>
+  <data name="Sep" xml:space="preserve"><value>Rgs</value></data>
+  <data name="Serverio KPI" xml:space="preserve"><value>Serverio KPI</value></data>
+  <data name="Serverio KPI lentelese dar nerasta irasu." xml:space="preserve"><value>Serverio KPI lentelese dar nerasta irasu.</value></data>
+  <data name="Serverio backup laikas nustatytas 22:30. Backup trunka apie 20-25 minutes, todel tuo metu nedekite dideliu skaiciavimu." xml:space="preserve"><value>Serverio backup laikas nustatytas 22:30. Backup trunka apie 20-25 minutes, todel tuo metu nedekite dideliu skaiciavimu.</value></data>
+  <data name="Serverio rodikliai" xml:space="preserve"><value>Serverio rodikliai</value></data>
+  <data name="Serverio sveikatos langas ir TASK_STATUS katalogu stebesena pagal START, RUNING ir FINISH irasus." xml:space="preserve"><value>Serverio sveikatos langas ir TASK_STATUS katalogu stebesena pagal START, RUNING ir FINISH irasus.</value></data>
+  <data name="Serveris" xml:space="preserve"><value>Serveris</value></data>
+  <data name="Serveris, procesai, raportai" xml:space="preserve"><value>Serveris, procesai, raportai</value></data>
+  <data name="Serveryje prisijungimas atliekamas su Windows vartotoju. Jei Windows vartotojas neatpazintas, prisijunkite su savo vartotojo vardu be domeno ir slaptazodziu." xml:space="preserve"><value>Serveryje prisijungimas atliekamas su Windows vartotoju. Jei Windows vartotojas neatpazintas, prisijunkite su savo vartotojo vardu be domeno ir slaptazodziu.</value></data>
+  <data name="Siai APIS krypciai dar nera SQL failu." xml:space="preserve"><value>Siai APIS krypciai dar nera SQL failu.</value></data>
+  <data name="Siam Windows vartotojui SQL teisiu procedura nesuteike KAIROS aplikacijos prieigos." xml:space="preserve"><value>Siam Windows vartotojui SQL teisiu procedura nesuteike KAIROS aplikacijos prieigos.</value></data>
+  <data name="Siandien" xml:space="preserve"><value>Siandien</value></data>
+  <data name="Sie laukai nekraunami i PROMO FORECAST lentele, nes yra pertekliniai arba gali buti prijungti is kitu SQL lenteliu pagal turimus raktus." xml:space="preserve"><value>Sie laukai nekraunami i PROMO FORECAST lentele, nes yra pertekliniai arba gali buti prijungti is kitu SQL lenteliu pagal turimus raktus.</value></data>
+  <data name="Siuntimo grafikas" xml:space="preserve"><value>Siuntimo grafikas</value></data>
+  <data name="Siuntimo rezimas" xml:space="preserve"><value>Siuntimo rezimas</value></data>
+  <data name="Siusti koda" xml:space="preserve"><value>Siusti koda</value></data>
+  <data name="Siusti koda dar karta" xml:space="preserve"><value>Siusti koda dar karta</value></data>
+  <data name="Siusti testini" xml:space="preserve"><value>Siusti testini</value></data>
+  <data name="Skaiciuojasi" xml:space="preserve"><value>Skaiciuojasi</value></data>
+  <data name="Slaptazodis" xml:space="preserve"><value>Slaptazodis</value></data>
+  <data name="Specialiu darbu poreikiu registravimas." xml:space="preserve"><value>Specialiu darbu poreikiu registravimas.</value></data>
+  <data name="Srautas pagal kuri skaiciuosime" xml:space="preserve"><value>Srautas pagal kuri skaiciuosime</value></data>
+  <data name="Start hour" xml:space="preserve"><value>Pradžios valanda</value></data>
+  <data name="Start minute" xml:space="preserve"><value>Pradžios minutė</value></data>
+  <data name="Start:" xml:space="preserve"><value>Pradžia:</value></data>
+  <data name="Statistinio serverio darbu busenos." xml:space="preserve"><value>Statistinio serverio darbu busenos.</value></data>
+  <data name="Status" xml:space="preserve"><value>Busena</value></data>
+  <data name="Statusas" xml:space="preserve"><value>Statusas</value></data>
+  <data name="Stored procedure" xml:space="preserve"><value>Saugoma procedūra</value></data>
+  <data name="Stulpeliai" xml:space="preserve"><value>Stulpeliai</value></data>
+  <data name="Stulpelis" xml:space="preserve"><value>Stulpelis</value></data>
+  <data name="Stulpeliu konverteris" xml:space="preserve"><value>Stulpeliu konverteris</value></data>
+  <data name="Su FINISH irasu" xml:space="preserve"><value>Su FINISH irasu</value></data>
+  <data name="Subject" xml:space="preserve"><value>Tema</value></data>
+  <data name="Subject sablonas" xml:space="preserve"><value>Subject sablonas</value></data>
+  <data name="Suderintas likutis" xml:space="preserve"><value>Suderintas likutis</value></data>
+  <data name="Sukurta" xml:space="preserve"><value>Sukurta</value></data>
+  <data name="Sukurti kaip nauja" xml:space="preserve"><value>Sukurti kaip nauja</value></data>
+  <data name="Sunday" xml:space="preserve"><value>Sekmadienis</value></data>
+  <data name="Susitarimo priedai" xml:space="preserve"><value>Susitarimo priedai</value></data>
+  <data name="Susitarimo punktai" xml:space="preserve"><value>Susitarimo punktai</value></data>
+  <data name="Susitarimu ir dokumentacijos registras." xml:space="preserve"><value>Susitarimu ir dokumentacijos registras.</value></data>
+  <data name="Sutartas nurasymu % pagal kuri skaiciuosim nurasoma kieki" xml:space="preserve"><value>Sutartas nurasymu % pagal kuri skaiciuosim nurasoma kieki</value></data>
+  <data name="Sutarties numeris arba pavadinimas" xml:space="preserve"><value>Sutarties numeris arba pavadinimas</value></data>
+  <data name="Symbols" xml:space="preserve"><value>Simboliai</value></data>
+  <data name="TARGET" xml:space="preserve"><value>TIKSLAS</value></data>
+  <data name="Tabas skirtas atvaizduoti is PROMO FORECAST ir kitu SQL saltiniu skaiciuojamus rodiklius." xml:space="preserve"><value>Tabas skirtas atvaizduoti is PROMO FORECAST ir kitu SQL saltiniu skaiciuojamus rodiklius.</value></data>
+  <data name="Tabas skirtas is naudojamu Excel failu ikelti PROMO FORECAST duomenis i SQL serveri." xml:space="preserve"><value>Tabas skirtas is naudojamu Excel failu ikelti PROMO FORECAST duomenis i SQL serveri.</value></data>
+  <data name="Tabas skirtas vienetiniams specialiu darbu poreikiams registruoti, kai prekei reikia papildomo veiksmo ar atskiro kiekio planavimo." xml:space="preserve"><value>Tabas skirtas vienetiniams specialiu darbu poreikiams registruoti, kai prekei reikia papildomo veiksmo ar atskiro kiekio planavimo.</value></data>
+  <data name="Task Scheduler" xml:space="preserve"><value>Užduočių planuoklis</value></data>
+  <data name="Task will run one time at selected start date and time." xml:space="preserve"><value>Užduotis bus vykdoma vieną kartą pasirinktą dieną ir laiku.</value></data>
+  <data name="Tekstas" xml:space="preserve"><value>Tekstas</value></data>
+  <data name="Template" xml:space="preserve"><value>Template</value></data>
+  <data name="Thursday" xml:space="preserve"><value>Ketvirtadienis</value></data>
+  <data name="Tik baigti darbai" xml:space="preserve"><value>Tik baigti darbai</value></data>
+  <data name="Tik rankinis paleidimas arba testinis siuntimas. Automatinis laikas nebus skai�iuojamas." xml:space="preserve"><value>Tik rankinis paleidimas arba testinis siuntimas. Automatinis laikas nebus skaičiuojamas.</value></data>
+  <data name="Tiksliai 7 simboliai: raides A-Z ir skaiciai 0-9." xml:space="preserve"><value>Tiksliai 7 simboliai: raides A-Z ir skaiciai 0-9.</value></data>
+  <data name="Tinklas / klientas" xml:space="preserve"><value>Tinklas / klientas</value></data>
+  <data name="Tinklas / klientas ir paaiskinimas yra privalomi." xml:space="preserve"><value>Tinklas / klientas ir paaiskinimas yra privalomi.</value></data>
+  <data name="Tipas" xml:space="preserve"><value>Tipas</value></data>
+  <data name="Top 10" xml:space="preserve"><value>Pirmos 10</value></data>
+  <data name="Top 100" xml:space="preserve"><value>Pirmos 100</value></data>
+  <data name="Top CPU procesai" xml:space="preserve"><value>Top CPU procesai</value></data>
+  <data name="Top RAM procesai" xml:space="preserve"><value>Top RAM procesai</value></data>
+  <data name="Triggeris" xml:space="preserve"><value>Triggeris</value></data>
+  <data name="Trinti" xml:space="preserve"><value>Trinti</value></data>
+  <data name="Trinti pagal filtra" xml:space="preserve"><value>Trinti pagal filtra</value></data>
+  <data name="Trukme" xml:space="preserve"><value>Trukme</value></data>
+  <data name="Tuesday" xml:space="preserve"><value>Antradienis</value></data>
+  <data name="Turi FINISH faila" xml:space="preserve"><value>Turi FINISH faila</value></data>
+  <data name="Turite tik perziuros teise." xml:space="preserve"><value>Turite tik perziuros teise.</value></data>
+  <data name="Use this page to detail your site's privacy policy." xml:space="preserve"><value>Šiame puslapyje pateikiama svetainės privatumo politika.</value></data>
+  <data name="Uzdaryti" xml:space="preserve"><value>Uzdaryti</value></data>
+  <data name="Uzklausa vykdoma" xml:space="preserve"><value>Uzklausa vykdoma</value></data>
+  <data name="Uzkrauti taska" xml:space="preserve"><value>Uzkrauti taska</value></data>
+  <data name="Uzpildykite duomenis ir spauskite perziura." xml:space="preserve"><value>Uzpildykite duomenis ir spauskite perziura.</value></data>
+  <data name="Uzpildzius forma pirma atsisiuskite koda. Kodas galios 10 min.; tik ji ivedus galima issaugoti pranesima." xml:space="preserve"><value>Uzpildzius forma pirma atsisiuskite koda. Kodas galios 10 min.; tik ji ivedus galima issaugoti pranesima.</value></data>
+  <data name="Uzrakinta" xml:space="preserve"><value>Uzrakinta</value></data>
+  <data name="Uzrakinti" xml:space="preserve"><value>Uzrakinti</value></data>
+  <data name="VN NOT PICKED PCC FLOWS KPI vaizdai" xml:space="preserve"><value>VN NOT PICKED PCC FLOWS KPI vaizdai</value></data>
+  <data name="Valandos" xml:space="preserve"><value>Valandos</value></data>
+  <data name="Valyti" xml:space="preserve"><value>Valyti</value></data>
+  <data name="Vardas / ERP" xml:space="preserve"><value>Vardas / ERP</value></data>
+  <data name="Vardas / grupe" xml:space="preserve"><value>Vardas / grupe</value></data>
+  <data name="Vartotojas" xml:space="preserve"><value>Vartotojas</value></data>
+  <data name="Veiksmai" xml:space="preserve"><value>Veiksmai</value></data>
+  <data name="Veiksmas" xml:space="preserve"><value>Veiksmas</value></data>
+  <data name="Vid. trukme" xml:space="preserve"><value>Vid. trukme</value></data>
+  <data name="Vidutine trukme" xml:space="preserve"><value>Vidutine trukme</value></data>
+  <data name="Visi" xml:space="preserve"><value>Visi</value></data>
+  <data name="Visi QV procesai" xml:space="preserve"><value>Visi QV procesai</value></data>
+  <data name="Viso triggeriu" xml:space="preserve"><value>Viso triggeriu</value></data>
+  <data name="Vykdoma..." xml:space="preserve"><value>Vykdoma...</value></data>
+  <data name="Vyksta" xml:space="preserve"><value>Vyksta</value></data>
+  <data name="WAREHOUSE KPI vaizdai" xml:space="preserve"><value>WAREHOUSE KPI vaizdai</value></data>
+  <data name="Wednesday" xml:space="preserve"><value>Trečiadienis</value></data>
+  <data name="Weekly" xml:space="preserve"><value>Kas savaitę</value></data>
+  <data name="days" xml:space="preserve"><value>dienas</value></data>
+  <data name="pertekliniai ignoruojami" xml:space="preserve"><value>pertekliniai ignoruojami</value></data>
+  <data name="pvz. 10 arba 10.5" xml:space="preserve"><value>pvz. 10 arba 10.5</value></data>
+  <data name="pvz. 12345 arba 12345, 67890" xml:space="preserve"><value>pvz. 12345 arba 12345, 67890</value></data>
+  <data name="pvz. 50" xml:space="preserve"><value>pvz. 50</value></data>
+  <data name="pvz. DAILY_SALES_REPORT" xml:space="preserve"><value>pvz. DAILY_SALES_REPORT</value></data>
+  <data name="user&amp;#64;bls.lt arba +37061234567" xml:space="preserve"><value>user@bls.lt arba +37061234567</value></data>
+  <data name="weeks on:" xml:space="preserve"><value>savaites, dienomis:</value></data>
+  <data name="(ATLAS) Pajamavimo detales pagal savininka, firma ir pasirinkta pajamavimo data. Rezultate matomos invoice eilutes, prekes, LPN, galiojimo datos, lotai, kiekiai ir svoriai." xml:space="preserve"><value>(ATLAS) Pajamavimo detales pagal savininka, firma ir pasirinkta pajamavimo data. Rezultate matomos invoice eilutes, prekes, LPN, galiojimo datos, lotai, kiekiai ir svoriai.</value></data>
+  <data name="ALCO/ECO prekiu pajamavimo detales pagal parinkta diena" xml:space="preserve"><value>ALCO/ECO prekiu pajamavimo detales pagal parinkta diena</value></data>
+  <data name="Atrinkimo detales pagal savininka, parodo uzsakymus pagal transportavimo diena nuo siandien -7 dienu (be taros!!!)" xml:space="preserve"><value>Atrinkimo detales pagal savininka, parodo uzsakymus pagal transportavimo diena nuo siandien -7 dienu (be taros!!!)</value></data>
+  <data name="Bazines eilutes:" xml:space="preserve"><value>Bazines eilutes:</value></data>
+  <data name="Choose a valid date and time." xml:space="preserve"><value>Pasirinkite tinkamą datą ir laiką.</value></data>
+  <data name="Data:" xml:space="preserve"><value>Data:</value></data>
+  <data name="Date cannot be earlier than {0}." xml:space="preserve"><value>Data negali būti ankstesnė nei {0}.</value></data>
+  <data name="Date cannot be later than {0}." xml:space="preserve"><value>Data negali būti vėlesnė nei {0}.</value></data>
+  <data name="Detalus savininko problemu sarasas pagal laikotarpi. Rezultate matomi konkretus dokumentai, klientai, adresai, komentarai ir problemu tipai." xml:space="preserve"><value>Detalus savininko problemu sarasas pagal laikotarpi. Rezultate matomi konkretus dokumentai, klientai, adresai, komentarai ir problemu tipai.</value></data>
+  <data name="Dimensija:" xml:space="preserve"><value>Dimensija:</value></data>
+  <data name="ECO ir NSP supakuoto kiekio lokacija kur nugabentas produktas." xml:space="preserve"><value>ECO ir NSP supakuoto kiekio lokacija kur nugabentas produktas.</value></data>
+  <data name="ECO prekiu pajamavimo detales pagal parinkta diena" xml:space="preserve"><value>ECO prekiu pajamavimo detales pagal parinkta diena</value></data>
+  <data name="ECO prekiu pakavimo detales pagal parinkta diena" xml:space="preserve"><value>ECO prekiu pakavimo detales pagal parinkta diena</value></data>
+  <data name="El. laisku ruosimas, HTML sablonai ir issiuntimo auditas." xml:space="preserve"><value>El. laisku ruosimas, HTML sablonai ir issiuntimo auditas.</value></data>
+  <data name="Exportuoti stulpeliai" xml:space="preserve"><value>Exportuoti stulpeliai</value></data>
+  <data name="Exportuotos eilutes" xml:space="preserve"><value>Exportuotos eilutes</value></data>
+  <data name="Failas ruosiamas" xml:space="preserve"><value>Failas ruosiamas</value></data>
+  <data name="Formatas" xml:space="preserve"><value>Formatas</value></data>
+  <data name="INF_PREK kodas turi buti tiksliai 7 simboliu, sudarytas tik is raidziu A-Z ir skaiciu 0-9." xml:space="preserve"><value>INF_PREK kodas turi buti tiksliai 7 simboliu, sudarytas tik is raidziu A-Z ir skaiciu 0-9.</value></data>
+  <data name="Informaciniu rodikliu issiuntimo sistema." xml:space="preserve"><value>Informaciniu rodikliu issiuntimo sistema.</value></data>
+  <data name="Invoice irasu tarukimas pagal saskaitos data (be taros!!!)" xml:space="preserve"><value>Invoice irasu tarukimas pagal saskaitos data (be taros!!!)</value></data>
+  <data name="Klientu suderinimu, kontaktu ir sutartu salygu registras." xml:space="preserve"><value>Klientu suderinimu, kontaktu ir sutartu salygu registras.</value></data>
+  <data name="Laikotarpio pabaigos data i STAT3 uzklausa perduodama YYYY-MM-DD formatu." xml:space="preserve"><value>Laikotarpio pabaigos data i STAT3 uzklausa perduodama YYYY-MM-DD formatu.</value></data>
+  <data name="Laikotarpio pabaigos data i STAT3 uzklausa perduodama YYYYMMDD formatu." xml:space="preserve"><value>Laikotarpio pabaigos data i STAT3 uzklausa perduodama YYYYMMDD formatu.</value></data>
+  <data name="Laikotarpio pradzios data i STAT3 uzklausa perduodama YYYY-MM-DD formatu." xml:space="preserve"><value>Laikotarpio pradzios data i STAT3 uzklausa perduodama YYYY-MM-DD formatu.</value></data>
+  <data name="Laikotarpio pradzios data i STAT3 uzklausa perduodama YYYYMMDD formatu." xml:space="preserve"><value>Laikotarpio pradzios data i STAT3 uzklausa perduodama YYYYMMDD formatu.</value></data>
+  <data name="MNH'o oeracijos IN bei OUT (tik reiksmingos likucio balansui) uz praita diena" xml:space="preserve"><value>MNH'o oeracijos IN bei OUT (tik reiksmingos likucio balansui) uz praita diena</value></data>
+  <data name="MNH'o operacijos IN bei OUT (tik reiksmingos likucio balansui) pagal pasirinkta diena" xml:space="preserve"><value>MNH'o operacijos IN bei OUT (tik reiksmingos likucio balansui) pagal pasirinkta diena</value></data>
+  <data name="Orderiai pagal OWNER sekancios dienos o jei trauksim penktadieni tai ivertinamos dienos sestadienis, sekmadienis, pirmadienis (be taros!!!)" xml:space="preserve"><value>Orderiai pagal OWNER sekancios dienos o jei trauksim penktadieni tai ivertinamos dienos sestadienis, sekmadienis, pirmadienis (be taros!!!)</value></data>
+  <data name="Orderiai pagal sandeli sios dienos ir ateinanciu dienu KPI (be taros!!!)" xml:space="preserve"><value>Orderiai pagal sandeli sios dienos ir ateinanciu dienu KPI (be taros!!!)</value></data>
+  <data name="Orderiu ataskaita kuri parodo uzsakyta ir atrinkta kieki" xml:space="preserve"><value>Orderiu ataskaita kuri parodo uzsakyta ir atrinkta kieki</value></data>
+  <data name="PROMO FORECAST ateinanciu dienu srautas pagal BUY_START su totaliniu QTY kiekiu." xml:space="preserve"><value>PROMO FORECAST ateinanciu dienu srautas pagal BUY_START su totaliniu QTY kiekiu.</value></data>
+  <data name="PROMO FORECAST nuo siandienos produkto pjuviu: kiekiai, tinklu skaicius ir akciju laikotarpiai pagal INF_PREK." xml:space="preserve"><value>PROMO FORECAST nuo siandienos produkto pjuviu: kiekiai, tinklu skaicius ir akciju laikotarpiai pagal INF_PREK.</value></data>
+  <data name="PROMO FORECAST planuojamas pirkimas nuo siandienos pagal BUY_START." xml:space="preserve"><value>PROMO FORECAST planuojamas pirkimas nuo siandienos pagal BUY_START.</value></data>
+  <data name="Pabaigos data" xml:space="preserve"><value>Pabaigos data</value></data>
+  <data name="Pabaigos data (imtinai)" xml:space="preserve"><value>Pabaigos data (imtinai)</value></data>
+  <data name="Palaukite, skaiciavimas dar vykdomas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta." xml:space="preserve"><value>Palaukite, skaiciavimas dar vykdomas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.</value></data>
+  <data name="Papildomas dokumento tipo filtras." xml:space="preserve"><value>Papildomas dokumento tipo filtras.</value></data>
+  <data name="Paramai perduotu prekiu ataskaita pagal pasirinktas dienas" xml:space="preserve"><value>Paramai perduotu prekiu ataskaita pagal pasirinktas dienas</value></data>
+  <data name="Parodo orderius pagal transportavimo diena nuo siandien +1 tokius KPI kaip svoris, paletinis skaiciavimas bei uzsakyta tam tara" xml:space="preserve"><value>Parodo orderius pagal transportavimo diena nuo siandien +1 tokius KPI kaip svoris, paletinis skaiciavimas bei uzsakyta tam tara</value></data>
+  <data name="Periodas:" xml:space="preserve"><value>Periodas:</value></data>
+  <data name="Pradzios data" xml:space="preserve"><value>Pradzios data</value></data>
+  <data name="Pradzios data (imtinai)" xml:space="preserve"><value>Pradzios data (imtinai)</value></data>
+  <data name="Prekiu savininko kodas. Galima tiksliai SNX, LIKE fragmentas arba IN sarasas per kableli." xml:space="preserve"><value>Prekiu savininko kodas. Galima tiksliai SNX, LIKE fragmentas arba IN sarasas per kableli.</value></data>
+  <data name="ProblemBook'o problemines eilutes kur Department parinktas ne Owner tarukimas pagal saskaitos data (be taros!!!)" xml:space="preserve"><value>ProblemBook'o problemines eilutes kur Department parinktas ne Owner tarukimas pagal saskaitos data (be taros!!!)</value></data>
+  <data name="Produktu WBX informacija" xml:space="preserve"><value>Produktu WBX informacija</value></data>
+  <data name="Puslapis {0} / {1}" xml:space="preserve"><value>Puslapis {0} / {1}</value></data>
+  <data name="Reiksme:" xml:space="preserve"><value>Reiksme:</value></data>
+  <data name="Rodoma {0}-{1} is {2}" xml:space="preserve"><value>Rodoma {0}-{1} is {2}</value></data>
+  <data name="Ruosiamas {0} failas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta." xml:space="preserve"><value>Ruosiamas {0} failas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.</value></data>
+  <data name="Ruosiamas {0}..." xml:space="preserve"><value>Ruosiamas {0}...</value></data>
+  <data name="Salinti INF_PREK {0}" xml:space="preserve"><value>Salinti INF_PREK {0}</value></data>
+  <data name="Sandeliu DB nuimta 18:00" xml:space="preserve"><value>Sandeliu DB nuimta 18:00</value></data>
+  <data name="Sandeliu KPI pagal planuojama transportavimo data. Auto indikatoriu vaizdas APIS skiltyje Indikatoriai." xml:space="preserve"><value>Sandeliu KPI pagal planuojama transportavimo data. Auto indikatoriu vaizdas APIS skiltyje Indikatoriai.</value></data>
+  <data name="Savininko problemu KPI suvestine pagal pasirinkta laikotarpi. Rezultate matomi problemu kiekiai ir KPI pjuviai pagal pasirinktus parametrus." xml:space="preserve"><value>Savininko problemu KPI suvestine pagal pasirinkta laikotarpi. Rezultate matomi problemu kiekiai ir KPI pjuviai pagal pasirinktus parametrus.</value></data>
+  <data name="This field is required." xml:space="preserve"><value>Šį lauką būtina užpildyti.</value></data>
+  <data name="Uzsakymo detales pagal savininka, parodo uzsakymus pagal transportavimo diena nuo siandien +1 (be taros!!!)" xml:space="preserve"><value>Uzsakymo detales pagal savininka, parodo uzsakymus pagal transportavimo diena nuo siandien +1 (be taros!!!)</value></data>
+  <data name="VN srautai i PCC, kurie dar nepickinti arba dar neturi israsytos saskaitos. Indikatorius APIS skiltyje Indikatoriai." xml:space="preserve"><value>VN srautai i PCC, kurie dar nepickinti arba dar neturi israsytos saskaitos. Indikatorius APIS skiltyje Indikatoriai.</value></data>
+  <data name="eiluciu kiekis" xml:space="preserve"><value>eiluciu kiekis</value></data>
+  <data name="uzsakymo kilogramai" xml:space="preserve"><value>uzsakymo kilogramai</value></data>
+  <data name="uzsakymo paletes" xml:space="preserve"><value>uzsakymo paletes</value></data>
+  <data name="{0} exportavimas vykdomas" xml:space="preserve"><value>{0} exportavimas vykdomas</value></data>
+  <data name="APIS SQL uzklausa nerasta." xml:space="preserve"><value>APIS SQL uzklausa nerasta.</value></data>
+  <data name="ARETE SQL uzklausa nerasta." xml:space="preserve"><value>ARETE SQL uzklausa nerasta.</value></data>
+  <data name="Aciu, pasiulymas issaugotas." xml:space="preserve"><value>Aciu, pasiulymas issaugotas.</value></data>
+  <data name="Atsakymai išsaugoti." xml:space="preserve"><value>Atsakymai išsaugoti.</value></data>
+  <data name="Balsas issaugotas." xml:space="preserve"><value>Balsas issaugotas.</value></data>
+  <data name="Blokiniam trynimui privalomas bent vienas aktyvus filtras." xml:space="preserve"><value>Blokiniam trynimui privalomas bent vienas aktyvus filtras.</value></data>
+  <data name="Development mode displays detailed information about the error." xml:space="preserve"><value>Kūrimo režimas pateikia išsamią informaciją apie klaidą.</value></data>
+  <data name="Do not enable Development in a deployed application. It may reveal sensitive exception details." xml:space="preserve"><value>Nenaudokite kūrimo režimo publikuotoje aplikacijoje. Jis gali atskleisti jautrią klaidų informaciją.</value></data>
+  <data name="Failas atstatytas." xml:space="preserve"><value>Failas atstatytas.</value></data>
+  <data name="Failas perkeltas i Deleted kataloga." xml:space="preserve"><value>Failas perkeltas i Deleted kataloga.</value></data>
+  <data name="For local debugging, set ASPNETCORE_ENVIRONMENT to Development and restart the app." xml:space="preserve"><value>Vietiniam derinimui nustatykite ASPNETCORE_ENVIRONMENT reikšmę Development ir paleiskite aplikaciją iš naujo.</value></data>
+  <data name="Grafikas atnaujintas." xml:space="preserve"><value>Grafikas atnaujintas.</value></data>
+  <data name="Grafikas ikeltas redagavimui." xml:space="preserve"><value>Grafikas ikeltas redagavimui.</value></data>
+  <data name="Grafikas panaikintas." xml:space="preserve"><value>Grafikas panaikintas.</value></data>
+  <data name="HYDRA SQL uzklausa nerasta." xml:space="preserve"><value>HYDRA SQL uzklausa nerasta.</value></data>
+  <data name="IRIS taskas atnaujintas." xml:space="preserve"><value>IRIS taskas atnaujintas.</value></data>
+  <data name="Iveskite pasiulyma." xml:space="preserve"><value>Iveskite pasiulyma.</value></data>
+  <data name="Neteisingas arba pasibaiges patvirtinimo kodas. Patikrinkite koda arba issiuskite nauja." xml:space="preserve"><value>Neteisingas arba pasibaiges patvirtinimo kodas. Patikrinkite koda arba issiuskite nauja.</value></data>
+  <data name="Neteisingas kiekis. Galima naudoti kableli arba taska." xml:space="preserve"><value>Neteisingas kiekis. Galima naudoti kableli arba taska.</value></data>
+  <data name="Neteisingas vartotojo vardas arba slaptazodis." xml:space="preserve"><value>Neteisingas vartotojo vardas arba slaptazodis.</value></data>
+  <data name="Neturite SESHAT CONTRIBUTE teises." xml:space="preserve"><value>Neturite SESHAT CONTRIBUTE teises.</value></data>
+  <data name="OK" xml:space="preserve"><value>Gerai</value></data>
+  <data name="PROMO ANALYSIS duomenu eksportui nerasta." xml:space="preserve"><value>PROMO ANALYSIS duomenu eksportui nerasta.</value></data>
+  <data name="PROMO FORECAST importui naudokite .xlsx arba .xlsm faila." xml:space="preserve"><value>PROMO FORECAST importui naudokite .xlsx arba .xlsm faila.</value></data>
+  <data name="Pakeitimai issaugoti." xml:space="preserve"><value>Pakeitimai issaugoti.</value></data>
+  <data name="Pakeitimu issaugoti nepavyko." xml:space="preserve"><value>Pakeitimu issaugoti nepavyko.</value></data>
+  <data name="Papildomas susitarimo punktas atnaujintas." xml:space="preserve"><value>Papildomas susitarimo punktas atnaujintas.</value></data>
+  <data name="Papildomas susitarimo punktas sukurtas." xml:space="preserve"><value>Papildomas susitarimo punktas sukurtas.</value></data>
+  <data name="Pasirinkite PROMO FORECAST Excel faila." xml:space="preserve"><value>Pasirinkite PROMO FORECAST Excel faila.</value></data>
+  <data name="Pasirinkite balsavimo varianta." xml:space="preserve"><value>Pasirinkite balsavimo varianta.</value></data>
+  <data name="Pasirinkite faila." xml:space="preserve"><value>Pasirinkite faila.</value></data>
+  <data name="Pasirinkta netinkama aplikacija." xml:space="preserve"><value>Pasirinkta netinkama aplikacija.</value></data>
+  <data name="Pasirinktas netinkamas prieigos tipas." xml:space="preserve"><value>Pasirinktas netinkamas prieigos tipas.</value></data>
+  <data name="Pasirinkti pabaigos datą" xml:space="preserve"><value>Pasirinkti pabaigos datą</value></data>
+  <data name="Pirma atlikite blokinio trynimo perziura pagal tuos pacius filtrus." xml:space="preserve"><value>Pirma atlikite blokinio trynimo perziura pagal tuos pacius filtrus.</value></data>
+  <data name="Pirma pasirinkite SESHAT irasa." xml:space="preserve"><value>Pirma pasirinkite SESHAT irasa.</value></data>
+  <data name="Pranesimo poreikio atsisakyta." xml:space="preserve"><value>Pranesimo poreikio atsisakyta.</value></data>
+  <data name="Pranesimo poreikis patvirtintas ir issaugotas." xml:space="preserve"><value>Pranesimo poreikis patvirtintas ir issaugotas.</value></data>
+  <data name="Prašome atsakyti į klausimus." xml:space="preserve"><value>Prašome atsakyti į klausimus.</value></data>
+  <data name="Prieigos prasymas uzregistruotas." xml:space="preserve"><value>Prieigos prasymas uzregistruotas.</value></data>
+  <data name="Prisijungimo vardas turi sutapti su jusu atpazintu vartotoju." xml:space="preserve"><value>Prisijungimo vardas turi sutapti su jusu atpazintu vartotoju.</value></data>
+  <data name="Rezultatas neberastas cache. Paleiskite EXECUTE dar karta." xml:space="preserve"><value>Rezultatas neberastas cache. Paleiskite EXECUTE dar karta.</value></data>
+  <data name="Režimas" xml:space="preserve"><value>Režimas</value></data>
+  <data name="SQL saltinis atnaujintas." xml:space="preserve"><value>SQL saltinis atnaujintas.</value></data>
+  <data name="SQL saltinis panaikintas." xml:space="preserve"><value>SQL saltinis panaikintas.</value></data>
+  <data name="Siam Windows vartotojui APIS aplikacijos USER salies teise nesuteikta." xml:space="preserve"><value>Siam Windows vartotojui APIS aplikacijos USER salies teise nesuteikta.</value></data>
+  <data name="Siam Windows vartotojui ARETE aplikacijos USER salies teise nesuteikta." xml:space="preserve"><value>Siam Windows vartotojui ARETE aplikacijos USER salies teise nesuteikta.</value></data>
+  <data name="Siam Windows vartotojui DIKE aplikacijos teise nesuteikta." xml:space="preserve"><value>Siam Windows vartotojui DIKE aplikacijos teise nesuteikta.</value></data>
+  <data name="Siam Windows vartotojui HYDRA aplikacijos USER salies teise nesuteikta." xml:space="preserve"><value>Siam Windows vartotojui HYDRA aplikacijos USER salies teise nesuteikta.</value></data>
+  <data name="Siam Windows vartotojui KAIROS aplikacijos teise nesuteikta." xml:space="preserve"><value>Siam Windows vartotojui KAIROS aplikacijos teise nesuteikta.</value></data>
+  <data name="Testinis SESHAT pranesimas issiustas el. pastu." xml:space="preserve"><value>Testinis SESHAT pranesimas issiustas el. pastu.</value></data>
+  <data name="Tik rankinis paleidimas arba testinis siuntimas. Automatinis laikas nebus skaičiuojamas." xml:space="preserve"><value>Tik rankinis paleidimas arba testinis siuntimas. Automatinis laikas nebus skaičiuojamas.</value></data>
+  <data name="Apis.KpiColumns" xml:space="preserve"><value>Stulpeliai: TOTAL, &lt;07:00, 08:00...17:00, &gt;17:00; reikšmė: Lines</value></data>
+  <data name="Dike.LiveClientHelp" xml:space="preserve"><value>Lietuvai priskirtos STAT3 klientų srities. Sisteminiai laukai susiejami pagal vidinį kliento ID, todėl pakeitus pavadinimą, kodą ar adresą STAT3, DIKE rodys naują reikšmę.</value></data>
+  <data name="Dike.SelectClientHelp" xml:space="preserve"><value>Pirmiausia suraskite arba pasirinkite klientą iš leidžiamų STAT3 klientų sąrašo. Jei paieška randa vieną klientą, jis pasirenkamas automatiškai; jei kelis, pasirinkite konkretų iš sąrašo.</value></data>
+  <data name="Dike.UpcomingHelp" xml:space="preserve"><value>Čia bus rodomi klientai, kuriems artėja arba jau aktyvus derinimo laikotarpis. Senus likučius ir siuntimo istoriją galėsime užkrauti iš pradinių duomenų, o vėliau pildysime iš web platformos veiksmų.</value></data>
+  <data name="Unikalus iraso raktas formuojamas is CLIENT, INF_PREK, PROMO_START ir PROMO_END; INF_PREK visada turi buti 7 simboliu." xml:space="preserve"><value>Unikalus iraso raktas formuojamas is CLIENT, INF_PREK, PROMO_START ir PROMO_END; INF_PREK visada turi buti 7 simboliu.</value></data>
+  <data name="Uzpildzius forma pirma atsisiuskite patvirtinimo koda. Kodas galios 10 min.; tik ji ivedus galima issaugoti pranesima." xml:space="preserve"><value>Uzpildzius forma pirma atsisiuskite patvirtinimo koda. Kodas galios 10 min.; tik ji ivedus galima issaugoti pranesima.</value></data>
+  <data name="Akcijos pabaigos data." xml:space="preserve"><value>Akcijos pabaigos data.</value></data>
+  <data name="Akcijos pradzios data." xml:space="preserve"><value>Akcijos pradzios data.</value></data>
+  <data name="Atvaizdavimas. NULL - suminis vaizdas, DAILY - skaidyti dienomis." xml:space="preserve"><value>Atvaizdavimas. NULL - suminis vaizdas, DAILY - skaidyti dienomis.</value></data>
+  <data name="Enter a valid email address." xml:space="preserve"><value>Įveskite teisingą el. pašto adresą.</value></data>
+  <data name="Enter a valid value." xml:space="preserve"><value>Įveskite teisingą reikšmę.</value></data>
+  <data name="Enter a value in the required format." xml:space="preserve"><value>Įveskite reikšmę nurodytu formatu.</value></data>
+  <data name="Filtravimas pagal INVOICENO." xml:space="preserve"><value>Filtravimas pagal INVOICENO.</value></data>
+  <data name="Filtravimas pagal ORDSTATID." xml:space="preserve"><value>Filtravimas pagal ORDSTATID.</value></data>
+  <data name="Filtravimas pagal POSID." xml:space="preserve"><value>Filtravimas pagal POSID.</value></data>
+  <data name="Filtravimas pagal REFORDERNUM." xml:space="preserve"><value>Filtravimas pagal REFORDERNUM.</value></data>
+  <data name="Filtravimas pagal prekes koda." xml:space="preserve"><value>Filtravimas pagal prekes koda.</value></data>
+  <data name="Filtravimas pagal savininkus." xml:space="preserve"><value>Filtravimas pagal savininkus.</value></data>
+  <data name="Filtravimas prekes TLICSUBTYPE." xml:space="preserve"><value>Filtravimas prekes TLICSUBTYPE.</value></data>
+  <data name="Filtravimas prekes barkoda." xml:space="preserve"><value>Filtravimas prekes barkoda.</value></data>
+  <data name="Filtravimas prekes pagal lauka FOOD vedant 1 arba 0." xml:space="preserve"><value>Filtravimas prekes pagal lauka FOOD vedant 1 arba 0.</value></data>
+  <data name="Filtravimas prekes pavadinima." xml:space="preserve"><value>Filtravimas prekes pavadinima.</value></data>
+  <data name="Firmos kodas arba keli kodai per kableli, pvz. SA, LV, EE." xml:space="preserve"><value>Firmos kodas arba keli kodai per kableli, pvz. SA, LV, EE.</value></data>
+  <data name="KPI laikotarpis: w - savaite, m - menuo." xml:space="preserve"><value>KPI laikotarpis: w - savaite, m - menuo.</value></data>
+  <data name="Kiek savaiciu ar menesiu atgal pateikti skaiciavima. 0 - einamas laikotarpis, 1 - vienas laikotarpis anksciau ir t.t." xml:space="preserve"><value>Kiek savaiciu ar menesiu atgal pateikti skaiciavima. 0 - einamas laikotarpis, 1 - vienas laikotarpis anksciau ir t.t.</value></data>
+  <data name="Klientas / tinklas." xml:space="preserve"><value>Klientas / tinklas.</value></data>
+  <data name="Kliento pirkimo pradzios data." xml:space="preserve"><value>Kliento pirkimo pradzios data.</value></data>
+  <data name="Kokius KPI atvaizduoti: ALL, LINE, SKU arba PLL." xml:space="preserve"><value>Kokius KPI atvaizduoti: ALL, LINE, SKU arba PLL.</value></data>
+  <data name="Operaciju data. Pasirinkta data i STAT3 uzklausa perduodama YYYYMMDD formatu." xml:space="preserve"><value>Operaciju data. Pasirinkta data i STAT3 uzklausa perduodama YYYYMMDD formatu.</value></data>
+  <data name="PROMO FORECAST statusas." xml:space="preserve"><value>PROMO FORECAST statusas.</value></data>
+  <data name="Pajamavimo data. Pasirinkta data i STAT3 uzklausa perduodama YYYY-MM-DD formatu." xml:space="preserve"><value>Pajamavimo data. Pasirinkta data i STAT3 uzklausa perduodama YYYY-MM-DD formatu.</value></data>
+  <data name="Pajamavimo data. Pasirinkta data i STAT3 uzklausa perduodama YYYYMMDD formatu." xml:space="preserve"><value>Pajamavimo data. Pasirinkta data i STAT3 uzklausa perduodama YYYYMMDD formatu.</value></data>
+  <data name="Prekiu savininko kodas. Iveskite tiksliai 3 simbolius, pvz. KGR." xml:space="preserve"><value>Prekiu savininko kodas. Iveskite tiksliai 3 simbolius, pvz. KGR.</value></data>
+  <data name="Prekiu savininko kodas. Iveskite tiksliai 3 simbolius, pvz. SNX." xml:space="preserve"><value>Prekiu savininko kodas. Iveskite tiksliai 3 simbolius, pvz. SNX.</value></data>
+  <data name="Problemos tipas, kurio nevertinti. NULL - nieko neismesti, DELAY - nevertinti velavimo problemu." xml:space="preserve"><value>Problemos tipas, kurio nevertinti. NULL - nieko neismesti, DELAY - nevertinti velavimo problemu.</value></data>
+  <data name="SA LV ar EE, LIKE fragmentas arba IN sarasas per kableli." xml:space="preserve"><value>SA LV ar EE, LIKE fragmentas arba IN sarasas per kableli.</value></data>
+  <data name="Sandelio kodo 2 raides pvz VN ar VH" xml:space="preserve"><value>Sandelio kodo 2 raides pvz VN ar VH</value></data>
+  <data name="Tolerancija minutemis velavimams skaiciuoti. 0 - be papildomos tolerancijos." xml:space="preserve"><value>Tolerancija minutemis velavimams skaiciuoti. 0 - be papildomos tolerancijos.</value></data>
+  <data name="Value must be at least {0}." xml:space="preserve"><value>Reikšmė turi būti ne mažesnė nei {0}.</value></data>
+  <data name="Value must be no greater than {0}." xml:space="preserve"><value>Reikšmė turi būti ne didesnė nei {0}.</value></data>
+  <data name="Vidinis prekes kodas." xml:space="preserve"><value>Vidinis prekes kodas.</value></data>
+  <data name="DataExchange.FilterValue" xml:space="preserve"><value>Reikšmė</value></data>
+  <data name="Dike.Validation.Client" xml:space="preserve"><value>Pasirinkite galiojantį klientą.</value></data>
+  <data name="Dike.Validation.Date" xml:space="preserve"><value>Tokios datos nėra. Įveskite galiojančią datą YYYY-MM-DD.</value></data>
+  <data name="Dike.Validation.Period" xml:space="preserve"><value>Įveskite galiojantį mėnesį YYYYMM.</value></data>
+  <data name="Dike.Validation.Frequency" xml:space="preserve"><value>Pasirinkite derinimo dažnį.</value></data>
+  <data name="Dike.Validation.Flow" xml:space="preserve"><value>Pasirinkite IN arba OUT.</value></data>
+  <data name="Dike.Validation.Codes" xml:space="preserve"><value>Kiekvienas INF_PREK kodas turi būti iš 7 raidžių arba skaičių. Daugiausia 500 kodų.</value></data>
+  <data name="Dike.Validation.Email" xml:space="preserve"><value>Įveskite galiojantį el. pašto adresą. Kelis adresus atskirkite kabliataškiu.</value></data>
+  <data name="Dike.Validation.Days" xml:space="preserve"><value>Įveskite mėnesio dienas nuo 1 iki 31, atskirtas kableliais.</value></data>
+  <data name="Dike.Validation.Time" xml:space="preserve"><value>Įveskite galiojantį laiką HH:mm (00:00–23:59).</value></data>
+  <data name="Dike.Validation.Actor" xml:space="preserve"><value>Nepavyko nustatyti prisijungusio vartotojo. Prisijunkite iš naujo.</value></data>
+  <data name="Dike.Validation.Conflict" xml:space="preserve"><value>Šį susitarimą jau pakeitė kitas vartotojas arba jis neberastas. Atidarykite jį iš sąrašo iš naujo.</value></data>
+  <data name="Dike.Validation.NotFound" xml:space="preserve"><value>Susitarimas nerastas.</value></data>
+  <data name="Dike.Validation.Summary" xml:space="preserve"><value>Patikrinkite įvestus duomenis:</value></data>
+  <data name="Dike.Validation.Value" xml:space="preserve"><value>Įveskite tinkamą reikšmę.</value></data>
+  <data name="Dike.Validation.Required" xml:space="preserve"><value>Šis laukas privalomas.</value></data>
+  <data name="Dike.Validation.Length" xml:space="preserve"><value>Įvesta per daug simbolių.</value></data>
+  <data name="Dike.Validation.Percent" xml:space="preserve"><value>Procentas turi būti nuo 0 iki 100.</value></data>
+  <data name="Dike.Saved" xml:space="preserve"><value>Susitarimas išsaugotas. Pakeitimas įrašytas į istoriją.</value></data>
+  <data name="Dike.WriteOff" xml:space="preserve"><value>Sutartas nurašymų %</value></data>
+  <data name="Dike.Manager" xml:space="preserve"><value>Atsakingas vadybininkas</value></data>
+  <data name="Dike.AutomaticSending" xml:space="preserve"><value>Automatinis formavimas ir siuntimas</value></data>
+  <data name="Dike.Recipients" xml:space="preserve"><value>Kam siųsti (el. paštas)</value></data>
+  <data name="Dike.MonthDays" xml:space="preserve"><value>Mėnesio dienos</value></data>
+  <data name="Dike.SendTime" xml:space="preserve"><value>Formavimo laikas (Vilnius)</value></data>
+  <data name="Dike.ScheduleHelp" xml:space="preserve"><value>Kelias mėnesio dienas atskirkite kableliais, pvz. 1, 15, 28. Laikas pagal Europe/Vilnius. Mėnesyje nesančios dienos praleidžiamos.</value></data>
+  <data name="Dike.SendingPending" xml:space="preserve"><value>Siuntimo nustatymai išsaugomi. Automatinis vykdymas bus prieinamas prijungus derinimo formos generavimą.</value></data>
+  <data name="Dike.New" xml:space="preserve"><value>Naujas susitarimas</value></data>
+  <data name="Dike.Create" xml:space="preserve"><value>Išsaugoti susitarimą</value></data>
+  <data name="Dike.Update" xml:space="preserve"><value>Atnaujinti susitarimą</value></data>
+  <data name="Dike.LastUpdated" xml:space="preserve"><value>Pakeista / vartotojas</value></data>
+  <data name="Dike.NoAgreements" xml:space="preserve"><value>Išsaugotų susitarimų dar nėra.</value></data>
+  <data name="Dike.Yes" xml:space="preserve"><value>Taip</value></data>
+  <data name="Dike.No" xml:space="preserve"><value>Ne</value></data>
+  <data name="Dike.Active" xml:space="preserve"><value>Aktyvus</value></data>
+  <data name="Dike.Inactive" xml:space="preserve"><value>Neaktyvus</value></data>
+  <data name="Dike.NoHistory" xml:space="preserve"><value>Pakeitimų istorijos dar nėra.</value></data>
+  <data name="Dike.Action.Created" xml:space="preserve"><value>Sukurta</value></data>
+  <data name="Dike.Action.Updated" xml:space="preserve"><value>Atnaujinta</value></data>
+  <data name="Dike.Changes" xml:space="preserve"><value>Peržiūrėti pakeitimus</value></data>
+  <data name="Dike.Field" xml:space="preserve"><value>Laukas</value></data>
+  <data name="Dike.Before" xml:space="preserve"><value>Buvo</value></data>
+  <data name="Dike.After" xml:space="preserve"><value>Dabar</value></data>
+  <data name="Dike.Field.ContractNo" xml:space="preserve"><value>Sutartis</value></data>
+  <data name="Dike.Field.Appendix" xml:space="preserve"><value>Priedas</value></data>
+  <data name="Dike.Field.ValidFrom" xml:space="preserve"><value>Galioja nuo</value></data>
+  <data name="Dike.Field.Frequency" xml:space="preserve"><value>Dažnis</value></data>
+  <data name="Dike.Field.Flow" xml:space="preserve"><value>Srautas</value></data>
+  <data name="Dike.Field.WriteOffPercent" xml:space="preserve"><value>Nurašymų %</value></data>
+  <data name="Dike.Field.FirstPeriod" xml:space="preserve"><value>Pirmas derinimas</value></data>
+  <data name="Dike.Field.Manager" xml:space="preserve"><value>Vadybininkas</value></data>
+  <data name="Dike.Field.IsActive" xml:space="preserve"><value>Aktyvumas</value></data>
+  <data name="Dike.Field.InfPrekCodes" xml:space="preserve"><value>INF_PREK kodai</value></data>
+  <data name="Dike.Field.AutomaticSending" xml:space="preserve"><value>Automatinis siuntimas</value></data>
+  <data name="Dike.Field.Recipients" xml:space="preserve"><value>Adresatai</value></data>
+  <data name="Dike.Field.MonthDays" xml:space="preserve"><value>Mėnesio dienos</value></data>
+  <data name="Dike.Field.SendTime" xml:space="preserve"><value>Siuntimo laikas</value></data>
+  <data name="Dike.Field.OwnerId" xml:space="preserve"><value>Klientas</value></data>
+  <data name="Dike.ListHelp" xml:space="preserve"><value>Išsaugoti susitarimai (iki 500 naujausių). Spauskite klientą, kad atidarytumėte susitarimą koregavimui.</value></data>
+  <data name="Dike.HistorySearch" xml:space="preserve"><value>Ieškoti pagal vartotoją, klientą arba pakeistą reikšmę</value></data>
+  <data name="Dike.AllHistory" xml:space="preserve"><value>Visų klientų istorija</value></data>
+  <data name="Dike.HistoryHelp" xml:space="preserve"><value>Rodoma iki 200 naujausių atrinktų įrašų. Laikas pagal Europe/Vilnius. Pasirinkus klientą, rodoma jo istorija.</value></data>
+  <data name="Dike.Time24Help" xml:space="preserve"><value>24 val. formatas HH:mm, pvz. 14:30.</value></data>
+  <data name="Dike.Preview.Disabled" xml:space="preserve"><value>Įjunkite automatinį formavimą, kad matytumėte numatomą datą ir laiką.</value></data>
+  <data name="Dike.Preview.Inactive" xml:space="preserve"><value>Susitarimas neaktyvus — automatinis formavimas nenumatytas.</value></data>
+  <data name="Dike.Preview.Incomplete" xml:space="preserve"><value>Pasirinkite galiojimo pradžią, pirmą derinimą, mėnesio dienas (1–31) ir laiką HH:mm.</value></data>
+  <data name="Dike.Preview.OnDemand" xml:space="preserve"><value>Derinant pagal poreikį automatinė data nenustatoma. Pasirinkite mėnesinį arba ketvirtinį dažnį.</value></data>
+  <data name="Dike.Preview.Loading" xml:space="preserve"><value>Skaičiuojama artimiausia formavimo data…</value></data>
+  <data name="Dike.Preview.Failed" xml:space="preserve"><value>Nepavyko apskaičiuoti datos. Pabandykite dar kartą.</value></data>
+  <data name="Dike.Preview.Ready" xml:space="preserve"><value>Artimiausias numatomas formavimas už laikotarpį {0}: {1} (Vilniaus laiku).</value></data>
+  <data name="Dike.Preview.ClockAdjusted" xml:space="preserve"><value>Dėl laikrodžio pasukimo laikas perkeltas viena valanda į priekį.</value></data>
+  <data name="Dike.Time.Choose" xml:space="preserve"><value>Pasirinkti laiką</value></data>
+  <data name="Dike.Time.Hour" xml:space="preserve"><value>Valandos</value></data>
+  <data name="Dike.Time.Minute" xml:space="preserve"><value>Minutės</value></data>
+  <data name="Dike.Time.FormatError" xml:space="preserve"><value>Įveskite laiką formatu HH:mm, pvz. 10:30.</value></data>
+  <data name="Dike.Time.RangeError" xml:space="preserve"><value>Tokio laiko nėra. Valandos turi būti 00–23, minutės 00–59.</value></data>
+  <data name="Dike.Preview.Previous" xml:space="preserve"><value>Ankstesnė data pagal grafiką: {0} (tai nėra įvykdymo patvirtinimas).</value></data>
+  <data name="Dike.Preview.NoPrevious" xml:space="preserve"><value>Pagal susitarimo pradžią ankstesnės datos grafike dar nėra.</value></data>
+  <data name="Dike.LastActual.Pending" xml:space="preserve"><value>Paskutinis faktinis derinimas: duomenų šaltinis dar neprijungtas.</value></data>
+  <data name="Dike.Document.Title" xml:space="preserve"><value>Susitarimo dokumentai</value></data>
+  <data name="Dike.Document.Help" xml:space="preserve"><value>Prisekite suformuotą EML arba pasirašytą PDF (iki 10 MB). Naujas failas pridedamas išsaugant ankstesnius. Peržiūrėti ir pridėti gali visi DIKE vartotojai, šalinti — tik DIKE ADMIN.</value></data>
+  <data name="Dike.Document.Agreement" xml:space="preserve"><value>Klientas / susitarimas</value></data>
+  <data name="Dike.Document.ChooseAgreement" xml:space="preserve"><value>Pasirinkite susitarimą</value></data>
+  <data name="Dike.Document.SelectHelp" xml:space="preserve"><value>Pasirinkite išsaugotą susitarimą, kad galėtumėte įkelti ir peržiūrėti jo dokumentus. Jei susitarimo dar nėra, pirmiausia išsaugokite jį skiltyje „Naujo sukūrimas / koregavimas“.</value></data>
+  <data name="Dike.Document.File" xml:space="preserve"><value>PDF / EML failas</value></data>
+  <data name="Dike.Document.Note" xml:space="preserve"><value>Pastaba / laikotarpis</value></data>
+  <data name="Dike.Document.Upload" xml:space="preserve"><value>Įkelti failą</value></data>
+  <data name="Dike.Document.UploadedAt" xml:space="preserve"><value>Įkelta</value></data>
+  <data name="Dike.Document.Actions" xml:space="preserve"><value>Veiksmai</value></data>
+  <data name="Dike.Document.Empty" xml:space="preserve"><value>Šiam susitarimui failų dar nepridėta.</value></data>
+  <data name="Dike.Document.Preview" xml:space="preserve"><value>Peržiūrėti</value></data>
+  <data name="Dike.Document.Download" xml:space="preserve"><value>Atsisiųsti</value></data>
+  <data name="Dike.Document.Delete" xml:space="preserve"><value>Pašalinti</value></data>
+  <data name="Dike.Document.ConfirmDelete" xml:space="preserve"><value>Pašalinti šį failą iš susitarimo? Veiksmas bus įrašytas į istoriją.</value></data>
+  <data name="Dike.Document.Close" xml:space="preserve"><value>Uždaryti peržiūrą</value></data>
+  <data name="Dike.Document.Required" xml:space="preserve"><value>Pasirinkite PDF arba EML failą.</value></data>
+  <data name="Dike.Document.SizeError" xml:space="preserve"><value>Failas turi būti netuščias ir ne didesnis nei 10 MB.</value></data>
+  <data name="Dike.Document.TypeError" xml:space="preserve"><value>Leidžiami tik PDF ir EML failai; pavadinimas turi neviršyti 255 simbolių.</value></data>
+  <data name="Dike.Document.NoteError" xml:space="preserve"><value>Pastaba turi neviršyti 500 simbolių.</value></data>
+  <data name="Dike.Document.InvalidContent" xml:space="preserve"><value>Nepavyko perskaityti PDF arba EML failo. Patikrinkite jo turinį ir formatą.</value></data>
+  <data name="Dike.Document.NotFound" xml:space="preserve"><value>Failas nerastas arba jau pašalintas.</value></data>
+  <data name="Dike.Document.Uploaded" xml:space="preserve"><value>Failas įkeltas ir įrašytas į pakeitimų istoriją.</value></data>
+  <data name="Dike.Document.Deleted" xml:space="preserve"><value>Failas pašalintas iš susitarimo. Veiksmas įrašytas į istoriją.</value></data>
+  <data name="Dike.Document.Status.Active" xml:space="preserve"><value>Pridėtas</value></data>
+  <data name="Dike.Document.Status.Deleted" xml:space="preserve"><value>Pašalintas</value></data>
+  <data name="Dike.Action.FileUploaded" xml:space="preserve"><value>Įkeltas failas</value></data>
+  <data name="Dike.Action.FileDeleted" xml:space="preserve"><value>Pašalintas failas</value></data>
+  <data name="Dike.Field.Document" xml:space="preserve"><value>Dokumento ID</value></data>
+  <data name="Dike.Field.FileName" xml:space="preserve"><value>Failo pavadinimas</value></data>
+  <data name="Dike.Field.FileNote" xml:space="preserve"><value>Failo pastaba</value></data>
+  <data name="Dike.Field.FileStatus" xml:space="preserve"><value>Failo būsena</value></data>
+  <data name="Dike.Mail.From" xml:space="preserve"><value>Nuo</value></data>
+  <data name="Dike.Mail.To" xml:space="preserve"><value>Kam</value></data>
+  <data name="Dike.Mail.Date" xml:space="preserve"><value>Data</value></data>
+  <data name="Dike.Mail.Body" xml:space="preserve"><value>Laiško turinys</value></data>
+  <data name="Dike.Mail.Attachments" xml:space="preserve"><value>Laiško priedai</value></data>
+  <data name="Dike.Document.AccessDenied" xml:space="preserve"><value>Susitarimas nerastas arba jo klientas neprieinamas DIKE aplinkoje.</value></data>
+  <data name="Dike.Existing.Select" xml:space="preserve"><value>Kliento išsaugoti susitarimai</value></data>
+  <data name="Dike.Existing.Choose" xml:space="preserve"><value>Pasirinkite susitarimą koregavimui</value></data>
+  <data name="Dike.Existing.NewMode" xml:space="preserve"><value>Kuriamas naujas TAROS derinimo susitarimas.</value></data>
+  <data name="Dike.Existing.EditMode" xml:space="preserve"><value>Koreguojamas išsaugotas susitarimas „{0}“. Pakeitimus išsaugosite mygtuku „Atnaujinti susitarimą“.</value></data>
+  <data name="Export.DownloadFailed" xml:space="preserve"><value>Eksportuoti nepavyko: serveris negrąžino tinkamo failo.</value></data>
+  <data name="Export.SessionExpired" xml:space="preserve"><value>Prisijungimo sesija pasibaigė. Prisijunkite ir pakartokite eksportą.</value></data>
+  <data name="Export.SignIn" xml:space="preserve"><value>Prisijungti</value></data>
+  <data name="Hub.Security.RequestAccess" xml:space="preserve"><value>Pateikti prieigos užklausą</value></data>
+  <data name="Hub.Security.SharedTerminal" xml:space="preserve"><value>Nenaudokite kolegos prisijungimo duomenų ar jo aktyvios sesijos. Prisijunkite savo Windows paskyroje. Reikalingų modulių prieigos galite paprašyti šiame puslapyje.</value></data>
+  <data name="Hub.Security.NoModules" xml:space="preserve"><value>Jums nepriskirta pasiekiamų modulių. Pateikite prieigos užklausą.</value></data>
+  <data name="Hub.Security.NoAccessTitle" xml:space="preserve"><value>Prieiga nesuteikta</value></data>
+  <data name="Hub.Security.NoAccess" xml:space="preserve"><value>Šiam moduliui neturite suteiktų teisių arba jų nepavyko patikrinti. Prieigos galite paprašyti pateikę užklausą.</value></data>
+  <data name="Hub.Security.RequestIdentity" xml:space="preserve"><value>Užklausa registruojama tik serverio atpažinto Windows vartotojo vardu. Teisės suteikiamos peržiūrėjus užklausą; pateikimas jų automatiškai nesuteikia.</value></data>
+  <data name="Hub.Security.OtherUser" xml:space="preserve"><value>Prisijungimas atmestas: naudokite savo Windows vartotoją. Prisijungti kolegos vardu jo terminale nesaugu. Jei trūksta teisių, pateikite prieigos užklausą.</value></data>
+  <data name="Hub.Security.WindowsRequired" xml:space="preserve"><value>Windows vartotojas neatpažintas. Prisijunkite prie savo Windows paskyros ir naudokite Windows autorizaciją. Kito vartotojo vardu prisijungti neleidžiama.</value></data>
+  <data name="Hub.Security.LoginHelp" xml:space="preserve"><value>Prisijunkite tik savo Windows vartotoju. Prisijungimas prie HUB nesuteikia teisių į modulius: kiekvienam jų reikalinga priskirta prieiga.</value></data>
+  <data name="Iris.ExcelGridlines" xml:space="preserve"><value>Excel langelių kraštinės</value></data>
+  <data name="Iris.Preview.Database" xml:space="preserve"><value>Duomenų bazė</value></data>
+  <data name="Iris.Preview.Failed" xml:space="preserve"><value>Peržiūros parengti nepavyko. Patikrinkite SQL šaltinį, procedūros parametrus ir prisijungimo teises.</value></data>
+  <data name="Iris.Preview.Title" xml:space="preserve"><value>SQL rezultato peržiūra</value></data>
+  <data name="Iris.Preview.InvalidDatabase" xml:space="preserve"><value>Duomenų bazės pavadinimas per ilgas.</value></data>
+  <data name="Iris.Preview.DataType" xml:space="preserve"><value>Duomenų tipas</value></data>
+  <data name="Iris.Preview.Column" xml:space="preserve"><value>Stulpelis</value></data>
+  <data name="Iris.Preview.InvalidType" xml:space="preserve"><value>Pasirinkite SQL tekstą, SQL failą arba procedūrą.</value></data>
+  <data name="Iris.Preview.Button" xml:space="preserve"><value>Peržiūrėti SQL rezultatą</value></data>
+  <data name="Iris.Preview.InvalidConnection" xml:space="preserve"><value>Pasirinkite sukonfigūruotą SQL prisijungimą.</value></data>
+  <data name="Iris.Preview.Loading" xml:space="preserve"><value>Tikrinama…</value></data>
+  <data name="Iris.Preview.InvalidFile" xml:space="preserve"><value>Pasirinkite .sql failą leidžiamame SQL kataloge. Papildomus katalogus nustato administratorius.</value></data>
+  <data name="Iris.Preview.NoResult" xml:space="preserve"><value>Šaltinis negrąžino rezultatų lentelės.</value></data>
+  <data name="Iris.Preview.InvalidSql" xml:space="preserve"><value>Įveskite SQL tekstą. Leistinas dydis – iki 1 MB.</value></data>
+  <data name="Iris.Preview.InvalidProcedure" xml:space="preserve"><value>Nurodykite egzistuojančios programuotojų sukurtos procedūros pavadinimą, pvz., dbo.PROCEDURE_NAME. Sisteminės procedūros neleidžiamos.</value></data>
+  <data name="Iris.Preview.DefaultDatabase" xml:space="preserve"><value>Pagal pasirinktą prisijungimą</value></data>
+  <data name="Iris.Preview.RowsShown" xml:space="preserve"><value>Rodoma eilučių</value></data>
+  <data name="Iris.Preview.AuditFinishFailed" xml:space="preserve"><value>SQL jau galėjo būti įvykdytas, tačiau nepavyko užbaigti audito įrašo. Prieš kartodami procedūrą kreipkitės į administratorių.</value></data>
+  <data name="Iris.Preview.Timeout" xml:space="preserve"><value>Peržiūra nutraukta arba viršytas vykdymo laikas. Patikslinkite užklausos filtrus.</value></data>
+  <data name="Iris.Preview.AuditId" xml:space="preserve"><value>Peržiūros audito ID</value></data>
+  <data name="Iris.Preview.Truncated" xml:space="preserve"><value>Peržiūra apribota: rodoma iki {0} eilučių vienai lentelei, iki 3 lentelių; ilgos reikšmės gali būti sutrumpintos.</value></data>
+  <data name="Iris.Preview.AuditUnavailable" xml:space="preserve"><value>Audito įrašo išsaugoti nepavyko, todėl SQL šaltinis nevykdomas.</value></data>
+  <data name="Iris.Preview.SelectOnly" xml:space="preserve"><value>Leidžiamos skaitymo užklausos ir laikinųjų # / ## lentelių kūrimas, pildymas bei šalinimas. Nuolatinių lentelių keitimas, EXEC ir netiesioginis išorinių komandų vykdymas draudžiami.</value></data>
+  <data name="Iris.Preview.Empty" xml:space="preserve"><value>Užklausa įvykdyta, tačiau duomenų eilučių nėra.</value></data>
+  <data name="Iris.Preview.ResultTable" xml:space="preserve"><value>Rezultatų lentelė</value></data>
+  <data name="Iris.Preview.SyntaxError" xml:space="preserve"><value>SQL sintaksė neteisinga. Patikrinkite įvestą SELECT užklausą.</value></data>
+  <data name="Iris.Preview.IdentityRequired" xml:space="preserve"><value>Peržiūrai reikalingas atpažintas prisijungęs vartotojas.</value></data>
+  <data name="Iris.Preview.ReadOnlyHelp" xml:space="preserve"><value>SQL tekstui ir failams leidžiami SELECT bei laikinos # / ## lentelės. Laikini duomenys galioja vienai peržiūrai; ## vardai izoliuojami nuo kitų vartotojų. Programuotojų procedūros vykdomos atskirai. Kiekviena peržiūra registruojama audite.</value></data>
+  <data name="Iris.Preview.PageInfo" xml:space="preserve"><value>{0}–{1} iš {2} · puslapis {3}/{4}</value></data>
+  <data name="Iris.Preview.Pages" xml:space="preserve"><value>Rezultatų puslapiai</value></data>
+</root>
 

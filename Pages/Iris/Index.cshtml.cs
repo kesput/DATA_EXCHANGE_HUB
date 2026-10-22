@@ -10,7 +10,9 @@ public class IndexModel(
     ISendMailService sendMailService,
     IUserNameResolver userNameResolver,
     IIrisService irisService,
-    IConfiguration configuration) : PageModel
+    IConfiguration configuration,
+    IIrisSourcePreviewService sourcePreviewService,
+    ILogger<IndexModel> logger) : PageModel
 {
     [BindProperty(SupportsGet = true)]
     public long SelectedReportId { get; set; }
@@ -109,6 +111,9 @@ public class IndexModel(
     public bool SourceAttachExcel { get; set; }
 
     [BindProperty]
+    public bool SourceExcelGridlines { get; set; }
+
+    [BindProperty]
     public bool SourceAttachCsv { get; set; }
 
     [BindProperty]
@@ -180,6 +185,31 @@ public class IndexModel(
     public async Task OnGetAsync()
     {
         await LoadPageStateAsync();
+    }
+
+    public async Task<IActionResult> OnPostPreviewSourceAsync()
+    {
+        Response.Headers.CacheControl = "no-store";
+        try
+        {
+            var result = await sourcePreviewService.PreviewAsync(new IrisSourcePreviewRequest(
+                SourceType, SourceSqlConnectionName, SourceSqlDatabase, SourceSqlText,
+                SourceSqlFilePath, SourceStoredProcedure, SourceId, SourceReportId),
+                userNameResolver.ResolveUserName(User), HttpContext.RequestAborted);
+            return Partial("_SourcePreview", new IrisSourcePreviewView(result));
+        }
+        catch (OperationCanceledException) when (HttpContext.RequestAborted.IsCancellationRequested) { throw; }
+        catch (Exception exception)
+        {
+            logger.LogWarning(exception, "IRIS SQL source preview failed.");
+            var key = exception is InvalidOperationException && exception.Message.StartsWith("Iris.Preview.", StringComparison.Ordinal)
+                ? exception.Message : exception is OperationCanceledException ||
+                    exception is Microsoft.Data.SqlClient.SqlException { Number: -2 } ? "Iris.Preview.Timeout" : "Iris.Preview.Failed";
+            var detail = exception is Microsoft.Data.SqlClient.SqlException sql &&
+                new[] { 102, 105, 156, 201, 206, 207, 208, 209, 245, 257, 536, 537, 2812, 4104, 8114, 8115, 8120, 8134 }.Contains(sql.Number)
+                ? sql.Message[..Math.Min(sql.Message.Length, 2000)] : null;
+            return Partial("_SourcePreview", new IrisSourcePreviewView(ErrorKey: key, ErrorDetail: detail));
+        }
     }
 
     public async Task OnPostPreviewAsync()
@@ -256,7 +286,8 @@ public class IndexModel(
                     SourceIncludeHtmlTable,
                     SourceAttachExcel,
                     SourceAttachCsv,
-                    userNameResolver.ResolveUserName(User)),
+                    userNameResolver.ResolveUserName(User),
+                    SourceExcelGridlines),
                 HttpContext.RequestAborted);
             SuccessMessage = $"SQL saltinis pridetas. Id={id}";
         }
@@ -292,6 +323,7 @@ public class IndexModel(
             SourceTableTitle = source.TableTitle;
             SourceIncludeHtmlTable = source.IncludeHtmlTable;
             SourceAttachExcel = source.AttachExcel;
+            SourceExcelGridlines = source.ExcelGridlines;
             SourceAttachCsv = source.AttachCsv;
             SuccessMessage = $"SQL saltinis #{source.SourceOrder} ikeltas redagavimui.";
         }
@@ -321,7 +353,8 @@ public class IndexModel(
                     SourceTableTitle,
                     SourceIncludeHtmlTable,
                     SourceAttachExcel,
-                    SourceAttachCsv),
+                    SourceAttachCsv,
+                    SourceExcelGridlines),
                 HttpContext.RequestAborted);
             SuccessMessage = "SQL saltinis atnaujintas.";
         }

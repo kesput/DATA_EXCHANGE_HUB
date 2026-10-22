@@ -1,0 +1,55 @@
+@model DATA_EXCHANGE_HUB.Models.IrisSourcePreviewView
+@if (Model.ErrorKey is not null)
+{
+    <div class="alert alert-danger mb-0" role="alert">
+        @L[Model.ErrorKey]
+        @if (Model.ErrorDetail is not null) { <div class="small mt-2">@Model.ErrorDetail</div> }
+    </div>
+}
+else if (Model.Result is { } result)
+{
+    <h4>@L["Iris.Preview.Title"]</h4>
+    @if (result.Tables.Count == 0)
+    {
+        <p class="mb-0">@L["Iris.Preview.NoResult"]</p>
+    }
+    @for (var tableIndex = 0; tableIndex < result.Tables.Count; tableIndex++)
+    {
+        var table = result.Tables[tableIndex];
+        <div class="mb-3" data-iris-preview-table>
+            <div class="d-flex justify-content-between gap-2 mb-1">
+                <strong>@L["Iris.Preview.ResultTable"] @(tableIndex + 1)</strong>
+                <span>@L["Iris.Preview.RowsShown"]: @table.Rows.Count</span>
+            </div>
+            <div class="iris-preview-table-scroll">
+                <table class="table table-sm table-bordered mb-0">
+                    <thead class="sticky-top"><tr>
+                    @foreach (var column in table.Columns)
+                    {
+                        <th class="text-nowrap">@column.Name <small class="d-block fw-normal">@column.DataType</small></th>
+                    }
+                    </tr></thead>
+                    <tbody>
+                    @for (var rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
+                    {
+                        var row = table.Rows[rowIndex];
+                        <tr hidden="@(rowIndex >= 50 ? "hidden" : null)">@foreach (var value in row) { <td class="text-nowrap">@value</td> }</tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            @if (table.Rows.Count > 50)
+            {
+                <nav class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-2" aria-label="@L["Iris.Preview.Pages"]">
+                    <span class="small" data-iris-preview-page-info data-template="@L["Iris.Preview.PageInfo"]">@L["Iris.Preview.PageInfo", 1, 50, table.Rows.Count, 1, (table.Rows.Count + 49) / 50]</span>
+                    <button class="btn btn-sm btn-outline-success" type="button" data-iris-preview-previous disabled>@L["DataExchange.Previous"]</button>
+                    <button class="btn btn-sm btn-outline-success" type="button" data-iris-preview-next>@L["DataExchange.Next"]</button>
+                </nav>
+            }
+            @if (table.Rows.Count == 0) { <p class="small mt-2 mb-0">@L["Iris.Preview.Empty"]</p> }
+            @if (table.Truncated) { <p class="small text-warning mt-2 mb-0">@L["Iris.Preview.Truncated", result.RowLimit]</p> }
+        </div>
+    }
+    @if (result.Truncated) { <div class="alert alert-info">@L["Iris.Preview.Truncated", result.RowLimit]</div> }
+    <p class="small text-muted mb-0">@L["Iris.Preview.AuditId"]: @result.AuditId</p>
+}

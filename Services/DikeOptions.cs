@@ -14,5 +14,7 @@ public sealed class DikeOptions
 
     public string LogTableName { get; set; } = "BLS_LOGIT_STAT.dbo.CLIENT_RECONCILIATION_LOG";
 
+    public string DocumentTableName { get; set; } = "BLS_LOGIT_STAT.dbo.CLIENT_RECONCILIATION_DOCUMENTS";
+
     public string Stat3ConnectionStringName { get; set; } = "STAT3";
 }

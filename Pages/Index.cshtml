@@ -7,11 +7,11 @@
 <div class="container-fluid hub-page pt-4">
     @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
     {
-        <div class="alert alert-success" role="alert">@Model.SuccessMessage</div>
+        <div class="alert alert-success" role="alert">@L[Model.SuccessMessage ?? string.Empty]</div>
     }
     @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
     {
-        <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+        <div class="alert alert-danger" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
     }
 
     <div class="hub-hero mb-4">
@@ -25,17 +25,17 @@
 
     <div class="row g-4 align-items-start">
         <aside class="col-xxl-3 col-xl-3 col-lg-4 hub-sidebar">
-            <section class="hub-board mb-4">
+            <section class="hub-board mb-4" id="access-request">
                 <div class="section-title-row">
                     <h2>@L["Landing.AccessRequest"]</h2>
                 </div>
                 <div class="alert alert-info py-2 px-3 small" role="status">
-                    @Model.AuthorizationNotice
+                    @L[Model.AuthorizationNotice]
                 </div>
                 <form method="post" class="d-grid gap-3">
                     <div>
                         <label class="form-label" asp-for="DomainUser">@L["Landing.WindowsUser"]</label>
-                        <input class="form-control" asp-for="DomainUser" readonly="@Model.IsDomainUserResolved" />
+                        <input class="form-control" asp-for="DomainUser" readonly />
                     </div>
                     <div>
                         <label class="form-label" asp-for="AppName">@L["Common.Application"]</label>
@@ -88,7 +88,7 @@
                 </div>
                 <p class="public-feedback-intro">@L["Landing.Feedback.Description"]</p>
                 <div class="alert alert-info py-2 px-3 small" role="status">
-                    Dalyvaujant apklausoje ar balsavime bus paprasyta Windows autorizacijos, kad atsakymas butu priskirtas jusu domeno vartotojui.
+                    @L["Dalyvaujant apklausoje ar balsavime bus paprasyta Windows autorizacijos, kad atsakymas butu priskirtas jusu domeno vartotojui."]
                 </div>
 
                 @if (!string.IsNullOrWhiteSpace(Model.FeedbackSuccessMessage))
@@ -177,7 +177,7 @@
                                     <span>@Model.QuickPoll.ResponseCount dalyvavo</span>
                                     @if (Model.QuickPoll.HasResponded)
                                     {
-                                        <span>Atsakyta</span>
+                                        <span>@L["Atsakyta"]</span>
                                     }
                                 </div>
                                 <p class="quick-poll-question">@(pollQuestion?.Text ?? Model.QuickPoll.Survey.Title)</p>
@@ -271,8 +271,8 @@
                     <a class="app-tile" asp-page="/ClientInfo/Index">
                         <span class="app-tile-icon">CI</span>
                         <span class="app-tile-body">
-                            <span class="app-tile-title">Klientu info</span>
-                            <span class="app-tile-desc">Paieska pagal FIRMID is STAT3 klientu informacijos.</span>
+                            <span class="app-tile-title">@L["Klientu info"]</span>
+                            <span class="app-tile-desc">@L["Paieska pagal FIRMID is STAT3 klientu informacijos."]</span>
                         </span>
                     </a>
                 </div>
@@ -466,17 +466,17 @@
                 </div>
                 <div class="hub-app-grid">
                     <article class="metric-card">
-                        <small>INBOUND</small>
+                        <small>@L["INBOUND"]</small>
                         <h4>@L["Landing.Warehousing.Inbound.Title"]</h4>
                         <span class="text-muted">@L["Landing.Warehousing.Inbound.Body"]</span>
                     </article>
                     <article class="metric-card">
-                        <small>STORAGE</small>
+                        <small>@L["STORAGE"]</small>
                         <h4>@L["Landing.Warehousing.Storage.Title"]</h4>
                         <span class="text-muted">@L["Landing.Warehousing.Storage.Body"]</span>
                     </article>
                     <article class="metric-card">
-                        <small>OUTBOUND</small>
+                        <small>@L["OUTBOUND"]</small>
                         <h4>@L["Landing.Warehousing.Outbound.Title"]</h4>
                         <span class="text-muted">@L["Landing.Warehousing.Outbound.Body"]</span>
                     </article>
@@ -511,17 +511,17 @@
                 </div>
                 <div class="hub-app-grid">
                     <article class="metric-card">
-                        <small>PACK</small>
+                        <small>@L["PACK"]</small>
                         <h4>@L["Landing.Packing.Service.Title"]</h4>
                         <span class="text-muted">@L["Landing.Packing.Service.Body"]</span>
                     </article>
                     <article class="metric-card">
-                        <small>CONTROL</small>
+                        <small>@L["CONTROL"]</small>
                         <h4>@L["Landing.Packing.Control.Title"]</h4>
                         <span class="text-muted">@L["Landing.Packing.Control.Body"]</span>
                     </article>
                     <article class="metric-card">
-                        <small>FLOW</small>
+                        <small>@L["FLOW"]</small>
                         <h4>@L["Landing.Packing.Flow.Title"]</h4>
                         <span class="text-muted">@L["Landing.Packing.Flow.Body"]</span>
                     </article>
@@ -578,12 +578,12 @@
                         <span class="text-muted">@L["Landing.Kpi.What.Body"]</span>
                     </article>
                     <article class="metric-card">
-                        <small>TARGET</small>
+                        <small>@L["TARGET"]</small>
                         <h4>@L["Landing.Kpi.Target.Title"]</h4>
                         <span class="text-muted">@L["Landing.Kpi.Target.Body"]</span>
                     </article>
                     <article class="metric-card">
-                        <small>ACTION</small>
+                        <small>@L["ACTION"]</small>
                         <h4>@L["Landing.Kpi.Action.Title"]</h4>
                         <span class="text-muted">@L["Landing.Kpi.Action.Body"]</span>
                     </article>

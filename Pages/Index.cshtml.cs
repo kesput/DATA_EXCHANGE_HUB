@@ -21,18 +21,24 @@ public sealed class IndexModel(
         "KAIROS",
         "ATLAS",
         "HYDRA",
+        "DIKE",
         "ARETE",
         "APIS",
         "ARGUS",
         "THEMIS",
         "SPHINX",
-        "File upload"
+        "File upload",
+        "Send Mail File",
+        "Klientu info",
+        "SESHAT",
+        "IRIS",
+        "SEND MAIL"
     ];
 
     [BindProperty]
     public string DomainUser { get; set; } = string.Empty;
 
-    [BindProperty]
+    [BindProperty(SupportsGet = true)]
     public string AppName { get; set; } = "HYDRA";
 
     [BindProperty]
@@ -74,7 +80,7 @@ public sealed class IndexModel(
     public string? PublicFeedbackLoadError { get; private set; }
 
     public string AuthorizationNotice =>
-        "Norint atlikti veiksma, bus paprasyta Windows autorizacijos. Taip sistema automatiskai priskirs jusu domeno vartotoja.";
+        "Hub.Security.RequestIdentity";
 
     public async Task OnGetAsync()
     {
@@ -85,9 +91,7 @@ public sealed class IndexModel(
     public async Task<IActionResult> OnPostAsync()
     {
         var resolvedUserName = userNameResolver.ResolveUserName(User);
-        DomainUser = string.IsNullOrWhiteSpace(resolvedUserName)
-            ? DomainUser.Trim()
-            : resolvedUserName;
+        DomainUser = resolvedUserName;
 
         if (string.IsNullOrWhiteSpace(DomainUser))
         {

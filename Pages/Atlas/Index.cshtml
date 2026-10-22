@@ -111,12 +111,12 @@
         <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
             @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
             {
-                <div class="alert alert-success" role="status">@Model.SuccessMessage</div>
+                <div class="alert alert-success" role="status">@L[Model.SuccessMessage ?? string.Empty]</div>
             }
 
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
-                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+                <div class="alert alert-danger" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
             }
 
             @if (!Model.HasAccess)
@@ -394,134 +394,13 @@
 @section Scripts {
     <script>
         (() => {
-            const inputs = Array.from(document.querySelectorAll('[data-atlas-date-input]'));
-            if (inputs.length === 0) return;
-
-            const usesSlashFormat = inputs[0].placeholder.includes('/');
-            let activeInput = null;
-            let visibleMonth = new Date();
-            visibleMonth.setDate(1);
-
-            const picker = document.createElement('div');
-            picker.className = 'atlas-date-picker';
-            picker.hidden = true;
-            document.body.appendChild(picker);
-
-            inputs.forEach((input) => {
-                input.addEventListener('focus', () => openPicker(input));
-                input.addEventListener('click', () => openPicker(input));
-                input.addEventListener('change', syncDateRange);
-            });
-
             const userFilterForm = document.getElementById('atlasUserFilterForm');
             const allUsersToggle = document.querySelector('[data-atlas-users-all]');
             const userToggles = Array.from(document.querySelectorAll('[data-atlas-user-filter]'));
             allUsersToggle?.addEventListener('change', () => {
-                userToggles.forEach((input) => {
-                    input.checked = allUsersToggle.checked;
-                });
+                userToggles.forEach(input => { input.checked = allUsersToggle.checked; });
                 userFilterForm?.submit();
             });
-
-            document.addEventListener('click', (event) => {
-                if (!picker.contains(event.target) && !inputs.includes(event.target)) {
-                    picker.hidden = true;
-                }
-            });
-
-            function openPicker(input) {
-                activeInput = input;
-                visibleMonth = parseDate(input.value) ?? new Date();
-                visibleMonth.setDate(1);
-                renderPicker();
-
-                const rect = input.getBoundingClientRect();
-                picker.style.left = `${window.scrollX + rect.left}px`;
-                picker.style.top = `${window.scrollY + rect.bottom + 6}px`;
-                picker.hidden = false;
-            }
-
-            function renderPicker() {
-                const year = visibleMonth.getFullYear();
-                const month = visibleMonth.getMonth();
-                const first = new Date(year, month, 1);
-                const startOffset = (first.getDay() + 6) % 7;
-                const start = new Date(year, month, 1 - startOffset);
-                const monthLabel = `${year}-${String(month + 1).padStart(2, '0')}`;
-                const weekdays = ['Pr', 'An', 'Tr', 'Kt', 'Pn', 'St', 'Sk'];
-
-                picker.innerHTML = `
-                    <div class="atlas-date-picker-head">
-                        <button type="button" data-prev>&laquo;</button>
-                        <strong>${monthLabel}</strong>
-                        <button type="button" data-next>&raquo;</button>
-                    </div>
-                    <div class="atlas-date-picker-grid">
-                        ${weekdays.map((day, index) => `<span class="${index >= 5 ? 'is-weekend' : ''}">${day}</span>`).join('')}
-                        ${Array.from({ length: 42 }, (_, offset) => {
-                            const date = new Date(start);
-                            date.setDate(start.getDate() + offset);
-                            const isOutside = date.getMonth() !== month;
-                            const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                            return `<button type="button" class="${isOutside ? 'is-outside' : ''} ${isWeekend ? 'is-weekend' : ''}" data-date="${toIso(date)}">${date.getDate()}</button>`;
-                        }).join('')}
-                    </div>`;
-
-                picker.querySelector('[data-prev]')?.addEventListener('click', () => {
-                    visibleMonth.setMonth(visibleMonth.getMonth() - 1);
-                    renderPicker();
-                });
-                picker.querySelector('[data-next]')?.addEventListener('click', () => {
-                    visibleMonth.setMonth(visibleMonth.getMonth() + 1);
-                    renderPicker();
-                });
-                picker.querySelectorAll('[data-date]').forEach((button) => {
-                    button.addEventListener('click', () => {
-                        if (!activeInput) return;
-                        const date = parseIso(button.dataset.date);
-                        activeInput.value = formatDate(date);
-                        syncDateRange();
-                        picker.hidden = true;
-                    });
-                });
-            }
-
-            function parseDate(value) {
-                const trimmed = value.trim();
-                let match = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-                if (match) return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-                match = trimmed.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-                if (match) return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
-                return null;
-            }
-
-            function parseIso(value) {
-                const [year, month, day] = value.split('-').map(Number);
-                return new Date(year, month - 1, day);
-            }
-
-            function toIso(date) {
-                return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-            }
-
-            function formatDate(date) {
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                return usesSlashFormat ? `${day}/${month}/${year}` : `${year}-${month}-${day}`;
-            }
-
-            function syncDateRange() {
-                const startInput = document.querySelector('[data-atlas-start-date]');
-                const endInput = document.querySelector('[data-atlas-end-date]');
-                if (!startInput || !endInput) return;
-
-                const startDate = parseDate(startInput.value);
-                const endDate = parseDate(endInput.value);
-                if (startDate && endDate && endDate < startDate) {
-                    endInput.value = formatDate(startDate);
-                }
-            }
         })();
     </script>
 }

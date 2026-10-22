@@ -18,7 +18,7 @@
         <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
             <div class="p-4 mb-3 exchange-panel">
                 <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
-                    Data exchange <small class="badge bg-secondary ms-2">DE</small>
+                    @L["Data exchange"] <small class="badge bg-secondary ms-2">DE</small>
                 </h3>
                 <p class="mb-0 text-dark-green">@L["DataExchange.Subtitle"]</p>
             </div>
@@ -196,6 +196,7 @@
                                             <div>
                                                 <label class="form-label" for="importCorrectionYearMonth">CORRECTION_YEARMONTH</label>
                                                 <input id="importCorrectionYearMonth"
+                                                       data-hub-month-compact
                                                        name="ImportCorrectionYearMonth"
                                                        class="form-control form-control-sm correction-context-input"
                                                        type="text"
@@ -249,7 +250,7 @@
                                                             name="handler"
                                                             value="ExportCsv"
                                                             class="btn btn-sm btn-outline-success">
-                                                        Export CSV
+                                                        @L["Export CSV"]
                                                     </button>
                                                 </div>
                                                 <div class="alert alert-info py-2 mt-2 mb-0 export-summary" data-export-summary hidden></div>
@@ -837,43 +838,31 @@
                     const url = new URL(window.location.href);
                     url.search = new URLSearchParams(new FormData(form)).toString();
 
-                    const response = await fetch(url, { credentials: "same-origin" });
-                    if (!response.ok) {
-                        window.location.href = url.toString();
-                        return;
-                    }
+                    try {
+                        window.HubExports.clearError(form);
+                        const response = await fetch(url, { credentials: "same-origin" });
+                        const format = (submitter?.value || '').toLowerCase().includes('csv') ? 'CSV' : 'Excel';
+                        const { blob, fileName } = await window.HubExports.readResponse(response, format);
+                        const downloadUrl = URL.createObjectURL(blob);
+                        const link = document.createElement("a");
+                        link.href = downloadUrl;
+                        link.download = fileName;
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                        URL.revokeObjectURL(downloadUrl);
 
-                    const blob = await response.blob();
-                    const fileName = getDownloadFileName(response) || "export";
-                    const downloadUrl = URL.createObjectURL(blob);
-                    const link = document.createElement("a");
-                    link.href = downloadUrl;
-                    link.download = fileName;
-                    document.body.appendChild(link);
-                    link.click();
-                    link.remove();
-                    URL.revokeObjectURL(downloadUrl);
-
-                    const rowCount = response.headers.get("X-Export-Row-Count") ?? "0";
-                    const columnCount = response.headers.get("X-Export-Column-Count") ?? "0";
-                    if (summary) {
-                        summary.textContent = `Exportuota: ${rowCount} eil., ${columnCount} stulp.`;
-                        summary.hidden = false;
-                    }
+                        const rowCount = response.headers.get("X-Export-Row-Count") ?? "0";
+                        const columnCount = response.headers.get("X-Export-Column-Count") ?? "0";
+                        if (summary) {
+                            summary.textContent = `Exportuota: ${rowCount} eil., ${columnCount} stulp.`;
+                            summary.hidden = false;
+                        }
+                    } catch (error) { window.HubExports.showError(form, error); }
                 });
             });
         }
 
-        function getDownloadFileName(response) {
-            const disposition = response.headers.get("Content-Disposition") ?? "";
-            const utfMatch = disposition.match(/filename\*=UTF-8''([^;]+)/i);
-            if (utfMatch) {
-                return decodeURIComponent(utfMatch[1]);
-            }
-
-            const match = disposition.match(/filename="?([^";]+)"?/i);
-            return match ? match[1] : "";
-        }
         function createFilterRow(isFirst) {
             const row = document.createElement("div");
             row.className = "exchange-filter-row";

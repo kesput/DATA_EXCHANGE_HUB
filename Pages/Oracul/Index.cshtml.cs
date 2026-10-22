@@ -1,4 +1,4 @@
-﻿using DATA_EXCHANGE_HUB.Models;
+using DATA_EXCHANGE_HUB.Models;
 using DATA_EXCHANGE_HUB.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,6 +14,9 @@ public sealed class IndexModel(
     IStringLocalizer<DATA_EXCHANGE_HUB.SharedResource> localizer,
     Microsoft.Extensions.Caching.Memory.IMemoryCache memoryCache) : PageModel
 {
+    [BindProperty(SupportsGet = true)]
+    public bool ExcelGridlines { get; set; }
+
     private const string ExcelContentType =
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private const string CsvContentType = "text/csv; charset=utf-8";
@@ -184,7 +187,7 @@ public sealed class IndexModel(
             var file = excelWorkbookService.CreateWorkbook(
                 result.Columns,
                 result.Rows,
-                "ORACUL");
+                "ORACUL", ExcelGridlines);
 
             AddExportSummaryHeaders(result.Rows.Count, result.Columns.Count);
             return File(file, ExcelContentType, BuildExcelFileName());

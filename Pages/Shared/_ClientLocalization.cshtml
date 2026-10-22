@@ -1,0 +1,25 @@
+@{
+    var keys = new[]
+    {
+        "This field is required.", "Date cannot be earlier than {0}.", "Date cannot be later than {0}.",
+        "Choose a valid date and time.", "Failas ruosiamas", "Uzklausa vykdoma", "Vykdoma...",
+        "Ruosiamas Excel...", "Ruosiamas CSV...", "Excel failas ruosiamas", "Valyti", "Operatorius", "Filtro jungtis",
+        "Palaukite, skaiciavimas dar vykdomas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.",
+        "Exportuotos eilutes", "Exportuoti stulpeliai", "Formatas", "{0} exportavimas vykdomas",
+        "Ruosiamas {0} failas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.", "Ruosiamas {0}...",
+        "INF_PREK kodas turi buti tiksliai 7 simboliu, sudarytas tik is raidziu A-Z ir skaiciu 0-9.",
+        "Salinti INF_PREK {0}", "Pakeitimai issaugoti.", "Pakeitimu issaugoti nepavyko.",
+        "Enter a valid email address.", "Enter a value in the required format.", "Enter a valid value.",
+        "Value must be at least {0}.", "Value must be no greater than {0}.",
+        "Export.DownloadFailed", "Export.SessionExpired", "Export.SignIn"
+    };
+    var messages = keys.ToDictionary(key => key, key => L[key].Value);
+}
+<script>
+    window.HubI18n = (() => {
+        const messages = @Json.Serialize(messages);
+        const t = key => messages[key] ?? key;
+        const format = (key, ...values) => t(key).replace(/\{(\d+)\}/g, (_, index) => String(values[index] ?? ''));
+        return { t, format };
+    })();
+</script>

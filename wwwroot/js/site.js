@@ -3,6 +3,35 @@
 
 // Write your JavaScript code.
 
+// Native validation messages follow the selected page language, not the browser language.
+(() => {
+    document.addEventListener('invalid', event => {
+        const input = event.target;
+        if (!input.validity || input.validity.customError || input.classList.contains('hub-date-native')) return;
+        const validity = input.validity;
+        let message;
+        if (validity.valueMissing) message = window.HubI18n.t('This field is required.');
+        else if (validity.typeMismatch && input.type === 'email') message = window.HubI18n.t('Enter a valid email address.');
+        else if (validity.patternMismatch) message = window.HubI18n.t('Enter a value in the required format.');
+        else if (validity.rangeUnderflow) message = window.HubI18n.format('Value must be at least {0}.', input.min);
+        else if (validity.rangeOverflow) message = window.HubI18n.format('Value must be no greater than {0}.', input.max);
+        else message = window.HubI18n.t('Enter a valid value.');
+        input.setCustomValidity(message);
+        input.dataset.hubLocalizedValidity = '1';
+    }, true);
+    const clearMessage = event => {
+        const input = event.target;
+        if (input.dataset?.hubLocalizedValidity !== '1') return;
+        input.setCustomValidity('');
+        delete input.dataset.hubLocalizedValidity;
+    };
+    document.addEventListener('input', clearMessage, true);
+    document.addEventListener('change', clearMessage, true);
+    document.addEventListener('reset', event => {
+        Array.from(event.target.elements || []).forEach(input => clearMessage({ target: input }));
+    }, true);
+})();
+
 (() => {
     function normalizeSearchText(value) {
         return (value ?? "")
@@ -189,12 +218,12 @@
         const text = (submitter?.textContent ?? "").trim().toLowerCase();
         const title = submitter?.dataset.busyTitle
             || form.dataset.busyTitle
-            || (text.includes("excel") ? "Failas ruosiamas" : "Uzklausa vykdoma");
+            || window.HubI18n.t(text.includes("excel") ? "Failas ruosiamas" : "Uzklausa vykdoma");
         const message = submitter?.dataset.busyMessage
             || form.dataset.busyMessage
-            || "Palaukite, skaiciavimas dar vykdomas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.";
+            || window.HubI18n.t("Palaukite, skaiciavimas dar vykdomas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.");
         const label = submitter?.dataset.busyLabel
-            || (text.includes("excel") ? "Ruosiamas Excel..." : "Vykdoma...");
+            || window.HubI18n.t(text.includes("excel") ? "Ruosiamas Excel..." : "Vykdoma...");
 
         return { title, message, label };
     }
@@ -243,13 +272,13 @@
     }
 
     function isExportAction(element) {
-        const handler = (element?.getAttribute("asp-page-handler") || element?.formAction || element?.href || "").toLowerCase();
+        const handler = (element?.getAttribute("asp-page-handler") || (element?.name === "handler" ? element.value : "") || element?.formAction || element?.href || "").toLowerCase();
         const text = (element?.textContent || "").toLowerCase();
         return handler.includes("exportexcel") || handler.includes("exportcsv") || text.includes("export excel") || text.includes("export csv");
     }
 
     function getExportFormat(element) {
-        const value = `${element?.formAction || element?.href || ""} ${element?.textContent || ""}`.toLowerCase();
+        const value = `${element?.value || ""} ${element?.formAction || element?.href || ""} ${element?.textContent || ""}`.toLowerCase();
         return value.includes("csv") ? "CSV" : "Excel";
     }
 
@@ -275,12 +304,69 @@
         const disposition = response.headers.get("Content-Disposition") || "";
         const utfMatch = /filename\*=UTF-8''([^;]+)/i.exec(disposition);
         if (utfMatch) {
-            return decodeURIComponent(utfMatch[1]);
+            try { return decodeURIComponent(utfMatch[1].replace(/^"|"$/g, "")); } catch { /* Fall back to the plain filename. */ }
         }
 
         const match = /filename="?([^";]+)"?/i.exec(disposition);
         return match ? match[1] : "export";
     }
+
+    function clearExportError(anchor) {
+        const host = anchor.closest("section, .tool-section, .exchange-content") || anchor.parentElement;
+        host?.querySelectorAll('[data-export-error]').forEach(error => error.remove());
+    }
+
+    function showExportError(anchor, error) {
+        clearExportError(anchor);
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-danger my-3';
+        alert.dataset.exportError = '';
+        alert.setAttribute('role', 'alert');
+        alert.textContent = error.message || window.HubI18n.t('Export.DownloadFailed');
+        if (error.loginUrl) {
+            const login = document.createElement('a');
+            login.className = 'alert-link ms-2';
+            login.href = error.loginUrl;
+            login.textContent = window.HubI18n.t('Export.SignIn');
+            alert.append(login);
+        }
+        anchor.insertAdjacentElement('afterend', alert);
+        alert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    async function readExportResponse(response, format) {
+        const type = (response.headers.get('Content-Type') || '').split(';')[0].trim().toLowerCase();
+        const extension = format === 'CSV' ? 'csv' : 'xlsx';
+        let fileName = getDownloadFileName(response);
+        const mimeMatches = extension === 'xlsx'
+            ? type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            : type === 'text/csv' || type === 'application/csv';
+        const namedFile = new RegExp(`\\.${extension}$`, 'i').test(fileName);
+        if (!response.ok || !mimeMatches && !(type === 'application/octet-stream' && namedFile)) {
+            const error = new Error(window.HubI18n.t('Export.DownloadFailed'));
+            const finalUrl = response.url ? new URL(response.url, location.href) : null;
+            if (finalUrl?.origin === location.origin && finalUrl.pathname.toLowerCase().startsWith('/hub/login')) {
+                error.message = window.HubI18n.t('Export.SessionExpired');
+                error.loginUrl = finalUrl.href;
+            } else if (type === 'text/html') {
+                const document = new DOMParser().parseFromString(await response.text(), 'text/html');
+                const detail = document.querySelector('.alert-danger, .alert-warning, [role="alert"]')?.textContent?.trim();
+                if (detail) error.message = window.HubI18n.t('Export.DownloadFailed') + ' ' + detail;
+            }
+            throw error;
+        }
+        const blob = await response.blob();
+        if (blob.size === 0) throw new Error(window.HubI18n.t('Export.DownloadFailed'));
+        if (extension === 'xlsx') {
+            const signature = new Uint8Array(await blob.slice(0, 4).arrayBuffer());
+            if (signature[0] !== 0x50 || signature[1] !== 0x4b || signature[2] !== 0x03 || signature[3] !== 0x04)
+                throw new Error(window.HubI18n.t('Export.DownloadFailed'));
+        }
+        if (!namedFile) fileName = `export.${extension}`;
+        return { blob, fileName };
+    }
+
+    window.HubExports = { readResponse: readExportResponse, showError: showExportError, clearError: clearExportError };
 
     function downloadBlob(blob, fileName) {
         const url = URL.createObjectURL(blob);
@@ -316,15 +402,15 @@
 
         summary.innerHTML = `
             <div class="metric-card">
-                <small>Exportuotos eilutes</small>
+                <small>${window.HubI18n.t("Exportuotos eilutes")}</small>
                 <h4>${rowCount}</h4>
             </div>
             <div class="metric-card">
-                <small>Exportuoti stulpeliai</small>
+                <small>${window.HubI18n.t("Exportuoti stulpeliai")}</small>
                 <h4>${columnCount}</h4>
             </div>
             <div class="metric-card">
-                <small>Formatas</small>
+                <small>${window.HubI18n.t("Formatas")}</small>
                 <h4>${format}</h4>
             </div>`;
     }
@@ -334,29 +420,30 @@
         event.stopImmediatePropagation();
         const format = getExportFormat(submitter);
         const busyText = {
-            title: `${format} exportavimas vykdomas`,
-            message: `Ruosiamas ${format} failas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.`,
-            label: `Ruosiamas ${format}...`
+            title: window.HubI18n.format("{0} exportavimas vykdomas", format),
+            message: window.HubI18n.format("Ruosiamas {0} failas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.", format),
+            label: window.HubI18n.format("Ruosiamas {0}...", format)
         };
-        setSubmittingState(form, submitter, busyText);
-
         try {
+            clearExportError(form);
             const formData = new FormData(form);
-            const action = submitter?.formAction || form.action || window.location.href;
-            const response = await fetch(action, {
-                method: (form.method || "POST").toUpperCase(),
-                body: formData,
-                credentials: "same-origin"
-            });
-
-            if (!response.ok) {
-                window.location.href = action;
-                return;
+            if (submitter?.name) formData.set(submitter.name, submitter.value);
+            const action = new URL(submitter?.getAttribute('formaction') || form.action || window.location.href, location.href);
+            const method = (submitter?.getAttribute('formmethod') || form.method || 'POST').toUpperCase();
+            const options = { method, credentials: 'same-origin' };
+            if (method === 'GET') {
+                new Set(formData.keys()).forEach(key => action.searchParams.delete(key));
+                formData.forEach((value, key) => action.searchParams.append(key, value));
+            } else {
+                options.body = formData;
             }
-
-            const blob = await response.blob();
-            downloadBlob(blob, getDownloadFileName(response));
+            setSubmittingState(form, submitter, busyText);
+            const response = await fetch(action, options);
+            const { blob, fileName } = await readExportResponse(response, format);
+            downloadBlob(blob, fileName);
             showExportSummary(form, response, format);
+        } catch (error) {
+            showExportError(form, error);
         } finally {
             resetBusyForm(form);
         }
@@ -368,9 +455,9 @@
         let panelHost = link.closest(".excel-actions") || link.parentElement;
         const fakeForm = panelHost || document.body;
         const busyText = {
-            title: `${format} exportavimas vykdomas`,
-            message: `Ruosiamas ${format} failas. Neuzdarykite puslapio ir nespauskite nuorodos dar karta.`,
-            label: `Ruosiamas ${format}...`
+            title: window.HubI18n.format("{0} exportavimas vykdomas", format),
+            message: window.HubI18n.format("Ruosiamas {0} failas. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.", format),
+            label: window.HubI18n.format("Ruosiamas {0}...", format)
         };
         const originalText = link.textContent;
         ensureBusyPanel(fakeForm, busyText.title, busyText.message);
@@ -378,15 +465,13 @@
         link.classList.add("disabled");
 
         try {
+            clearExportError(link);
             const response = await fetch(link.href, { credentials: "same-origin" });
-            if (!response.ok) {
-                window.location.href = link.href;
-                return;
-            }
-
-            const blob = await response.blob();
-            downloadBlob(blob, getDownloadFileName(response));
+            const { blob, fileName } = await readExportResponse(response, format);
+            downloadBlob(blob, fileName);
             showExportSummary(link, response, format);
+        } catch (error) {
+            showExportError(link, error);
         } finally {
             link.textContent = originalText;
             link.classList.remove("disabled");

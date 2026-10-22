@@ -6,12 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>DATA_EXCHANGE_HUB</AssemblyName>
     <RootNamespace>DATA_EXCHANGE_HUB</RootNamespace>
-    <DefaultItemExcludes>$(DefaultItemExcludes);publish\**</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);publish\**;Tests\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Bondski.QvdLib" Version="2.2.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+    <PackageReference Include="Microsoft.SqlServer.TransactSql.ScriptDom" Version="180.140.0" />
     <PackageReference Include="MsgReader" Version="6.0.13" />
   </ItemGroup>
 

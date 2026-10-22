@@ -18,12 +18,21 @@ v7.0 pakeitimai orientuoti i SQL modeliu selectu atskyrima pagal vartotojo salie
 v6.0 pakeitimai orientuoti i dideliu SQL rezultatu valdyma ir vienoda eksportavimo patirti visuose SQL modeliuose.
 
 - `ARETE`, `APIS`, `HYDRA`, `ORACUL`, `ClientInfo`, `Themis` ir `DataExchange` turi `Export Excel` ir `Export CSV` veiksmus.
+- Salia Excel eksporto mygtuko galima pazymeti `Excel langeliu krastines`: antrastems ir visai eksportuojamai duomenu sriciai, iskaitant tuscius langelius, uzdedamos juodos krastines. Pasirinkimas taip pat veikia `KAIROS`, `SPHINX` ir APIS detaliu eksportuose. Nepazymejus lieka iprastas formatas; CSV pasirinkimas neveikia.
 - CSV eksportas generuojamas su `sep=;` ir UTF-8 BOM, kad Excel atidarant faila duomenys iskart issiskaidytu i celes pagal `;` skirtuka.
 - Eksporto metu rodomas uzimtumo pranesimas su formatu (`Excel` arba `CSV`), analogiskai `EXECUTE` vykdymo pranesimui.
 - Po eksporto puslapyje parodomi KPI: eksportuotu eiluciu kiekis, eksportuotu stulpeliu kiekis ir formatas.
 - Po `EXECUTE` dideli rezultatai vizualizacijoje puslapiuojami po 10 000 eiluciu. SQL rezultatas saugomas cache, todel spaudziant `Ankstesnis` / `Kitas` SQL uzklausa nevykdoma is naujo.
 - Exportai naudoja pilna cache turima rezultata, todel eksportuojamos visos uzkrautos eilutes, ne tik aktyviai matomas 10 000 eiluciu puslapis.
 ## Paleidimas
+
+LT ir EN vartotojo sasajos tekstai saugomi `Resources/SharedResource.lt.resx` ir `Resources/SharedResource.en.resx`. Puslapiai juos naudoja per `L[...]`, o dinaminiai naršykles pranesimai gauna tik reikiamus vertimus is `Pages/Shared/_ClientLocalization.cshtml`. SQL parametru ir uzklausu aprasymai taip pat lokalizuojami pagal komentaro teksta. Keiciant tekstus reikia atnaujinti abi kalbas, islaikyti vienodus formatavimo argumentus ir nekeisti formu lauku vardu bei siunciamu techniniu reiksmiu.
+
+Visuose moduliuose datos ir laikotarpiai pasirenkami bendru kalendoriaus mygtuku. LT kalba datos rodomos `YYYY-MM-DD`, EN kalba `DD/MM/YYYY`; datos su laiku islaiko ir laika, o menesio laikotarpiai rodomi `YYYYMM`. I serveri datos perduodamos ISO formatu, islaikant lauku ribas ir validacija. `CORRECTION_YEARMONTH` importo laukas ir toliau perduodamas kaip `YYYYMM`.
+
+Pradzios ir pabaigos datos susiejamos toje pacioje formoje: pabaigos kalendoriaus minimumas yra pradzia, pradzios maksimumas - pabaiga. Netinkamas intervalas, ivestas ranka arba gautas pakeitus viena is datu, iskart parodo paaiskinima pasirinkta kalba ir blokuoja formos pateikima. Vienodos datos leidziamos; isjungta neprivaloma pabaiga neberiboja pradzios. SQL parametru laukams naudojamas `data-date-range-field` (pvz. `@SNDATE` / `@ENDATE`, `@START_DATE` / `@END_DATE`).
+
+APIS SQL faile galima nurodyti Excel skaitini stulpelio formata komentaru, pvz. `-- SQL_EXCEL_NUMBER: PLL|0.000`. Kiekvienas stulpelis aprasomas atskira eilute, naudojant rezultato stulpelio pavadinima ir Excel formato koda (`0`, `0.00`, `0.000`, `#,##0.00` ir pan.). Eksporte atpazintos skaitines reiksmes tampa tikrais Excel skaiciais; tuscios reiksmes lieka tuscios, o neskaitinis tekstas issaugomas. Formatas taikomas ir su langeliu krastinemis, ir be ju. CSV ir puslapio lentele nesikeicia.
 
 ```powershell
 dotnet run
@@ -201,6 +210,49 @@ Duomenu pakeitimai rasomi i `[BLS_LOGIT_STAT].[dbo].[BS_EXCHANGE_LOG]`.
 - `ACTOR_USER`, `EVENT_AT`, `TABLE_NAME`, `KEY_COLUMN`, `KEY_VALUE` leidzia matyti kas, kada ir kur atliko pakeitima.
 
 Pries naudojant ikelima, koregavima ar salinima naujoje aplinkoje paleiskite `Database/DataExchangeHub.sql`, kad butu sukurta log lentele.
+
+## HUB prieigos patikra
+
+- Nesekmingas HUB prisijungimas panaikina ankstesne prisijungimo sesija. Bandymas naudoti kito vartotojo duomenis blokuoja modulius iki sekmingo prisijungimo savo vardu; ankstesne Windows autorizacija sio blokavimo neapeina.
+- Production prisijungimui reikalingas serverio atpazintas Windows vartotojas. Jei Windows vartotojas neatpazintas, prisijungimas vien ivestu vartotojo vardu ir slaptazodziu neleidziamas. Serveryje turi veikti Windows Authentication.
+- `HubModuleAccess` taiko ta pacia prieigos patikra HUB sarasui ir tiesioginiams moduliu adresams. SQL arba prieigos tikrinimo klaida prieigos nesuteikia. Modulio vidines administratoriaus, saliu ir dokumentu teises tikrinamos papildomai.
+- IRIS ir SEND MAIL prieiga tikrinama per `BLS_LOGIT_STAT.dbo.APPLICATION_GetUserAccess` aplikacijoms `IRIS` ir `SEND_MAIL`. Galima nustatyti atitinkamo `Iris` / `SendMail` skyriaus `AppName`, `AccessConnectionStringName` ir `AccessProcedureName`. Kitu moduliu esami prieigos saltiniai islaikomi.
+- Prieigos uzklausos vartotoja nustato serveris; formoje pateiktas vartotojo vardas negali pakeisti uzklausos autoriaus. Uzklausejo prieiga neatsiranda automatiskai pateikus prasyma.
+
+## IRIS Excel priedo nustatymai
+
+IRIS SQL saltinio formos mygtukas „Perziureti SQL rezultata“ vykdo dar neissaugotus formos duomenis ir rodo tikras rezultato eilutes po forma, nekeisdamas saltinio nustatymu. SQL tekstui ir failams Microsoft ScriptDom tikrina visa sintakses medi: leidziami SELECT, CTE, JOIN, agregatai ir vidines uzklausos; nuolatiniu lenteliu DML / DDL, EXEC, NEXT VALUE FOR, OPENQUERY / OPENROWSET bei netiesioginis vykdymas blokuojami. Laikinoms # / ## lentelems leidziami CREATE TABLE, SELECT INTO, INSERT, UPDATE, DELETE, TRUNCATE ir DROP; galimi IF / BEGIN blokai, jei ju viduje tik leidziami veiksmai. DML taikinys turi buti tiesiogiai nurodytas laikinos lenteles vardu, ne aliasu; OUTPUT INTO neleidziamas. INLINE_SQL taip pat tikrinamas issaugant saltini. Abu # / ## vardu tipai perziuroje perrasomi i unikalius privacius # sesijos vardus, iskaitant OBJECT_ID tikrinimus ir stulpeliu kvalifikatorius. ## sintakse nepateikia bendros lenteles kitoms perziuroms ar vartotojams. Duomenys galioja tik vieno vykdymo metu; isorinis IRIS siuntimo vykdytojas tures taikyti ta pacia patikra ir izoliavima. Komentaruose bei tekstinese reiksmeje esantys SQL komandu zodziai patikros neapeina ir nesukelia klaidingu draudimu.
+
+Vartotojas atskirai patvirtino programuotoju sukurtu proceduru vykdyma. STORED_PROCEDURE kelias tikrina sistemos kataloge, kad procedura egzistuoja ir nera sistemine, bei vykdo ja pagal pilna DB / schemos / proceduros pavadinima. Sisteminems proceduroms ir sisteminems DB prieiga siame kelyje neleidziama; proceduros neprilyginamos SELECT ir gali tureti programuotoju numatytu salutiniu veiksmu.
+
+Numatyta perziuros riba: 500 eiluciu vienai lentelei (`Iris:PreviewMaxRows`), iki 3 lenteliu, iki 100 stulpeliu, iki 2000 simboliu vienai reiksmei ir bendras teksto biudzetas. SQL tekstas ribojamas iki 1 MB; `Iris:PreviewTimeoutSeconds` numatytasis laikas yra 30 s. SQL failams leidziamas projekto `Sql` katalogas ir papildomi `Iris:PreviewSqlRoots` katalogai; nuorodos bei junction katalogai neleidziami.
+
+Perziuros lentele rodoma atskirame viso plocio bloke po KPI / adresatu / SQL saltinio formomis, pries siuntimo grafika. Rezultatai puslapiuojami po 50 eiluciu is jau gauto perziuros rezultato; puslapiu keitimas SQL pakartotinai nevykdo. Plati lentele slenkama horizontaliai savo konteineryje. SQL redaktorius turi savas slinkties juostas ir nuo rezultato dydzio neissiplecia.
+
+Auditas saugomas `Iris:PreviewLogTableName` (numatyta `BLS_LOGIT_STAT.dbo.IRIS_QUERY_PREVIEW_LOG`) per `Iris:ConnectionStringName`. Registruojami serverio nustatytas vartotojas, pradzia / pabaiga UTC, saltinio ir KPI ID, ivestas SQL (`SqlText`) ir realiai vykdytas izoliuotas SQL (`ExecutedSql`) arba procedura, failo kelias, prisijungimo profilis, DB, busena, parodytu eiluciu kiekis, trukme bei klaida. Pradinis irasas ir vykdomas tekstas privalo buti issaugoti pries SQL vykdyma; jei nepavyksta, saltinis nevykdomas. Atmesti bandymai irgi registruojami. Nutruke STARTED irasai lieka matomi, jei procesas sustabdomas ar dingsta SQL rysys. Lenteles schema sukuriama automatiskai, esami irasai neperrasomi.
+
+Regresiniai testai: `dotnet run --project Tests/IrisPreview/Checks.csproj`. Papildomiems SQL integraciniams testams vykdykite `dotnet run --project Tests/IrisPreview/Checks.csproj -- --sql` is projekto katalogo. Integraciniai testai naudoja vietinius sukonfiguruotus prisijungimus, kuria atskirus atsitiktiniais vardais pavadintus testinius objektus ir juos pasalina; tikru laisku nesiuncia.
+
+- SQL saltinio formoje prie „Prisegti Excel“ galima pasirinkti „Excel langeliu krastines“. Pasirinkimas saugomas kiekvienam saltiniui ir atkuriamas ji redaguojant.
+- `Iris:SourceTableName` lenteleje (numatyta `BLS_LOGIT_STAT.dbo.IRIS_REPORT_SOURCES`) naudojamas `ExcelGridlines BIT NOT NULL DEFAULT (0)` stulpelis. Trukstamas stulpelis pridedamas automatiskai per IRIS schemos patikra; esamu saltiniu pasirinkimas lieka isjungtas.
+- Busimas siuntimo skriptas, kai `AttachExcel=1`, turi perskaityti `ExcelGridlines`: `1` reiskia langeliu krastines antrastei ir duomenu sriciai, `0` – be krastiniu. Bendras C# generatorius tai palaiko per `IExcelWorkbookService.CreateWorkbook(..., gridlines: source.ExcelGridlines)`. Pats IRIS siuntimo / Excel generavimo vykdymas siame etape dar neprijungtas.
+
+## DIKE susitarimai
+
+- Susitarimai saugomi `Dike:ConfigTableName` lenteleje (`BLS_LOGIT_STAT.dbo.CLIENT_RECONCILIATION_CONFIG`), pakeitimai – `Dike:LogTableName` (`BLS_LOGIT_STAT.dbo.CLIENT_RECONCILIATION_LOG`), naudojant `Dike:AccessConnectionStringName` jungti. Trukstamos lenteles sukuriamos automatiskai, esamos neperrasomos.
+- Vienas klientas gali tureti kelis susitarimus. Sarase paspaudus klienta atidaromas konkretus susitarimas koregavimui; „Naujas susitarimas“ pradeda nauja irasa tam paciam klientui.
+- „Naujo sukurimas / koregavimas“ pasirinkus klienta automatiskai uzkraunamas jo naujausias aktyvus susitarimas (jei aktyviu nera — naujausias issaugotas). Jei susitarimu keli, galima pasirinkti konkretu. Tuscia forma esamam klientui atidaroma tik aiskiai paspaudus „Naujas susitarimas“. DIKE derinimu sritis siuo metu skirta TARA.
+- Sukurimas ir koregavimas kartu su auditu atliekami vienoje SQL transakcijoje. Auditas saugo prisijungusi vartotoja (ta pati `IUserNameResolver`, kaip prieigos tikrinimas), UTC laika ir visas reiksmes pries / po. Versija apsaugo nuo pasenusios formos perrasymo.
+- Istorijoje galima ieskoti vartotojo, kliento ar pakeistos reiksmes; rodoma iki 200 naujausiu atrinktu ivykiu. Susitarimu sarase – iki 500 naujausiu irasu.
+- Datos, pirmas laikotarpis, INF_PREK, procentas ir siuntimo nustatymai tikrinami serveryje. Pirmas laikotarpis issaugomas `YYYYMM`, nors kalendoriaus pateikiama `YYYY-MM` reiksme taip pat priimama.
+- Vadybininkas rodomas prie kliento informacijos ir klientu sarase is SQL `MANAGER_FULLNAME`: `WM0.SNTXDB.dbo.OWNER.MANAGERID` jungiamas su `WM0.SNTXECOM.dbo.MANAGER.ID`, skaitomas `MANAGER.FULLNAME`. Saraso ir pasirinkto kliento uzklausos naudoja ta pati saltini. Vadybininkas susitarimo formoje neredaguojamas; ankstesnes reiksmes susitarimu JSON neperrasomos is formos.
+- „Esamuose susitarimuose“ yra susitarimo dokumentu blokas: PDF / EML ikelimas (iki 10 MB), pastaba, perziura lange ir originalo atsisiuntimas. Kiekvienas ikelimas sukuria atskira faila, net jei pavadinimas kartojasi.
+- Dokumentai saugomi SQL `Dike:DocumentTableName` (`BLS_LOGIT_STAT.dbo.CLIENT_RECONCILIATION_DOCUMENTS`), su turiniu, susitarimo ID, autoriumi ir laiku. Ikelimas / pasalinimas ir istorija atliekami vienoje transakcijoje; pasalinimas loginis, audito duomenys ir ankstesnis turinys lieka saugomi.
+- Patvirtinta prieigos taisykle: visi DIKE prieiga turintys vartotojai gali skaityti ir prideti aktyviu SA/BLT klientu susitarimu failus. Kiekvienas dokumento veiksmas tikrina susitarima, klienta ir failo priklausyma. Salinti gali tik DIKE `ADMIN`, patikrintas per ta pacia SQL prieigos procedura (`ACCESS` / `ACCESS_LEVEL`); teise tikrinama ir serveryje.
+- EML perziurai naudojama jau idiegta `MsgReader` MIME biblioteka. HTML laisko turinys atskirtas `sandbox` iframe, taikomas CSP ir draudziamas isorinis turinys. PDF atidaromas narsykles perziuroje. Vien dokumento ikelimas nereiskia faktinio derinimo patvirtinimo.
+- Siuntimo adresatai, menesio dienos 1–31 ir laikas `Europe/Vilnius` issaugomi kaip nustatymai; DIKE automatini vykdyma ir formos generavima dar reikia prijungti.
+- Laikas ivedamas ranka `HH:mm` arba pasirenkamas laikrodzio mygtuku is valandu 00–23 ir minuciu 00–59. Neegzistuojantis laikas, pvz. `10:66`, iskart pazymimas pranesimu; tikrinimas taip pat atliekamas serveryje.
+- Automatinio formavimo perziura perskaiciuojama pakeitus laikotarpi, dazni, dienas, laika ar galiojimo pradzia. Grafikas prasideda tame paciame pirmo derinimo menesyje, menesiniu arba 3 menesiu zingsniu. Rodomos artimiausia dar nepraejusi data ir ankstesne data pagal grafika su savaites diena bei 24h laiku; menesyje nesancios dienos praleidziamos. Ankstesne suplanuota data nera faktinio ivykdymo patvirtinimas; faktinio paskutinio derinimo SQL saltini dar reikia prijungti. Neaktyviems ir pagal poreiki derinamiems susitarimams automatine data nerodoma. Vasaros laiko metu neegzistuojantis laikas pastumiamas viena valanda pirmyn, apie tai rodant paaiskinima.
 
 ## ORACUL
 

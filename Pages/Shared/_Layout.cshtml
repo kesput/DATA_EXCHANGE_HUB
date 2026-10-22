@@ -19,7 +19,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Data Exchange Hub</title>
+    <title>@L[ViewData["Title"]?.ToString() ?? string.Empty] - Data Exchange Hub</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -42,7 +42,7 @@
                     {
                         <a class="btn btn-orange header-hub-back" asp-page="/Hub/Index">@L["Common.BackToHub"]</a>
                     }
-                    <nav class="language-switcher" aria-label="Language">
+                    <nav class="language-switcher" aria-label="@L["Language"]">
                         <a class="language-option @(currentCulture == "lt" ? "active" : null)"
                            asp-page="/Culture"
                            asp-route-culture="lt"
@@ -67,7 +67,10 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <partial name="_ClientLocalization" />
+    <script src="~/js/date-picker.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/excel-gridlines.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

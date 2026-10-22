@@ -29,21 +29,63 @@ public sealed class ExcelWorkbookService : IExcelWorkbookService
     public byte[] CreateWorkbook(
         IReadOnlyList<string> headers,
         IReadOnlyList<IReadOnlyDictionary<string, string?>> rows,
-        string worksheetName)
+        string worksheetName,
+        bool gridlines = false,
+        IReadOnlyDictionary<string, string>? numberFormats = null)
     {
         if (headers.Count == 0)
         {
             throw new InvalidOperationException("Eksportui nerasta stulpeliu.");
         }
 
+        var columnFormats = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (numberFormats is not null)
+        {
+            foreach (var pair in numberFormats)
+                if (headers.Contains(pair.Key, StringComparer.OrdinalIgnoreCase)) columnFormats[pair.Key] = pair.Value;
+        }
+        var formats = columnFormats.Values.Distinct(StringComparer.Ordinal).ToList();
+        var includeStyles = gridlines || formats.Count > 0;
         using var output = new MemoryStream();
         using (var archive = new ZipArchive(output, ZipArchiveMode.Create, leaveOpen: true))
         {
-            WriteXml(archive, "[Content_Types].xml", CreateContentTypesDocument());
+            WriteXml(archive, "[Content_Types].xml", CreateContentTypesDocument(includeStyles));
             WriteXml(archive, "_rels/.rels", CreateRootRelationshipsDocument());
             WriteXml(archive, "xl/workbook.xml", CreateWorkbookDocument(worksheetName));
-            WriteXml(archive, "xl/_rels/workbook.xml.rels", CreateWorkbookRelationshipsDocument());
-            WriteXml(archive, "xl/worksheets/sheet1.xml", CreateWorksheetDocument(headers, rows));
+            WriteXml(archive, "xl/_rels/workbook.xml.rels", CreateWorkbookRelationshipsDocument(includeStyles));
+            var worksheet = CreateWorksheetDocument(headers, rows);
+            if (gridlines)
+            {
+                foreach (var cell in worksheet.Descendants(SpreadsheetNs + "c"))
+                {
+                    cell.SetAttributeValue("s", "1");
+                }
+            }
+            foreach (var row in worksheet.Descendants(SpreadsheetNs + "row").Skip(1))
+            {
+                var cells = row.Elements(SpreadsheetNs + "c").ToArray();
+                for (var index = 0; index < headers.Count; index++)
+                {
+                    if (!columnFormats.TryGetValue(headers[index], out var format)) continue;
+                    var cell = cells[index];
+                    cell.SetAttributeValue("s", 2 + formats.IndexOf(format) * 2 + (gridlines ? 1 : 0));
+                    var value = cell.Element(SpreadsheetNs + "is")?.Element(SpreadsheetNs + "t")?.Value;
+                    if (string.IsNullOrWhiteSpace(value))
+                    {
+                        cell.RemoveNodes();
+                        cell.SetAttributeValue("t", "n");
+                    }
+                    else if (decimal.TryParse(value, NumberStyles.Float, CultureInfo.CurrentCulture, out var number) ||
+                             decimal.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out number))
+                    {
+                        cell.RemoveNodes();
+                        cell.SetAttributeValue("t", "n");
+                        cell.Add(new XElement(SpreadsheetNs + "v", number.ToString(CultureInfo.InvariantCulture)));
+                    }
+                }
+            }
+            if (includeStyles) WriteXml(archive, "xl/styles.xml", CreateGridlineStylesDocument(formats));
+            WriteXml(archive, "xl/worksheets/sheet1.xml", worksheet);
         }
 
         return output.ToArray();
@@ -135,7 +177,50 @@ public sealed class ExcelWorkbookService : IExcelWorkbookService
 
         return $"\"{text.Replace("\"", "\"\"", StringComparison.Ordinal)}\"";
     }
-    private static XDocument CreateContentTypesDocument()
+    private static XDocument CreateGridlineStylesDocument(IReadOnlyList<string> formats)
+    {
+        var document = XDocument.Parse("""
+            <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+              <fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts>
+              <fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>
+              <borders count="2">
+                <border><left/><right/><top/><bottom/><diagonal/></border>
+                <border>
+                  <left style="thin"><color rgb="FF000000"/></left>
+                  <right style="thin"><color rgb="FF000000"/></right>
+                  <top style="thin"><color rgb="FF000000"/></top>
+                  <bottom style="thin"><color rgb="FF000000"/></bottom>
+                  <diagonal/>
+                </border>
+              </borders>
+              <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+              <cellXfs count="2">
+                <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+                <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1"/>
+              </cellXfs>
+              <cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
+            </styleSheet>
+            """);
+        if (formats.Count > 0)
+        {
+            document.Root!.AddFirst(new XElement(SpreadsheetNs + "numFmts",
+                new XAttribute("count", formats.Count),
+                formats.Select((format, index) => new XElement(SpreadsheetNs + "numFmt",
+                    new XAttribute("numFmtId", 164 + index), new XAttribute("formatCode", format)))));
+            var cellFormats = document.Root.Element(SpreadsheetNs + "cellXfs")!;
+            for (var index = 0; index < formats.Count; index++)
+                for (var border = 0; border <= 1; border++)
+                    cellFormats.Add(new XElement(SpreadsheetNs + "xf",
+                        new XAttribute("numFmtId", 164 + index), new XAttribute("fontId", 0),
+                        new XAttribute("fillId", 0), new XAttribute("borderId", border),
+                        new XAttribute("xfId", 0), new XAttribute("applyNumberFormat", 1),
+                        new XAttribute("applyBorder", border)));
+            cellFormats.SetAttributeValue("count", 2 + formats.Count * 2);
+        }
+        return document;
+    }
+
+    private static XDocument CreateContentTypesDocument(bool gridlines)
     {
         return new XDocument(
             new XDeclaration("1.0", "utf-8", "yes"),
@@ -146,6 +231,9 @@ public sealed class ExcelWorkbookService : IExcelWorkbookService
                 new XElement(ContentTypesNs + "Default",
                     new XAttribute("Extension", "xml"),
                     new XAttribute("ContentType", "application/xml")),
+                gridlines ? new XElement(ContentTypesNs + "Override",
+                    new XAttribute("PartName", "/xl/styles.xml"),
+                    new XAttribute("ContentType", "application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml")) : null,
                 new XElement(ContentTypesNs + "Override",
                     new XAttribute("PartName", "/xl/workbook.xml"),
                     new XAttribute("ContentType", ContentType)),
@@ -165,11 +253,15 @@ public sealed class ExcelWorkbookService : IExcelWorkbookService
                     new XAttribute("Target", "xl/workbook.xml"))));
     }
 
-    private static XDocument CreateWorkbookRelationshipsDocument()
+    private static XDocument CreateWorkbookRelationshipsDocument(bool gridlines)
     {
         return new XDocument(
             new XDeclaration("1.0", "utf-8", "yes"),
             new XElement(PackageRelationshipNs + "Relationships",
+                gridlines ? new XElement(PackageRelationshipNs + "Relationship",
+                    new XAttribute("Id", "rId2"),
+                    new XAttribute("Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles"),
+                    new XAttribute("Target", "styles.xml")) : null,
                 new XElement(PackageRelationshipNs + "Relationship",
                     new XAttribute("Id", "rId1"),
                     new XAttribute("Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet"),

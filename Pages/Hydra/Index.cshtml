@@ -47,7 +47,7 @@
         <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
-                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+                <div class="alert alert-danger" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
             }
 
             <div class="hub-hero mb-4 hydra-hero">
@@ -94,11 +94,11 @@
                     }
                     else
                     {
-                        <form method="post" class="hydra-query-form" id="hydraQueryForm" data-busy-form data-busy-title="HYDRA uzklausa vykdoma">
+                        <form method="post" class="hydra-query-form" id="hydraQueryForm" data-busy-form data-busy-title="@L["HYDRA uzklausa vykdoma"]">
                             <div class="hydra-query-line">
                                 <div class="hydra-query-name">
                                     <label class="form-label" asp-for="QueryId">@L["Hydra.Query.Select"]</label>
-                                    <select class="form-select" asp-for="QueryId" id="hydraQuerySelect">
+                                    <select class="form-select form-select-sm" asp-for="QueryId" id="hydraQuerySelect">
                                         @foreach (var query in areaQueries)
                                         {
                                             <option value="@query.Id">@query.Name</option>
@@ -137,7 +137,7 @@
                                                     <option value="@definition.Name"
                                                             data-type="@definition.DataType"
                                                             data-operators="@string.Join(",", definition.AllowedOperators)"
-                                                                                                                            data-description="@definition.Description"
+                                                                                                                            data-description="@L[definition.Description]"
                                                                 selected="@(firstFilter.ColumnName.Equals(definition.Name, StringComparison.OrdinalIgnoreCase))">
                                                         @definition.Name
                                                     </option>
@@ -239,7 +239,7 @@
                                                         <option value="@definition.Name"
                                                                 data-type="@definition.DataType"
                                                                 data-operators="@string.Join(",", definition.AllowedOperators)"
-                                                                                                                                data-description="@definition.Description"
+                                                                                                                                data-description="@L[definition.Description]"
                                                                 selected="@(filter.ColumnName.Equals(definition.Name, StringComparison.OrdinalIgnoreCase))">
                                                             @definition.Name
                                                         </option>
@@ -266,7 +266,7 @@
                                                        value="@(Model.SelectedQuery.Filters.FirstOrDefault(definition => definition.Name.Equals(filter.ColumnName, StringComparison.OrdinalIgnoreCase)) is { } valueDefinition ? IndexModel.FormatFilterInputValue(valueDefinition, filter.Value) : filter.Value)"
                                                        placeholder="@L["DataExchange.FilterValue"]" />
                                                 <button type="button" class="btn btn-sm btn-outline-secondary filter-remove-button" data-remove-hydra-filter>@L["DataExchange.ClearFilters"]</button>
-                                                <div class="form-text filter-description-line" data-hydra-filter-description>@(filterDefinition?.Description ?? string.Empty)</div>
+                                                <div class="form-text filter-description-line" data-hydra-filter-description>@L[filterDefinition?.Description ?? string.Empty]</div>
                                             </div>
                                         }
                                     </div>
@@ -277,9 +277,9 @@
                             }
 
                             <div class="form-actions">
-                                <button type="submit" asp-page-handler="Execute" class="btn btn-orange" data-busy-label="Vykdoma...">EXECUTE</button>
-                                <button type="submit" asp-page-handler="ExportExcel" class="btn btn-outline-primary" data-busy-title="Excel failas ruosiamas" data-busy-label="Ruosiamas Excel..." data-busy-auto-reset-ms="5000">Export Excel</button>
-                                    <button type="submit" asp-page-handler="ExportCsv" class="btn btn-outline-success" data-busy-title="CSV failas ruosiamas" data-busy-label="Ruosiamas CSV..." data-busy-auto-reset-ms="5000">Export CSV</button>
+                                <button type="submit" asp-page-handler="Execute" class="btn btn-orange" data-busy-label="@L["Vykdoma..."]">@L["EXECUTE"]</button>
+                                <button type="submit" asp-page-handler="ExportExcel" class="btn btn-outline-primary" data-busy-title="@L["Excel failas ruosiamas"]" data-busy-label="@L["Ruosiamas Excel..."]" data-busy-auto-reset-ms="5000">@L["Export Excel"]</button>
+                                    <button type="submit" asp-page-handler="ExportCsv" class="btn btn-outline-success" data-busy-title="@L["CSV failas ruosiamas"]" data-busy-label="@L["Ruosiamas CSV..."]" data-busy-auto-reset-ms="5000">@L["Export CSV"]</button>
                             </div>
                         </form>
 
@@ -304,9 +304,9 @@
                             {
                                 <div class="d-flex align-items-center gap-2 flex-wrap mb-3" data-result-pager>
                                     <span class="status-pill">Rodoma @Model.ResultPageStartRow-@Model.ResultPageEndRow is @Model.ResultTotalRows</span>
-                                    <button type="submit" form="hydraQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Max(1, Model.ResultPageValue - 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue <= 1)">Ankstesnis</button>
+                                    <button type="submit" form="hydraQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Max(1, Model.ResultPageValue - 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue <= 1)">@L["Ankstesnis"]</button>
                                     <span class="small text-muted">Puslapis @Model.ResultPageValue / @Model.ResultTotalPages</span>
-                                    <button type="submit" form="hydraQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Min(Model.ResultTotalPages, Model.ResultPageValue + 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue >= Model.ResultTotalPages)">Kitas</button>
+                                    <button type="submit" form="hydraQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Min(Model.ResultTotalPages, Model.ResultPageValue + 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue >= Model.ResultTotalPages)">@L["Kitas"]</button>
                                 </div>
                             }
                             @if (Model.Result.Rows.Count == 0)
@@ -321,7 +321,7 @@
                                             <tr>
                                                 @for (var columnIndex = 0; columnIndex < Model.Result.Columns.Count; columnIndex++)
                                                 {
-                                                    <th data-hydra-sort-column="@columnIndex" role="button" title="Double click to sort">
+                                                    <th data-hydra-sort-column="@columnIndex" role="button" title="@L["Double click to sort"]">
                                                         @Model.Result.Columns[columnIndex]
                                                     </th>
                                                 }
@@ -352,7 +352,7 @@
 @section Scripts {
     <script>
         (() => {
-            const filters = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.SelectedQuery?.Filters.Where(filter => !filter.IsRequired).Select(filter => new { filter.Name, filter.DataType, filter.AllowedOperators, filter.Description }) ?? []));
+            const filters = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.SelectedQuery?.Filters.Where(filter => !filter.IsRequired).Select(filter => new { filter.Name, filter.DataType, filter.AllowedOperators, Description = L[filter.Description].Value }) ?? []));
             const rows = document.getElementById("hydraFilterRows");
             const addButton = document.getElementById("addHydraFilterButton");
             const querySelect = document.getElementById("hydraQuerySelect");
@@ -428,7 +428,7 @@
                 removeButton.type = "button";
                 removeButton.className = "btn btn-sm btn-outline-secondary filter-remove-button";
                 removeButton.dataset.removeHydraFilter = "";
-                removeButton.textContent = "Valyti";
+                removeButton.textContent = window.HubI18n.t("Valyti");
                 row.appendChild(removeButton);
 
                 return row;
@@ -551,34 +551,12 @@
             });
 
             function wireIsoDatePicker(valueInput, dataType) {
-                if (dataType !== "date" && dataType !== "datetime") {
-                    valueInput.dataset.isoDatePicker = "";
-                    return;
-                }
-
-                if (valueInput.dataset.isoDatePicker === dataType) {
-                    return;
-                }
-
-                valueInput.dataset.isoDatePicker = dataType;
-                valueInput.addEventListener("focus", () => openIsoDatePicker(valueInput, dataType));
-                valueInput.addEventListener("click", () => openIsoDatePicker(valueInput, dataType));
-                valueInput.addEventListener("blur", () => {
-                    valueInput.type = "text";
-                });
-            }
-
-            function openIsoDatePicker(valueInput, dataType) {
-                if (valueInput.type === "date" || valueInput.type === "datetime-local") {
-                    return;
-                }
-
-                valueInput.type = dataType === "date" ? "date" : "datetime-local";
-                if (typeof valueInput.showPicker === "function") {
-                    valueInput.showPicker();
+                const operator = valueInput.closest('.exchange-filter-row')?.querySelector('select[name="FilterOperators"]')?.value?.toLowerCase();
+                if (['in', 'like', 'between'].includes(operator)) return;
+                if (dataType === 'date' || dataType === 'datetime') {
+                    valueInput.type = dataType === 'date' ? 'date' : 'datetime-local';
                 }
             }
-
             function sortResultTable(table, columnIndex) {
                 const tbody = table.tBodies[0];
                 if (!tbody || Number.isNaN(columnIndex)) {

@@ -16,6 +16,9 @@ public sealed class IndexModel(
     IDataExchangeTableService tableService,
     IKairosAnalysisQueryService kairosAnalysisQueryService) : PageModel
 {
+    [BindProperty(SupportsGet = true)]
+    public bool ExcelGridlines { get; set; }
+
     private static readonly CultureInfo LithuanianCulture = CultureInfo.GetCultureInfo("lt-LT");
     private static readonly TimeSpan CutoffTime = new(11, 0, 0);
     private const string PromoBuyFromTodayQueryId = "Sql/Kairos/LT/DataExchangeSql/PromoAnalysis/PROMO_BY_BUY_FROM_TODAY.sql";
@@ -471,7 +474,7 @@ public sealed class IndexModel(
                 .Select(column => column.Name)
                 .ToArray();
             var rows = ToExcelRows(tableData, headers);
-            var file = excelWorkbookService.CreateWorkbook(headers, rows, "Promo forecast");
+            var file = excelWorkbookService.CreateWorkbook(headers, rows, "Promo forecast", ExcelGridlines);
             return File(file, ExcelContentType, BuildKairosExcelFileName(
                 "promo_forecast",
                 exportAllFilteredRows ? "filtered_all" : $"top{PromoForecastRowLimitValue}"));
@@ -509,7 +512,7 @@ public sealed class IndexModel(
             : query.Equals("daily", StringComparison.OrdinalIgnoreCase)
                 ? "promo_analysis_daily_qty_flow"
                 : "promo_analysis_buy_from_today";
-        var file = excelWorkbookService.CreateWorkbook(result.Columns, rows, "Promo analysis");
+        var file = excelWorkbookService.CreateWorkbook(result.Columns, rows, "Promo analysis", ExcelGridlines);
         return File(file, ExcelContentType, BuildKairosExcelFileName(
             exportName,
             IsPromoAnalysisAllRows ? "all" : $"top{PromoAnalysisRowLimitValue}"));

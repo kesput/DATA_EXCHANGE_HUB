@@ -2,6 +2,7 @@
 @model DATA_EXCHANGE_HUB.Pages.Apis.IndexModel
 @{
     ViewData["Title"] = "APIS";
+    var isEnglish = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "en";
 }
 
 <div class="container-fluid exchange-page pt-4">
@@ -11,7 +12,7 @@
                 <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
                     APIS <small class="badge bg-secondary ms-2">AP</small>
                 </h3>
-                <p class="mb-0 text-dark-green">Analytics - Processes - Indicators - Statistics</p>
+                <p class="mb-0 text-dark-green">@L["Analytics - Processes - Indicators - Statistics"]</p>
             </div>
 
             <div class="hub-app-list mb-3">
@@ -24,7 +25,7 @@
                         <a class="list-group-item list-group-item-action active list-with-details @(pillar.Area.Equals(Model.ActiveArea, StringComparison.OrdinalIgnoreCase) ? "is-selected" : "")"
                            href="?Area=@Uri.EscapeDataString(pillar.Area)&QueryId=@Uri.EscapeDataString(targetQuery?.Id ?? string.Empty)#apis-@pillar.Area">
                             <div class="d-flex justify-content-between align-items-baseline">
-                                <strong>@pillar.TitleLt</strong>
+                                <strong>@(isEnglish ? pillar.TitleEn : pillar.TitleLt)</strong>
                                 <span class="text-muted small">@pillar.Letter</span>
                             </div>
                             <div class="d-flex justify-content-end align-items-center mt-1 client-kpis">
@@ -44,14 +45,14 @@
         <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
-                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+                <div class="alert alert-danger" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
             }
 
             <div class="hub-hero mb-4">
                 <div>
-                    <span class="hub-eyebrow">Analysis platform</span>
+                    <span class="hub-eyebrow">@L["Analysis platform"]</span>
                     <h1>APIS</h1>
-                    <p>Analize, procesai, indikatoriai ir statistika vienoje SQL pagrindu valdomaje darbo erdveje.</p>
+                    <p>@L["Analize, procesai, indikatoriai ir statistika vienoje SQL pagrindu valdomaje darbo erdveje."]</p>
                 </div>
             </div>
 
@@ -65,9 +66,8 @@
                            href="?Area=@Uri.EscapeDataString(pillar.Area)&QueryId=@Uri.EscapeDataString(targetQuery?.Id ?? string.Empty)#apis-@pillar.Area">
                             <span class="app-tile-icon">@pillar.Letter</span>
                             <span class="app-tile-body">
-                                <span class="app-tile-title">@pillar.TitleLt</span>
-                                <span class="app-tile-desc">@pillar.DescriptionLt</span>
-                                <span class="text-muted">@pillar.TitleEn - @pillar.DescriptionEn</span>
+                                <span class="app-tile-title">@(isEnglish ? pillar.TitleEn : pillar.TitleLt)</span>
+                                <span class="app-tile-desc">@(isEnglish ? pillar.DescriptionEn : pillar.DescriptionLt)</span>
                             </span>
                             <span class="app-status">@queries.Count SQL</span>
                         </a>
@@ -80,21 +80,21 @@
                 var areaQueries = Model.GetQueriesForArea(pillar.Area);
                 <section class="tool-section mb-3" id="apis-@pillar.Area">
                     <div class="section-title-row">
-                        <h2>@pillar.TitleLt</h2>
-                        <span class="status-pill">@pillar.TitleEn</span>
+                        <h2>@(isEnglish ? pillar.TitleEn : pillar.TitleLt)</h2>
+                        <span class="status-pill">@(isEnglish ? pillar.TitleEn : pillar.TitleLt)</span>
                     </div>
 
                     @if (pillar.Area.Equals("Analytics", StringComparison.OrdinalIgnoreCase) && Model.CanViewQvdPreview)
                     {
                         <div class="hub-board mb-3">
                             <div class="section-title-row compact">
-                                <h3>QVD preview</h3>
+                                <h3>@L["QVD preview"]</h3>
                                 <span class="status-pill-muted">Data/Apis/Qvd</span>
                             </div>
                             @if (Model.QvdFiles.Count == 0)
                             {
                                                                 <div class="empty-state">
-                                    <div>QVD failu sukonfiguruotuose aplankuose nerasta.</div>
+                                    <div>@L["QVD failu sukonfiguruotuose aplankuose nerasta."]</div>
                                     @if (Model.QvdRoots.Count > 0)
                                     {
                                         <div class="mt-2 small">
@@ -112,7 +112,7 @@
                                     <input type="hidden" name="Area" value="@Model.ActiveArea" />
                                     <input type="hidden" name="QueryId" value="@Model.QueryId" />
                                     <div class="col-lg-8">
-                                        <label class="form-label" for="apisQvdFile">QVD failas</label>
+                                        <label class="form-label" for="apisQvdFile">@L["QVD failas"]</label>
                                         <select class="form-select" id="apisQvdFile" name="QvdFileId" onchange="this.form.submit()">
                                             @foreach (var qvdFile in Model.QvdFiles)
                                             {
@@ -121,7 +121,7 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-4">
-                                        <button type="submit" class="btn btn-outline-primary w-100">Perkrauti QVD</button>
+                                        <button type="submit" class="btn btn-outline-primary w-100">@L["Perkrauti QVD"]</button>
                                     </div>
                                 </form>
 
@@ -129,25 +129,25 @@
                                 {
                                     <div class="hub-metrics my-3">
                                         <div class="metric-card">
-                                            <small>Irasai QVD</small>
+                                            <small>@L["Irasai QVD"]</small>
                                             <h4>@Model.QvdPreview.TotalRecords</h4>
                                         </div>
                                         <div class="metric-card">
-                                            <small>Stulpeliai</small>
+                                            <small>@L["Stulpeliai"]</small>
                                             <h4>@Model.QvdPreview.Fields.Count</h4>
                                         </div>
                                         <div class="metric-card">
-                                            <small>Preview</small>
+                                            <small>@L["Preview"]</small>
                                             <h4>@Model.QvdPreview.Rows.Count</h4>
                                         </div>
                                         <div class="metric-card">
-                                            <small>Create UTC</small>
+                                            <small>@L["Create UTC"]</small>
                                             <h4>@(Model.QvdPreview.File.CreateUtcTime?.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) ?? "-")</h4>
                                         </div>
                                     </div>
 
                                     <div class="alert alert-info" role="status">
-                                        <strong>CreatorDoc:</strong> @(string.IsNullOrWhiteSpace(Model.QvdPreview.File.CreatorDoc) ? "-" : Model.QvdPreview.File.CreatorDoc)
+                                        <strong>@L["CreatorDoc:"]</strong> @(string.IsNullOrWhiteSpace(Model.QvdPreview.File.CreatorDoc) ? "-" : Model.QvdPreview.File.CreatorDoc)
                                     </div>
 
                                     @if (!string.IsNullOrWhiteSpace(Model.QvdPreview.Warning))
@@ -159,9 +159,9 @@
                                         <table class="table align-middle exchange-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Field</th>
-                                                    <th>Symbols</th>
-                                                    <th>Format</th>
+                                                    <th>@L["Field"]</th>
+                                                    <th>@L["Symbols"]</th>
+                                                    <th>@L["Format"]</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -209,7 +209,7 @@
                     }
                     @if (areaQueries.Count == 0)
                     {
-                        <div class="empty-state">Siai APIS krypciai dar nera SQL failu.</div>
+                        <div class="empty-state">@L["Siai APIS krypciai dar nera SQL failu."]</div>
                     }
                     else
                     {
@@ -219,7 +219,7 @@
                         if (isIndicatorView)
                         {
                             <div class="apis-indicator-shell">
-                                <div class="apis-indicator-toolbar" aria-label="Indikatoriu pasirinkimas">
+                                <div class="apis-indicator-toolbar" aria-label="@L["Indikatoriu pasirinkimas"]">
                                     @foreach (var query in indicatorQueries)
                                     {
                                         <a class="apis-indicator-tab @(query.Id.Equals(Model.SelectedQuery?.Id, StringComparison.OrdinalIgnoreCase) ? "is-selected" : "")"
@@ -232,7 +232,7 @@
                                 @if (!string.IsNullOrWhiteSpace(Model.SelectedQuery?.Description))
                                 {
                                     <div class="alert alert-info mb-0" role="status">
-                                        @Model.SelectedQuery.Description
+                                        @L[Model.SelectedQuery.Description]
                                     </div>
                                 }
                             </div>
@@ -242,7 +242,7 @@
                         <form method="post" class="d-grid gap-3" id="apisQueryForm">
                             <div class="row g-3 align-items-end">
                                 <div class="col-lg-8">
-                                    <label class="form-label" asp-for="QueryId">SQL select / procedura</label>
+                                    <label class="form-label" asp-for="QueryId">@L["SQL select / procedura"]</label>
                                     <select class="form-select" asp-for="QueryId" id="apisQuerySelect">
                                         @foreach (var query in areaQueries)
                                         {
@@ -251,24 +251,24 @@
                                     </select>
                                 </div>
                                 <div class="col-lg-4 d-flex gap-2">
-                                    <button type="submit" asp-page-handler="Execute" class="btn btn-orange" data-apis-submit-label="Vykdoma...">EXECUTE</button>
-                                    <button type="submit" asp-page-handler="ExportExcel" class="btn btn-outline-primary" data-apis-submit-label="Ruosiamas Excel..." data-apis-auto-reset-ms="5000">Export Excel</button>
-                                    <button type="submit" asp-page-handler="ExportCsv" class="btn btn-outline-success" data-apis-submit-label="Ruosiamas CSV..." data-apis-auto-reset-ms="5000">Export CSV</button>
+                                    <button type="submit" asp-page-handler="Execute" class="btn btn-orange" data-apis-submit-label="@L["Vykdoma..."]">@L["EXECUTE"]</button>
+                                    <button type="submit" asp-page-handler="ExportExcel" class="btn btn-outline-primary" data-apis-submit-label="@L["Ruosiamas Excel..."]" data-apis-auto-reset-ms="5000">@L["Export Excel"]</button>
+                                    <button type="submit" asp-page-handler="ExportCsv" class="btn btn-outline-success" data-apis-submit-label="@L["Ruosiamas CSV..."]" data-apis-auto-reset-ms="5000">@L["Export CSV"]</button>
                                 </div>
                             </div>
 
                             <div class="apis-query-progress" id="apisQueryProgress" role="status" aria-live="polite" hidden>
                                 <div class="apis-query-spinner" aria-hidden="true"></div>
                                 <div>
-                                    <strong id="apisQueryProgressTitle">Uzklausa vykdoma</strong>
-                                    <span>Palaukite, SQL skaiciavimas dar tesiasi. Neuzdarykite puslapio ir nespauskite mygtuko dar karta.</span>
+                                    <strong id="apisQueryProgressTitle">@L["Uzklausa vykdoma"]</strong>
+                                    <span>@L["Palaukite, SQL skaiciavimas dar tesiasi. Neuzdarykite puslapio ir nespauskite mygtuko dar karta."]</span>
                                 </div>
                             </div>
 
                             @if (!string.IsNullOrWhiteSpace(Model.SelectedQuery?.Description))
                             {
                                 <div class="alert alert-info mb-0" role="status">
-                                    @Model.SelectedQuery.Description
+                                    @L[Model.SelectedQuery.Description]
                                 </div>
                             }
                             @if (Model.SelectedQuery?.Parameters.Count > 0)
@@ -287,7 +287,7 @@
                                     .ToArray();
                                 <div class="hub-board apis-parameter-board" data-apis-required-parameter-count="@requiredParameters.Length">
                                     <div class="section-title-row compact">
-                                        <h3>Parametrai</h3>
+                                        <h3>@L["Parametrai"]</h3>
                                         <span class="status-pill-muted">@Model.SelectedQuery.ProcedureName</span>
                                     </div>
                                     <div class="row g-3">
@@ -296,24 +296,7 @@
                                             var parameter = requiredParameters[index];
                                             <div class="col-xl-4 col-md-6">
                                                 <input type="hidden" name="Parameters[@index].Name" value="@parameter.Name" />
-                                                @if (parameter.AllowedOperators.Count > 1)
-                                                {
-                                                    <label class="form-label" for="apis-param-operator-@index">Operatorius</label>
-                                                    <select class="form-select form-select-sm mb-2"
-                                                            id="apis-param-operator-@index"
-                                                            name="Parameters[@index].Operator">
-                                                        @foreach (var parameterOperator in parameter.AllowedOperators)
-                                                        {
-                                                            <option value="@parameterOperator" selected="@(Model.GetParameterOperator(parameter).Equals(parameterOperator, StringComparison.OrdinalIgnoreCase) ? "selected" : null)">
-                                                                @IndexModel.GetOperatorLabel(parameterOperator)
-                                                            </option>
-                                                        }
-                                                    </select>
-                                                }
-                                                else
-                                                {
-                                                    <input type="hidden" name="Parameters[@index].Operator" value="@(parameter.AllowedOperators.FirstOrDefault() ?? ExchangeTableFilter.EqualsOperator)" />
-                                                }
+                                                <input type="hidden" name="Parameters[@index].Operator" value="@ExchangeTableFilter.EqualsOperator" />
                                                 <label class="form-label" for="apis-param-@index">
                                                     @parameter.Name <span class="text-danger">*</span>
                                                 </label>
@@ -335,6 +318,7 @@
                                                     <div class="input-group apis-date-input" data-date-format="@Model.GetDateDisplayFormat()">
                                                         <input class="form-control apis-date-display"
                                                                id="apis-param-@index"
+                                                               data-date-range-field="@parameter.Name"
                                                                name="Parameters[@index].Value"
                                                                type="text"
                                                                inputmode="numeric"
@@ -344,7 +328,7 @@
                                                                title="@IndexModel.GetParameterTitle(parameter)"
                                                                autocomplete="off"
                                                                required />
-                                                        <button class="btn btn-outline-secondary apis-date-open" type="button" aria-label="Pasirinkti data">Cal</button>
+                                                        <button class="btn btn-outline-secondary apis-date-open" type="button" aria-label="@L["Pasirinkti data"]">@L["Cal"]</button>
                                                         <input class="apis-date-native" type="date" value="@Model.GetParameterNativeDateValue(parameter)" tabindex="-1" aria-hidden="true" />
                                                     </div>
                                                 }
@@ -364,7 +348,7 @@
                                                 <div class="form-text">
                                                     @if (!string.IsNullOrWhiteSpace(parameter.Description))
                                                     {
-                                                        <span>@parameter.Description</span>
+                                                        <span>@L[parameter.Description]</span>
                                                     }
                                                     else
                                                     {
@@ -379,7 +363,7 @@
                                     {
                                         <div class="exchange-filter-form apis-filter-form mt-3">
                                             <div class="exchange-filter-header">
-                                                <h3>Pasirinktiniai filtrai</h3>
+                                                <h3>@L["Pasirinktiniai filtrai"]</h3>
                                             </div>
                                             <div class="exchange-filter-rows" id="apisOptionalParameterRows">
                                                 @for (var optionalIndex = 0; optionalIndex < activeOptionalParameters.Length; optionalIndex++)
@@ -388,36 +372,36 @@
                                                     var index = requiredParameters.Length + optionalIndex;
                                                     <div class="exchange-filter-row" data-apis-optional-parameter-row>
                                                         <div class="filter-connector">
-                                                            <select class="form-select form-select-sm" name="Parameters[@index].Connector" aria-label="Filtro jungtis" data-apis-optional-connector>
+                                                            <select class="form-select form-select-sm" name="Parameters[@index].Connector" aria-label="@L["Filtro jungtis"]" data-apis-optional-connector>
                                                                 <option value="@ExchangeTableFilter.AndConnector" selected="@(Model.GetParameterConnector(parameter).Equals(ExchangeTableFilter.AndConnector, StringComparison.OrdinalIgnoreCase))">AND</option>
                                                                 <option value="@ExchangeTableFilter.OrConnector" selected="@(Model.GetParameterConnector(parameter).Equals(ExchangeTableFilter.OrConnector, StringComparison.OrdinalIgnoreCase))">OR</option>
                                                             </select>
                                                         </div>
-                                                        <select class="form-select form-select-sm" name="Parameters[@index].Name" aria-label="Filtras" data-apis-optional-name>
-                                                            <option value="">Filtras</option>
+                                                        <select class="form-select form-select-sm" name="Parameters[@index].Name" aria-label="@L["Filtras"]" data-apis-optional-name>
+                                                            <option value="">@L["Filtras"]</option>
                                                             @foreach (var optionalParameter in optionalParameters)
                                                             {
                                                                 <option value="@optionalParameter.Name"
                                                                         data-type="@optionalParameter.DataType"
                                                                         data-operators="@string.Join(",", optionalParameter.AllowedOperators)"
-                                                                        data-description="@optionalParameter.Description"
+                                                                        data-description="@L[optionalParameter.Description]"
                                                                         selected="@(optionalParameter.Name.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase))">@optionalParameter.Name</option>
                                                             }
                                                         </select>
-                                                        <select class="form-select form-select-sm" name="Parameters[@index].Operator" aria-label="Operatorius" data-apis-optional-operator>
+                                                        <select class="form-select form-select-sm" name="Parameters[@index].Operator" aria-label="@L["Operatorius"]" data-apis-optional-operator>
                                                             @foreach (var parameterOperator in parameter.AllowedOperators)
                                                             {
                                                                 <option value="@parameterOperator" selected="@(Model.GetParameterOperator(parameter).Equals(parameterOperator, StringComparison.OrdinalIgnoreCase))">@IndexModel.GetOperatorLabel(parameterOperator)</option>
                                                             }
                                                         </select>
                                                         <input class="form-control form-control-sm filter-value-input" name="Parameters[@index].Value" value="@Model.GetParameterValue(parameter)" placeholder="@IndexModel.GetParameterPlaceholder(parameter)" data-apis-optional-value />
-                                                        <button class="btn btn-sm btn-outline-secondary filter-remove-button" type="button" data-apis-remove-optional>Valyti</button>
-                                                        <div class="form-text filter-description-line" data-apis-optional-help>@(string.IsNullOrWhiteSpace(parameter.Description) ? parameter.DataType : parameter.Description)</div>
+                                                        <button class="btn btn-sm btn-outline-secondary filter-remove-button" type="button" data-apis-remove-optional>@L["Valyti"]</button>
+                                                        <div class="form-text filter-description-line" data-apis-optional-help>@(string.IsNullOrWhiteSpace(parameter.Description) ? parameter.DataType : L[parameter.Description].Value)</div>
                                                     </div>
                                                 }
                                             </div>
                                             <div class="exchange-filter-actions">
-                                                <button class="btn btn-sm btn-outline-secondary" type="button" id="apisAddOptionalParameter">Prideti filtra</button>
+                                                <button class="btn btn-sm btn-outline-secondary" type="button" id="apisAddOptionalParameter">@L["Prideti filtra"]</button>
                                             </div>
                                         </div>
                                     }
@@ -464,9 +448,9 @@
                                     .Select(summary => new { summary.Key.Dvaznew, summary.Key.Org })
                                     .ToArray();
 
-                            <div class="apis-kpi-view-tabs" role="tablist" aria-label="WAREHOUSE KPI vaizdai">
+                            <div class="apis-kpi-view-tabs" role="tablist" aria-label="@L["WAREHOUSE KPI vaizdai"]">
                                 <button class="apis-kpi-view-tab active" id="warehouse-kpi-summary-tab" data-bs-toggle="tab" data-bs-target="#warehouse-kpi-summary" type="button" role="tab" aria-controls="warehouse-kpi-summary" aria-selected="true">KPI</button>
-                                <button class="apis-kpi-view-tab" id="warehouse-kpi-hours-tab" data-bs-toggle="tab" data-bs-target="#warehouse-kpi-hours" type="button" role="tab" aria-controls="warehouse-kpi-hours" aria-selected="false">Valandos</button>
+                                <button class="apis-kpi-view-tab" id="warehouse-kpi-hours-tab" data-bs-toggle="tab" data-bs-target="#warehouse-kpi-hours" type="button" role="tab" aria-controls="warehouse-kpi-hours" aria-selected="false">@L["Valandos"]</button>
                             </div>
                             <div class="tab-content apis-kpi-view-content">
                                 <div class="tab-pane fade show active" id="warehouse-kpi-summary" role="tabpanel" aria-labelledby="warehouse-kpi-summary-tab" tabindex="0">
@@ -493,7 +477,7 @@
                                                     <tr>
                                                         <th>DVAZNEW</th>
                                                         <th>ORG</th>
-                                                        <th>Lines</th>
+                                                        <th>@L["Lines"]</th>
                                                         <th>Brutto_t</th>
                                                         <th>F_pll</th>
                                                         <th>M_pll</th>
@@ -557,7 +541,7 @@
                                             <section class="apis-kpi-panel" aria-label="@regime KPI pagal valandas">
                                                 <div class="apis-kpi-panel-header">
                                                     <h3>@regime - uzsakymai pagal valandas</h3>
-                                                    <p>Stulpeliai: TOTAL, &lt;07:00, 08:00...17:00, &gt;17:00 | Reiksme: Lines</p>
+                                                    <p>@L["Apis.KpiColumns"]</p>
                                                 </div>
                                                 <div class="table-responsive">
                                                     <table class="apis-kpi-table apis-kpi-hour-pivot">
@@ -628,31 +612,31 @@
                                 new { Key = "pll", Label = "PLL", Column = "PLL_BY_ORDER", Description = "uzsakymo paletes" }
                             };
 
-                            <div class="apis-kpi-view-tabs" role="tablist" aria-label="VN NOT PICKED PCC FLOWS KPI vaizdai">
+                            <div class="apis-kpi-view-tabs" role="tablist" aria-label="@L["VN NOT PICKED PCC FLOWS KPI vaizdai"]">
                                 <button class="apis-kpi-view-tab active" id="pcc-pick-delay-tab" data-bs-toggle="tab" data-bs-target="#pcc-pick-delay" type="button" role="tab" aria-controls="pcc-pick-delay" aria-selected="true">PCC_PICK_DELAY</button>
                             </div>
                             <div class="tab-content apis-kpi-view-content">
                                 <div class="tab-pane fade show active" id="pcc-pick-delay" role="tabpanel" aria-labelledby="pcc-pick-delay-tab" tabindex="0">
                                     @if (pccCountries.Length == 0)
                                     {
-                                        <div class="empty-state">Paskutiniu 14 dienu PCC_PICK_DELAY duomenu nera.</div>
+                                        <div class="empty-state">@L["Paskutiniu 14 dienu PCC_PICK_DELAY duomenu nera."]</div>
                                     }
                                     else
                                     {
                                         var pccPickDelayUpdatedAt = Model.ResultUpdatedAt ?? DateTime.Now;
                                         <div class="apis-kpi-refresh-bar" role="status">
-                                            <span>Duomenys atnaujinti: <strong>@pccPickDelayUpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")</strong></span>
+                                            <span>@L["Duomenys atnaujinti:"] <strong>@pccPickDelayUpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")</strong></span>
                                             @if (Model.CanRefreshResult)
                                             {
                                                 <a class="btn btn-sm btn-outline-primary"
-                                                   href="?Area=Indicators&QueryId=@Uri.EscapeDataString(Model.SelectedQuery?.Id ?? string.Empty)&Refresh=@DateTime.Now.Ticks#apis-Indicators">Atnaujinti</a>
+                                                   href="?Area=Indicators&QueryId=@Uri.EscapeDataString(Model.SelectedQuery?.Id ?? string.Empty)&Refresh=@DateTime.Now.Ticks#apis-Indicators">@L["Atnaujinti"]</a>
                                             }
                                             else
                                             {
-                                                <a class="btn btn-sm btn-outline-primary disabled" aria-disabled="true" tabindex="-1">Atnaujinti</a>
+                                                <a class="btn btn-sm btn-outline-primary disabled" aria-disabled="true" tabindex="-1">@L["Atnaujinti"]</a>
                                             }
                                         </div>
-                                        <div class="apis-kpi-view-tabs" role="tablist" aria-label="PCC_PICK_DELAY metrika">
+                                        <div class="apis-kpi-view-tabs" role="tablist" aria-label="@L["PCC_PICK_DELAY metrika"]">
                                             @for (var measureIndex = 0; measureIndex < pccPickDelayMeasures.Length; measureIndex++)
                                             {
                                                 var measure = pccPickDelayMeasures[measureIndex];
@@ -750,15 +734,15 @@
                         {
                             <div class="hub-metrics my-4">
                                 <div class="metric-card">
-                                    <small>Eilutes</small>
+                                    <small>@L["Eilutes"]</small>
                                     <h4>@Model.Result.Rows.Count</h4>
                                 </div>
                                 <div class="metric-card">
-                                    <small>Stulpeliai</small>
+                                    <small>@L["Stulpeliai"]</small>
                                     <h4>@Model.Result.Columns.Count</h4>
                                 </div>
                                 <div class="metric-card">
-                                    <small>Saltinis</small>
+                                    <small>@L["Saltinis"]</small>
                                     <h4>@Model.SelectedQuery?.Name</h4>
                                 </div>
                             </div>
@@ -766,10 +750,10 @@
                             @if (Model.HasResultPaging)
                             {
                                 <div class="d-flex align-items-center gap-2 flex-wrap mb-3" data-result-pager>
-                                    <span class="status-pill">Rodoma @Model.ResultPageStartRow-@Model.ResultPageEndRow is @Model.ResultTotalRows</span>
-                                    <button type="submit" form="apisQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Max(1, Model.ResultPageValue - 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue <= 1)">Ankstesnis</button>
-                                    <span class="small text-muted">Puslapis @Model.ResultPageValue / @Model.ResultTotalPages</span>
-                                    <button type="submit" form="apisQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Min(Model.ResultTotalPages, Model.ResultPageValue + 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue >= Model.ResultTotalPages)">Kitas</button>
+                                    <span class="status-pill">@L["Rodoma {0}-{1} is {2}", Model.ResultPageStartRow, Model.ResultPageEndRow, Model.ResultTotalRows]</span>
+                                    <button type="submit" form="apisQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Max(1, Model.ResultPageValue - 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue <= 1)">@L["Ankstesnis"]</button>
+                                    <span class="small text-muted">@L["Puslapis {0} / {1}", Model.ResultPageValue, Model.ResultTotalPages]</span>
+                                    <button type="submit" form="apisQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Min(Model.ResultTotalPages, Model.ResultPageValue + 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue >= Model.ResultTotalPages)">@L["Kitas"]</button>
                                 </div>
                             }
                             <div class="table-responsive exchange-table-wrap">
@@ -813,7 +797,7 @@
             {
                 parameter.Name,
                 parameter.DataType,
-                parameter.Description,
+                                                Description = L[parameter.Description].Value,
                 parameter.AllowedOperators,
                 parameter.AllowedValues,
                 DefaultValue = parameter.DefaultValue ?? string.Empty,
@@ -868,7 +852,7 @@
                 }
 
                 const dataType = getDefinitionValue(definition, "dataType") || "text";
-                valueInput.type = dataType === "int" || dataType === "decimal" ? "number" : dataType === "date" ? "date" : "text";
+                valueInput.type = dataType === "int" || dataType === "decimal" ? "number" : dataType === "date" ? "date" : dataType === "datetime" ? "datetime-local" : "text";
                 valueInput.placeholder = getDefinitionValue(definition, "placeholder") || getDefinitionValue(definition, "defaultValue") || "NULL";
                 help.textContent = getDefinitionValue(definition, "description") || dataType;
             };
@@ -895,7 +879,7 @@
                 const connectorSelect = document.createElement("select");
                 connectorSelect.className = "form-select form-select-sm";
                 connectorSelect.dataset.apisOptionalConnector = "";
-                connectorSelect.setAttribute("aria-label", "Filtro jungtis");
+                connectorSelect.setAttribute("aria-label", window.HubI18n.t("Filtro jungtis"));
                 connectorSelect.appendChild(createOption("and", "AND", true));
                 connectorSelect.appendChild(createOption("or", "OR"));
                 connectorWrap.appendChild(connectorSelect);
@@ -919,7 +903,7 @@
                 const operatorSelect = document.createElement("select");
                 operatorSelect.className = "form-select form-select-sm";
                 operatorSelect.dataset.apisOptionalOperator = "";
-                operatorSelect.setAttribute("aria-label", "Operatorius");
+                operatorSelect.setAttribute("aria-label", window.HubI18n.t("Operatorius"));
                 row.appendChild(operatorSelect);
 
                 const valueInput = document.createElement("input");
@@ -931,7 +915,7 @@
                 removeButton.className = "btn btn-sm btn-outline-secondary filter-remove-button";
                 removeButton.type = "button";
                 removeButton.dataset.apisRemoveOptional = "";
-                removeButton.textContent = "Valyti";
+                removeButton.textContent = window.HubI18n.t("Valyti");
                 row.appendChild(removeButton);
 
                 const help = document.createElement("div");
@@ -973,8 +957,8 @@
                 if (progress) {
                     progress.hidden = false;
                     progressTitle.textContent = submitter?.textContent?.toLowerCase().includes("excel")
-                        ? "Excel failas ruosiamas"
-                        : "Uzklausa vykdoma";
+                        ? window.HubI18n.t("Excel failas ruosiamas")
+                        : window.HubI18n.t("Uzklausa vykdoma");
                     progress.scrollIntoView({ behavior: "smooth", block: "center" });
                 }
 
@@ -985,7 +969,7 @@
 
                 if (submitter) {
                     submitter.dataset.originalText ||= submitter.textContent;
-                    submitter.textContent = submitter.dataset.apisSubmitLabel || "Vykdoma...";
+                    submitter.textContent = submitter.dataset.apisSubmitLabel || window.HubI18n.t("Vykdoma...");
                 }
 
                 const autoResetMs = Number(submitter?.dataset.apisAutoResetMs || 0);
@@ -1006,45 +990,6 @@
                 }
             });
 
-            const pad = value => String(value).padStart(2, "0");
-            const formatDate = (isoValue, format) => {
-                if (!/^\d{4}-\d{2}-\d{2}$/.test(isoValue)) return "";
-                const [year, month, day] = isoValue.split("-");
-                return format === "dd/MM/yyyy" ? `${day}/${month}/${year}` : `${year}-${month}-${day}`;
-            };
-            const parseDisplayDate = (value, format) => {
-                const trimmed = value.trim();
-                let match = format === "dd/MM/yyyy"
-                    ? /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(trimmed)
-                    : /^(\d{4})-(\d{2})-(\d{2})$/.exec(trimmed);
-                if (!match) return "";
-                const year = format === "dd/MM/yyyy" ? match[3] : match[1];
-                const month = format === "dd/MM/yyyy" ? match[2] : match[2];
-                const day = format === "dd/MM/yyyy" ? match[1] : match[3];
-                return `${year}-${pad(month)}-${pad(day)}`;
-            };
-
-            document.querySelectorAll(".apis-date-input").forEach(group => {
-                const display = group.querySelector(".apis-date-display");
-                const native = group.querySelector(".apis-date-native");
-                const opener = group.querySelector(".apis-date-open");
-                const format = group.dataset.dateFormat || "yyyy-MM-dd";
-                opener?.addEventListener("click", () => {
-                    native.value = parseDisplayDate(display.value, format) || native.value;
-                    if (typeof native.showPicker === "function") {
-                        native.showPicker();
-                    } else {
-                        native.click();
-                    }
-                });
-                native?.addEventListener("change", () => {
-                    display.value = formatDate(native.value, format);
-                    display.dispatchEvent(new Event("input", { bubbles: true }));
-                });
-                display?.addEventListener("change", () => {
-                    native.value = parseDisplayDate(display.value, format);
-                });
-            });
         })();
     </script>
 }

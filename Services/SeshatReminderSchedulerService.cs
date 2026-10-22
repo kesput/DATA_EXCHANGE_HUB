@@ -18,7 +18,7 @@ public sealed class SeshatReminderSchedulerService(
             {
                 var now = DateTime.Now;
                 var sendHour = currentOptions.NormalizedSendHour;
-                if (now.Hour >= sendHour && _lastRunDate != now.Date)
+                if (currentOptions.Enabled && now.Hour >= sendHour && _lastRunDate != now.Date)
                 {
                     using var scope = scopeFactory.CreateScope();
                     var seshatService = scope.ServiceProvider.GetRequiredService<ISeshatService>();

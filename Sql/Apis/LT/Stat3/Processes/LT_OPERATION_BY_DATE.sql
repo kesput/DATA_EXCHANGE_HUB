@@ -73,7 +73,7 @@ SELECT
      ,QUANTITY
 FROM ILSLT.dbo.BLS_MANH_OPERATIONS_CURRENT WITH (NOLOCK)
 WHERE COMPANY = ''' + REPLACE(@OWN,'''','''''') + N'''
-  AND ((WORK_A = ''Picking'' AND RIGHT(TO_LOC,4) = ''Avai'')
+  AND ((WORK_A = ''Picking'' AND LEFT(TO_LOC,3) = ''STG'')
     OR (WORK_A = ''Picking'' AND REFERENCE_TYPE = ''Parcel'' AND LEFT(TO_LOC,3) = ''PCK''))
 '
 

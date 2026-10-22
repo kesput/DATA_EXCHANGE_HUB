@@ -29,7 +29,7 @@
                            type="tel"
                            pattern="^\+370-?\d{8}$"
                            data-question-id="@q.Id"
-                           placeholder="+37060000000 arba +370-60000000" />
+                           placeholder="@L["+37060000000 arba +370-60000000"]" />
                 }
                 else if (q.TextValidation == "NUMBER")
                 {
@@ -37,7 +37,7 @@
                            type="number"
                            step="any"
                            data-question-id="@q.Id"
-                           placeholder="pvz. 10 arba 10.5" />
+                           placeholder="@L["pvz. 10 arba 10.5"]" />
                 }
                 else
                 {
@@ -86,11 +86,11 @@
 <div class="container-fluid hub-page pt-4">
     @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
     {
-        <div class="alert alert-success mb-3" role="alert">@Model.SuccessMessage</div>
+        <div class="alert alert-success mb-3" role="alert">@L[Model.SuccessMessage ?? string.Empty]</div>
     }
     @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
     {
-        <div class="alert alert-danger mb-3" role="alert">@Model.ErrorMessage</div>
+        <div class="alert alert-danger mb-3" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
     }
 
     <div class="row g-4 align-items-start">

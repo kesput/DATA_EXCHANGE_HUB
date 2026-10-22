@@ -35,7 +35,7 @@
         <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
-                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+                <div class="alert alert-danger" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
             }
 
             @if (!Model.HasAccess)
@@ -52,7 +52,7 @@
                         <h2>@L["Oracul.Parameters"]</h2>
                     </div>
 
-                    <form method="post" class="oracul-form" id="oraculQueryForm" data-busy-form data-busy-title="ORACUL uzklausa vykdoma">
+                    <form method="post" class="oracul-form" id="oraculQueryForm" data-busy-form data-busy-title="@L["ORACUL uzklausa vykdoma"]">
                         <div class="oracul-mode">
                             <span class="form-label">@L["Oracul.QueryMode"]</span>
                             <label class="form-check">
@@ -103,9 +103,9 @@
                             </div>
 
                             <div class="oracul-actions">
-                                <button type="submit" asp-page-handler="Execute" class="btn btn-orange" data-busy-label="Vykdoma...">EXECUTE</button>
-                                <button type="submit" asp-page-handler="ExportExcel" class="btn btn-outline-primary" data-busy-title="Excel failas ruosiamas" data-busy-label="Ruosiamas Excel..." data-busy-auto-reset-ms="5000">Export Excel</button>
-                                    <button type="submit" asp-page-handler="ExportCsv" class="btn btn-outline-success" data-busy-title="CSV failas ruosiamas" data-busy-label="Ruosiamas CSV..." data-busy-auto-reset-ms="5000">Export CSV</button>
+                                <button type="submit" asp-page-handler="Execute" class="btn btn-orange" data-busy-label="@L["Vykdoma..."]">@L["EXECUTE"]</button>
+                                <button type="submit" asp-page-handler="ExportExcel" class="btn btn-outline-primary" data-busy-title="@L["Excel failas ruosiamas"]" data-busy-label="@L["Ruosiamas Excel..."]" data-busy-auto-reset-ms="5000">@L["Export Excel"]</button>
+                                    <button type="submit" asp-page-handler="ExportCsv" class="btn btn-outline-success" data-busy-title="@L["CSV failas ruosiamas"]" data-busy-label="@L["Ruosiamas CSV..."]" data-busy-auto-reset-ms="5000">@L["Export CSV"]</button>
                             </div>
                         </div>
                     </form>
@@ -115,7 +115,7 @@
                 {
                     <div class="oracul-metrics mb-3">
                         <div class="metric-card">
-                            <small>KPI Name</small>
+                            <small>@L["KPI Name"]</small>
                             <h4>@Model.ReportName</h4>
                         </div>
                         <div class="metric-card">
@@ -123,7 +123,7 @@
                             <h4>@Model.Result.Rows.Count</h4>
                         </div>
                         <div class="metric-card">
-                            <small>BRUTTO, t</small>
+                            <small>@L["BRUTTO, t"]</small>
                             <h4>@Model.BruttoTotalText</h4>
                         </div>
                         <div class="metric-card">
@@ -141,9 +141,9 @@
                             {
                                 <div class="d-flex align-items-center gap-2 flex-wrap mb-3" data-result-pager>
                                     <span class="status-pill">Rodoma @Model.ResultPageStartRow-@Model.ResultPageEndRow is @Model.ResultTotalRows</span>
-                                    <button type="submit" form="oraculQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Max(1, Model.ResultPageValue - 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue <= 1)">Ankstesnis</button>
+                                    <button type="submit" form="oraculQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Max(1, Model.ResultPageValue - 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue <= 1)">@L["Ankstesnis"]</button>
                                     <span class="small text-muted">Puslapis @Model.ResultPageValue / @Model.ResultTotalPages</span>
-                                    <button type="submit" form="oraculQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Min(Model.ResultTotalPages, Model.ResultPageValue + 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue >= Model.ResultTotalPages)">Kitas</button>
+                                    <button type="submit" form="oraculQueryForm" formaction="?handler=ResultPage" name="ResultPage" value="@(Math.Min(Model.ResultTotalPages, Model.ResultPageValue + 1))" class="btn btn-sm btn-outline-secondary" disabled="@(Model.ResultPageValue >= Model.ResultTotalPages)">@L["Kitas"]</button>
                                 </div>
                             }
                 @if (Model.Result.Rows.Count == 0)

@@ -27,11 +27,14 @@ public sealed class DikeService(
                 [OWNER].[SHORTNAME],
                 [OWNER].[NAME],
                 [OWNER].[REGCODE],
-                ORGALL.[ADDRESS]
-            FROM [SNTXDATA].[dbo].[OWNER] AS [OWNER] WITH (NOLOCK)
+                ORGALL.[ADDRESS],
+                MANAGER.FULLNAME AS MANAGER_FULLNAME
+            FROM WM0.SNTXDB.[dbo].[OWNER] AS [OWNER] WITH (NOLOCK)
             LEFT JOIN [SNTXDATA].dbo.ORGALL AS ORGALL WITH (NOLOCK)
                 ON ORGALL.FIRMID = OWNER.FIRMID
                AND ORGALL.ORGID = OWNER.ORGID
+            LEFT JOIN WM0.SNTXECOM.dbo.MANAGER as MANAGER WITH (NOLOCK)
+                 ON MANAGER.ID = [OWNER].MANAGERID
             WHERE [OWNER].ACTIVE = 1
               AND [OWNER].FIRMID = N'SA'
               AND [OWNER].[SID] = N'BLT'
@@ -70,11 +73,14 @@ public sealed class DikeService(
                 [OWNER].[SHORTNAME],
                 [OWNER].[NAME],
                 [OWNER].[REGCODE],
-                ORGALL.[ADDRESS]
-            FROM [SNTXDATA].[dbo].[OWNER] AS [OWNER] WITH (NOLOCK)
+                ORGALL.[ADDRESS],
+                MANAGER.FULLNAME AS MANAGER_FULLNAME
+            FROM WM0.SNTXDB.[dbo].[OWNER] AS [OWNER] WITH (NOLOCK)
             LEFT JOIN [SNTXDATA].dbo.ORGALL AS ORGALL WITH (NOLOCK)
                 ON ORGALL.FIRMID = OWNER.FIRMID
                AND ORGALL.ORGID = OWNER.ORGID
+            LEFT JOIN WM0.SNTXECOM.dbo.MANAGER AS MANAGER WITH (NOLOCK)
+                ON MANAGER.ID = [OWNER].MANAGERID
             WHERE [OWNER].ACTIVE = 1
               AND [OWNER].FIRMID = N'SA'
               AND [OWNER].[SID] = N'BLT'
@@ -102,7 +108,8 @@ public sealed class DikeService(
             ReadString(reader, 3),
             ReadString(reader, 4),
             ReadString(reader, 5),
-            ReadString(reader, 6));
+            ReadString(reader, 6),
+            ReadString(reader, reader.GetOrdinal("MANAGER_FULLNAME")));
 
     private static string ReadString(SqlDataReader reader, int ordinal) =>
         reader.IsDBNull(ordinal) ? string.Empty : reader.GetString(ordinal);

@@ -15,7 +15,7 @@
 
     @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
     {
-        <div class="alert alert-danger mb-4" role="alert">@Model.ErrorMessage</div>
+        <div class="alert alert-danger mb-4" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
     }
 
     <div class="hub-board mb-4">

@@ -9,7 +9,7 @@
         <aside class="col-xxl-2 col-xl-2 col-lg-3 mb-4 exchange-sidebar">
             <div class="p-4 mb-3 exchange-panel">
                 <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
-                    File upload <small class="badge bg-secondary ms-2">FU</small>
+                    @L["File upload"] <small class="badge bg-secondary ms-2">FU</small>
                 </h3>
                 <p class="mb-0 text-dark-green">@L["FileUpload.Subtitle"]</p>
             </div>
@@ -39,12 +39,12 @@
         <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
             @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
             {
-                <div class="alert alert-success" role="status" data-auto-dismiss-alert>@Model.SuccessMessage</div>
+                <div class="alert alert-success" role="status" data-auto-dismiss-alert>@L[Model.SuccessMessage ?? string.Empty]</div>
             }
 
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
-                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+                <div class="alert alert-danger" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
             }
 
             @if (!Model.CanOpen)
@@ -76,7 +76,7 @@
                     <h2>@L["FileUpload.DirectorySpace"]</h2>
                     <span class="status-pill @(Model.IsStorageLimitReached ? "status-pill-muted" : "")">@Model.UsedStoragePercent%</span>
                 </div>
-                <div class="progress file-upload-progress" role="progressbar" aria-label="Katalogo vietos naudojimas" aria-valuenow="@Model.UsedStoragePercent" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress file-upload-progress" role="progressbar" aria-label="@L["Katalogo vietos naudojimas"]" aria-valuenow="@Model.UsedStoragePercent" aria-valuemin="0" aria-valuemax="100">
                     <div class="progress-bar @(Model.IsStorageLimitReached ? "bg-danger" : "bg-success")" style="width: @Model.UsedStoragePercent%"></div>
                 </div>
                 @if (Model.IsStorageLimitReached)
@@ -109,43 +109,43 @@
                 </form>
             </section>            <section class="tool-section mb-3">
                 <div class="section-title-row">
-                    <h2>EXCHANGE_UPLOAD pranesimai</h2>
+                    <h2>@L["EXCHANGE_UPLOAD pranesimai"]</h2>
                 </div>
 
                 <form method="post" asp-page-handler="SaveNotification" class="row g-3 align-items-end">
                     <div class="col-xl-3 col-md-6">
-                        <label class="field-label" for="NotificationPattern">Failo sablonas</label>
+                        <label class="field-label" for="NotificationPattern">@L["Failo sablonas"]</label>
                         <input id="NotificationPattern" name="NotificationPattern" class="form-control" placeholder="%ORDER_BASE_2026%" value="@Model.NotificationPattern" required />
                     </div>
                     <div class="col-xl-2 col-md-6">
-                        <label class="field-label" for="NotificationTriggerType">Ivykis</label>
+                        <label class="field-label" for="NotificationTriggerType">@L["Ivykis"]</label>
                         <select id="NotificationTriggerType" name="NotificationTriggerType" class="form-select">
-                            <option value="ANY_UPLOAD" selected="@(Model.NotificationTriggerType == "ANY_UPLOAD")">Bet koks ikelimas</option>
-                            <option value="NEW_UPLOAD" selected="@(Model.NotificationTriggerType == "NEW_UPLOAD")">Naujas failas</option>
-                            <option value="REPLACE_UPLOAD" selected="@(Model.NotificationTriggerType == "REPLACE_UPLOAD")">Atnaujintas failas</option>
+                            <option value="ANY_UPLOAD" selected="@(Model.NotificationTriggerType == "ANY_UPLOAD")">@L["Bet koks ikelimas"]</option>
+                            <option value="NEW_UPLOAD" selected="@(Model.NotificationTriggerType == "NEW_UPLOAD")">@L["Naujas failas"]</option>
+                            <option value="REPLACE_UPLOAD" selected="@(Model.NotificationTriggerType == "REPLACE_UPLOAD")">@L["Atnaujintas failas"]</option>
                         </select>
                     </div>
                     <div class="col-xl-2 col-md-6">
-                        <label class="field-label" for="NotificationChannel">Kanalas</label>
+                        <label class="field-label" for="NotificationChannel">@L["Kanalas"]</label>
                         <select id="NotificationChannel" name="NotificationChannel" class="form-select">
-                            <option value="EMAIL" selected="@(Model.NotificationChannel == "EMAIL")">Email</option>
+                            <option value="EMAIL" selected="@(Model.NotificationChannel == "EMAIL")">@L["Email"]</option>
                             <option value="SMS" selected="@(Model.NotificationChannel == "SMS")">SMS</option>
                         </select>
                     </div>
                     <div class="col-xl-3 col-md-6">
-                        <label class="field-label" for="NotificationContact">Kontaktas</label>
-                        <input id="NotificationContact" name="NotificationContact" class="form-control" value="@Model.NotificationContact" maxlength="320" pattern="([^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]{2,})|(\+370-?\d{8})" title="Iveskite email adresa, pvz. user&#64;bls.lt, arba lietuviska telefono numeri, pvz. +37061234567." required />
+                        <label class="field-label" for="NotificationContact">@L["Kontaktas"]</label>
+                        <input id="NotificationContact" name="NotificationContact" class="form-control" value="@Model.NotificationContact" maxlength="320" pattern="([^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]{2,})|(\+370-?\d{8})" title="@L["Iveskite email adresa, pvz. user&#64;bls.lt, arba lietuviska telefono numeri, pvz. +37061234567."]" required />
                     </div>
                     <div class="col-xl-2 col-md-6">
-                        <label class="field-label" for="NotificationVerificationCode">Kodas</label>
+                        <label class="field-label" for="NotificationVerificationCode">@L["Kodas"]</label>
                         <input id="NotificationVerificationCode" name="NotificationVerificationCode" class="form-control" value="@Model.NotificationVerificationCode" autocomplete="one-time-code" />
                     </div>
                     <div class="col-12 d-flex gap-2 flex-wrap">
-                        <span title="Uzpildzius forma pirma atsisiuskite koda. Kodas galios 10 min.; tik ji ivedus galima issaugoti pranesima."><button type="submit" class="btn btn-dark-green" data-notification-save disabled>Issaugoti</button></span>
-                        <button type="submit" name="ResendNotificationVerification" value="true" class="btn btn-outline-secondary">Siusti koda</button>
+                        <span title="@L["Uzpildzius forma pirma atsisiuskite koda. Kodas galios 10 min.; tik ji ivedus galima issaugoti pranesima."]"><button type="submit" class="btn btn-dark-green" data-notification-save disabled>@L["Issaugoti"]</button></span>
+                        <button type="submit" name="ResendNotificationVerification" value="true" class="btn btn-outline-secondary">@L["Siusti koda"]</button>
                     </div>
                     <div class="col-12">
-                        <div class="text-muted small">Uzpildzius forma pirma atsisiuskite patvirtinimo koda. Kodas galios 10 min.; tik ji ivedus galima issaugoti pranesima.</div>
+                        <div class="text-muted small">@L["Uzpildzius forma pirma atsisiuskite patvirtinimo koda. Kodas galios 10 min.; tik ji ivedus galima issaugoti pranesima."]</div>
                     </div>
                 </form>
 
@@ -155,11 +155,11 @@
                         <table class="table table-sm exchange-table mb-0">
                             <thead>
                                 <tr>
-                                    <th>Sablonas</th>
-                                    <th>Ivykis</th>
-                                    <th>Kanalas</th>
-                                    <th>Kontaktas</th>
-                                    <th>Busena</th>
+                                    <th>@L["Sablonas"]</th>
+                                    <th>@L["Ivykis"]</th>
+                                    <th>@L["Kanalas"]</th>
+                                    <th>@L["Kontaktas"]</th>
+                                    <th>@L["Busena"]</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -177,7 +177,7 @@
                                             {
                                                 <form method="post" asp-page-handler="CancelNotification" class="d-inline">
                                                     <input type="hidden" name="notificationId" value="@notification.Id" />
-                                                    <button type="submit" class="btn btn-sm btn-outline-secondary">Atsaukti</button>
+                                                    <button type="submit" class="btn btn-sm btn-outline-secondary">@L["Atsaukti"]</button>
                                                 </form>
                                             }
                                         </td>
@@ -206,7 +206,7 @@
                                     <th>@L["Common.File"]</th>
                                     <th>@L["FileUpload.Size"]</th>
                                     <th>@L["FileUpload.Time"]</th>
-                                    <th>Ikele</th>
+                                    <th>@L["Ikele"]</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -222,7 +222,7 @@
                                             <a class="btn btn-sm btn-outline-secondary"
                                                asp-page-handler="Download"
                                                asp-route-fileName="@file.FileName">
-                                                Parsisiusti
+                                                @L["Parsisiusti"]
                                             </a>
                                         </td>
                                     </tr>

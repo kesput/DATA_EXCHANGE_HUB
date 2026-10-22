@@ -68,6 +68,7 @@ builder.Services.Configure<FormOptions>(options =>
 builder.Services.Configure<List<HubApplication>>(
     builder.Configuration.GetSection("HubApplications"));
 builder.Services.AddSingleton<IHubApplicationCatalog, HubApplicationCatalog>();
+builder.Services.AddScoped<IHubModuleAccess, HubModuleAccess>();
 builder.Services.AddSingleton<IHubApplicationAcronymService, HubApplicationAcronymService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
@@ -86,6 +87,7 @@ builder.Services.AddScoped<IHydraQueryService, HydraQueryService>();
 builder.Services.AddScoped<IHydraAccessService, HydraAccessService>();
 builder.Services.AddScoped<IDikeAccessService, DikeAccessService>();
 builder.Services.AddScoped<IDikeService, DikeService>();
+builder.Services.AddScoped<DikeAgreementStore>();
 builder.Services.AddScoped<IAreteQueryService, AreteQueryService>();
 builder.Services.AddScoped<IAreteAccessService, AreteAccessService>();
 builder.Services.AddScoped<IApisQueryService, ApisQueryService>();
@@ -97,6 +99,8 @@ builder.Services.AddScoped<IArgusServerMetricsService, ArgusServerMetricsService
 builder.Services.AddScoped<IArgusTaskKillService, ArgusTaskKillService>();
 builder.Services.AddScoped<ISendMailService, SendMailService>();
 builder.Services.AddScoped<IIrisService, IrisService>();
+builder.Services.AddScoped<IIrisSourcePreviewService, IrisSourcePreviewService>();
+builder.Services.AddScoped<IIrisPreviewAuditStore, IrisPreviewAuditStore>();
 builder.Services.AddScoped<ISendSmsService, SendSmsService>();
 builder.Services.AddScoped<IContactVerificationService, ContactVerificationService>();
 builder.Services.AddScoped<IHubAccessRequestService, HubAccessRequestService>();
@@ -163,12 +167,14 @@ app.Use(async (context, next) =>
         path.Equals("/Index", StringComparison.OrdinalIgnoreCase) ||
         path.Equals("/Culture", StringComparison.OrdinalIgnoreCase) ||
         path.StartsWith("/Hub/Login", StringComparison.OrdinalIgnoreCase) ||
+        path.Equals("/Hub/AccessDenied", StringComparison.OrdinalIgnoreCase) ||
         path.StartsWith("/ClientInfo", StringComparison.OrdinalIgnoreCase) ||
         path.StartsWith("/Spinkx", StringComparison.OrdinalIgnoreCase);
 
     var hasHubSession =
-        context.Session.GetString(DATA_EXCHANGE_HUB.Pages.Hub.LoginModel.SessionKey) == "1" ||
-        context.User.Identity?.IsAuthenticated == true;
+        context.Session.GetString(DATA_EXCHANGE_HUB.Pages.Hub.LoginModel.BlockedSessionKey) != "1" &&
+        (context.Session.GetString(DATA_EXCHANGE_HUB.Pages.Hub.LoginModel.SessionKey) == "1" ||
+         context.User.Identity?.IsAuthenticated == true);
     var isStaticAsset =
         context.Request.Path.StartsWithSegments("/css") ||
         context.Request.Path.StartsWithSegments("/js") ||
@@ -180,7 +186,7 @@ app.Use(async (context, next) =>
         (path.Equals("/Hub", StringComparison.OrdinalIgnoreCase) ||
          path.Equals("/Hub/Index", StringComparison.OrdinalIgnoreCase)))
     {
-        context.Response.Redirect("/");
+        context.Response.Redirect("/Hub/Login");
         return;
     }
 
@@ -195,6 +201,8 @@ app.Use(async (context, next) =>
 
     await next();
 });
+
+app.UseMiddleware<HubModuleAccessMiddleware>();
 
 app.UseAuthorization();
 

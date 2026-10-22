@@ -7,31 +7,34 @@
 <div class="container-fluid hub-page pt-4">
     @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
     {
-        <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+        <div class="alert alert-danger" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
     }
 
     <div class="hub-hero mb-4">
         <div>
             <span class="hub-eyebrow">DARBO APLINKA</span>
-            <h1>Prisijungimas prie HUB</h1>
-            <p>Serveryje prisijungimas atliekamas su Windows vartotoju. Jei Windows vartotojas neatpazintas, prisijunkite su savo vartotojo vardu be domeno ir slaptazodziu.</p>
+            <h1>@L["Prisijungimas prie HUB"]</h1>
+            <p>@L["Hub.Security.LoginHelp"]</p>
         </div>
     </div>
 
     <section class="tool-section" style="max-width: 640px;">
+        <div class="alert alert-warning" role="note">@L["Hub.Security.SharedTerminal"]
+            <a asp-page="/Index" asp-fragment="access-request">@L["Hub.Security.RequestAccess"]</a>
+        </div>
         <form method="post" class="d-grid gap-3">
             <input type="hidden" asp-for="ReturnUrl" />
             <div>
-                <label class="form-label" asp-for="UserName">Prisijungimo vardas</label>
-                <input class="form-control" asp-for="UserName" autocomplete="username" pattern="[A-Za-z0-9._-]+" title="Iveskite tik vartotojo varda be domeno" autofocus />
+                <label class="form-label" asp-for="UserName">@L["Prisijungimo vardas"]</label>
+                <input class="form-control" asp-for="UserName" autocomplete="username" pattern="[A-Za-z0-9._-]+" title="@L["Iveskite tik vartotojo varda be domeno"]" autofocus />
             </div>
             <div>
-                <label class="form-label" asp-for="Password">Slaptazodis</label>
+                <label class="form-label" asp-for="Password">@L["Slaptazodis"]</label>
                 <input class="form-control" asp-for="Password" type="password" autocomplete="current-password" />
             </div>
             <div class="d-flex gap-2 justify-content-end">
-                <a class="btn btn-outline-secondary" asp-page="/Index">Grizti</a>
-                <button class="btn btn-orange" type="submit">Jungtis</button>
+                <a class="btn btn-outline-secondary" asp-page="/Index">@L["Grizti"]</a>
+                <button class="btn btn-orange" type="submit">@L["Jungtis"]</button>
             </div>
         </form>
     </section>

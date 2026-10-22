@@ -79,7 +79,7 @@ public sealed class IrisService(
         await connection.OpenAsync(cancellationToken);
         await using var command = new SqlCommand($"""
             SELECT Id, ReportId, SourceOrder, SourceType, SqlConnectionName, SqlDatabase,
-                   SqlText, SqlFilePath, StoredProcedure, TableTitle, IncludeHtmlTable, AttachExcel, AttachCsv
+                   SqlText, SqlFilePath, StoredProcedure, TableTitle, IncludeHtmlTable, AttachExcel, AttachCsv, ExcelGridlines
             FROM {SourceTable}
             WHERE ReportId = @ReportId
             ORDER BY SourceOrder, Id;
@@ -101,7 +101,8 @@ public sealed class IrisService(
                 reader.GetString(9),
                 reader.GetBoolean(10),
                 reader.GetBoolean(11),
-                reader.GetBoolean(12)));
+                reader.GetBoolean(12),
+                reader.GetBoolean(13)));
         }
 
         return sources;
@@ -238,9 +239,9 @@ public sealed class IrisService(
 
     public async Task<long> CreateSourceAsync(IrisCreateSourceRequest request, CancellationToken cancellationToken)
     {
-        await EnsureSchemaAsync(cancellationToken);
         var sourceType = NormalizeSourceType(request.SourceType);
         ValidateSource(sourceType, request.ReportId, request.SqlConnectionName, request.SqlText, request.SqlFilePath, request.StoredProcedure);
+        await EnsureSchemaAsync(cancellationToken);
         await using var connection = new SqlConnection(GetConnectionString());
         await connection.OpenAsync(cancellationToken);
         var nextOrder = await GetNextSourceOrderAsync(connection, request.ReportId, cancellationToken);
@@ -248,11 +249,11 @@ public sealed class IrisService(
         await using var command = new SqlCommand($"""
             INSERT INTO {SourceTable}
                 (ReportId, SourceOrder, SourceType, SqlConnectionName, SqlDatabase, SqlText,
-                 SqlFilePath, StoredProcedure, TableTitle, IncludeHtmlTable, AttachExcel, AttachCsv, CreatedBy)
+                 SqlFilePath, StoredProcedure, TableTitle, IncludeHtmlTable, AttachExcel, AttachCsv, CreatedBy, ExcelGridlines)
             OUTPUT INSERTED.Id
             VALUES
                 (@ReportId, @SourceOrder, @SourceType, @SqlConnectionName, @SqlDatabase, @SqlText,
-                 @SqlFilePath, @StoredProcedure, @TableTitle, @IncludeHtmlTable, @AttachExcel, @AttachCsv, @CreatedBy);
+                 @SqlFilePath, @StoredProcedure, @TableTitle, @IncludeHtmlTable, @AttachExcel, @AttachCsv, @CreatedBy, @ExcelGridlines);
             """, connection);
         command.Parameters.AddWithValue("@ReportId", request.ReportId);
         command.Parameters.AddWithValue("@SourceOrder", nextOrder);
@@ -265,6 +266,7 @@ public sealed class IrisService(
         Add(command, "@TableTitle", request.TableTitle, 260);
         command.Parameters.AddWithValue("@IncludeHtmlTable", request.IncludeHtmlTable);
         command.Parameters.AddWithValue("@AttachExcel", request.AttachExcel);
+        command.Parameters.AddWithValue("@ExcelGridlines", request.ExcelGridlines);
         command.Parameters.AddWithValue("@AttachCsv", request.AttachCsv);
         Add(command, "@CreatedBy", request.CreatedBy, 260);
         return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
@@ -272,7 +274,6 @@ public sealed class IrisService(
 
     public async Task UpdateSourceAsync(IrisUpdateSourceRequest request, CancellationToken cancellationToken)
     {
-        await EnsureSchemaAsync(cancellationToken);
         if (request.Id <= 0)
         {
             throw new InvalidOperationException("Pasirinkite SQL saltini redagavimui.");
@@ -280,6 +281,7 @@ public sealed class IrisService(
 
         var sourceType = NormalizeSourceType(request.SourceType);
         ValidateSource(sourceType, request.ReportId, request.SqlConnectionName, request.SqlText, request.SqlFilePath, request.StoredProcedure);
+        await EnsureSchemaAsync(cancellationToken);
         await using var connection = new SqlConnection(GetConnectionString());
         await connection.OpenAsync(cancellationToken);
         await using var command = new SqlCommand($"""
@@ -294,6 +296,7 @@ public sealed class IrisService(
                 TableTitle = @TableTitle,
                 IncludeHtmlTable = @IncludeHtmlTable,
                 AttachExcel = @AttachExcel,
+                ExcelGridlines = @ExcelGridlines,
                 AttachCsv = @AttachCsv
             WHERE Id = @Id;
             """, connection);
@@ -308,6 +311,7 @@ public sealed class IrisService(
         Add(command, "@TableTitle", request.TableTitle, 260);
         command.Parameters.AddWithValue("@IncludeHtmlTable", request.IncludeHtmlTable);
         command.Parameters.AddWithValue("@AttachExcel", request.AttachExcel);
+        command.Parameters.AddWithValue("@ExcelGridlines", request.ExcelGridlines);
         command.Parameters.AddWithValue("@AttachCsv", request.AttachCsv);
         if (await command.ExecuteNonQueryAsync(cancellationToken) == 0)
         {
@@ -543,6 +547,8 @@ public sealed class IrisService(
             throw new InvalidOperationException("Inline SQL saltiniui privalomas SQL tekstas.");
         }
 
+        if (sourceType == "INLINE_SQL") IrisSelectPolicy.Validate(sqlText);
+
         if (sourceType == "SQL_FILE" && string.IsNullOrWhiteSpace(sqlFilePath))
         {
             throw new InvalidOperationException("SQL failo saltiniui privalomas failo kelias.");
@@ -603,10 +609,17 @@ public sealed class IrisService(
                     IncludeHtmlTable BIT NOT NULL CONSTRAINT DF_IRIS_SOURCES_IncludeHtml DEFAULT (1),
                     AttachExcel BIT NOT NULL CONSTRAINT DF_IRIS_SOURCES_AttachExcel DEFAULT (0),
                     AttachCsv BIT NOT NULL CONSTRAINT DF_IRIS_SOURCES_AttachCsv DEFAULT (0),
+                    ExcelGridlines BIT NOT NULL DEFAULT (0),
                     CreatedBy NVARCHAR(260) NOT NULL,
                     CreatedAt DATETIME2(0) NOT NULL CONSTRAINT DF_IRIS_SOURCES_CreatedAt DEFAULT (SYSDATETIME()),
                     CONSTRAINT FK_IRIS_SOURCES_REPORT FOREIGN KEY (ReportId) REFERENCES {ReportTable}(Id)
                 );
+            END;
+            """;
+        yield return $"""
+            IF COL_LENGTH(N'{ObjectNameLiteral(SourceTable)}', N'ExcelGridlines') IS NULL
+            BEGIN
+                ALTER TABLE {SourceTable} ADD ExcelGridlines BIT NOT NULL DEFAULT (0) WITH VALUES;
             END;
             """;
         yield return $"""

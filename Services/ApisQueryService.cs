@@ -124,7 +124,24 @@ public sealed class ApisQueryService(
             commandType,
             procedureName,
             description,
-            parameters);
+            parameters,
+            ExcelNumberFormats: ReadExcelNumberFormats(filePath));
+    }
+
+    private static IReadOnlyDictionary<string, string> ReadExcelNumberFormats(string filePath)
+    {
+        var formats = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        const string marker = "-- SQL_EXCEL_NUMBER:";
+        foreach (var line in File.ReadLines(filePath))
+        {
+            var trimmed = line.Trim();
+            if (!trimmed.StartsWith(marker, StringComparison.OrdinalIgnoreCase)) continue;
+            var parts = trimmed[marker.Length..].Split('|', 2, StringSplitOptions.TrimEntries);
+            if (parts.Length != 2 || string.IsNullOrWhiteSpace(parts[0]) || string.IsNullOrWhiteSpace(parts[1]))
+                throw new InvalidOperationException($"Neteisingas SQL_EXCEL_NUMBER formatas faile {Path.GetFileName(filePath)}. Naudokite: -- SQL_EXCEL_NUMBER: COLUMN|0.000");
+            formats[parts[0]] = parts[1];
+        }
+        return formats;
     }
 
     private static string BuildTextCommand(

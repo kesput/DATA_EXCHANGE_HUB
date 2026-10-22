@@ -1,0 +1,8 @@
+@model DATA_EXCHANGE_HUB.Models.DikeClientInfo
+<div class="dike-client-summary">
+    <div><span class="field-label">SHORTNAME</span><strong>@Model.ShortName</strong></div>
+    <div><span class="field-label">REGCODE</span><strong>@Model.RegCode</strong></div>
+    <div><span class="field-label">NAME</span><strong>@Model.Name</strong></div>
+    <div><span class="field-label">ADDRESS</span><strong>@(string.IsNullOrWhiteSpace(Model.Address) ? "-" : Model.Address)</strong></div>
+    <div><span class="field-label">@L["Dike.Manager"]</span><strong>@(string.IsNullOrWhiteSpace(Model.ManagerFullName) ? "-" : Model.ManagerFullName)</strong></div>
+</div>

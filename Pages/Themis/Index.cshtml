@@ -68,12 +68,12 @@
         <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
             @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
             {
-                <div class="alert alert-success" role="status">@Model.SuccessMessage</div>
+                <div class="alert alert-success" role="status">@L[Model.SuccessMessage ?? string.Empty]</div>
             }
 
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
-                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+                <div class="alert alert-danger" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
             }
 
             @if (!Model.HasAccess)
@@ -142,13 +142,13 @@
                                     <a class="btn btn-sm btn-outline-success"
                                        asp-page-handler="ExportCsv"
                                        asp-all-route-data="@Model.CurrentFilterRouteValues">
-                                        Export CSV
+                                        @L["Export CSV"]
                                     </a>
                                     <a class="btn btn-sm btn-outline-secondary"
                                        asp-page-handler="ExportTemplate"
                                        asp-route-tableName="@Model.SelectedTable.TableName"
                                        asp-route-rowLimit="@Model.RowLimit">
-                                        Template
+                                        @L["Template"]
                                     </a>
                                     <form method="post"
                                           asp-page-handler="ImportExcel"
@@ -267,7 +267,7 @@
                                             <option value="">@L["DataExchange.Column"]</option>
                                             @foreach (var col in Model.TableData.Columns)
                                             {
-                                                <option value="@col.Name" selected="@(filter.ColumnName.Equals(col.Name, StringComparison.OrdinalIgnoreCase))">@col.Name</option>
+                                                <option value="@col.Name" data-type="@col.DataType" selected="@(filter.ColumnName.Equals(col.Name, StringComparison.OrdinalIgnoreCase))">@col.Name</option>
                                             }
                                         </select>
                                         <select name="FilterOperators" class="form-select form-select-sm">
@@ -516,7 +516,7 @@
                             <table class="table table-sm exchange-log-table">
                                 <thead>
                                     <tr>
-                                        <th>Log ID</th>
+                                        <th>@L["Log ID"]</th>
                                         <th>@L["DataExchange.Time"]</th>
                                         <th>@L["DataExchange.Action"]</th>
                                         <th>@L["Themis.Source"]</th>
@@ -543,7 +543,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <span class="text-success small">OK</span>
+                                                    <span class="text-success small">@L["OK"]</span>
                                                 }
                                             </td>
                                             <td class="row-actions">

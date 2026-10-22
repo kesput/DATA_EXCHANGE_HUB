@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using DATA_EXCHANGE_HUB.Models;
@@ -15,6 +15,9 @@ public sealed class IndexModel(
     IExcelWorkbookService excelWorkbookService,
     IStringLocalizer<DATA_EXCHANGE_HUB.SharedResource> localizer) : PageModel
 {
+    [BindProperty(SupportsGet = true)]
+    public bool ExcelGridlines { get; set; }
+
     private const string ExcelContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private static readonly string[] TemplateHeaders =
     [
@@ -186,7 +189,7 @@ public sealed class IndexModel(
         var file = excelWorkbookService.CreateWorkbook(
             export.Headers,
             export.Rows,
-            "SPHINX results");
+            "SPHINX results", ExcelGridlines);
 
         return File(file, ExcelContentType, export.FileName);
     }
@@ -200,7 +203,7 @@ public sealed class IndexModel(
         }
 
         var rows = CreateTemplateRows();
-        var file = excelWorkbookService.CreateWorkbook(TemplateHeaders, rows, "SPHINX template");
+        var file = excelWorkbookService.CreateWorkbook(TemplateHeaders, rows, "SPHINX template", ExcelGridlines);
 
         return File(file, ExcelContentType, "sphinx_apklausos_template.xlsx");
     }
@@ -225,7 +228,7 @@ public sealed class IndexModel(
         }
 
         var rows = CreateRowsFromSurvey(survey.TopLevelQuestions);
-        var file = excelWorkbookService.CreateWorkbook(TemplateHeaders, rows, "SPHINX export");
+        var file = excelWorkbookService.CreateWorkbook(TemplateHeaders, rows, "SPHINX export", ExcelGridlines);
         var safeTitle = new string(survey.Survey.Title.Select(ch => char.IsLetterOrDigit(ch) ? ch : '_').ToArray()).Trim('_');
         if (string.IsNullOrWhiteSpace(safeTitle))
         {

@@ -1,4 +1,4 @@
-﻿using DATA_EXCHANGE_HUB.Models;
+using DATA_EXCHANGE_HUB.Models;
 using DATA_EXCHANGE_HUB.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,6 +16,9 @@ public sealed class IndexModel(
     IWebHostEnvironment environment,
     IStringLocalizer<DATA_EXCHANGE_HUB.SharedResource> localizer) : PageModel
 {
+    [BindProperty(SupportsGet = true)]
+    public bool ExcelGridlines { get; set; }
+
     private const string ExcelContentType =
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private const string CsvContentType = "text/csv; charset=utf-8";
@@ -141,7 +144,7 @@ public sealed class IndexModel(
 
             var headers = tableData.Columns.Select(col => col.Name).ToArray();
             var rows = ToExcelRows(tableData);
-            var file = excelWorkbookService.CreateWorkbook(headers, rows, "Data");
+            var file = excelWorkbookService.CreateWorkbook(headers, rows, "Data", ExcelGridlines);
             var fileName = BuildExcelFileName(SelectedTable.TableName, $"top{RowLimitValue}_p{PageNumber}");
 
             AddExportSummaryHeaders(tableData.Rows.Count, headers.Length);
@@ -225,7 +228,7 @@ public sealed class IndexModel(
                 return RedirectToSelectedTable();
             }
 
-            var file = excelWorkbookService.CreateWorkbook(headers, [], "Template");
+            var file = excelWorkbookService.CreateWorkbook(headers, [], "Template", ExcelGridlines);
             var fileName = BuildExcelFileName(SelectedTable.TableName, "template");
 
             AddExportSummaryHeaders(tableData.Rows.Count, headers.Length);

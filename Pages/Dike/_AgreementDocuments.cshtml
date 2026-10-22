@@ -1,0 +1,88 @@
+@model DATA_EXCHANGE_HUB.Pages.Dike.IndexModel
+<div class="exchange-panel p-3 mb-4" id="dike-documents">
+    <h3 class="h5">@L["Dike.Document.Title"]</h3>
+    <p class="form-text">@L["Dike.Document.Help"]</p>
+    @if (!string.IsNullOrWhiteSpace(Model.DocumentError))
+    {
+        <div class="alert alert-danger" role="alert">@L[Model.DocumentError]</div>
+    }
+    <form method="get" class="row g-2 align-items-end mb-3" id="dikeDocumentSelection">
+        <input type="hidden" name="ActivePane" value="history" />
+        <div class="col-md-10">
+            <label class="form-label" for="dikeDocumentAgreement">@L["Dike.Document.Agreement"]</label>
+            <select class="form-select" asp-for="DocumentAgreementId" id="dikeDocumentAgreement">
+                <option value="">@L["Dike.Document.ChooseAgreement"]</option>
+                @foreach (var agreement in Model.Agreements)
+                {
+                    <option value="@agreement.Data.Id">@agreement.ClientName — @agreement.Data.ContractNo @agreement.Data.Appendix (@agreement.Data.FirstPeriod)</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2"><button class="btn btn-outline-success w-100" type="submit">@L["Pasirinkti"]</button></div>
+    </form>
+    @if (Model.DocumentAgreement is null)
+    {
+        <div class="alert alert-info mb-0">@L["Dike.Document.SelectHelp"]</div>
+    }
+    else
+    {
+        <form method="post" asp-page-handler="UploadDocument" enctype="multipart/form-data" class="row g-3 align-items-end mb-3" id="dikeDocumentUpload">
+            <input type="hidden" name="documentAgreementId" value="@Model.DocumentAgreement.Id" />
+            <div class="col-lg-5">
+                <label class="form-label" for="dikeDocumentFile">@L["Dike.Document.File"]</label>
+                <input class="form-control" type="file" id="dikeDocumentFile" name="documentFile" accept=".pdf,.eml" required
+                       data-size-error="@L["Dike.Document.SizeError"]" data-type-error="@L["Dike.Document.TypeError"]" />
+            </div>
+            <div class="col-lg-5">
+                <label class="form-label" for="dikeDocumentNote">@L["Dike.Document.Note"]</label>
+                <input class="form-control" type="text" name="documentNote" id="dikeDocumentNote" maxlength="500" />
+            </div>
+            <div class="col-lg-2"><button class="btn btn-orange w-100" type="submit">@L["Dike.Document.Upload"]</button></div>
+        </form>
+        <div class="exchange-table-wrap">
+            <table class="exchange-table">
+                <thead><tr><th>@L["Dike.Document.File"]</th><th>@L["Dike.Document.Note"]</th><th>@L["Dike.Document.UploadedAt"]</th><th>@L["Vartotojas"]</th><th>@L["Dike.Document.Actions"]</th></tr></thead>
+                <tbody>
+                    @if (Model.Documents.Count == 0)
+                    {
+                        <tr><td colspan="5" class="text-muted">@L["Dike.Document.Empty"]</td></tr>
+                    }
+                    @foreach (var document in Model.Documents)
+                    {
+                        <tr>
+                            <td class="text-break">@document.FileName <div class="small text-muted">@((document.Size / 1024d).ToString("N1")) KB</div></td>
+                            <td class="text-break">@document.Note</td>
+                            <td>@IndexModel.VilniusTime(document.UploadedAt).ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@document.UploadedBy</td>
+                            <td>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button class="btn btn-sm btn-outline-success" type="button" data-dike-document-preview="@Url.Page("/Dike/Index", "Document", new { documentAgreementId = document.AgreementId, documentId = document.Id })" data-document-name="@document.FileName">@L["Dike.Document.Preview"]</button>
+                                    <a class="btn btn-sm btn-outline-secondary" asp-page="/Dike/Index" asp-page-handler="Document" asp-route-documentAgreementId="@document.AgreementId" asp-route-documentId="@document.Id" asp-route-download="true">@L["Dike.Document.Download"]</a>
+                                    @if (Model.CanDeleteDocuments)
+                                    {
+                                        <form method="post" asp-page-handler="DeleteDocument" data-dike-document-delete="@L["Dike.Document.ConfirmDelete"]">
+                                            <input type="hidden" name="documentId" value="@document.Id" />
+                                            <input type="hidden" name="documentAgreementId" value="@document.AgreementId" />
+                                            <button class="btn btn-sm btn-outline-danger" type="submit">@L["Dike.Document.Delete"]</button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+<div class="modal fade" id="dikeDocumentModal" tabindex="-1" aria-labelledby="dikeDocumentModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title h5 text-break" id="dikeDocumentModalTitle">@L["Dike.Document.Preview"]</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@L["Dike.Document.Close"]"></button>
+            </div>
+            <div class="modal-body p-0"><iframe id="dikeDocumentFrame" title="@L["Dike.Document.Preview"]" class="dike-document-frame"></iframe></div>
+        </div>
+    </div>
+</div>

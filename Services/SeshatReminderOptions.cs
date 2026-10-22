@@ -4,6 +4,8 @@ public sealed class SeshatReminderOptions
 {
     public const string SectionName = "SeshatReminders";
 
+    public bool Enabled { get; set; } = true;
+
     public int SendHour { get; set; } = 12;
 
     public int CheckEveryMinutes { get; set; } = 15;

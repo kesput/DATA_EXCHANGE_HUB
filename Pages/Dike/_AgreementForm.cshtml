@@ -1,0 +1,148 @@
+@model DATA_EXCHANGE_HUB.Pages.Dike.IndexModel
+<form method="post" asp-page-handler="Save" id="dikeAgreementForm" class="dike-agreement-form">
+    <input type="hidden" asp-for="Agreement.Id" />
+    <input type="hidden" asp-for="Agreement.Version" />
+    <input type="hidden" asp-for="Agreement.OwnerId" />
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong>@L["Dike.Validation.Summary"]</strong>
+            <ul class="mb-0">
+                @foreach (var entry in ViewData.ModelState.Where(item => item.Value!.Errors.Count > 0))
+                {
+                    @foreach (var error in entry.Value!.Errors)
+                    {
+                        <li>@L["Dike.Field." + entry.Key.Split('.').Last()]: @L[string.IsNullOrEmpty(error.ErrorMessage) ? "Dike.Validation.Value" : error.ErrorMessage]</li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+    <fieldset disabled="@(Model.SelectedClient is null)">
+        <div class="row g-3">
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label" for="dikeContractNo">@L["Pagal sutarti"]</label>
+                <input class="form-control" asp-for="Agreement.ContractNo" id="dikeContractNo" maxlength="200" required />
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label" for="dikeContractAppendix">@L["Pagal sutarties prieda"]</label>
+                <input class="form-control" asp-for="Agreement.Appendix" id="dikeContractAppendix" maxlength="200" />
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label" for="dikeAgreementStart">@L["Galioja nuo"]</label>
+                <input class="form-control" asp-for="Agreement.ValidFrom" id="dikeAgreementStart" type="date" required />
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label" for="dikeFrequency">@L["Daznis"]</label>
+                <select class="form-select" asp-for="Agreement.Frequency" id="dikeFrequency">
+                    <option value="Kas menesi">@L["Kas menesi"]</option>
+                    <option value="Kas ketvirti">@L["Kas ketvirti"]</option>
+                    <option value="Pagal poreiki">@L["Pagal poreiki"]</option>
+                </select>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label" for="dikeFlow">@L["Srautas pagal kuri skaiciuosime"]</label>
+                <select class="form-select" asp-for="Agreement.Flow" id="dikeFlow"><option value="IN">IN</option><option value="OUT">OUT</option></select>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label" for="dikeWriteOffPercent">@L["Dike.WriteOff"]</label>
+                <input class="form-control" asp-for="Agreement.WriteOffPercent" id="dikeWriteOffPercent" type="number" min="0" max="100" step="0.01" required />
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label" for="dikeFirstPeriod">@L["Pirmas derinimas"]</label>
+                <input class="form-control" asp-for="Agreement.FirstPeriod" id="dikeFirstPeriod" type="text" placeholder="YYYYMM" required />
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label" for="dikeInfPrekCode">@L["Derinami INF_PREK kodai"]</label>
+                <div class="input-group dike-code-entry">
+                    <input class="form-control" id="dikeInfPrekCode" placeholder="@L["INF_PREK kodas"]" pattern="[A-Za-z0-9]{7}" aria-describedby="dikeInfPrekCodeHint dikeInfPrekCodeError" />
+                    <button class="btn btn-outline-success" type="button" id="dikeAddInfPrekCode">@L["Prideti"]</button>
+                </div>
+                <div class="form-text" id="dikeInfPrekCodeHint">@L["Tiksliai 7 simboliai: raides A-Z ir skaiciai 0-9."]</div>
+                <div class="text-danger small mt-1" id="dikeInfPrekCodeError" role="alert" hidden></div>
+                <div class="dike-code-list mt-2" id="dikeInfPrekCodeList" aria-live="polite">
+                    <span class="text-muted small" data-empty-inf-prek hidden="@(Model.Agreement.InfPrekCodes.Count > 0)">@L["Kodu dar neprideta."]</span>
+                    @foreach (var code in Model.Agreement.InfPrekCodes)
+                    {
+                        <span class="dike-code-chip" data-inf-prek-code="@code">
+                            <input type="hidden" name="Agreement.InfPrekCodes" value="@code" />
+                            <span>@code</span>
+                            <button type="button" class="dike-code-remove" aria-label="@L["Salinti INF_PREK {0}", code]">&#215;</button>
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="exchange-panel p-3 my-3">
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" asp-for="Agreement.AutomaticSending" id="dikeAutomaticSending" />
+                <label class="form-check-label fw-bold" for="dikeAutomaticSending">@L["Dike.AutomaticSending"]</label>
+            </div>
+            <div class="row g-3" id="dikeScheduleFields">
+                <div class="col-lg-6">
+                    <label class="form-label" for="dikeRecipients">@L["Dike.Recipients"]</label>
+                    <input class="form-control" asp-for="Agreement.Recipients" id="dikeRecipients" type="text" maxlength="1000" placeholder="client@example.com; other@example.com" />
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label" for="dikeMonthDays">@L["Dike.MonthDays"]</label>
+                    <input class="form-control" asp-for="Agreement.MonthDays" id="dikeMonthDays" maxlength="200" placeholder="1, 15, 28" />
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label" for="dikeSendTime">@L["Dike.SendTime"]</label>
+                    <div class="dike-time-control" id="dikeTimeControl">
+                        <div class="input-group">
+                            <input class="form-control" asp-for="Agreement.SendTime" id="dikeSendTime" type="text" placeholder="HH:mm" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" aria-describedby="dikeTimeHint dikeTimeError"
+                                   data-format-error="@L["Dike.Time.FormatError"]" data-range-error="@L["Dike.Time.RangeError"]" data-required-error="@L["Dike.Validation.Required"]" />
+                            <button class="btn btn-outline-secondary" type="button" id="dikeTimeToggle" aria-label="@L["Dike.Time.Choose"]" title="@L["Dike.Time.Choose"]" aria-expanded="false" aria-controls="dikeTimePicker">&#128339;</button>
+                        </div>
+                        <div class="dike-time-picker exchange-panel p-3 shadow" id="dikeTimePicker" hidden>
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label" for="dikeTimeHour">@L["Dike.Time.Hour"]</label>
+                                    <select class="form-select" id="dikeTimeHour">
+                                        @for (var hour = 0; hour < 24; hour++) { <option value="@hour.ToString("00")">@hour.ToString("00")</option> }
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" for="dikeTimeMinute">@L["Dike.Time.Minute"]</label>
+                                    <select class="form-select" id="dikeTimeMinute">
+                                        @for (var minute = 0; minute < 60; minute++) { <option value="@minute.ToString("00")">@minute.ToString("00")</option> }
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-success w-100" type="button" id="dikeTimeApply">@L["Pasirinkti"]</button>
+                        </div>
+                    </div>
+                    <div class="text-danger small mt-1" id="dikeTimeError" aria-live="polite" hidden></div>
+                    <div class="form-text" id="dikeTimeHint">@L["Dike.Time24Help"]</div>
+                </div>
+            </div>
+            <div class="alert alert-info mt-3 mb-0" id="dikeSchedulePreview" role="status" aria-live="polite"
+                 data-url="@Url.Page("/Dike/Index", "SchedulePreview")"
+                 data-disabled="@L["Dike.Preview.Disabled"]"
+                 data-inactive="@L["Dike.Preview.Inactive"]"
+                 data-incomplete="@L["Dike.Preview.Incomplete"]"
+                 data-ondemand="@L["Dike.Preview.OnDemand"]"
+                 data-loading="@L["Dike.Preview.Loading"]"
+                 data-failed="@L["Dike.Preview.Failed"]"
+                 data-adjusted="@L["Dike.Preview.ClockAdjusted"]"
+                 data-previous="@L["Dike.Preview.Previous"]"
+                 data-no-previous="@L["Dike.Preview.NoPrevious"]"
+                 data-ready="@L["Dike.Preview.Ready"]"></div>
+            <div class="form-text">@L["Dike.LastActual.Pending"]</div>
+            <div class="form-text mt-2">@L["Dike.ScheduleHelp"]</div>
+            <div class="form-text">@L["Dike.SendingPending"]</div>
+        </div>
+        <div class="d-flex flex-wrap gap-3 align-items-center justify-content-between">
+            <div class="form-check">
+                <input class="form-check-input" asp-for="Agreement.IsActive" id="dikeAgreementActive" />
+                <label class="form-check-label" for="dikeAgreementActive">@L["Aktyvus susitarimas"]</label>
+            </div>
+            <div class="d-flex gap-2">
+                <a class="btn btn-outline-success" asp-page="/Dike/Index" asp-route-SelectedOwnerId="@Model.SelectedOwnerId" asp-route-AgreementPane="edit" asp-route-CreateNewAgreement="true">@L["Dike.New"]</a>
+                <button class="btn btn-orange" type="submit">@L[Model.Agreement.Id == Guid.Empty ? "Dike.Create" : "Dike.Update"]</button>
+            </div>
+        </div>
+    </fieldset>
+</form>

@@ -47,11 +47,11 @@
         <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
             @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
             {
-                <div class="alert alert-success mb-3" role="alert">@Model.SuccessMessage</div>
+                <div class="alert alert-success mb-3" role="alert">@L[Model.SuccessMessage ?? string.Empty]</div>
             }
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
-                <div class="alert alert-danger mb-3" role="alert">@Model.ErrorMessage</div>
+                <div class="alert alert-danger mb-3" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
             }
 
             <div class="hub-hero mb-4">
@@ -125,7 +125,7 @@
                             <table class="table table-sm mb-0 sphinx-guide-table">
                                 <tbody>
                                     <tr><td>Q3</td><td>SINGLE</td><td>Q3_A1</td><td>@L["Common.Yes"]</td></tr>
-                                    <tr><td>Q3_SUB1</td><td>TEXT</td><td>Parent</td><td>Q3_A1</td></tr>
+                                    <tr><td>Q3_SUB1</td><td>TEXT</td><td>@L["Parent"]</td><td>Q3_A1</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -210,7 +210,7 @@
                         </div>
                         <div id="limit-count-field" class="mt-2 d-none">
                             <label class="form-label" asp-for="MaxResponses">@L["Sphinx.MaxResponses"]</label>
-                            <input class="form-control" style="max-width:14rem" asp-for="MaxResponses" type="number" min="1" max="10000" placeholder="pvz. 50" />
+                            <input class="form-control" style="max-width:14rem" asp-for="MaxResponses" type="number" min="1" max="10000" placeholder="@L["pvz. 50"]" />
                         </div>
                         <div id="limit-date-field" class="mt-2 d-none">
                             <label class="form-label" asp-for="ExpiresAtString">@L["Sphinx.ExpiresAt"]</label>

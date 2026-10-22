@@ -18,6 +18,8 @@ public sealed class LoginModel(
 
     public const string PasswordSessionKey = "WorkHubPasswordAuthenticated";
 
+    public const string BlockedSessionKey = "WorkHubLoginBlocked";
+
     private readonly WorkHubOptions _options = options.Value;
 
     [BindProperty]
@@ -39,6 +41,11 @@ public sealed class LoginModel(
         }
 
         var activeWindowsUserName = ResolveServerWindowsUserName();
+        if (HttpContext.Session.GetString(BlockedSessionKey) == "1")
+        {
+            ErrorMessage = "Hub.Security.LoginHelp";
+            return Page();
+        }
         if (!string.IsNullOrWhiteSpace(activeWindowsUserName))
         {
             HttpContext.Session.SetString(SessionKey, "1");
@@ -53,8 +60,21 @@ public sealed class LoginModel(
 
     public async Task<IActionResult> OnPostAsync()
     {
+        // A rejected login must never leave a previous authenticated session usable.
+        ClearHubLoginSession();
+        HttpContext.Session.SetString(BlockedSessionKey, "1");
         var activeUserName = ResolveActiveWindowsUserName();
+        if (string.IsNullOrWhiteSpace(activeUserName))
+        {
+            ErrorMessage = "Hub.Security.WindowsRequired";
+            return Page();
+        }
         var hasAttemptedUserName = credentialValidator.TryNormalizeUserName(UserName, out var attemptedUserName);
+        if (!hasAttemptedUserName)
+        {
+            ErrorMessage = "Neteisingas vartotojo vardas arba slaptazodis.";
+            return Page();
+        }
         if (!string.IsNullOrWhiteSpace(activeUserName) &&
             hasAttemptedUserName &&
             !IsSameUser(activeUserName, attemptedUserName))
@@ -64,22 +84,18 @@ public sealed class LoginModel(
                 await TryNotifySuspiciousLoginAsync(activeUserName, validatedAttemptedUserName);
             }
 
-            ErrorMessage = "Prisijungimo vardas turi sutapti su jusu atpazintu vartotoju.";
+            ErrorMessage = "Hub.Security.OtherUser";
             return Page();
         }
 
         if (credentialValidator.TryValidate(UserName, Password, out var authenticatedUserName))
         {
+            HttpContext.Session.Remove(BlockedSessionKey);
             HttpContext.Session.SetString(SessionKey, "1");
             HttpContext.Session.SetString(PasswordSessionKey, "0");
             HttpContext.Session.SetString(
                 WindowsUserNameResolver.AuthenticatedUserSessionKey,
                 authenticatedUserName);
-
-            if (string.IsNullOrWhiteSpace(activeUserName))
-            {
-                await TryNotifySuspiciousLoginAsync("WINDOWS_USER_NOT_DETECTED", authenticatedUserName);
-            }
 
             return LocalRedirect(GetSafeReturnUrl(ReturnUrl));
         }
@@ -87,6 +103,7 @@ public sealed class LoginModel(
         if (environment.IsDevelopment() &&
             string.Equals(Password, _options.Password, StringComparison.Ordinal))
         {
+            HttpContext.Session.Remove(BlockedSessionKey);
             HttpContext.Session.SetString(SessionKey, "1");
             HttpContext.Session.SetString(PasswordSessionKey, "1");
             HttpContext.Session.Remove(WindowsUserNameResolver.AuthenticatedUserSessionKey);
@@ -185,22 +202,12 @@ public sealed class LoginModel(
     {
         var left = NormalizeUserName(leftUserName);
         var right = NormalizeUserName(rightUserName);
-        return left.Equals(right, StringComparison.OrdinalIgnoreCase) ||
-               ShortUserName(left).Equals(ShortUserName(right), StringComparison.OrdinalIgnoreCase);
+        return left.Equals(right, StringComparison.OrdinalIgnoreCase);
     }
 
     private static string NormalizeUserName(string userName)
     {
         return string.IsNullOrWhiteSpace(userName) ? string.Empty : userName.Trim();
-    }
-
-    private static string ShortUserName(string userName)
-    {
-        var normalized = NormalizeUserName(userName);
-        var slashIndex = normalized.LastIndexOf('\\');
-        return slashIndex >= 0 && slashIndex < normalized.Length - 1
-            ? normalized[(slashIndex + 1)..]
-            : normalized;
     }
 
     private static bool IsRealWindowsUserName(string? userName)
@@ -217,7 +224,8 @@ public sealed class LoginModel(
 
     private static string GetSafeReturnUrl(string returnUrl)
     {
-        return string.IsNullOrWhiteSpace(returnUrl) || !returnUrl.StartsWith("/", StringComparison.Ordinal)
+        return string.IsNullOrWhiteSpace(returnUrl) || !returnUrl.StartsWith("/", StringComparison.Ordinal) ||
+            returnUrl.StartsWith("//", StringComparison.Ordinal) || returnUrl.StartsWith("/\\", StringComparison.Ordinal)
             ? "/Hub/Index"
             : returnUrl;
     }

@@ -4,6 +4,7 @@
     ViewData["Title"] = "DIKE";
     var activePane = string.IsNullOrWhiteSpace(Model.ActivePane) ? "agreements" : Model.ActivePane;
     var agreementPane = string.IsNullOrWhiteSpace(Model.AgreementPane) ? "active" : Model.AgreementPane;
+    string AuditValue(string value) => string.IsNullOrEmpty(value) ? "—" : L[value switch { "True" => "Dike.Yes", "False" => "Dike.No", _ => value }].Value;
 }
 
 <div class="container-fluid exchange-page dike-page pt-4">
@@ -13,82 +14,86 @@
                 <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
                     DIKE <small class="badge bg-secondary ms-2">DK</small>
                 </h3>
-                <p class="mb-0 text-dark-green">Klientu suderinimu registras.</p>
+                <p class="mb-0 text-dark-green">@L["Klientu suderinimu registras."]</p>
             </div>
 
             <div class="access-panel stacked mb-3">
                 <div>
-                    <span class="field-label">Registras</span>
-                    <strong>Config</strong>
+                    <span class="field-label">@L["Registras"]</span>
+                    <strong>@L["Config"]</strong>
                 </div>
                 <div>
-                    <span class="field-label">Saltinis</span>
+                    <span class="field-label">@L["Saltinis"]</span>
                     <strong>STAT3</strong>
                 </div>
                 <div>
-                    <span class="field-label">Audit</span>
-                    <strong>Log</strong>
+                    <span class="field-label">@L["Audit"]</span>
+                    <strong>@L["Log"]</strong>
                 </div>
             </div>
 
-            <a class="btn btn-orange w-100" asp-page="/Hub/Index">Grizti i HUB</a>
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">@L["Grizti i HUB"]</a>
         </aside>
 
         <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
             <div class="hub-hero mb-4">
                 <div>
-                    <span class="hub-eyebrow">DERINIMAI, INFORMACIJA, KONTAKTAI, ESAMI SUSITARIMAI</span>
+                    <span class="hub-eyebrow">@L["DERINIMAI, INFORMACIJA, KONTAKTAI, ESAMI SUSITARIMAI"]</span>
                     <h1>DIKE</h1>
-                    <p>DIKE - klientu suderinimu, kontaktu, sutartu salygu ir pakeitimu istorijos valdymo erdve.</p>
+                    <p>@L["DIKE - klientu suderinimu, kontaktu, sutartu salygu ir pakeitimu istorijos valdymo erdve."]</p>
                 </div>
             </div>
 
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
-                <div class="alert alert-warning mb-3" role="alert">@Model.ErrorMessage</div>
+                <div class="alert alert-warning mb-3" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+            {
+                <div class="alert alert-success mb-3" role="status">@L[Model.SuccessMessage]</div>
             }
 
             <section class="hub-board mb-4" id="dike-register">
                 <div class="section-title-row">
                     <div>
-                        <span class="hub-eyebrow">REGISTRAS</span>
-                        <h2>Klientu suderinimu konfiguracija</h2>
+                        <span class="hub-eyebrow">@L["UiHeading.Register"]</span>
+                        <h2>@L["Klientu suderinimu konfiguracija"]</h2>
                     </div>
                     <span class="status-pill-muted">CLIENT_RECONCILIATION_CONFIG</span>
                 </div>
 
-                <div class="hub-app-grid" role="tablist" aria-label="DIKE sritys">
+                <div class="hub-app-grid" role="tablist" aria-label="@L["DIKE sritys"]">
                     <button class="app-tile @(activePane == "agreements" ? "is-selected" : "")" type="button" data-dike-tab="agreements" role="tab" aria-selected="@(activePane == "agreements" ? "true" : "false")">
                         <span class="app-tile-icon">D</span>
                         <span class="app-tile-body">
-                            <span class="app-tile-title">Derinimai</span>
-                            <span class="app-tile-desc">Daznis, sutartas procentas ir srautas.</span>
+                            <span class="app-tile-title">@L["Derinimai"]</span>
+                            <span class="app-tile-desc">@L["Daznis, sutartas procentas ir srautas."]</span>
                         </span>
-                        <span class="app-status">Config</span>
+                        <span class="app-status">@L["Config"]</span>
                     </button>
                     <button class="app-tile @(activePane == "info" ? "is-selected" : "")" type="button" data-dike-tab="info" role="tab" aria-selected="@(activePane == "info" ? "true" : "false")">
                         <span class="app-tile-icon">I</span>
                         <span class="app-tile-body">
-                            <span class="app-tile-title">Informacija</span>
-                            <span class="app-tile-desc">STAT3 klientas pagal OWNER.ID.</span>
+                            <span class="app-tile-title">@L["Informacija"]</span>
+                            <span class="app-tile-desc">@L["STAT3 klientas pagal OWNER.ID."]</span>
                         </span>
                         <span class="app-status">STAT3</span>
                     </button>
                     <button class="app-tile @(activePane == "contacts" ? "is-selected" : "")" type="button" data-dike-tab="contacts" role="tab" aria-selected="@(activePane == "contacts" ? "true" : "false")">
                         <span class="app-tile-icon">K</span>
                         <span class="app-tile-body">
-                            <span class="app-tile-title">Kontaktai</span>
-                            <span class="app-tile-desc">Derinimo ir judejimo informavimo adresatai.</span>
+                            <span class="app-tile-title">@L["Kontaktai"]</span>
+                            <span class="app-tile-desc">@L["Derinimo ir judejimo informavimo adresatai."]</span>
                         </span>
-                        <span class="app-status">Mail</span>
+                        <span class="app-status">@L["Mail"]</span>
                     </button>
                     <button class="app-tile @(activePane == "history" ? "is-selected" : "")" type="button" data-dike-tab="history" role="tab" aria-selected="@(activePane == "history" ? "true" : "false")">
                         <span class="app-tile-icon">E</span>
                         <span class="app-tile-body">
-                            <span class="app-tile-title">Esami susitarimai</span>
-                            <span class="app-tile-desc">Aktyvumas, istorija ir pakeitimu logai.</span>
+                            <span class="app-tile-title">@L["Esami susitarimai"]</span>
+                            <span class="app-tile-desc">@L["Aktyvumas, istorija ir pakeitimu logai."]</span>
                         </span>
-                        <span class="app-status">Audit</span>
+                        <span class="app-status">@L["Audit"]</span>
                     </button>
                 </div>
             </section>
@@ -96,51 +101,62 @@
             <section class="tool-section mb-4" data-dike-pane="agreements" hidden="@(activePane != "agreements")">
                 <div class="section-title-row">
                     <div>
-                        <span class="hub-eyebrow">DERINIMAI</span>
-                        <h2>Klientu derinimai</h2>
+                        <span class="hub-eyebrow">@L["UiHeading.Reconciliations"]</span>
+                        <h2>@L["Klientu derinimai"] (TARA)</h2>
                     </div>
-                    <span class="status-pill-muted">Darbo erdve</span>
+                    <span class="status-pill-muted">@L["Darbo erdve"]</span>
                 </div>
 
-                <ul class="nav nav-tabs argus-main-tabs mb-3" role="tablist" aria-label="DIKE derinimu sritys">
+                <ul class="nav nav-tabs argus-main-tabs mb-3" role="tablist" aria-label="@L["DIKE derinimu sritys"]">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link @(agreementPane == "active" ? "active" : "")" type="button" data-dike-agreement-tab="active" role="tab" aria-selected="@(agreementPane == "active" ? "true" : "false")">
-                            Artejantys / aktyvus derinimai
+                            @L["Artejantys / aktyvus derinimai"]
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link @(agreementPane == "edit" ? "active" : "")" type="button" data-dike-agreement-tab="edit" role="tab" aria-selected="@(agreementPane == "edit" ? "true" : "false")">
-                            Naujo sukurimas / koregavimas
+                            @L["Naujo sukurimas / koregavimas"]
                         </button>
                     </li>
                 </ul>
 
                 <div data-dike-agreement-pane="active" hidden="@(agreementPane != "active")">
-                    <div class="alert alert-info mb-3" role="status">
-                        Cia bus rodomi klientai, kuriems arteja arba jau aktyvus derinimo laikotarpis.
-                        Senus likucius ir siuntimo istorija galesime uzkrauti is pradiniu duomenu, o veliau pildysime is web platformos veiksmu.
-                    </div>
+                    <div class="alert alert-info mb-3" role="status">@L["Dike.ListHelp"]</div>
 
                     <div class="exchange-table-wrap">
                         <table class="exchange-table">
                             <thead>
                                 <tr>
-                                    <th>Klientas</th>
-                                    <th>Imones kodas</th>
-                                    <th>Derinimo daznis</th>
-                                    <th>Arteja laikotarpis</th>
-                                    <th>Paskutinis laikotarpis</th>
-                                    <th>Suderintas likutis</th>
-                                    <th>Informacija issiusta</th>
-                                    <th>Busena</th>
+                                    <th>@L["Klientas"]</th>
+                                    <th>@L["Imones kodas"]</th>
+                                    <th>@L["Derinimo daznis"]</th>
+                                    <th>@L["Pirmas derinimas"]</th>
+                                    <th>@L["Dike.AutomaticSending"]</th>
+                                    <th>@L["Dike.LastUpdated"]</th>
+                                    <th>@L["Busena"]</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td colspan="8" class="text-muted">
-                                        Artejanciu derinimu sarasas bus prijungtas prie DIKE konfigracijos ir istorijos lentu.
-                                    </td>
-                                </tr>
+                                @if (Model.Agreements.Count == 0)
+                                {
+                                    <tr><td colspan="7" class="text-muted">@L["Dike.NoAgreements"]</td></tr>
+                                }
+                                @foreach (var item in Model.Agreements)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a asp-page="/Dike/Index" asp-route-AgreementId="@item.Data.Id" asp-route-AgreementPane="edit">@item.ClientName</a>
+                                            <div class="small text-muted">@item.Data.ContractNo @item.Data.Appendix</div>
+                                            <a class="small" asp-page="/Dike/Index" asp-route-ActivePane="history" asp-route-DocumentAgreementId="@item.Data.Id">@L["Dike.Document.Title"]</a>
+                                        </td>
+                                        <td>@Model.Clients.FirstOrDefault(client => client.OwnerId == item.Data.OwnerId)?.RegCode</td>
+                                        <td>@L[item.Data.Frequency]</td>
+                                        <td>@item.Data.FirstPeriod</td>
+                                        <td>@L[item.Data.AutomaticSending ? "Dike.Yes" : "Dike.No"]</td>
+                                        <td>@IndexModel.VilniusTime(item.UpdatedAt).ToString("yyyy-MM-dd HH:mm")<div class="small text-muted">@item.UpdatedBy</div></td>
+                                        <td>@L[item.Data.IsActive ? "Dike.Active" : "Dike.Inactive"]</td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -152,13 +168,13 @@
                         <input type="hidden" name="AgreementPane" value="edit" />
                         <div class="row g-3 align-items-end">
                             <div class="col-xl-4 col-lg-5">
-                                <label class="form-label" for="dikeAgreementClientSearch">Kliento paieska</label>
-                                <input class="form-control" id="dikeAgreementClientSearch" name="SearchTerm" value="@Model.SearchTerm" type="search" placeholder="Pavadinimas, trumpinys arba imones kodas" />
+                                <label class="form-label" for="dikeAgreementClientSearch">@L["Kliento paieska"]</label>
+                                <input class="form-control" id="dikeAgreementClientSearch" name="SearchTerm" value="@Model.SearchTerm" type="search" placeholder="@L["Pavadinimas, trumpinys arba imones kodas"]" />
                             </div>
                             <div class="col-xl-5 col-lg-5">
-                                <label class="form-label" for="dikeAgreementClient">Klientas</label>
+                                <label class="form-label" for="dikeAgreementClient">@L["Klientas"]</label>
                                 <select class="form-select" id="dikeAgreementClient" asp-for="SelectedOwnerId">
-                                    <option value="">Pasirinkite klienta</option>
+                                    <option value="">@L["Pasirinkite klienta"]</option>
                                     @foreach (var client in Model.Clients)
                                     {
                                         <option value="@client.OwnerId">
@@ -168,7 +184,7 @@
                                 </select>
                             </div>
                             <div class="col-xl-3 col-lg-2 d-flex justify-content-lg-end">
-                                <button class="btn btn-outline-success" type="submit">Pasirinkti</button>
+                                <button class="btn btn-outline-success" type="submit">@L["Pasirinkti"]</button>
                             </div>
                         </div>
                     </form>
@@ -176,86 +192,41 @@
                     @if (Model.SelectedClient is null)
                     {
                         <div class="alert alert-warning mb-3" role="status">
-                            Pirmiausia suraskite arba pasirinkite klienta is STAT3 leidziamu klientu saraso. Jei paieska randa viena klienta, jis pasirenkamas automatiskai; jei randa kelis, pasirinkite konkretu is saraso.
+                            @L["Dike.SelectClientHelp"]
                         </div>
                     }
                     else
                     {
                         <div class="exchange-panel p-3 mb-3">
-                            <div class="row g-3">
-                                <div class="col-xl-2 col-md-4">
-                                    <span class="field-label">SHORTNAME</span>
-                                    <strong>@Model.SelectedClient.ShortName</strong>
-                                </div>
-                                <div class="col-xl-3 col-md-4">
-                                    <span class="field-label">REGCODE</span>
-                                    <strong>@Model.SelectedClient.RegCode</strong>
-                                </div>
-                                <div class="col-xl-5 col-md-12">
-                                    <span class="field-label">NAME</span>
-                                    <strong>@Model.SelectedClient.Name</strong>
-                                </div>
-                                <div class="col-12">
-                                    <span class="field-label">ADDRESS</span>
-                                    <strong>@(string.IsNullOrWhiteSpace(Model.SelectedClient.Address) ? "-" : Model.SelectedClient.Address)</strong>
-                                </div>
-                            </div>
+                            <partial name="_ClientSummary" model="Model.SelectedClient" />
                         </div>
                     }
 
-                    <div class="row g-3">
-                        <div class="col-xl-6 col-md-6">
-                            <label class="form-label" for="dikeContractNo">Pagal sutarti</label>
-                            <input class="form-control" id="dikeContractNo" placeholder="Sutarties numeris arba pavadinimas" disabled="@(Model.SelectedClient is null)" />
+                    @if (Model.SelectedClient is not null)
+                    {
+                        @if (Model.ClientAgreements.Count > 1)
+                        {
+                            <form method="get" class="exchange-panel p-3 mb-3" id="dikeExistingAgreementSelection">
+                                <input type="hidden" name="ActivePane" value="agreements" />
+                                <input type="hidden" name="AgreementPane" value="edit" />
+                                <input type="hidden" name="SelectedOwnerId" value="@Model.SelectedOwnerId" />
+                                <label class="form-label" for="dikeExistingAgreement">@L["Dike.Existing.Select"]</label>
+                                <select class="form-select" name="AgreementId" id="dikeExistingAgreement">
+                                    <option value="">@L["Dike.Existing.Choose"]</option>
+                                    @foreach (var item in Model.ClientAgreements)
+                                    {
+                                        <option value="@item.Data.Id" selected="@(item.Data.Id == Model.Agreement.Id)">@item.Data.ContractNo @item.Data.Appendix — @item.Data.ValidFrom (@L[item.Data.IsActive ? "Dike.Active" : "Dike.Inactive"])</option>
+                                    }
+                                </select>
+                                <button class="btn btn-outline-success mt-2" type="submit">@L["Pasirinkti"]</button>
+                            </form>
+                        }
+                        <div class="alert @(Model.Agreement.Id == Guid.Empty ? "alert-info" : "alert-success") mb-3" role="status">
+                            @if (Model.Agreement.Id == Guid.Empty) { @L["Dike.Existing.NewMode"] }
+                            else { @L["Dike.Existing.EditMode", Model.Agreement.ContractNo] }
                         </div>
-                        <div class="col-xl-6 col-md-6">
-                            <label class="form-label" for="dikeContractAppendix">Pagal sutarties prieda</label>
-                            <input class="form-control" id="dikeContractAppendix" placeholder="Priedas, punktas arba papildomas tekstas" disabled="@(Model.SelectedClient is null)" />
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <label class="form-label" for="dikeFrequency">Daznis</label>
-                            <select class="form-select" id="dikeFrequency" disabled="@(Model.SelectedClient is null)">
-                                <option>Kas menesi</option>
-                                <option>Kas ketvirti</option>
-                                <option>Pagal poreiki</option>
-                            </select>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <label class="form-label" for="dikeFlow">Srautas pagal kuri skaiciuosime</label>
-                            <select class="form-select" id="dikeFlow" disabled="@(Model.SelectedClient is null)">
-                                <option value="IN">IN</option>
-                                <option value="OUT">OUT</option>
-                            </select>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <label class="form-label" for="dikeWriteOffPercent">Sutartas nurasymu % pagal kuri skaiciuosim nurasoma kieki</label>
-                            <input class="form-control" id="dikeWriteOffPercent" type="number" min="0" max="100" step="0.01" placeholder="0.00" disabled="@(Model.SelectedClient is null)" />
-                        </div>
-                        <div class="col-xl-6 col-md-12">
-                            <label class="form-label" for="dikeInfPrekCode">Derinami INF_PREK kodai</label>
-                            <div class="input-group">
-                                <input class="form-control" id="dikeInfPrekCode" placeholder="INF_PREK kodas" disabled="@(Model.SelectedClient is null)" />
-                                <button class="btn btn-outline-success" type="button" id="dikeAddInfPrekCode" disabled="@(Model.SelectedClient is null)">Prideti</button>
-                            </div>
-                            <div class="dike-code-list mt-2" id="dikeInfPrekCodeList" aria-live="polite">
-                                <span class="text-muted small" data-empty-inf-prek>Kodu dar neprideta.</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6">
-                            <label class="form-label" for="dikeAgreementStart">Galioja nuo</label>
-                            <input class="form-control" id="dikeAgreementStart" type="date" lang="en-CA" disabled="@(Model.SelectedClient is null)" />
-                        </div>
-                        <div class="col-xl-4 col-md-6">
-                            <label class="form-label" for="dikeNextPeriod">Kitas derinimo laikotarpis</label>
-                            <input class="form-control" id="dikeNextPeriod" type="month" lang="en-CA" disabled="@(Model.SelectedClient is null)" />
-                        </div>
-                        <div class="col-xl-4 col-md-12 d-flex align-items-end">
-                            <div class="form-check">
-                                <input class="form-check-input" id="dikeAgreementActive" type="checkbox" checked disabled="@(Model.SelectedClient is null)" />
-                                <label class="form-check-label" for="dikeAgreementActive">Aktyvus susitarimas</label>
-                            </div>
-                        </div>
-                    </div>
+                    }
+                    <partial name="_AgreementForm" model="Model" />
                 </div>
             </section>
 
@@ -263,49 +234,31 @@
                 <div class="section-title-row">
                     <div>
                         <span class="hub-eyebrow">STAT3 OWNER / ORGALL</span>
-                        <h2>Kliento informacija</h2>
+                        <h2>@L["Kliento informacija"]</h2>
                     </div>
-                    <span class="status-pill">Gyvas saltinis</span>
+                    <span class="status-pill">@L["Gyvas saltinis"]</span>
                 </div>
 
                 <div class="alert alert-info mb-3" role="status">
-                    Klientas bus pasirenkamas tik is aktyviu STAT3 irasu: <strong>OWNER.ACTIVE = 1</strong>,
-                    Lietuvai priskirta STAT3 klientu sriti. Sisteminiai laukai bus siejami pagal vidini kliento ID,
-                    todel pasikeitus pavadinimui, kodui ar adresui STAT3, DIKE rodys nauja reiksme.
+                    @L["Klientas bus pasirenkamas tik is aktyviu STAT3 irasu:"] <strong>OWNER.ACTIVE = 1</strong>,
+                    @L["Dike.LiveClientHelp"]
                 </div>
 
                 @if (Model.SelectedClient is not null)
                 {
                     <div class="exchange-panel p-3 mb-3">
-                        <div class="row g-3">
-                            <div class="col-xl-2 col-md-4">
-                                <span class="field-label">SHORTNAME</span>
-                                <strong>@Model.SelectedClient.ShortName</strong>
-                            </div>
-                            <div class="col-xl-3 col-md-4">
-                                <span class="field-label">REGCODE</span>
-                                <strong>@Model.SelectedClient.RegCode</strong>
-                            </div>
-                            <div class="col-xl-5 col-md-12">
-                                <span class="field-label">NAME</span>
-                                <strong>@Model.SelectedClient.Name</strong>
-                            </div>
-                            <div class="col-12">
-                                <span class="field-label">ADDRESS</span>
-                                <strong>@(string.IsNullOrWhiteSpace(Model.SelectedClient.Address) ? "-" : Model.SelectedClient.Address)</strong>
-                            </div>
-                        </div>
+                        <partial name="_ClientSummary" model="Model.SelectedClient" />
                     </div>
                 }
 
                 <form method="get" class="row g-3 align-items-end mb-3">
                     <input type="hidden" name="ActivePane" value="info" />
                     <div class="col-xl-3 col-lg-4 col-md-6">
-                        <label class="form-label" for="dikeOwnerSearch">Paieska</label>
-                        <input class="form-control" id="dikeOwnerSearch" name="SearchTerm" value="@Model.SearchTerm" type="search" placeholder="Pavadinimas, trumpinys arba imones kodas" />
+                        <label class="form-label" for="dikeOwnerSearch">@L["Paieska"]</label>
+                        <input class="form-control" id="dikeOwnerSearch" name="SearchTerm" value="@Model.SearchTerm" type="search" placeholder="@L["Pavadinimas, trumpinys arba imones kodas"]" />
                     </div>
                     <div class="col-xl-9 col-lg-8 col-md-6 d-flex justify-content-lg-end">
-                        <button class="btn btn-outline-success" type="submit">Ieskoti</button>
+                        <button class="btn btn-outline-success" type="submit">@L["Ieskoti"]</button>
                     </div>
                 </form>
 
@@ -317,14 +270,15 @@
                                 <th>NAME</th>
                                 <th>REGCODE</th>
                                 <th>ADDRESS</th>
+                                <th>@L["Dike.Manager"]</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if (Model.Clients.Count == 0)
                             {
                                 <tr>
-                                    <td colspan="4" class="text-muted">
-                                        Klientu pagal nurodyta paieska nerasta.
+                                    <td colspan="5" class="text-muted">
+                                        @L["Klientu pagal nurodyta paieska nerasta."]
                                     </td>
                                 </tr>
                             }
@@ -344,6 +298,7 @@
                                         <td>@client.Name</td>
                                         <td>@client.RegCode</td>
                                         <td>@client.Address</td>
+                                        <td>@(string.IsNullOrWhiteSpace(client.ManagerFullName) ? "-" : client.ManagerFullName)</td>
                                     </tr>
                                 }
                             }
@@ -355,48 +310,97 @@
             <section class="tool-section mb-4" data-dike-pane="contacts" hidden="@(activePane != "contacts")">
                 <div class="section-title-row">
                     <div>
-                        <span class="hub-eyebrow">KONTAKTAI</span>
-                        <h2>Derinimo ir informavimo adresatai</h2>
+                        <span class="hub-eyebrow">@L["UiHeading.Contacts"]</span>
+                        <h2>@L["Derinimo ir informavimo adresatai"]</h2>
                     </div>
-                    <span class="status-pill-muted">Ruosiamas</span>
+                    <span class="status-pill-muted">@L["Dike.Recipients"]</span>
                 </div>
 
-                <div class="row g-3">
-                    <div class="col-xl-6">
-                        <label class="form-label" for="dikeReconciliationEmail">Kliento derinimo email</label>
-                        <input class="form-control" id="dikeReconciliationEmail" type="email" placeholder="client@example.com" />
-                    </div>
-                    <div class="col-xl-6">
-                        <label class="form-label" for="dikeMovementEmail">Kam siusti prekiu judejima</label>
-                        <input class="form-control" id="dikeMovementEmail" type="text" placeholder="email1@example.com; email2@example.com" />
-                    </div>
+                <div class="exchange-table-wrap">
+                    <table class="exchange-table">
+                        <thead><tr><th>@L["Klientas"]</th><th>@L["Dike.Recipients"]</th><th>@L["Dike.AutomaticSending"]</th></tr></thead>
+                        <tbody>
+                            @if (Model.Agreements.Count == 0)
+                            {
+                                <tr><td colspan="3" class="text-muted">@L["Dike.NoAgreements"]</td></tr>
+                            }
+                            @foreach (var item in Model.Agreements)
+                            {
+                                <tr>
+                                    <td><a asp-page="/Dike/Index" asp-route-AgreementId="@item.Data.Id" asp-route-AgreementPane="edit">@item.ClientName</a></td>
+                                    <td class="text-break">@item.Data.Recipients</td>
+                                    <td>@L[item.Data.AutomaticSending ? "Dike.Yes" : "Dike.No"]</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
             <section class="tool-section mb-4" data-dike-pane="history" hidden="@(activePane != "history")">
                 <div class="section-title-row">
                     <div>
-                        <span class="hub-eyebrow">ESAMI SUSITARIMAI</span>
-                        <h2>Aktyvumas ir pakeitimu istorija</h2>
+                        <span class="hub-eyebrow">@L["UiHeading.ExistingAgreements"]</span>
+                        <h2>@L["Aktyvumas ir pakeitimu istorija"]</h2>
                     </div>
                     <span class="status-pill-muted">CLIENT_RECONCILIATION_LOG</span>
                 </div>
+
+                <partial name="_AgreementDocuments" model="Model" />
+
+                <form method="get" class="row g-3 align-items-end mb-3">
+                    <input type="hidden" name="ActivePane" value="history" />
+                    <input type="hidden" name="SelectedOwnerId" value="@Model.SelectedOwnerId" />
+                    <div class="col-md-8">
+                        <label class="form-label" for="dikeHistorySearch">@L["Dike.HistorySearch"]</label>
+                        <input class="form-control" asp-for="HistorySearch" id="dikeHistorySearch" maxlength="200" />
+                    </div>
+                    <div class="col-md-4 d-flex gap-2">
+                        <button class="btn btn-outline-success" type="submit">@L["Ieskoti"]</button>
+                        <a class="btn btn-outline-secondary" asp-page="/Dike/Index" asp-route-ActivePane="history">@L["Dike.AllHistory"]</a>
+                    </div>
+                    <div class="form-text">@L["Dike.HistoryHelp"]</div>
+                </form>
 
                 <div class="exchange-table-wrap">
                     <table class="exchange-table">
                         <thead>
                             <tr>
-                                <th>Laikas</th>
-                                <th>Veiksmas</th>
-                                <th>Vartotojas</th>
-                                <th>Klientas</th>
-                                <th>Pastaba</th>
+                                <th>@L["Laikas"]</th>
+                                <th>@L["Veiksmas"]</th>
+                                <th>@L["Vartotojas"]</th>
+                                <th>@L["Klientas"]</th>
+                                <th>@L["Pastaba"]</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td colspan="5" class="text-muted">Pakeitimu istorija bus prijungta prie DIKE log lentos.</td>
-                            </tr>
+                            @if (Model.History.Count == 0)
+                            {
+                                <tr><td colspan="5" class="text-muted">@L["Dike.NoHistory"]</td></tr>
+                            }
+                            @foreach (var audit in Model.History)
+                            {
+                                <tr>
+                                    <td>@IndexModel.VilniusTime(audit.OccurredAt).ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td>@L["Dike.Action." + audit.Action]<div class="small text-break">@audit.DocumentFileName</div></td>
+                                    <td>@audit.Actor</td>
+                                    <td><a asp-page="/Dike/Index" asp-route-AgreementId="@audit.AgreementId" asp-route-AgreementPane="edit">@audit.ClientName</a></td>
+                                    <td>
+                                        <details>
+                                            <summary>@L["Dike.Changes"] (@audit.Changes.Count)</summary>
+                                            <table class="table table-sm mb-0">
+                                                <thead><tr><th>@L["Dike.Field"]</th><th>@L["Dike.Before"]</th><th>@L["Dike.After"]</th></tr></thead>
+                                                <tbody>
+                                                @foreach (var change in audit.Changes)
+                                                {
+                                                    <tr><td>@L["Dike.Field." + change.Field]</td><td class="text-break">@AuditValue(change.Before)</td><td class="text-break">@AuditValue(change.After)</td></tr>
+                                                }
+                                                </tbody>
+                                            </table>
+                                        </details>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -446,9 +450,26 @@
                 tab.addEventListener("click", () => activateAgreement(tab.dataset.dikeAgreementTab));
             });
 
+            const agreementClient = document.getElementById("dikeAgreementClient");
+            agreementClient?.addEventListener("change", () => {
+                agreementClient.form?.requestSubmit();
+            });
+            const existingAgreement = document.getElementById("dikeExistingAgreement");
+            existingAgreement?.addEventListener("change", () => existingAgreement.form.requestSubmit());
+
             const infPrekInput = document.getElementById("dikeInfPrekCode");
             const addInfPrekButton = document.getElementById("dikeAddInfPrekCode");
             const infPrekList = document.getElementById("dikeInfPrekCodeList");
+            const infPrekError = document.getElementById("dikeInfPrekCodeError");
+
+            function setInfPrekError(message) {
+                infPrekInput?.classList.toggle("is-invalid", Boolean(message));
+                infPrekInput?.setAttribute("aria-invalid", message ? "true" : "false");
+                if (infPrekError) {
+                    infPrekError.textContent = message;
+                    infPrekError.hidden = !message;
+                }
+            }
 
             function refreshInfPrekEmptyState() {
                 const emptyState = infPrekList?.querySelector("[data-empty-inf-prek]");
@@ -466,11 +487,13 @@
                 }
 
                 const code = infPrekInput.value.trim();
-                if (!code) {
+                if (!/^[A-Za-z0-9]{7}$/.test(code)) {
+                    setInfPrekError(window.HubI18n.t("INF_PREK kodas turi buti tiksliai 7 simboliu, sudarytas tik is raidziu A-Z ir skaiciu 0-9."));
                     infPrekInput.focus();
                     return;
                 }
 
+                setInfPrekError("");
                 const normalizedCode = code.toUpperCase();
                 const exists = Array.from(infPrekList.querySelectorAll("[data-inf-prek-code]"))
                     .some(item => item.dataset.infPrekCode === normalizedCode);
@@ -486,7 +509,7 @@
 
                 const value = document.createElement("input");
                 value.type = "hidden";
-                value.name = "InfPrekCodes";
+                value.name = "Agreement.InfPrekCodes";
                 value.value = normalizedCode;
 
                 const label = document.createElement("span");
@@ -495,7 +518,7 @@
                 const remove = document.createElement("button");
                 remove.type = "button";
                 remove.className = "dike-code-remove";
-                remove.setAttribute("aria-label", `Salinti INF_PREK ${normalizedCode}`);
+                remove.setAttribute("aria-label", window.HubI18n.format("Salinti INF_PREK {0}", normalizedCode));
                 remove.textContent = "x";
                 remove.addEventListener("click", () => {
                     item.remove();
@@ -510,12 +533,33 @@
             }
 
             addInfPrekButton?.addEventListener("click", addInfPrekCode);
+            infPrekInput?.addEventListener("input", () => setInfPrekError(""));
             infPrekInput?.addEventListener("keydown", event => {
                 if (event.key === "Enter") {
                     event.preventDefault();
                     addInfPrekCode();
                 }
             });
+
+            infPrekList?.addEventListener("click", event => {
+                const remove = event.target.closest(".dike-code-remove");
+                if (remove) { remove.closest("[data-inf-prek-code]")?.remove(); refreshInfPrekEmptyState(); }
+            });
+            document.getElementById("dikeAgreementForm")?.addEventListener("submit", event => {
+                if (infPrekInput?.value.trim()) {
+                    addInfPrekCode();
+                    if (infPrekInput.value.trim()) event.preventDefault();
+                }
+            });
+            const automaticSending = document.getElementById("dikeAutomaticSending");
+            function updateSchedule() {
+                document.querySelectorAll("#dikeScheduleFields input").forEach(input => {
+                    input.required = Boolean(automaticSending?.checked);
+                });
+                document.getElementById("dikeScheduleFields")?.classList.toggle("opacity-75", !automaticSending?.checked);
+            }
+            automaticSending?.addEventListener("change", updateSchedule);
+            updateSchedule();
 
             document.querySelectorAll("[data-row-link]").forEach(row => {
                 row.addEventListener("click", event => {
@@ -528,4 +572,6 @@
             });
         })();
     </script>
+    <script src="~/js/dike-schedule.js" asp-append-version="true"></script>
+    <script src="~/js/dike-documents.js" asp-append-version="true"></script>
 }

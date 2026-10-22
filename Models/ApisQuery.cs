@@ -10,7 +10,8 @@ public sealed record ApisQueryDefinition(
     string? ProcedureName,
     string Description,
     IReadOnlyList<ApisParameterDefinition> Parameters,
-    string ViewMode = "");
+    string ViewMode = "",
+    IReadOnlyDictionary<string, string>? ExcelNumberFormats = null);
 
 public sealed record ApisParameterDefinition(
     string Name,

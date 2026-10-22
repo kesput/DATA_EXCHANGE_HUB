@@ -7,7 +7,9 @@ public interface IExcelWorkbookService
     byte[] CreateWorkbook(
         IReadOnlyList<string> headers,
         IReadOnlyList<IReadOnlyDictionary<string, string?>> rows,
-        string worksheetName);
+        string worksheetName,
+        bool gridlines = false,
+        IReadOnlyDictionary<string, string>? numberFormats = null);
 
     byte[] CreateSemicolonCsv(
         IReadOnlyList<string> headers,

@@ -11,16 +11,16 @@
                 <h3 class="mb-0 d-flex justify-content-between align-items-center fw-bold text-dark-green">
                     SESHAT <small class="badge bg-secondary ms-2">SH</small>
                 </h3>
-                <p class="mb-0 text-dark-green">Susitarimu ir dokumentacijos registras.</p>
+                <p class="mb-0 text-dark-green">@L["Susitarimu ir dokumentacijos registras."]</p>
             </div>
 
             <div class="access-panel stacked mb-3">
                 <div>
-                    <span class="field-label">Vartotojas</span>
+                    <span class="field-label">@L["Vartotojas"]</span>
                     <strong>@(string.IsNullOrWhiteSpace(Model.Access.UserName) ? "-" : Model.Access.UserName)</strong>
                 </div>
                 <div>
-                    <span class="field-label">Role</span>
+                    <span class="field-label">@L["Role"]</span>
                     <strong>@Model.Access.RoleLabel</strong>
                 </div>
                 <div>
@@ -33,40 +33,40 @@
                 </div>
             </div>
 
-            <a class="btn btn-orange w-100" asp-page="/Hub/Index">Grizti i HUB</a>
+            <a class="btn btn-orange w-100" asp-page="/Hub/Index">@L["Grizti i HUB"]</a>
         </aside>
 
         <section class="col-xxl-10 col-xl-10 col-lg-9 exchange-content">
             @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
             {
-                <div class="alert alert-success" role="status">@Model.SuccessMessage</div>
+                <div class="alert alert-success" role="status">@L[Model.SuccessMessage ?? string.Empty]</div>
             }
 
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
-                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+                <div class="alert alert-danger" role="alert">@L[Model.ErrorMessage ?? string.Empty]</div>
             }
 
             @if (!Model.Access.CanOpen)
             {
                 <div class="p-5 text-center text-muted border border-dashed rounded-lg bg-light-green">
-                    <h2 class="fw-bold text-dark-green">Prieiga nesuteikta</h2>
-                    <p class="mb-0">SESHAT teises suteikiamos per BS_APP_ACCESS pagal sali ir role.</p>
+                    <h2 class="fw-bold text-dark-green">@L["Prieiga nesuteikta"]</h2>
+                    <p class="mb-0">@L["SESHAT teises suteikiamos per BS_APP_ACCESS pagal sali ir role."]</p>
                 </div>
             }
             else
             {
                 <div class="hub-metrics mb-3">
                     <div class="metric-card">
-                        <small>Irasai</small>
+                        <small>@L["Irasai"]</small>
                         <h4>@Model.Documents.Count</h4>
                     </div>
                     <div class="metric-card">
-                        <small>Role</small>
+                        <small>@L["Role"]</small>
                         <h4>@Model.Access.RoleLabel</h4>
                     </div>
                     <div class="metric-card">
-                        <small>Pasirinktas</small>
+                        <small>@L["Pasirinktas"]</small>
                         <h4>@(Model.Details?.Document.Id.ToString() ?? "-")</h4>
                     </div>
                 </div>
@@ -86,17 +86,17 @@
                         </div>
                         <div class="seshat-agreement-text">@Model.Details.Document.Description</div>
                         <div class="seshat-inline-files">
-                            <h3>Pranesimai apie termino pabaiga</h3>
+                            <h3>@L["Pranesimai apie termino pabaiga"]</h3>
                             <div class="alert alert-info py-2 px-3 small" role="status">EMAIL pranesimai bus siunciami pagal nustatyta grafika nuo @Model.ReminderSendTimeText. Testini pranesima galite issiusti iskart i nurodyta el. pasta.</div>
                             @if (!Model.Details.Document.ValidTo.HasValue)
                             {
-                                <div class="empty-state compact">Priminimams reikia uzpildyti susitarimo data "Galioja iki".</div>
+                                <div class="empty-state compact">@L["Priminimams reikia uzpildyti susitarimo data \"Galioja iki\"."]</div>
                             }
                             else
                             {
                                 @if (!Model.Details.Reminders.Any())
                                 {
-                                    <div class="empty-state compact">Pranesimu poreikiu dar nera.</div>
+                                    <div class="empty-state compact">@L["Pranesimu poreikiu dar nera."]</div>
                                 }
                                 else
                                 {
@@ -106,20 +106,20 @@
                                         var reminderContact = reminderIsEmail ? reminder.Email : reminder.PhoneNo;
                                         <div class="seshat-file-strip">
                                             <div>
-                                                <strong>@reminder.NotifyChannel · @reminder.DaysBefore d. iki termino</strong>
+                                                <strong>@reminder.NotifyChannel Â· @reminder.DaysBefore d. iki termino</strong>
                                                 <div class="text-muted">@reminderContact</div>
                                                 <div class="text-muted">Bus siunciama @Model.FormatReminderSendAt(Model.Details.Document.ValidTo, reminder.DaysBefore)</div>
-                                                <small>@reminder.KpiName · @reminder.Subject</small>
+                                                <small>@reminder.KpiName Â· @reminder.Subject</small>
                                             </div>
                                             <div class="seshat-file-actions">
-                                                <form method="post" asp-page-handler="SendReminderTest" class="d-inline"><input type="hidden" name="DocumentId" value="@Model.Details.Document.Id" /><input type="hidden" name="reminderId" value="@reminder.Id" /><button class="btn btn-sm btn-outline-secondary" type="submit">Siusti testini</button></form>
+                                                <form method="post" asp-page-handler="SendReminderTest" class="d-inline"><input type="hidden" name="DocumentId" value="@Model.Details.Document.Id" /><input type="hidden" name="reminderId" value="@reminder.Id" /><button class="btn btn-sm btn-outline-secondary" type="submit">@L["Siusti testini"]</button></form>
                                                 <span class="status-pill @(reminder.Active ? "" : "status-pill-muted")">@(reminder.Active ? "Active" : "Inactive")</span>
                                                 @if (Model.CanEditSelected && reminder.Active)
                                                 {
                                                     <form method="post" asp-page-handler="CancelReminder" onsubmit="return confirm('Atsisakyti sio pranesimo poreikio?');">
                                                         <input type="hidden" asp-for="DocumentId" />
                                                         <input type="hidden" name="reminderId" value="@reminder.Id" />
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger">Atsisakyti</button>
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">@L["Atsisakyti"]</button>
                                                     </form>
                                                 }
                                             </div>
@@ -127,40 +127,40 @@
                                         @if (Model.CanEditSelected && reminder.Active)
                                         {
                                             <details class="seshat-edit-panel">
-                                                <summary>Pakeisti pranesimo poreiki</summary>
+                                                <summary>@L["Pakeisti pranesimo poreiki"]</summary>
                                                 <form method="post" class="seshat-section-form" asp-page-handler="SaveReminder">
                                                     <input type="hidden" asp-for="DocumentId" />
                                                     <div>
-                                                        <label class="form-label" for="reminderChannel-@reminder.Id">Pranesimo budas</label>
+                                                        <label class="form-label" for="reminderChannel-@reminder.Id">@L["Pranesimo budas"]</label>
                                                         <select id="reminderChannel-@reminder.Id" class="form-select" name="ReminderChannel">
                                                             <option value="EMAIL" selected="@reminderIsEmail">EMAIL</option>
                                                             <option value="SMS" selected="@(!reminderIsEmail)">SMS</option>
                                                         </select>
                                                     </div>
                                                     <div>
-                                                        <label class="form-label" for="reminderContact-@reminder.Id">El. pastas arba telefono nr.</label>
-                                                        <input id="reminderContact-@reminder.Id" class="form-control" name="ReminderContact" value="@reminderContact" maxlength="320" pattern="([^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]{2,})|(\+370-?\d{8})" title="Iveskite email adresa, pvz. user&#64;bls.lt, arba lietuviska telefono numeri, pvz. +37061234567." required />
+                                                        <label class="form-label" for="reminderContact-@reminder.Id">@L["El. pastas arba telefono nr."]</label>
+                                                        <input id="reminderContact-@reminder.Id" class="form-control" name="ReminderContact" value="@reminderContact" maxlength="320" pattern="([^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]{2,})|(\+370-?\d{8})" title="@L["Iveskite email adresa, pvz. user&#64;bls.lt, arba lietuviska telefono numeri, pvz. +37061234567."]" required />
                                                     </div>
                                                     <div>
-                                                        <label class="form-label" for="reminderDays-@reminder.Id">Pranesti pries dienu</label>
+                                                        <label class="form-label" for="reminderDays-@reminder.Id">@L["Pranesti pries dienu"]</label>
                                                         <input id="reminderDays-@reminder.Id" class="form-control" name="ReminderNotifyDaysBefore" value="@reminder.DaysBefore" type="number" min="1" max="365" required />
                                                     </div>
                                                     @if (!reminderIsEmail && Model.HasPendingSmsVerification(Model.Details.Document.Id, reminderContact, reminder.DaysBefore))
                                                     {
                                                         <div>
-                                                            <label class="form-label" for="smsCode-@reminder.Id">SMS patvirtinimo kodas</label>
+                                                            <label class="form-label" for="smsCode-@reminder.Id">@L["SMS patvirtinimo kodas"]</label>
                                                             <input id="smsCode-@reminder.Id" class="form-control" name="SmsVerificationCode" maxlength="6" minlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="one-time-code" required />
                                                         </div>
                                                     }
                                                     <div class="kairos-actions">
                                                         @if (!reminderIsEmail && Model.HasPendingSmsVerification(Model.Details.Document.Id, reminderContact, reminder.DaysBefore))
                                                         {
-                                                            <button type="submit" class="btn btn-orange">Patvirtinti ir issaugoti</button>
-                                                            <button type="submit" class="btn btn-outline-secondary" name="ResendSmsVerification" value="true" formnovalidate>Siusti koda dar karta</button>
+                                                            <button type="submit" class="btn btn-orange">@L["Patvirtinti ir issaugoti"]</button>
+                                                            <button type="submit" class="btn btn-outline-secondary" name="ResendSmsVerification" value="true" formnovalidate>@L["Siusti koda dar karta"]</button>
                                                         }
                                                         else
                                                         {
-                                                            <button type="submit" class="btn btn-orange">Issaugoti pakeitima</button>
+                                                            <button type="submit" class="btn btn-orange">@L["Issaugoti pakeitima"]</button>
                                                         }
                                                     </div>
                                                 </form>
@@ -174,36 +174,36 @@
                                     <form method="post" class="seshat-section-form" asp-page-handler="SaveReminder">
                                         <input type="hidden" asp-for="DocumentId" />
                                         <div>
-                                            <label class="form-label" asp-for="ReminderChannel">Pranesimo budas</label>
+                                            <label class="form-label" asp-for="ReminderChannel">@L["Pranesimo budas"]</label>
                                             <select class="form-select" asp-for="ReminderChannel">
                                                 <option value="EMAIL">EMAIL</option>
                                                 <option value="SMS">SMS</option>
                                             </select>
                                         </div>
                                         <div>
-                                            <label class="form-label" asp-for="ReminderContact">El. pastas arba telefono nr.</label>
-                                            <input class="form-control" asp-for="ReminderContact" maxlength="320" placeholder="user&#64;bls.lt arba +37061234567" pattern="([^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]{2,})|(\+370-?\d{8})" title="Iveskite email adresa, pvz. user&#64;bls.lt, arba lietuviska telefono numeri, pvz. +37061234567." required />
+                                            <label class="form-label" asp-for="ReminderContact">@L["El. pastas arba telefono nr."]</label>
+                                            <input class="form-control" asp-for="ReminderContact" maxlength="320" placeholder="@L["user&#64;bls.lt arba +37061234567"]" pattern="([^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]{2,})|(\+370-?\d{8})" title="@L["Iveskite email adresa, pvz. user&#64;bls.lt, arba lietuviska telefono numeri, pvz. +37061234567."]" required />
                                         </div>
                                         <div>
-                                            <label class="form-label" asp-for="ReminderNotifyDaysBefore">Pranesti pries dienu</label>
+                                            <label class="form-label" asp-for="ReminderNotifyDaysBefore">@L["Pranesti pries dienu"]</label>
                                             <input class="form-control" asp-for="ReminderNotifyDaysBefore" type="number" min="1" max="365" required />
                                         </div>
                                         @if (Model.ReminderChannel == "SMS" && Model.HasPendingSmsVerification(Model.Details.Document.Id, Model.ReminderContact, Model.ReminderNotifyDaysBefore))
                                         {
                                             <div>
-                                                <label class="form-label" asp-for="SmsVerificationCode">SMS patvirtinimo kodas</label>
+                                                <label class="form-label" asp-for="SmsVerificationCode">@L["SMS patvirtinimo kodas"]</label>
                                                 <input class="form-control" asp-for="SmsVerificationCode" maxlength="6" minlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="one-time-code" required />
                                             </div>
                                         }
                                         <div class="kairos-actions">
                                             @if (Model.ReminderChannel == "SMS" && Model.HasPendingSmsVerification(Model.Details.Document.Id, Model.ReminderContact, Model.ReminderNotifyDaysBefore))
                                             {
-                                                <button type="submit" class="btn btn-orange">Patvirtinti ir issaugoti</button>
-                                                <button type="submit" class="btn btn-outline-secondary" name="ResendSmsVerification" value="true" formnovalidate>Siusti koda dar karta</button>
+                                                <button type="submit" class="btn btn-orange">@L["Patvirtinti ir issaugoti"]</button>
+                                                <button type="submit" class="btn btn-outline-secondary" name="ResendSmsVerification" value="true" formnovalidate>@L["Siusti koda dar karta"]</button>
                                             }
                                             else
                                             {
-                                                <button type="submit" class="btn btn-orange">Issaugoti pranesimo poreiki</button>
+                                                <button type="submit" class="btn btn-orange">@L["Issaugoti pranesimo poreiki"]</button>
                                             }
                                         </div>
                                     </form>
@@ -212,29 +212,29 @@
                         </div>
 
                         <div class="seshat-inline-files">
-                            <h3>Susitarimo priedai</h3>
+                            <h3>@L["Susitarimo priedai"]</h3>
                             @if (Model.CanEditSelected)
                             {
                                 <form method="post" enctype="multipart/form-data" class="file-upload-form mb-3" asp-page-handler="Upload" data-clipboard-file-form>
                                     <input type="hidden" asp-for="DocumentId" />
                                     <div>
-                                        <label class="field-label" for="agreementReplacementFiles">Prideti arba pakeisti prieda</label>
+                                        <label class="field-label" for="agreementReplacementFiles">@L["Prideti arba pakeisti prieda"]</label>
                                         <input id="agreementReplacementFiles" name="uploadFiles" type="file" multiple class="form-control" required data-clipboard-file-input />
                                         <div class="seshat-clipboard-status" data-clipboard-file-status></div>
                                     </div>
                                     <div>
-                                        <label class="field-label" asp-for="FileDescription">Aprasymas</label>
-                                        <textarea class="form-control" asp-for="FileDescription" rows="2" maxlength="1000" placeholder="Pvz. nauja versija vietoje seno priedo"></textarea>
+                                        <label class="field-label" asp-for="FileDescription">@L["Aprasymas"]</label>
+                                        <textarea class="form-control" asp-for="FileDescription" rows="2" maxlength="1000" placeholder="@L["Pvz. nauja versija vietoje seno priedo"]"></textarea>
                                     </div>
                                     <div class="form-actions">
-                                        <button type="submit" class="btn btn-orange">Prikabinti nauja prieda</button>
+                                        <button type="submit" class="btn btn-orange">@L["Prikabinti nauja prieda"]</button>
                                     </div>
                                 </form>
-                                <div class="text-muted small mb-2">Norint pakeisti prieda kitu: istrinkite sena prieda ir prikabinkite nauja faila.</div>
+                                <div class="text-muted small mb-2">@L["Norint pakeisti prieda kitu: istrinkite sena prieda ir prikabinkite nauja faila."]</div>
                             }
                             @if (!Model.Details.AgreementFiles.Any())
                             {
-                                <div class="empty-state compact">Priedu dar nera.</div>
+                                <div class="empty-state compact">@L["Priedu dar nera."]</div>
                             }
                             else
                             {
@@ -244,21 +244,21 @@
                                         <div>
                                             <strong>@file.OriginalFileName</strong>
                                             <div class="text-muted">@file.Description</div>
-                                            <small>@file.FileKind · @IndexModel.FormatFileSize(file.FileSizeBytes) · @IndexModel.FormatDateTime(file.UploadedAt)</small>
+                                            <small>@file.FileKind Â· @IndexModel.FormatFileSize(file.FileSizeBytes) Â· @IndexModel.FormatDateTime(file.UploadedAt)</small>
                                         </div>
                                         <div class="seshat-file-actions">
                                             @if (IndexModel.CanPreview(file))
                                             {
-                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">Perziureti</a>
+                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">@L["Perziureti"]</a>
                                             }
-                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">Parsisiusti</a>
+                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">@L["Parsisiusti"]</a>
                                             @if (Model.CanEditSelected)
                                             {
                                                 <form method="post" asp-page-handler="DeleteFile" onsubmit="return confirm('Perkelti faila i Deleted kataloga?');">
                                                     <input type="hidden" asp-for="DocumentId" />
                                                     <input type="hidden" name="fileId" value="@file.Id" />
                                                     <input type="hidden" name="DeleteReason" value="User delete" />
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Trinti</button>
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">@L["Trinti"]</button>
                                                 </form>
                                             }
                                         </div>
@@ -266,7 +266,7 @@
                                     @if (IndexModel.CanPreview(file))
                                     {
                                         <details class="seshat-preview-panel">
-                                            <summary>Greita perziura</summary>
+                                            <summary>@L["Greita perziura"]</summary>
                                             <iframe class="seshat-preview-frame" src='@Url.Page(null, "Preview", new { fileId = file.Id })' title="@file.OriginalFileName"></iframe>
                                         </details>
                                     }
@@ -275,10 +275,10 @@
                         </div>
 
                         <div class="seshat-inline-files">
-                            <h3>Susitarimo punktai</h3>
+                            <h3>@L["Susitarimo punktai"]</h3>
                             @if (!Model.Details.Sections.Any())
                             {
-                                <div class="empty-state compact">Papildomu punktu dar nera.</div>
+                                <div class="empty-state compact">@L["Papildomu punktu dar nera."]</div>
                             }
                             else
                             {
@@ -293,29 +293,29 @@
                                         @if (Model.CanEditSelected)
                                         {
                                             <details class="seshat-edit-panel">
-                                                <summary>Koreguoti punkta</summary>
+                                                <summary>@L["Koreguoti punkta"]</summary>
                                                 <form method="post" enctype="multipart/form-data" class="seshat-section-form" asp-page-handler="UpdateSection" data-clipboard-file-form>
                                                     <input type="hidden" asp-for="DocumentId" />
                                                     <input type="hidden" name="sectionId" value="@agreementSection.Id" />
                                                     <div>
-                                                        <label class="form-label" for="sectionTitle-@agreementSection.Id">Punkto pavadinimas</label>
+                                                        <label class="form-label" for="sectionTitle-@agreementSection.Id">@L["Punkto pavadinimas"]</label>
                                                         <input id="sectionTitle-@agreementSection.Id" class="form-control" name="sectionTitle" value="@agreementSection.Title" maxlength="200" />
                                                     </div>
                                                     <div>
-                                                        <label class="form-label" for="sectionBody-@agreementSection.Id">Punkto aprasas</label>
+                                                        <label class="form-label" for="sectionBody-@agreementSection.Id">@L["Punkto aprasas"]</label>
                                                         <textarea id="sectionBody-@agreementSection.Id" class="form-control" name="sectionBody" rows="4" required>@agreementSection.Body</textarea>
                                                     </div>
                                                     <div>
-                                                        <label class="form-label" for="sectionUploadFiles-@agreementSection.Id">Papildomi punkto failai</label>
+                                                        <label class="form-label" for="sectionUploadFiles-@agreementSection.Id">@L["Papildomi punkto failai"]</label>
                                                         <input id="sectionUploadFiles-@agreementSection.Id" name="sectionUploadFiles" type="file" class="form-control" multiple data-clipboard-file-input />
                                                         <div class="seshat-clipboard-status" data-clipboard-file-status></div>
                                                     </div>
                                                     <div>
-                                                        <label class="form-label" for="sectionFileDescription-@agreementSection.Id">Failu aprasymas</label>
+                                                        <label class="form-label" for="sectionFileDescription-@agreementSection.Id">@L["Failu aprasymas"]</label>
                                                         <textarea id="sectionFileDescription-@agreementSection.Id" class="form-control" name="sectionFileDescription" rows="2" maxlength="1000"></textarea>
                                                     </div>
                                                     <div class="kairos-actions">
-                                                        <button type="submit" class="btn btn-orange">Issaugoti punkta</button>
+                                                        <button type="submit" class="btn btn-orange">@L["Issaugoti punkta"]</button>
                                                     </div>
                                                 </form>
                                             </details>
@@ -326,21 +326,21 @@
                                                 <div>
                                                     <strong>@file.OriginalFileName</strong>
                                                     <div class="text-muted">@file.Description</div>
-                                                    <small>@file.FileKind · @IndexModel.FormatFileSize(file.FileSizeBytes)</small>
+                                                    <small>@file.FileKind Â· @IndexModel.FormatFileSize(file.FileSizeBytes)</small>
                                                 </div>
                                                 <div class="seshat-file-actions">
                                             @if (IndexModel.CanPreview(file))
                                             {
-                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">Perziureti</a>
+                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">@L["Perziureti"]</a>
                                             }
-                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">Parsisiusti</a>
+                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">@L["Parsisiusti"]</a>
                                             @if (Model.CanEditSelected)
                                             {
                                                 <form method="post" asp-page-handler="DeleteFile" onsubmit="return confirm('Perkelti faila i Deleted kataloga?');">
                                                     <input type="hidden" asp-for="DocumentId" />
                                                     <input type="hidden" name="fileId" value="@file.Id" />
                                                     <input type="hidden" name="DeleteReason" value="User delete" />
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Trinti</button>
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">@L["Trinti"]</button>
                                                 </form>
                                             }
                                         </div>
@@ -348,7 +348,7 @@
                                             @if (IndexModel.CanPreview(file))
                                             {
                                                 <details class="seshat-preview-panel compact">
-                                                    <summary>Greita perziura</summary>
+                                                    <summary>@L["Greita perziura"]</summary>
                                                     <iframe class="seshat-preview-frame" src='@Url.Page(null, "Preview", new { fileId = file.Id })' title="@file.OriginalFileName"></iframe>
                                                 </details>
                                             }
@@ -363,33 +363,33 @@
                             <form method="post" enctype="multipart/form-data" class="seshat-section-form" asp-page-handler="CreateSection" data-clipboard-file-form>
                                 <input type="hidden" asp-for="DocumentId" />
                                 <div>
-                                    <label class="form-label" asp-for="SectionTitle">Punkto pavadinimas</label>
+                                    <label class="form-label" asp-for="SectionTitle">@L["Punkto pavadinimas"]</label>
                                     <input class="form-control" asp-for="SectionTitle" maxlength="200" />
                                 </div>
                                 <div>
-                                    <label class="form-label" asp-for="SectionBody">Punkto aprasas</label>
+                                    <label class="form-label" asp-for="SectionBody">@L["Punkto aprasas"]</label>
                                     <textarea class="form-control" asp-for="SectionBody" rows="4" required></textarea>
                                 </div>
                                 <div>
-                                    <label class="form-label" for="sectionUploadFile">Punkto failai</label>
+                                    <label class="form-label" for="sectionUploadFile">@L["Punkto failai"]</label>
                                     <input id="sectionUploadFile" name="sectionUploadFiles" type="file" multiple class="form-control" data-clipboard-file-input />
                                     <div class="seshat-clipboard-status" data-clipboard-file-status></div>
                                 </div>
                                 <div>
-                                    <label class="form-label" asp-for="SectionFileDescription">Failu aprasymas</label>
+                                    <label class="form-label" asp-for="SectionFileDescription">@L["Failu aprasymas"]</label>
                                     <textarea class="form-control" asp-for="SectionFileDescription" rows="3" maxlength="1000"></textarea>
                                 </div>
                                 <div class="kairos-actions">
-                                    <button type="submit" class="btn btn-orange">Prideti punkta</button>
+                                    <button type="submit" class="btn btn-orange">@L["Prideti punkta"]</button>
                                 </div>
                             </form>
                         }
 
                         <div class="seshat-inline-files">
-                            <h3>Papildomi punktai ir laiskai</h3>
+                            <h3>@L["Papildomi punktai ir laiskai"]</h3>
                             @if (!Model.Details.MailFiles.Any())
                             {
-                                <div class="empty-state compact">Outlook / el. pasto punktu dar nera.</div>
+                                <div class="empty-state compact">@L["Outlook / el. pasto punktu dar nera."]</div>
                             }
                             else
                             {
@@ -402,10 +402,10 @@
                                             <span class="status-pill">@file.FileKind</span>
                                         </div>
                                         <dl class="seshat-mail-meta">
-                                            <dt>Failas</dt><dd>@file.OriginalFileName</dd>
-                                            <dt>Nuo</dt><dd>@(string.IsNullOrWhiteSpace(mail.From) ? "-" : mail.From)</dd>
-                                            <dt>Kam</dt><dd>@(string.IsNullOrWhiteSpace(mail.To) ? "-" : mail.To)</dd>
-                                            <dt>Data</dt><dd>@(string.IsNullOrWhiteSpace(mail.Date) ? IndexModel.FormatDateTime(file.UploadedAt) : mail.Date)</dd>
+                                            <dt>@L["Failas"]</dt><dd>@file.OriginalFileName</dd>
+                                            <dt>@L["Nuo"]</dt><dd>@(string.IsNullOrWhiteSpace(mail.From) ? "-" : mail.From)</dd>
+                                            <dt>@L["Kam"]</dt><dd>@(string.IsNullOrWhiteSpace(mail.To) ? "-" : mail.To)</dd>
+                                            <dt>@L["Data"]</dt><dd>@(string.IsNullOrWhiteSpace(mail.Date) ? IndexModel.FormatDateTime(file.UploadedAt) : mail.Date)</dd>
                                         </dl>
                                         @if (!string.IsNullOrWhiteSpace(file.Description))
                                         {
@@ -414,14 +414,14 @@
                                         <div class="seshat-file-actions">
                                             @if (IndexModel.CanPreview(file))
                                             {
-                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">Perziureti</a>
+                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">@L["Perziureti"]</a>
                                             }
-                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">Parsisiusti</a>
+                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">@L["Parsisiusti"]</a>
                                         </div>
                                     @if (IndexModel.CanPreview(file))
                                         {
                                             <details class="seshat-preview-panel compact" open>
-                                                <summary>Greita perziura</summary>
+                                                <summary>@L["Greita perziura"]</summary>
                                                 <iframe class="seshat-preview-frame" src='@Url.Page(null, "Preview", new { fileId = file.Id })' title="@file.OriginalFileName"></iframe>
                                             </details>
                                         }
@@ -432,21 +432,21 @@
                     </section>
                 }                <section class="tool-section mb-3">
                     <div class="section-title-row">
-                        <h2>Paieska</h2>
+                        <h2>@L["Paieska"]</h2>
                     </div>
                     <form method="get" class="kairos-form">
                         <div>
-                            <label class="form-label" asp-for="Search">Tekstas</label>
-                            <input class="form-control" asp-for="Search" placeholder="Pavadinimas, paaiskinimas, raktazodziai, autorius, failas" />
+                            <label class="form-label" asp-for="Search">@L["Tekstas"]</label>
+                            <input class="form-control" asp-for="Search" placeholder="@L["Pavadinimas, paaiskinimas, raktazodziai, autorius, failas"]" />
                         </div>
                         <div>
-                            <label class="form-label" asp-for="Country">Salis</label>
+                            <label class="form-label" asp-for="Country">@L["Salis"]</label>
                             <input class="form-control" asp-for="Country" maxlength="10" placeholder="LT" />
                         </div>
                         <div>
-                            <label class="form-label" asp-for="Status">Statusas</label>
+                            <label class="form-label" asp-for="Status">@L["Statusas"]</label>
                             <select class="form-select" asp-for="Status">
-                                <option value="">Visi</option>
+                                <option value="">@L["Visi"]</option>
                                 <option value="DRAFT">DRAFT</option>
                                 <option value="ACTIVE">ACTIVE</option>
                                 <option value="EXPIRED">EXPIRED</option>
@@ -455,7 +455,7 @@
                             </select>
                         </div>
                         <div class="kairos-actions">
-                            <button type="submit" class="btn btn-orange">Ieskoti</button>
+                            <button type="submit" class="btn btn-orange">@L["Ieskoti"]</button>
                         </div>
                     </form>
                 </section>
@@ -474,15 +474,15 @@
                         <form method="post" enctype="multipart/form-data" class="kairos-form" asp-page-handler="Save">
                             <input type="hidden" asp-for="DocumentId" />
                             <div>
-                                <label class="form-label" asp-for="Title">Pavadinimas</label>
+                                <label class="form-label" asp-for="Title">@L["Pavadinimas"]</label>
                                 <input class="form-control" asp-for="Title" maxlength="200" required />
                             </div>
                             <div>
-                                <label class="form-label" asp-for="CountriesText">Salys</label>
+                                <label class="form-label" asp-for="CountriesText">@L["Salys"]</label>
                                 <input class="form-control" asp-for="CountriesText" maxlength="100" placeholder="LT, LV" required />
                             </div>
                             <div>
-                                <label class="form-label" asp-for="EditStatus">Statusas</label>
+                                <label class="form-label" asp-for="EditStatus">@L["Statusas"]</label>
                                 <select class="form-select" asp-for="EditStatus">
                                     <option value="DRAFT">DRAFT</option>
                                     <option value="ACTIVE">ACTIVE</option>
@@ -492,59 +492,59 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="form-label" asp-for="ValidFrom">Galioja nuo</label>
+                                <label class="form-label" asp-for="ValidFrom">@L["Galioja nuo"]</label>
                                 <div class="localized-date-field">
                                     <input class="form-control localized-date-native" asp-for="ValidFrom" type="date" data-localized-date-native />
-                                    <input class="form-control localized-date-display" type="text" value="@IndexModel.FormatDateInput(Model.ValidFrom)" readonly data-localized-date-display aria-label="Galioja nuo" />
+                                    <input class="form-control localized-date-display" type="text" value="@IndexModel.FormatDateInput(Model.ValidFrom)" readonly data-localized-date-display aria-label="@L["Galioja nuo"]" />
                                 </div>
                             </div>
                             <div>
-                                <label class="form-label" asp-for="ValidTo">Galioja iki</label>
+                                <label class="form-label" asp-for="ValidTo">@L["Galioja iki"]</label>
                                 <div class="localized-date-field">
                                     <input class="form-control localized-date-native" asp-for="ValidTo" type="date" data-localized-date-native />
-                                    <input class="form-control localized-date-display" type="text" value="@IndexModel.FormatDateInput(Model.ValidTo)" readonly data-localized-date-display aria-label="Galioja iki" />
+                                    <input class="form-control localized-date-display" type="text" value="@IndexModel.FormatDateInput(Model.ValidTo)" readonly data-localized-date-display aria-label="@L["Galioja iki"]" />
                                 </div>
                             </div>
                             <div>
-                                <label class="form-label" asp-for="Keywords">Raktazodziai</label>
+                                <label class="form-label" asp-for="Keywords">@L["Raktazodziai"]</label>
                                 <input class="form-control" asp-for="Keywords" maxlength="500" />
                             </div>
                             <div class="kairos-comment-field">
-                                <label class="form-label" asp-for="Description">Paaiskinimas / susitarimas</label>
+                                <label class="form-label" asp-for="Description">@L["Paaiskinimas / susitarimas"]</label>
                                 <textarea class="form-control" asp-for="Description" rows="5" required></textarea>
                             </div>
                             <div>
-                                <label class="form-label" for="saveUploadFile">Failas</label>
+                                <label class="form-label" for="saveUploadFile">@L["Failas"]</label>
                                 <input id="saveUploadFile" name="uploadFiles" type="file" multiple class="form-control" data-clipboard-file-input />
                                 <div class="seshat-clipboard-status" data-clipboard-file-status></div>
                             </div>
                             <div>
-                                <label class="form-label" asp-for="FileDescription">Failu aprasymas</label>
+                                <label class="form-label" asp-for="FileDescription">@L["Failu aprasymas"]</label>
                                 <textarea class="form-control" asp-for="FileDescription" rows="3" maxlength="1000"></textarea>
                             </div>
                             <div class="kairos-actions">
-                                <button type="submit" class="btn btn-orange">Issaugoti</button>
+                                <button type="submit" class="btn btn-orange">@L["Issaugoti"]</button>
                                 @if (Model.DocumentId.HasValue)
                                 {
-                                    <a class="btn btn-outline-secondary" asp-page="/Seshat/Index">Naujas irasas</a>
+                                    <a class="btn btn-outline-secondary" asp-page="/Seshat/Index">@L["Naujas irasas"]</a>
                                 }
                             </div>
                         </form>
                     }
                     else
                     {
-                        <div class="empty-state compact">Turite tik perziuros teise.</div>
+                        <div class="empty-state compact">@L["Turite tik perziuros teise."]</div>
                     }
                 </section>
 
                 <section class="tool-section mb-3">
                     <div class="section-title-row">
-                        <h2>SESHAT irasai</h2>
+                        <h2>@L["SESHAT irasai"]</h2>
                         <span class="status-pill">@Model.Documents.Count naujausi</span>
                     </div>
                     @if (Model.Documents.Count == 0)
                     {
-                        <div class="empty-state">Irasu nerasta.</div>
+                        <div class="empty-state">@L["Irasu nerasta."]</div>
                     }
                     else
                     {
@@ -553,13 +553,13 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Pavadinimas</th>
-                                        <th>Salys</th>
-                                        <th>Statusas</th>
-                                        <th>Galiojimas</th>
-                                        <th>Failai</th>
-                                        <th>Autorius</th>
-                                        <th>Atnaujino</th>
+                                        <th>@L["Pavadinimas"]</th>
+                                        <th>@L["Salys"]</th>
+                                        <th>@L["Statusas"]</th>
+                                        <th>@L["Galiojimas"]</th>
+                                        <th>@L["Failai"]</th>
+                                        <th>@L["Autorius"]</th>
+                                        <th>@L["Atnaujino"]</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -584,7 +584,7 @@
                                                    asp-route-DocumentId="@document.Id"
                                                    asp-route-Search="@Model.Search"
                                                    asp-route-Status="@Model.Status"
-                                                   asp-route-Country="@Model.Country">Atidaryti</a>
+                                                   asp-route-Country="@Model.Country">@L["Atidaryti"]</a>
                                             </td>
                                         </tr>
                                     }
@@ -598,7 +598,7 @@
                 {
                     <section class="tool-section mb-3">
                         <div class="section-title-row">
-                            <h2>Prisegti failai</h2>
+                            <h2>@L["Prisegti failai"]</h2>
                             <span class="status-pill">@Model.Details.Files.Count</span>
                         </div>
 
@@ -607,23 +607,23 @@
                             <form method="post" enctype="multipart/form-data" class="file-upload-form mb-3" asp-page-handler="Upload" data-clipboard-file-form>
                                 <input type="hidden" asp-for="DocumentId" />
                                 <div>
-                                    <label class="field-label" for="uploadFile">Failas</label>
+                                    <label class="field-label" for="uploadFile">@L["Failas"]</label>
                                     <input id="uploadFile" name="uploadFiles" type="file" multiple class="form-control" required data-clipboard-file-input />
                                     <div class="seshat-clipboard-status" data-clipboard-file-status></div>
                                 </div>
                                 <div>
-                                    <label class="field-label" asp-for="FileDescription">Aprasymas</label>
+                                    <label class="field-label" asp-for="FileDescription">@L["Aprasymas"]</label>
                                     <textarea class="form-control" asp-for="FileDescription" rows="3" maxlength="1000"></textarea>
                                 </div>
                                 <div class="form-actions">
-                                    <button type="submit" class="btn btn-orange">Prikabinti</button>
+                                    <button type="submit" class="btn btn-orange">@L["Prikabinti"]</button>
                                 </div>
                             </form>
                         }
 
                         @if (Model.Details.Files.Count == 0)
                         {
-                            <div class="empty-state compact">Failu dar nera.</div>
+                            <div class="empty-state compact">@L["Failu dar nera."]</div>
                         }
                         else
                         {
@@ -631,12 +631,12 @@
                                 <table class="table align-middle exchange-table">
                                     <thead>
                                         <tr>
-                                            <th>Failas</th>
-                                            <th>Tipas</th>
-                                            <th>Dydis</th>
-                                            <th>Ikele</th>
-                                            <th>Busena</th>
-                                            <th>Veiksmai</th>
+                                            <th>@L["Failas"]</th>
+                                            <th>@L["Tipas"]</th>
+                                            <th>@L["Dydis"]</th>
+                                            <th>@L["Ikele"]</th>
+                                            <th>@L["Busena"]</th>
+                                            <th>@L["Veiksmai"]</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -653,12 +653,12 @@
                                                 <td>
                                                     @if (file.IsDeleted)
                                                     {
-                                                        <span class="status-pill status-pill-muted">Deleted</span>
+                                                        <span class="status-pill status-pill-muted">@L["Deleted"]</span>
                                                         <div class="text-muted">@file.DeletedBy @file.DeletedAt?.LocalDateTime.ToString("yyyy-MM-dd HH:mm")</div>
                                                     }
                                                     else
                                                     {
-                                                        <span class="status-pill">Active</span>
+                                                        <span class="status-pill">@L["Active"]</span>
                                                     }
                                                 </td>
                                                 <td class="row-actions">
@@ -667,9 +667,9 @@
                                                         <div class="seshat-file-actions">
                                             @if (IndexModel.CanPreview(file))
                                             {
-                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">Perziureti</a>
+                                                <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Preview" asp-route-fileId="@file.Id" target="_blank">@L["Perziureti"]</a>
                                             }
-                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">Parsisiusti</a>
+                                            <a class="btn btn-sm btn-outline-secondary" asp-page-handler="Download" asp-route-fileId="@file.Id">@L["Parsisiusti"]</a>
                                         </div>
                                                         @if (Model.CanEditSelected)
                                                         {
@@ -677,7 +677,7 @@
                                                                 <input type="hidden" asp-for="DocumentId" />
                                                                 <input type="hidden" name="fileId" value="@file.Id" />
                                                                 <input type="hidden" name="DeleteReason" value="User delete" />
-                                                                <button type="submit" class="btn btn-sm btn-outline-danger">Trinti</button>
+                                                                <button type="submit" class="btn btn-sm btn-outline-danger">@L["Trinti"]</button>
                                                             </form>
                                                         }
                                                     }
@@ -686,7 +686,7 @@
                                                         <form method="post" asp-page-handler="RestoreFile">
                                                             <input type="hidden" asp-for="DocumentId" />
                                                             <input type="hidden" name="fileId" value="@file.Id" />
-                                                            <button type="submit" class="btn btn-sm btn-outline-primary">Atstatyti</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary">@L["Atstatyti"]</button>
                                                         </form>
                                                     }
                                                 </td>
@@ -700,12 +700,12 @@
 
                     <section class="tool-section">
                         <div class="section-title-row">
-                            <h2>Pakeitimu istorija</h2>
+                            <h2>@L["Pakeitimu istorija"]</h2>
                             <span class="status-pill">@Model.Details.Logs.Count</span>
                         </div>
                         @if (Model.Details.Logs.Count == 0)
                         {
-                            <div class="empty-state compact">Istorijos dar nera.</div>
+                            <div class="empty-state compact">@L["Istorijos dar nera."]</div>
                         }
                         else
                         {
@@ -713,10 +713,10 @@
                                 <table class="table align-middle exchange-table">
                                     <thead>
                                         <tr>
-                                            <th>Laikas</th>
-                                            <th>Veiksmas</th>
-                                            <th>Vartotojas</th>
-                                            <th>Santrauka</th>
+                                            <th>@L["Laikas"]</th>
+                                            <th>@L["Veiksmas"]</th>
+                                            <th>@L["Vartotojas"]</th>
+                                            <th>@L["Santrauka"]</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -765,14 +765,14 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="smsVerificationModalLabel">SMS kodas issiustas</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Uzdaryti"></button>
+                    <h5 class="modal-title" id="smsVerificationModalLabel">@L["SMS kodas issiustas"]</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@L["Uzdaryti"]"></button>
                 </div>
                 <div class="modal-body">
-                    Iveskite gauta 6 simboliu koda SMS patvirtinimo lauke. Jei kodo negavote, galite issiusti nauja koda.
+                    @L["Iveskite gauta 6 simboliu koda SMS patvirtinimo lauke. Jei kodo negavote, galite issiusti nauja koda."]
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-orange" data-bs-dismiss="modal">Gerai</button>
+                    <button type="button" class="btn btn-orange" data-bs-dismiss="modal">@L["Gerai"]</button>
                 </div>
             </div>
         </div>

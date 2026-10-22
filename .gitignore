@@ -3,6 +3,9 @@ obj/
 logs/
 App_Data/
 publish/
+.buildcheck/
+dev-server*.log
+devserver*.log
 appsettings.Production.json
 appsettings.Local.json
 

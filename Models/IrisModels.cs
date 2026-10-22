@@ -25,7 +25,8 @@ public sealed record IrisReportSource(
     string TableTitle,
     bool IncludeHtmlTable,
     bool AttachExcel,
-    bool AttachCsv);
+    bool AttachCsv,
+    bool ExcelGridlines = false);
 
 public sealed record IrisReportRecipient(
     long Id,
@@ -72,7 +73,8 @@ public sealed record IrisCreateSourceRequest(
     bool IncludeHtmlTable,
     bool AttachExcel,
     bool AttachCsv,
-    string CreatedBy);
+    string CreatedBy,
+    bool ExcelGridlines = false);
 
 public sealed record IrisUpdateSourceRequest(
     long Id,
@@ -86,7 +88,8 @@ public sealed record IrisUpdateSourceRequest(
     string TableTitle,
     bool IncludeHtmlTable,
     bool AttachExcel,
-    bool AttachCsv);
+    bool AttachCsv,
+    bool ExcelGridlines = false);
 
 public sealed record IrisCreateRecipientRequest(
     long ReportId,

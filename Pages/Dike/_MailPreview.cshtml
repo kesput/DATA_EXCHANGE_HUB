@@ -1,0 +1,37 @@
+@model DATA_EXCHANGE_HUB.Services.DikeMailContent
+<!doctype html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@Model.Subject</title>
+    <style>
+        body { font: 14px system-ui, sans-serif; margin: 20px; color: #18372a; background: #fff; }
+        dl { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 8px 12px; }
+        dt { font-weight: bold; } dd { margin: 0; overflow-wrap: anywhere; }
+        pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
+        iframe { width: 100%; min-height: 65vh; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h2>@Model.Subject</h2>
+    <dl>
+        <dt>@L["Dike.Mail.From"]</dt><dd>@Model.From</dd>
+        <dt>@L["Dike.Mail.To"]</dt><dd>@Model.To</dd>
+        <dt>@L["Dike.Mail.Date"]</dt><dd>@Model.Date</dd>
+    </dl>
+    @if (!string.IsNullOrWhiteSpace(Model.Html))
+    {
+        <iframe title="@L["Dike.Mail.Body"]" sandbox="" referrerpolicy="no-referrer" srcdoc="@Model.Html"></iframe>
+    }
+    else
+    {
+        <pre>@Model.Text</pre>
+    }
+    @if (Model.Attachments.Count > 0)
+    {
+        <h3>@L["Dike.Mail.Attachments"]</h3>
+        <ul>@foreach (var attachment in Model.Attachments) { <li>@attachment</li> }</ul>
+    }
+</body>
+</html>
