@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using DATA_EXCHANGE_HUB.Models;
 using DATA_EXCHANGE_HUB.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -112,6 +112,9 @@ public class IndexModel(
 
     [BindProperty]
     public bool SourceExcelGridlines { get; set; }
+
+    [BindProperty]
+    public bool SourceCsvWindows1257 { get; set; }
 
     [BindProperty]
     public bool SourceAttachCsv { get; set; }
@@ -287,7 +290,8 @@ public class IndexModel(
                     SourceAttachExcel,
                     SourceAttachCsv,
                     userNameResolver.ResolveUserName(User),
-                    SourceExcelGridlines),
+                    SourceExcelGridlines,
+                    SourceCsvWindows1257),
                 HttpContext.RequestAborted);
             SuccessMessage = $"SQL saltinis pridetas. Id={id}";
         }
@@ -324,6 +328,7 @@ public class IndexModel(
             SourceIncludeHtmlTable = source.IncludeHtmlTable;
             SourceAttachExcel = source.AttachExcel;
             SourceExcelGridlines = source.ExcelGridlines;
+            SourceCsvWindows1257 = source.CsvWindows1257;
             SourceAttachCsv = source.AttachCsv;
             SuccessMessage = $"SQL saltinis #{source.SourceOrder} ikeltas redagavimui.";
         }
@@ -354,7 +359,8 @@ public class IndexModel(
                     SourceIncludeHtmlTable,
                     SourceAttachExcel,
                     SourceAttachCsv,
-                    SourceExcelGridlines),
+                    SourceExcelGridlines,
+                    SourceCsvWindows1257),
                 HttpContext.RequestAborted);
             SuccessMessage = "SQL saltinis atnaujintas.";
         }

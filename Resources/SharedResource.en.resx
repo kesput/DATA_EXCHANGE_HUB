@@ -1500,5 +1500,8 @@
   <data name="Iris.Preview.ReadOnlyHelp" xml:space="preserve"><value>SQL text and files support SELECT and # / ## temporary tables. Temporary data lasts for one preview; ## names are isolated from other users. Developer-created procedures run separately. Every preview is audited.</value></data>
   <data name="Iris.Preview.PageInfo" xml:space="preserve"><value>{0}–{1} of {2} · page {3}/{4}</value></data>
   <data name="Iris.Preview.Pages" xml:space="preserve"><value>Result pages</value></data>
+  <data name="Csv.Windows1257" xml:space="preserve"><value>CSV Windows-1257 (no BOM)</value></data>
+  <data name="Csv.NoBom" xml:space="preserve"><value>no BOM</value></data>
+  <data name="Csv.WithBom" xml:space="preserve"><value>with BOM</value></data>
 </root>
 

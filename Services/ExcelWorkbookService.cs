@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.IO.Compression;
 using System.Text;
 using System.Xml;
@@ -93,7 +93,10 @@ public sealed class ExcelWorkbookService : IExcelWorkbookService
 
     public byte[] CreateSemicolonCsv(
         IReadOnlyList<string> headers,
-        IReadOnlyList<IReadOnlyDictionary<string, string?>> rows)
+        IReadOnlyList<IReadOnlyDictionary<string, string?>> rows,
+        bool windows1257 = false,
+        IReadOnlySet<string>? numericColumns = null,
+        string? valueCulture = null)
     {
         if (headers.Count == 0)
         {
@@ -102,17 +105,18 @@ public sealed class ExcelWorkbookService : IExcelWorkbookService
 
         var builder = new StringBuilder();
         builder.AppendLine("sep=;");
-        builder.AppendLine(string.Join(';', headers.Select(EscapeCsvValue)));
+        builder.AppendLine(string.Join(';', headers.Select(header => EscapeCsvValue(header, windows1257))));
 
         foreach (var row in rows)
         {
             builder.AppendLine(string.Join(';', headers.Select(header =>
-                row.TryGetValue(header, out var value) ? EscapeCsvValue(value) : string.Empty)));
+                EscapeCsvValue(row.TryGetValue(header, out var value)
+                    ? (windows1257 && numericColumns?.Contains(header) == true
+                        ? CsvExportEncoding.InvariantNumber(value, valueCulture) : value)
+                    : string.Empty, windows1257))));
         }
 
-        return Encoding.UTF8.GetPreamble()
-            .Concat(Encoding.UTF8.GetBytes(builder.ToString()))
-            .ToArray();
+        return CsvExportEncoding.Encode(builder.ToString(), windows1257);
     }
     public ExcelWorksheetData ReadWorkbook(Stream stream)
     {
@@ -164,10 +168,10 @@ public sealed class ExcelWorkbookService : IExcelWorkbookService
         return new ExcelWorksheetData(headers, dataRows);
     }
 
-    private static string EscapeCsvValue(string? value)
+    private static string EscapeCsvValue(string? value, bool quoteAll = false)
     {
         var text = value ?? string.Empty;
-        if (!text.Contains(';', StringComparison.Ordinal) &&
+        if (!quoteAll && !text.Contains(';', StringComparison.Ordinal) &&
             !text.Contains('"', StringComparison.Ordinal) &&
             !text.Contains('\r', StringComparison.Ordinal) &&
             !text.Contains('\n', StringComparison.Ordinal))

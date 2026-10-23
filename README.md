@@ -1,6 +1,26 @@
 # Data Exchange Hub
 
-ASP.NET Core Razor Pages projektas vidiniam HUB puslapiui ir pirmai aplikacijai `Data exchange`.
+Vidinis ASP.NET Core Razor Pages (.NET 9) aplikaciju HUB su Windows vartotoju atpazinimu ir atskiromis moduliu prieigos teisemis. Apima SQL uzklausu vykdyma, Excel / CSV eksportus, DIKE klientu susitarimus ir IRIS ataskaitu bei siuntimo parametru konfiguravima.
+
+## Versija v7.2
+
+- Puslapio antrasteje ir pradiniame puslapyje rodoma `v7.2`, kad po diegimo butu matoma atnaujinta versija.
+- Visuose veikianciuose CSV eksportuose (`APIS`, `ARETE`, `HYDRA`, `ORACUL`, `ClientInfo`, `THEMIS`, `DataExchange`) yra pasirinkimas `Windows-1257` be BOM. Nepazymejus lieka UTF-8 su BOM. Abiem atvejais islaikomas `;` skirtukas ir `sep=;` eilute.
+- Windows-1257 variante visos antrastes ir reiksmes apgaubiamos kabutemis, vidines kabutes dvigubinamos, tuscios reiksmes rasomos kaip `""`. Nepalaikomi simboliai sukelia paaiskinama klaida, kad duomenys nebutu tyliai pakeisti klaustukais.
+- APIS Windows-1257 eksportas naudoja SQL skaitiniu stulpeliu metaduomenis ir rezultato pradine kultura: desimtainis skirtukas yra taskas, tikslumas islaikomas. Tekstiniai kodai, ju nuliai pradzioje ir kableliai nekeiciami. UTF-8 formatavimas islaiko ankstesni elgesi.
+- Eksporto mygtukai islaiko dydi; SQL uzklausos / proceduros pasirinkimo laukui skiriamas likes eilutes plotis. Siauruose ekranuose valdikliai persikelia i kita eilute.
+- IRIS saltinio `CsvWindows1257` nustatymas issaugomas ir ikeliamas redagavimui. Stulpelis pridedamas per esama SQL schemos atnaujinimo mechanizma, esamiems saltiniams numatyta `false`. Faktinis IRIS siuntimo generatorius dar neintegruotas; busimas skriptas turi pritaikyti si nustatyma.
+- Production prisijungimui reikalinga patikima Windows tapatybe. IIS autentifikacija inicijuojama per Windows handleri; be jo pateikiamas 401 su paaiskinimu. Prisijungimas kitu vartotojo vardu ir nepriskirtu moduliu prieiga blokuojami.
+- Production sablonas paveldi aktualu moduliu kataloga, kad nesusidubliuotu ir nedingtu DIKE / IRIS. `Deploy/Test-HubIis.ps1` tikrina IIS nustatymus nekeisdamas serverio ir nerodydamas slaptazodziu. Publikavimas sustabdomas, jei kompiliavimas ar publish nepavyksta.
+
+Automatines patikros be realiu prisijungimo slaptazodziu ir pranesimu siuntimo:
+
+```powershell
+dotnet run --project .\Tests\HubAccess\Checks.csproj
+dotnet run --project .\Tests\CsvExport\Checks.csproj
+```
+
+Prisijungimo patikru yra 32, CSV patikru - 26. CSV GET / POST pasirinkimo narsykles patikra: `Tests/CsvExport/BrowserChecks.html`. Paleidziant DEV automatinius SESHAT siuntimus isjunkite su `--SeshatReminders:Enabled=false`. Diegima IIS uzbaikite realaus vartotojo su teisemis ir vartotojo be teisiu patikra; vien vietiniai testai IIS konfiguracijos nepatvirtina.
 
 ## Versija v7.0
 
@@ -87,10 +107,26 @@ appsettings.Production.json
 
 Ir jame irasykite realius SQL prisijungimus.
 
-5. IIS site/application fizinis kelias turi rodyti i publikuota folderi. `web.config` jau paruostas:
-   - `ASPNETCORE_ENVIRONMENT=Production`
+5. IIS site/application fizinis kelias turi rodyti i publikuota folderi. `web.config` nustato `ASPNETCORE_ENVIRONMENT=Production` ir `inprocess` talpinima. Autentifikacijos parametrai turi buti nustatyti paciame IIS:
    - `anonymousAuthentication=false`
    - `windowsAuthentication=true`
+
+`Production` sablonas moduliu katalogo neperraso: jis paveldimas is naujo `appsettings.json`. Jei esamame serverio `appsettings.Production.json` liko senas `HubApplications` masyvas, ji pasalinkite issaugodami kitus nustatymus ir prisijungimus; kitaip konfiguracijos masyvu sujungimas gali dubliuoti modulius ar paslepti DIKE / IRIS.
+
+Po ikelimo IIS serveryje administratoriaus Windows PowerShell lange paleiskite tik skaitymui skirta patikra (nurodykite tikra IIS svetaines pavadinima):
+
+```powershell
+.\Deploy\Test-HubIis.ps1 -SiteName "DATA_EXCHANGE_HUB"
+# Jei HUB yra IIS application, papildomai: -ApplicationPath "/HubApp"
+```
+
+Skriptas nekeicia IIS, nesijungia prie SQL ir nerodo slaptazodziu. Po jo patikrinkite realu vartotoja su priskirtu moduliu ir vartotoja be teisiu, taip pat tiesiogine modulio nuoroda. Be Windows tapatybes Production prisijungimas negalimas; IIS atveju aplikacija inicijuoja Windows autentifikacija, o be jos handlerio grazina 401 su paaiskinimu.
+
+Prisijungimo regresijos testai be realiu slaptazodziu, SQL ir pranesimu siuntimo:
+
+```powershell
+dotnet run --project .\Tests\HubAccess\Checks.csproj
+```
 
 6. Excel importo perziuros saugomos `App_Data\DataExchange\ImportPreviews`, todel IIS app pool turi tureti `Modify` teise visam `App_Data\DataExchange` katalogui. Si zingsni reikia paleisti serveryje po failu nukopijavimo. Serveryje paleiskite PowerShell kaip Administrator ir ivykdykite:
 

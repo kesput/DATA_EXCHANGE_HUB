@@ -15,7 +15,10 @@ public sealed class IndexModel(
 
     private const string ExcelContentType =
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    private const string CsvContentType = "text/csv; charset=utf-8";
+    [BindProperty(SupportsGet = true)]
+    public bool CsvWindows1257 { get; set; }
+
+    private string CsvContentType => CsvExportEncoding.ContentType(CsvWindows1257);
     private const int ResultPageSize = 10000;
 
     [BindProperty]
@@ -175,7 +178,7 @@ public sealed class IndexModel(
             }
             var file = excelWorkbookService.CreateSemicolonCsv(
                 result.Columns,
-                result.Rows);
+                result.Rows, CsvWindows1257);
 
             AddExportSummaryHeaders(result.Rows.Count, result.Columns.Count);
             return File(file, CsvContentType, BuildCsvFileName());

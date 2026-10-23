@@ -24,7 +24,10 @@ public sealed class IndexModel(
 
     private const string ExcelContentType =
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    private const string CsvContentType = "text/csv; charset=utf-8";
+    [BindProperty(SupportsGet = true)]
+    public bool CsvWindows1257 { get; set; }
+
+    private string CsvContentType => CsvExportEncoding.ContentType(CsvWindows1257);
     private const string DefaultExchangeAccessTableName = "BLS_LOGIT_STAT.dbo.BS_EXCHANGE_ACCESS";
     private const string ExportScopeTop = "top";
     private const string ExportScopeFilteredAll = "filteredAll";
@@ -228,7 +231,7 @@ public sealed class IndexModel(
             var exportData = await LoadExportDataAsync(exportScope);
             var headers = exportData.TableData.Columns.Select(column => column.Name).ToArray();
             var rows = ToExcelRows(exportData.TableData);
-            var file = CreateSemicolonCsv(headers, rows);
+            var file = excelWorkbookService.CreateSemicolonCsv(headers, rows, CsvWindows1257);
             var fileName = BuildExportFileName(SelectedTable!.TableName, exportData.Suffix, "csv");
 
             AddExportSummaryHeaders(exportData.TableData.Rows.Count, headers.Length);
@@ -1050,43 +1053,6 @@ public sealed class IndexModel(
         Response.Headers.Append("X-Export-Column-Count", columnCount.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
-    private static byte[] CreateSemicolonCsv(
-        IReadOnlyList<string> headers,
-        IReadOnlyList<IReadOnlyDictionary<string, string?>> rows)
-    {
-        if (headers.Count == 0)
-        {
-            throw new InvalidOperationException("Eksportui nerasta stulpeliu.");
-        }
-
-        var builder = new StringBuilder();
-        builder.AppendLine("sep=;");
-        builder.AppendLine(string.Join(';', headers.Select(EscapeCsvValue)));
-
-        foreach (var row in rows)
-        {
-            builder.AppendLine(string.Join(';', headers.Select(header =>
-                row.TryGetValue(header, out var value) ? EscapeCsvValue(value) : string.Empty)));
-        }
-
-        return Encoding.UTF8.GetPreamble()
-            .Concat(Encoding.UTF8.GetBytes(builder.ToString()))
-            .ToArray();
-    }
-
-    private static string EscapeCsvValue(string? value)
-    {
-        var text = value ?? string.Empty;
-        if (!text.Contains(';', StringComparison.Ordinal) &&
-            !text.Contains('"', StringComparison.Ordinal) &&
-            !text.Contains('\r', StringComparison.Ordinal) &&
-            !text.Contains('\n', StringComparison.Ordinal))
-        {
-            return text;
-        }
-
-        return $"\"{text.Replace("\"", "\"\"", StringComparison.Ordinal)}\"";
-    }
     private static IReadOnlyList<IReadOnlyDictionary<string, string?>> ToExcelRows(
         ExchangeTableData tableData)
     {

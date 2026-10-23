@@ -1500,5 +1500,8 @@
   <data name="Iris.Preview.ReadOnlyHelp" xml:space="preserve"><value>SQL tekstui ir failams leidžiami SELECT bei laikinos # / ## lentelės. Laikini duomenys galioja vienai peržiūrai; ## vardai izoliuojami nuo kitų vartotojų. Programuotojų procedūros vykdomos atskirai. Kiekviena peržiūra registruojama audite.</value></data>
   <data name="Iris.Preview.PageInfo" xml:space="preserve"><value>{0}–{1} iš {2} · puslapis {3}/{4}</value></data>
   <data name="Iris.Preview.Pages" xml:space="preserve"><value>Rezultatų puslapiai</value></data>
+  <data name="Csv.Windows1257" xml:space="preserve"><value>CSV Windows-1257 (be BOM)</value></data>
+  <data name="Csv.NoBom" xml:space="preserve"><value>be BOM</value></data>
+  <data name="Csv.WithBom" xml:space="preserve"><value>su BOM</value></data>
 </root>
 

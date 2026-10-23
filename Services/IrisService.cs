@@ -79,7 +79,7 @@ public sealed class IrisService(
         await connection.OpenAsync(cancellationToken);
         await using var command = new SqlCommand($"""
             SELECT Id, ReportId, SourceOrder, SourceType, SqlConnectionName, SqlDatabase,
-                   SqlText, SqlFilePath, StoredProcedure, TableTitle, IncludeHtmlTable, AttachExcel, AttachCsv, ExcelGridlines
+                   SqlText, SqlFilePath, StoredProcedure, TableTitle, IncludeHtmlTable, AttachExcel, AttachCsv, ExcelGridlines, CsvWindows1257
             FROM {SourceTable}
             WHERE ReportId = @ReportId
             ORDER BY SourceOrder, Id;
@@ -102,7 +102,8 @@ public sealed class IrisService(
                 reader.GetBoolean(10),
                 reader.GetBoolean(11),
                 reader.GetBoolean(12),
-                reader.GetBoolean(13)));
+                reader.GetBoolean(13),
+                reader.GetBoolean(14)));
         }
 
         return sources;
@@ -249,11 +250,11 @@ public sealed class IrisService(
         await using var command = new SqlCommand($"""
             INSERT INTO {SourceTable}
                 (ReportId, SourceOrder, SourceType, SqlConnectionName, SqlDatabase, SqlText,
-                 SqlFilePath, StoredProcedure, TableTitle, IncludeHtmlTable, AttachExcel, AttachCsv, CreatedBy, ExcelGridlines)
+                 SqlFilePath, StoredProcedure, TableTitle, IncludeHtmlTable, AttachExcel, AttachCsv, CreatedBy, ExcelGridlines, CsvWindows1257)
             OUTPUT INSERTED.Id
             VALUES
                 (@ReportId, @SourceOrder, @SourceType, @SqlConnectionName, @SqlDatabase, @SqlText,
-                 @SqlFilePath, @StoredProcedure, @TableTitle, @IncludeHtmlTable, @AttachExcel, @AttachCsv, @CreatedBy, @ExcelGridlines);
+                 @SqlFilePath, @StoredProcedure, @TableTitle, @IncludeHtmlTable, @AttachExcel, @AttachCsv, @CreatedBy, @ExcelGridlines, @CsvWindows1257);
             """, connection);
         command.Parameters.AddWithValue("@ReportId", request.ReportId);
         command.Parameters.AddWithValue("@SourceOrder", nextOrder);
@@ -267,6 +268,7 @@ public sealed class IrisService(
         command.Parameters.AddWithValue("@IncludeHtmlTable", request.IncludeHtmlTable);
         command.Parameters.AddWithValue("@AttachExcel", request.AttachExcel);
         command.Parameters.AddWithValue("@ExcelGridlines", request.ExcelGridlines);
+        command.Parameters.AddWithValue("@CsvWindows1257", request.CsvWindows1257);
         command.Parameters.AddWithValue("@AttachCsv", request.AttachCsv);
         Add(command, "@CreatedBy", request.CreatedBy, 260);
         return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
@@ -297,6 +299,7 @@ public sealed class IrisService(
                 IncludeHtmlTable = @IncludeHtmlTable,
                 AttachExcel = @AttachExcel,
                 ExcelGridlines = @ExcelGridlines,
+                CsvWindows1257 = @CsvWindows1257,
                 AttachCsv = @AttachCsv
             WHERE Id = @Id;
             """, connection);
@@ -312,6 +315,7 @@ public sealed class IrisService(
         command.Parameters.AddWithValue("@IncludeHtmlTable", request.IncludeHtmlTable);
         command.Parameters.AddWithValue("@AttachExcel", request.AttachExcel);
         command.Parameters.AddWithValue("@ExcelGridlines", request.ExcelGridlines);
+        command.Parameters.AddWithValue("@CsvWindows1257", request.CsvWindows1257);
         command.Parameters.AddWithValue("@AttachCsv", request.AttachCsv);
         if (await command.ExecuteNonQueryAsync(cancellationToken) == 0)
         {
@@ -610,6 +614,7 @@ public sealed class IrisService(
                     AttachExcel BIT NOT NULL CONSTRAINT DF_IRIS_SOURCES_AttachExcel DEFAULT (0),
                     AttachCsv BIT NOT NULL CONSTRAINT DF_IRIS_SOURCES_AttachCsv DEFAULT (0),
                     ExcelGridlines BIT NOT NULL DEFAULT (0),
+                    CsvWindows1257 BIT NOT NULL DEFAULT (0),
                     CreatedBy NVARCHAR(260) NOT NULL,
                     CreatedAt DATETIME2(0) NOT NULL CONSTRAINT DF_IRIS_SOURCES_CreatedAt DEFAULT (SYSDATETIME()),
                     CONSTRAINT FK_IRIS_SOURCES_REPORT FOREIGN KEY (ReportId) REFERENCES {ReportTable}(Id)
@@ -620,6 +625,12 @@ public sealed class IrisService(
             IF COL_LENGTH(N'{ObjectNameLiteral(SourceTable)}', N'ExcelGridlines') IS NULL
             BEGIN
                 ALTER TABLE {SourceTable} ADD ExcelGridlines BIT NOT NULL DEFAULT (0) WITH VALUES;
+            END;
+            """;
+        yield return $"""
+            IF COL_LENGTH(N'{ObjectNameLiteral(SourceTable)}', N'CsvWindows1257') IS NULL
+            BEGIN
+                ALTER TABLE {SourceTable} ADD CsvWindows1257 BIT NOT NULL DEFAULT (0) WITH VALUES;
             END;
             """;
         yield return $"""

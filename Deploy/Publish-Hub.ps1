@@ -18,6 +18,9 @@ $backupPath = "$publishPath.backup.$timestamp"
 
 Write-Host "Running build checks..."
 dotnet build $projectRoot --configuration $Configuration
+if ($LASTEXITCODE -ne 0) {
+    throw "Build failed. Publish was not started."
+}
 
 if (Test-Path $publishPath) {
     Write-Host "Creating publish backup: $backupPath"
@@ -28,6 +31,9 @@ dotnet publish $projectRoot `
     --configuration $Configuration `
     --output $publishPath `
     --self-contained false
+if ($LASTEXITCODE -ne 0) {
+    throw "Publish failed. Do not deploy the output directory."
+}
 
 $appDataPath = Join-Path $publishPath "App_Data"
 $dataExchangeStoragePath = Join-Path $appDataPath "DataExchange"

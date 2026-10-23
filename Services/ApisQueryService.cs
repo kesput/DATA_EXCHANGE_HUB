@@ -67,6 +67,12 @@ public sealed class ApisQueryService(
         using var cancellationRegistration = cancellationToken.Register(command.Cancel);
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToArray();
+        var numericColumns = Enumerable.Range(0, reader.FieldCount)
+            .Where(index => Type.GetTypeCode(reader.GetFieldType(index)) is
+                TypeCode.Byte or TypeCode.SByte or TypeCode.Int16 or TypeCode.UInt16 or
+                TypeCode.Int32 or TypeCode.UInt32 or TypeCode.Int64 or TypeCode.UInt64 or
+                TypeCode.Single or TypeCode.Double or TypeCode.Decimal)
+            .Select(reader.GetName).ToHashSet(StringComparer.OrdinalIgnoreCase);
         var rows = new List<IReadOnlyDictionary<string, string?>>();
 
         while (await reader.ReadAsync(cancellationToken))
@@ -83,7 +89,7 @@ public sealed class ApisQueryService(
             rows.Add(values);
         }
 
-        return new ApisQueryResult(columns, rows);
+        return new ApisQueryResult(columns, rows, numericColumns, CultureInfo.CurrentCulture.Name);
     }
 
     private static bool IsAllowedCountryPath(

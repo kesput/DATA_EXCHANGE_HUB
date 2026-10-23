@@ -1,7 +1,9 @@
 using DATA_EXCHANGE_HUB.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.Extensions.Options;
 using System.Security.Principal;
 
@@ -12,7 +14,8 @@ public sealed class LoginModel(
     IWebHostEnvironment environment,
     IWindowsCredentialValidator credentialValidator,
     IHubSecurityAlertService securityAlertService,
-    ILogger<LoginModel> logger) : PageModel
+    ILogger<LoginModel> logger,
+    IAuthenticationSchemeProvider authenticationSchemes) : PageModel
 {
     public const string SessionKey = "WorkHubAuthenticated";
 
@@ -32,8 +35,9 @@ public sealed class LoginModel(
     public string ReturnUrl { get; set; } = "/Hub/Index";
 
     public string? ErrorMessage { get; private set; }
+    public bool WindowsAuthenticationRequired { get; private set; }
 
-    public IActionResult OnGet()
+    public async Task<IActionResult> OnGetAsync()
     {
         if (string.IsNullOrWhiteSpace(ReturnUrl))
         {
@@ -41,6 +45,18 @@ public sealed class LoginModel(
         }
 
         var activeWindowsUserName = ResolveServerWindowsUserName();
+        if (string.IsNullOrWhiteSpace(activeWindowsUserName) && !environment.IsDevelopment())
+        {
+            WindowsAuthenticationRequired = true;
+            ClearHubLoginSession();
+            if (await authenticationSchemes.GetSchemeAsync(IISDefaults.AuthenticationScheme) is not null)
+                return Challenge(IISDefaults.AuthenticationScheme);
+            // Plain Kestrel cannot perform IIS authentication. Show a meaningful
+            // 401 instead of offering a password form that cannot succeed.
+            Response.StatusCode = StatusCodes.Status401Unauthorized;
+            ErrorMessage = "Hub.Security.WindowsRequired";
+            return Page();
+        }
         if (HttpContext.Session.GetString(BlockedSessionKey) == "1")
         {
             ErrorMessage = "Hub.Security.LoginHelp";
@@ -66,6 +82,7 @@ public sealed class LoginModel(
         var activeUserName = ResolveActiveWindowsUserName();
         if (string.IsNullOrWhiteSpace(activeUserName))
         {
+            WindowsAuthenticationRequired = true;
             ErrorMessage = "Hub.Security.WindowsRequired";
             return Page();
         }

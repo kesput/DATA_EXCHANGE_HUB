@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model DATA_EXCHANGE_HUB.Pages.Iris.IndexModel
 @{
     ViewData["Title"] = "IRIS";
@@ -375,6 +375,10 @@
                                                 <input class="form-check-input" asp-for="SourceAttachCsv" />
                                                 <label class="form-check-label" asp-for="SourceAttachCsv">@L["Prisegti CSV"]</label>
                                             </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" asp-for="SourceCsvWindows1257" />
+                                                <label class="form-check-label" asp-for="SourceCsvWindows1257">@L["Csv.Windows1257"]</label>
+                                            </div>
                                         </div>
                                         @if (Model.Reports.Count == 0)
                                         {
@@ -628,6 +632,10 @@
                                             <td>@(source.IncludeHtmlTable ? "Taip" : "Ne") @source.TableTitle</td>
                                             <td>
                                                 Excel @L[source.AttachExcel ? "Dike.Yes" : "Dike.No"] / CSV @L[source.AttachCsv ? "Dike.Yes" : "Dike.No"]
+                                                @if (source.AttachCsv)
+                                                {
+                                                    <div class="small">@(source.CsvWindows1257 ? "Windows-1257" : "UTF-8") / @L[source.CsvWindows1257 ? "Csv.NoBom" : "Csv.WithBom"]</div>
+                                                }
                                                 @if (source.AttachExcel)
                                                 {
                                                     <div class="small">@L["Iris.ExcelGridlines"]: @L[source.ExcelGridlines ? "Dike.Yes" : "Dike.No"]</div>

@@ -21,6 +21,7 @@
     <Content Update="appsettings.Local.example.json" CopyToPublishDirectory="Never" />
     <Content Update="appsettings.Local.json" CopyToPublishDirectory="Never" />
     <Content Update="appsettings.Production.template.json" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Deploy\Test-HubIis.ps1" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="Sql\Hydra\**\*.sql" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="Sql\Kairos\**\*.sql" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="Sql\Arete\**\*.sql" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />

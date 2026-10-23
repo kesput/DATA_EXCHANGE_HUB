@@ -1,0 +1,32 @@
+<!doctype html><html lang="lt"><meta charset="utf-8"><title>CSV browser checks</title>
+<form id="post" method="post" action="https://localhost/Hydra/Index"><input name="QueryId" value="query-1"><input name="Filter" value="kept"><button type="submit" formaction="https://localhost/Hydra/Index?handler=ExportExcel">Excel</button><button type="submit" formaction="https://localhost/Hydra/Index?handler=ExportCsv">CSV</button></form>
+<form id="get" method="get" action="https://localhost/DataExchange/Index"><input name="tableName" value="table-1"><button name="handler" value="ExportCsv">CSV</button></form>
+<form id="hidden" method="post"><input name="handler" value="ExportCsv"><button type="submit">CSV</button></form>
+<div><a id="link1" href="https://localhost/Themis/Index?handler=ExportCsv&amp;tableName=test&amp;PageNumber=2">CSV</a><a id="excel" href="https://localhost/Themis/Index?handler=ExportExcel">Excel</a></div>
+<div><a id="link2" href="https://localhost/Themis/Index?handler=ExportCsv&amp;tableName=other">CSV</a></div>
+<pre id="results">RUNNING</pre>
+<script src="../../wwwroot/js/csv-encoding.js"></script>
+<script>
+try {
+ let count=0; const check=(ok,name)=>{if(!ok)throw Error(name);count++;};
+ const controls=[...document.querySelectorAll('input[type=checkbox]')];
+ check(controls.length===5,'Choice for each CSV form/link group');
+ check(controls.every(c=>!c.checked),'Default UTF-8');
+ check(controls[0].parentNode.textContent.includes('be BOM'),'LT label');
+ check(document.querySelector('#post button[formaction*=ExportCsv]').previousElementSibling.contains(controls[0]),'Choice next to CSV button');
+ controls[0].checked=true;controls[0].dispatchEvent(new Event('change'));
+ check(controls.every(c=>c.checked),'All choices synchronized');
+ for(const id of ['post','get','hidden']) {
+  const data=new FormData(document.getElementById(id));
+  check(data.getAll('CsvWindows1257').length===1 && data.get('CsvWindows1257')==='true',id+' request parameter');
+ }
+ check(new FormData(document.getElementById('post')).get('Filter')==='kept','Filters retained');
+ for(const id of ['link1','link2']) check(new URL(document.getElementById(id).href).searchParams.get('CsvWindows1257')==='true',id+' GET parameter');
+ check(new URL(document.getElementById('link1').href).searchParams.get('PageNumber')==='2','GET parameters retained');
+ check(!new URL(document.getElementById('excel').href).searchParams.has('CsvWindows1257'),'Excel link unaffected');
+ controls[4].checked=false;controls[4].dispatchEvent(new Event('change'));
+ check(controls.every(c=>!c.checked),'Uncheck synchronized');
+ check(new FormData(document.getElementById('post')).get('CsvWindows1257')==='false','Switch back to UTF-8');
+ document.getElementById('results').textContent='PASS '+count+' browser checks';
+} catch(error) { document.getElementById('results').textContent='FAIL '+error.message; }
+</script></html>
