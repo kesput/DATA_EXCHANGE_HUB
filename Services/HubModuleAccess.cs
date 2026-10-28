@@ -6,6 +6,7 @@ namespace DATA_EXCHANGE_HUB.Services;
 
 public interface IHubModuleAccess
 {
+    bool HasCheckFailures { get; }
     Task<bool> CanOpenAsync(string path, ClaimsPrincipal user, CancellationToken cancellationToken = default);
 }
 
@@ -18,6 +19,7 @@ public sealed class HubModuleAccess(
     ILogger<HubModuleAccess> logger) : IHubModuleAccess
 {
     private readonly Dictionary<string, Task<bool>> checks = new(StringComparer.OrdinalIgnoreCase);
+    public bool HasCheckFailures { get; private set; }
 
     public static string Module(string path) => path.Split('?', 2)[0].Trim('/').Split('/')[0].ToUpperInvariant();
 
@@ -68,7 +70,9 @@ public sealed class HubModuleAccess(
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
-            logger.LogWarning(exception, "HUB module access check failed for {Module}; access denied.", module);
+            HasCheckFailures = true;
+            logger.LogWarning(exception, "HUB module access check failed for {Module}, user {UserName}; access denied.",
+                module, userNameResolver.ResolveUserName(user));
             return false;
         }
     }

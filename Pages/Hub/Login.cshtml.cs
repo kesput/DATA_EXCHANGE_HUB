@@ -66,7 +66,10 @@ public sealed class LoginModel(
         {
             HttpContext.Session.SetString(SessionKey, "1");
             HttpContext.Session.SetString(PasswordSessionKey, "0");
-            HttpContext.Session.Remove(WindowsUserNameResolver.AuthenticatedUserSessionKey);
+            // IIS may authenticate only the challenged login request. Preserve
+            // this server-verified identity for later anonymous requests in the
+            // same session; a fresh Windows identity always takes precedence.
+            HttpContext.Session.SetString(WindowsUserNameResolver.AuthenticatedUserSessionKey, activeWindowsUserName);
             return LocalRedirect(GetSafeReturnUrl(ReturnUrl));
         }
 

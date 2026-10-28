@@ -816,14 +816,16 @@ a.list-group-item {
 
 .exchange-table-header {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(22rem, auto);
-  align-items: stretch;
+  grid-template-columns: minmax(12rem, 1fr) minmax(0, 2fr);
+  align-items: start;
   gap: 1rem;
 }
 
 .exchange-table-title {
   display: grid;
   justify-items: start;
+  grid-column: 1;
+  grid-row: 1;
   gap: 0.65rem;
   min-width: 0;
 }
@@ -839,7 +841,63 @@ a.list-group-item {
 .exchange-table-controls {
   display: grid;
   justify-items: end;
-  gap: 0.65rem;
+  gap: .65rem;
+  min-width: 0;
+}
+
+/* Table import/export toolbars have a row-limit form; KAIROS does not. */
+.exchange-table-header:has(> .exchange-table-controls > .exchange-row-limit-form) {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.exchange-table-header:has(> .exchange-table-controls > .exchange-row-limit-form) > .exchange-table-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.exchange-table-header:has(> .exchange-table-controls > .exchange-row-limit-form) > .exchange-table-controls {
+  display: contents;
+}
+
+.exchange-table-controls > form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: .5rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.exchange-table-controls > form > .btn,
+.exchange-table-controls > form > .form-check {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.exchange-table-controls > .exchange-row-limit-form {
+  grid-column: 2;
+  grid-row: 1;
+  width: auto;
+}
+
+.exchange-table-controls > .excel-actions,
+.exchange-table-controls > .correction-import-context {
+  grid-column: 1 / -1;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.exchange-table-controls .export-excel-form,
+.exchange-table-controls .excel-upload-form {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.exchange-table-controls .excel-file-input {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .exchange-row-limit-form {
@@ -1703,8 +1761,14 @@ a.list-group-item {
     width: 100%;
   }
 
-  .exchange-table-header {
+  .exchange-table-header,
+  .exchange-table-header:has(> .exchange-table-controls > .exchange-row-limit-form) {
     grid-template-columns: 1fr;
+  }
+
+  .exchange-table-controls > .exchange-row-limit-form {
+    grid-column: 1;
+    grid-row: auto;
   }
 
   .exchange-table-controls,
@@ -1720,6 +1784,11 @@ a.list-group-item {
 
   .exchange-row-limit-form .form-select {
     width: 100%;
+  }
+
+  .oracul-params {
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
   }
 
   .exchange-action-bar .btn,

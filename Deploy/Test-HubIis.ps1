@@ -24,7 +24,8 @@ $pool = Get-Item -LiteralPath "IIS:\AppPools\$poolName"
 $windows = (Get-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' -Location $location -Filter 'system.webServer/security/authentication/windowsAuthentication' -Name enabled).Value
 $anonymous = (Get-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' -Location $location -Filter 'system.webServer/security/authentication/anonymousAuthentication' -Name enabled).Value
 if (-not $windows) { $issues.Add('Windows Authentication must be enabled in IIS.') }
-if ($anonymous) { $issues.Add('Disable Anonymous Authentication for the Windows-authenticated HUB configuration.') }
+if ($anonymous) { Write-Host 'Public landing is enabled. Protected HUB pages still require the application identity and module permission checks.' }
+else { Write-Host 'IIS requires Windows authentication before opening the landing page.' }
 if (-not (Get-WebGlobalModule -Name AspNetCoreModuleV2)) { $issues.Add('ASP.NET Core Hosting Bundle / AspNetCoreModuleV2 is missing.') }
 [pscustomobject]@{
     Site = $location; PhysicalPath = $sitePath; AppPool = $poolName

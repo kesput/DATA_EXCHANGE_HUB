@@ -1466,7 +1466,7 @@
   <data name="Hub.Security.NoModules" xml:space="preserve"><value>No accessible modules are assigned to you. Submit an access request.</value></data>
   <data name="Hub.Security.NoAccessTitle" xml:space="preserve"><value>Access not granted</value></data>
   <data name="Hub.Security.NoAccess" xml:space="preserve"><value>You do not have permission for this module, or your permissions could not be verified. Submit an access request to request permission.</value></data>
-  <data name="Hub.Security.RequestIdentity" xml:space="preserve"><value>The request is registered only for the Windows user identified by the server. Permissions are granted after review; submitting a request does not automatically grant access.</value></data>
+  <data name="Hub.Security.RequestIdentity" xml:space="preserve"><value>If your Windows user is not recognised, select Verify Windows user. After authentication you will return to this form to submit the request in your own name.</value></data>
   <data name="Hub.Security.OtherUser" xml:space="preserve"><value>Sign-in rejected: use your own Windows account. Signing in as a colleague on their terminal is unsafe. If you need permissions, submit an access request.</value></data>
   <data name="Hub.Security.WindowsRequired" xml:space="preserve"><value>Your Windows account could not be identified. Sign in to your own Windows account and use Windows authentication. Signing in as another user is not allowed.</value></data>
   <data name="Hub.Security.LoginHelp" xml:space="preserve"><value>Sign in using your own Windows account. HUB sign-in does not grant module permissions: each module requires assigned access.</value></data>
@@ -1503,5 +1503,9 @@
   <data name="Csv.Windows1257" xml:space="preserve"><value>CSV Windows-1257 (no BOM)</value></data>
   <data name="Csv.NoBom" xml:space="preserve"><value>no BOM</value></data>
   <data name="Csv.WithBom" xml:space="preserve"><value>with BOM</value></data>
+  <data name="Hub.Security.AuthorizeForRequest" xml:space="preserve"><value>Verify Windows user</value></data>
+  <data name="Hub.Security.CurrentUser" xml:space="preserve"><value>Windows user</value></data>
+  <data name="Hub.Security.AccessCheckFailed" xml:space="preserve"><value>Some or all module permissions could not be checked. This does not mean that access has not been assigned. Try again; if the problem persists, contact an administrator and provide the username shown here.</value></data>
+  <data name="Hub.Security.RetryAccessCheck" xml:space="preserve"><value>Check again</value></data>
 </root>
 

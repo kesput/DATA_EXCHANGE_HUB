@@ -1,9 +1,11 @@
 ﻿using DATA_EXCHANGE_HUB.Models;
 using DATA_EXCHANGE_HUB.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using System.Globalization;
+using System.Text.Json;
 
 namespace DATA_EXCHANGE_HUB.Pages;
 
@@ -12,8 +14,12 @@ public sealed class IndexModel(
     IUserNameResolver userNameResolver,
     IGlossaryService glossaryService,
     ISphinxService sphinxService,
-    IHubFeedbackService feedbackService) : PageModel
+    IHubFeedbackService feedbackService,
+    IAuthenticationSchemeProvider authenticationSchemes) : PageModel
 {
+    private const string AccessRequestDraftKey = "Hub.AccessRequest.Draft";
+    private sealed record AccessRequestDraft(string AppName, string RequestedAccess, string Comment, DateTimeOffset ExpiresAt);
+
     public IReadOnlyList<string> RequestableApps { get; } =
     [
         "Data exchange",
@@ -84,8 +90,61 @@ public sealed class IndexModel(
 
     public async Task OnGetAsync()
     {
+        Response.Headers.CacheControl = "no-store";
         DomainUser = userNameResolver.ResolveUserName(User);
+        if (!string.IsNullOrWhiteSpace(DomainUser)) RestoreAccessRequestDraft();
         await LoadPageDataAsync();
+    }
+
+    public async Task<IActionResult> OnGetAuthorizeAccessRequestAsync()
+    {
+        Response.Headers.CacheControl = "no-store";
+        DomainUser = userNameResolver.ResolveUserName(User);
+        if (string.IsNullOrWhiteSpace(DomainUser))
+        {
+            if (await authenticationSchemes.GetSchemeAsync(IISDefaults.AuthenticationScheme) is not null)
+                return Challenge(IISDefaults.AuthenticationScheme);
+
+            // Kestrel without a Windows handler cannot display a native login prompt.
+            Response.StatusCode = StatusCodes.Status401Unauthorized;
+            ErrorMessage = "Hub.Security.WindowsRequired";
+            return Page();
+        }
+
+        return RedirectToPage("/Index", pageHandler: null,
+            routeValues: new { AppName = RequestableApps.Contains(AppName, StringComparer.OrdinalIgnoreCase) ? AppName : "HYDRA" },
+            fragment: "access-request");
+    }
+
+    public IActionResult OnPostAuthenticateAccessRequest()
+    {
+        var draft = new AccessRequestDraft(
+            RequestableApps.Contains(AppName, StringComparer.OrdinalIgnoreCase) ? AppName : "HYDRA",
+            string.Equals(RequestedAccess, "ADMIN", StringComparison.OrdinalIgnoreCase) ? "ADMIN" : "USER",
+            (Comment ?? string.Empty)[..Math.Min(Comment?.Length ?? 0, 1000)],
+            DateTimeOffset.UtcNow.AddMinutes(10));
+        HttpContext.Session.SetString(AccessRequestDraftKey, JsonSerializer.Serialize(draft));
+        return RedirectToPage("/Index", "AuthorizeAccessRequest", new { draft.AppName });
+    }
+
+    private void RestoreAccessRequestDraft()
+    {
+        var json = HttpContext.Session.GetString(AccessRequestDraftKey);
+        if (json is null) return;
+        HttpContext.Session.Remove(AccessRequestDraftKey);
+        try
+        {
+            var draft = JsonSerializer.Deserialize<AccessRequestDraft>(json);
+            if (draft is null || draft.ExpiresAt < DateTimeOffset.UtcNow ||
+                !RequestableApps.Contains(draft.AppName, StringComparer.OrdinalIgnoreCase) ||
+                draft.RequestedAccess is not ("USER" or "ADMIN")) return;
+            AppName = draft.AppName;
+            RequestedAccess = draft.RequestedAccess;
+            Comment = draft.Comment;
+            // GET-bound values must not override the restored form in tag helpers.
+            ModelState.Remove(nameof(AppName));
+        }
+        catch (JsonException) { /* An invalid draft is discarded; it never grants access. */ }
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -95,7 +154,7 @@ public sealed class IndexModel(
 
         if (string.IsNullOrWhiteSpace(DomainUser))
         {
-            return Challenge(IISDefaults.AuthenticationScheme);
+            return OnPostAuthenticateAccessRequest();
         }
 
         if (!RequestableApps.Contains(AppName, StringComparer.OrdinalIgnoreCase))

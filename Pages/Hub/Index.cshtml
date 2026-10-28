@@ -72,13 +72,23 @@
         }
     </div>
 
-    @if (Model.Applications.Count == 0)
+    <div class="small text-muted mb-3">@L["Hub.Security.CurrentUser"]: <strong>@Model.CurrentUserName</strong></div>
+    @if (Model.HasAccessCheckErrors)
+    {
+        <div class="alert alert-warning" role="alert">
+            @L["Hub.Security.AccessCheckFailed"]
+            <a class="btn btn-sm btn-outline-secondary ms-2" asp-page="/Hub/Index">@L["Hub.Security.RetryAccessCheck"]</a>
+        </div>
+    }
+    else if (Model.Applications.Count == 0)
     {
         <div class="alert alert-warning" role="alert">@L["Hub.Security.NoModules"]</div>
     }
     <div class="mb-3">
-        <a class="btn btn-outline-success" asp-page="/Index" asp-fragment="access-request">@L["Hub.Security.RequestAccess"]</a>
+        <a class="btn btn-outline-success" asp-page="/Index" asp-page-handler="AuthorizeAccessRequest">@L["Hub.Security.RequestAccess"]</a>
     </div>
+    @if (Model.Applications.Count > 0)
+    {
     <div class="row g-4 align-items-start">
         <aside class="col-xxl-2 col-xl-2 col-lg-3 hub-sidebar">
             <form method="get" class="input-group search-box mb-3">
@@ -199,6 +209,7 @@
             </div>
         </section>
     </div>
+    }
 </div>
 
 

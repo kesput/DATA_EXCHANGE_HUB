@@ -71,6 +71,8 @@
     links.forEach((link) => {
         if (groups.has(link.parentNode)) return;
         groups.add(link.parentNode);
+        // One option also controls template links in the same action group.
+        if (controls.some(control => link.parentNode.contains(control))) return;
         addChoice(link.parentNode, link);
     });
     update();

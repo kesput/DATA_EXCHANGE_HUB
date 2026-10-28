@@ -2,6 +2,28 @@
 
 Vidinis ASP.NET Core Razor Pages (.NET 9) aplikaciju HUB su Windows vartotoju atpazinimu ir atskiromis moduliu prieigos teisemis. Apima SQL uzklausu vykdyma, Excel / CSV eksportus, DIKE klientu susitarimus ir IRIS ataskaitu bei siuntimo parametru konfiguravima.
 
+## Versija v7.3 (2026-10-28)
+
+- Puslapio antrasteje ir pradiniame puslapyje rodoma `v7.3`; aplikacijos surinkimo versija yra `7.3.0`.
+
+- Windows SSO prisijungimas sesijoje islaiko serverio patvirtinta vartotojo varda, kad griztant i HUB ar modulius IIS uzklausa be Windows tapatybes neprarastu teisiu patikros vartotojo. Nauja Windows tapatybe visada turi pirmenybe ir atnaujina jau patvirtintos sesijos varda. Negaliojanti sesija nesuteikia prieigos.
+
+- Griztant i HUB, praradus vartotojo tapatybe net ir su likusiu sesijos pozymiu, nukreipiama i prisijungima. Kataloge rodomas tikrinamas Windows vartotojas. Technines moduliu teisiu patikros klaidos atskiriamos nuo tikro teisiu nebuvimo: leidziami moduliai lieka matomi, pateikiamas pakartotines patikros veiksmas; kai nieko nepavyksta patvirtinti del klaidos, grazinama 503. Tuscios paieskos ir nuliniai KPI be pasiekiamu moduliu nerodomi.
+
+- Prieigos prasymo nuoroda inicijuoja Windows autorizacija ir grazina i ta pacia forma ties `#access-request`. Neatpazintas vartotojas pirmiausia patvirtina Windows paskyra; pasirinkta aplikacija, prieigos tipas ir komentaras islaikomi iki 10 min. sesijoje. Prasymas issaugomas tik atskirai ji pateikus po autorizacijos, naudojant serverio patvirtinta varda. Vien paskyros patvirtinimas nesuteikia moduliu teisiu.
+
+- Sutvarkytos eksporto ir importo juostos: DataExchange / THEMIS pavadinimas ir Top pasirinkimas lieka virsuje, veiksmai gauna visa ploti zemiau, viena Excel krastiniu varnele valdo eksporta ir sablona. KAIROS islaiko savo atskira valdikliu struktura; ORACUL siauruose ekranuose pereina i viena stulpeli.
+- IIS paketas: `publish\DATA_EXCHANGE_HUB-v7.3`. Keliant nauja paketa issaugokite serverio `appsettings.Production.json` ir jo SQL prisijungimus. Vien paketo sukurimas serverio neatnaujina. Po ikelimo patikrinkite rodoma `v7.3`, grizima i HUB is modulio bei prieigos prasymo autorizacijos eiga.
+
+Automatines patikros be realiu prisijungimo slaptazodziu ir pranesimu siuntimo:
+
+```powershell
+dotnet run --project .\Tests\HubAccess\Checks.csproj
+dotnet run --project .\Tests\CsvExport\Checks.csproj
+```
+
+Prisijungimo patikru yra 71, CSV patikru - 26. CSV GET / POST pasirinkimo narsykles patikra: `Tests/CsvExport/BrowserChecks.html`. Paleidziant DEV automatinius SESHAT siuntimus isjunkite su `--SeshatReminders:Enabled=false`. Diegima IIS uzbaikite realaus vartotojo su teisemis ir vartotojo be teisiu patikra; vien vietiniai testai IIS konfiguracijos nepatvirtina.
+
 ## Versija v7.2
 
 - Puslapio antrasteje ir pradiniame puslapyje rodoma `v7.2`, kad po diegimo butu matoma atnaujinta versija.
@@ -12,15 +34,6 @@ Vidinis ASP.NET Core Razor Pages (.NET 9) aplikaciju HUB su Windows vartotoju at
 - IRIS saltinio `CsvWindows1257` nustatymas issaugomas ir ikeliamas redagavimui. Stulpelis pridedamas per esama SQL schemos atnaujinimo mechanizma, esamiems saltiniams numatyta `false`. Faktinis IRIS siuntimo generatorius dar neintegruotas; busimas skriptas turi pritaikyti si nustatyma.
 - Production prisijungimui reikalinga patikima Windows tapatybe. IIS autentifikacija inicijuojama per Windows handleri; be jo pateikiamas 401 su paaiskinimu. Prisijungimas kitu vartotojo vardu ir nepriskirtu moduliu prieiga blokuojami.
 - Production sablonas paveldi aktualu moduliu kataloga, kad nesusidubliuotu ir nedingtu DIKE / IRIS. `Deploy/Test-HubIis.ps1` tikrina IIS nustatymus nekeisdamas serverio ir nerodydamas slaptazodziu. Publikavimas sustabdomas, jei kompiliavimas ar publish nepavyksta.
-
-Automatines patikros be realiu prisijungimo slaptazodziu ir pranesimu siuntimo:
-
-```powershell
-dotnet run --project .\Tests\HubAccess\Checks.csproj
-dotnet run --project .\Tests\CsvExport\Checks.csproj
-```
-
-Prisijungimo patikru yra 32, CSV patikru - 26. CSV GET / POST pasirinkimo narsykles patikra: `Tests/CsvExport/BrowserChecks.html`. Paleidziant DEV automatinius SESHAT siuntimus isjunkite su `--SeshatReminders:Enabled=false`. Diegima IIS uzbaikite realaus vartotojo su teisemis ir vartotojo be teisiu patikra; vien vietiniai testai IIS konfiguracijos nepatvirtina.
 
 ## Versija v7.0
 
@@ -86,7 +99,8 @@ Serverio testavimui naudokite IIS su Windows Authentication, kad aplikacija maty
 1. Serveryje idiekite:
    - .NET 9 Hosting Bundle.
    - IIS role su `Windows Authentication`.
-   - Isjunkite `Anonymous Authentication`, ijunkite `Windows Authentication`.
+   - Ijunkite `Windows Authentication`. Viesam pradiniam puslapiui iki autorizacijos taip pat ijunkite `Anonymous Authentication`; apsaugotas darbo aplinkas tikrina aplikacijos autentifikacijos ir moduliu teisiu politika.
+   - Jei `Anonymous Authentication` isjungtas, IIS paprasys Windows autorizacijos dar pries atidarydamas puslapi.
 2. Publikavimas is projekto katalogo:
 
 ```powershell
@@ -108,8 +122,8 @@ appsettings.Production.json
 Ir jame irasykite realius SQL prisijungimus.
 
 5. IIS site/application fizinis kelias turi rodyti i publikuota folderi. `web.config` nustato `ASPNETCORE_ENVIRONMENT=Production` ir `inprocess` talpinima. Autentifikacijos parametrai turi buti nustatyti paciame IIS:
-   - `anonymousAuthentication=false`
    - `windowsAuthentication=true`
+   - `anonymousAuthentication=true`, jei pradinis puslapis turi buti viesas ir autorizacija prasoma paspaudus prieigos prasymo mygtuka. `false` autorizuoja visa svetaine dar iki aplikacijos.
 
 `Production` sablonas moduliu katalogo neperraso: jis paveldimas is naujo `appsettings.json`. Jei esamame serverio `appsettings.Production.json` liko senas `HubApplications` masyvas, ji pasalinkite issaugodami kitus nustatymus ir prisijungimus; kitaip konfiguracijos masyvu sujungimas gali dubliuoti modulius ar paslepti DIKE / IRIS.
 
@@ -179,7 +193,7 @@ icacls "Q:\QLIKDATA\DATA\SEND_MAIL\EE" /grant "IIS AppPool\DATA_EXCHANGE_HUB:(OI
    - Atidarius `ORACUL`, prieiga turi buti tikrinama per `APPLICATION_GetUserAccess`.
    - Atidarius `KAIROS`, prieiga turi buti tikrinama per `APPLICATION_GetUserAccess` su aplikacijos pavadinimu `KAIROS`.
 
-Jei vietoje realaus vartotojo matomas AppPool arba serverio useris, IIS dar naudoja Anonymous arba aplikacija paleista ne per Windows Authentication.
+Jei vietoje realaus vartotojo matomas AppPool arba serverio useris, tikrinkite Windows Authentication ir tapatybes perdavima aplikacijai. Vien Anonymous ijungimas nereiskia, kad Windows autentifikacija neveikia; viesas pradinis puslapis palaiko abi autentifikacijos parinktis.
 
 ## Teisiu rezimas
 

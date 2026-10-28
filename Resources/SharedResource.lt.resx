@@ -1466,7 +1466,7 @@
   <data name="Hub.Security.NoModules" xml:space="preserve"><value>Jums nepriskirta pasiekiamų modulių. Pateikite prieigos užklausą.</value></data>
   <data name="Hub.Security.NoAccessTitle" xml:space="preserve"><value>Prieiga nesuteikta</value></data>
   <data name="Hub.Security.NoAccess" xml:space="preserve"><value>Šiam moduliui neturite suteiktų teisių arba jų nepavyko patikrinti. Prieigos galite paprašyti pateikę užklausą.</value></data>
-  <data name="Hub.Security.RequestIdentity" xml:space="preserve"><value>Užklausa registruojama tik serverio atpažinto Windows vartotojo vardu. Teisės suteikiamos peržiūrėjus užklausą; pateikimas jų automatiškai nesuteikia.</value></data>
+  <data name="Hub.Security.RequestIdentity" xml:space="preserve"><value>Jei Windows vartotojas neatpažintas, paspauskite „Patvirtinti Windows vartotoją“. Po autorizacijos liksite šioje formoje ir galėsite pateikti prašymą savo vardu.</value></data>
   <data name="Hub.Security.OtherUser" xml:space="preserve"><value>Prisijungimas atmestas: naudokite savo Windows vartotoją. Prisijungti kolegos vardu jo terminale nesaugu. Jei trūksta teisių, pateikite prieigos užklausą.</value></data>
   <data name="Hub.Security.WindowsRequired" xml:space="preserve"><value>Windows vartotojas neatpažintas. Prisijunkite prie savo Windows paskyros ir naudokite Windows autorizaciją. Kito vartotojo vardu prisijungti neleidžiama.</value></data>
   <data name="Hub.Security.LoginHelp" xml:space="preserve"><value>Prisijunkite tik savo Windows vartotoju. Prisijungimas prie HUB nesuteikia teisių į modulius: kiekvienam jų reikalinga priskirta prieiga.</value></data>
@@ -1503,5 +1503,9 @@
   <data name="Csv.Windows1257" xml:space="preserve"><value>CSV Windows-1257 (be BOM)</value></data>
   <data name="Csv.NoBom" xml:space="preserve"><value>be BOM</value></data>
   <data name="Csv.WithBom" xml:space="preserve"><value>su BOM</value></data>
+  <data name="Hub.Security.AuthorizeForRequest" xml:space="preserve"><value>Patvirtinti Windows vartotoją</value></data>
+  <data name="Hub.Security.CurrentUser" xml:space="preserve"><value>Windows vartotojas</value></data>
+  <data name="Hub.Security.AccessCheckFailed" xml:space="preserve"><value>Nepavyko patikrinti dalies arba visų modulių teisių. Tai nereiškia, kad teisės nesuteiktos. Pabandykite dar kartą; jei problema kartojasi, kreipkitės į administratorių ir nurodykite čia rodomą vartotojo vardą.</value></data>
+  <data name="Hub.Security.RetryAccessCheck" xml:space="preserve"><value>Tikrinti dar kartą</value></data>
 </root>
 

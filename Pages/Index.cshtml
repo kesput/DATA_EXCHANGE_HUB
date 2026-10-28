@@ -57,7 +57,14 @@
                         <label class="form-label" asp-for="Comment">@L["Landing.Comment"]</label>
                         <textarea class="form-control" asp-for="Comment" rows="4" maxlength="1000"></textarea>
                     </div>
-                    <button class="btn btn-orange" type="submit">@L["Landing.SubmitRequest"]</button>
+                    @if (Model.IsDomainUserResolved)
+                    {
+                        <button class="btn btn-orange" type="submit">@L["Landing.SubmitRequest"]</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-orange" type="submit" asp-page-handler="AuthenticateAccessRequest">@L["Hub.Security.AuthorizeForRequest"]</button>
+                    }
                 </form>
             </section>
         </aside>
@@ -74,7 +81,7 @@
                 </div>
                 <div class="metric-card">
                     <small>@L["Landing.Metric.Version"]</small>
-                    <h4>v7.2</h4>
+                    <h4>v7.3</h4>
                 </div>
             </div>
 

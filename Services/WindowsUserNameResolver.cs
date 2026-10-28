@@ -53,6 +53,11 @@ public sealed class WindowsUserNameResolver(
         try
         {
             httpContext?.Session.SetString(SessionUserNameKey, normalized);
+            // A later IIS-authenticated request can identify a different user.
+            // Refresh an existing verified session so an anonymous follow-up
+            // request cannot fall back to the previous account.
+            if (!string.IsNullOrWhiteSpace(httpContext?.Session.GetString(AuthenticatedUserSessionKey)))
+                httpContext!.Session.SetString(AuthenticatedUserSessionKey, normalized);
         }
         catch (InvalidOperationException)
         {

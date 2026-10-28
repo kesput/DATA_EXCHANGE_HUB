@@ -20,7 +20,7 @@
 
     <section class="tool-section" style="max-width: 640px;">
         <div class="alert alert-warning" role="note">@L["Hub.Security.SharedTerminal"]
-            <a asp-page="/Index" asp-fragment="access-request">@L["Hub.Security.RequestAccess"]</a>
+            <a asp-page="/Index" asp-page-handler="AuthorizeAccessRequest">@L["Hub.Security.RequestAccess"]</a>
         </div>
         @if (!Model.WindowsAuthenticationRequired)
         {
