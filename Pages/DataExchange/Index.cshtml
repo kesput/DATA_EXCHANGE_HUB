@@ -1,4 +1,4 @@
-﻿@page
+@page
 @using System.Globalization
 @using DATA_EXCHANGE_HUB.Models
 @model DATA_EXCHANGE_HUB.Pages.DataExchange.IndexModel
@@ -532,7 +532,7 @@
                                                 <tr class="data-row" data-row-key="@row.KeyValue">
                                                     @foreach (var column in Model.TableData.Columns)
                                                     {
-                                                        var isKeyColumn = Model.TableData.KeyColumn?.Equals(column.Name, StringComparison.OrdinalIgnoreCase) == true;
+                                                        var isKeyColumn = Model.TableData.IsKeyColumn(column.Name);
                                                         var isEditable = Model.CanEditSelectedTable && !isKeyColumn && column.CanUpdate && !string.IsNullOrWhiteSpace(row.KeyValue);
 
                                                         <td data-column-name="@column.Name" data-editable="@(isEditable ? "true" : "false")">
@@ -721,7 +721,7 @@
 @section Scripts {
     <script>
         const selectedTableName = @selectedTableNameJson;
-        const changedRows = {};
+        const changedRows = Object.create(null);
         const updateButton = document.getElementById("updateButton");
         const updateStatus = document.getElementById("updateStatus");
         const sortDirections = {};
@@ -1115,17 +1115,27 @@
         }
 
         function makeEditable(cell) {
-            if (cell.querySelector("input")) {
+            if (cell.querySelector("input, select")) {
                 return;
             }
 
             const originalValue = cell.textContent.trim();
             const columnName = cell.getAttribute("data-column-name");
             const rowKey = cell.closest("tr").getAttribute("data-row-key");
-            const input = document.createElement("input");
-            input.type = "text";
-            input.className = "form-control form-control-sm";
-            input.value = originalValue;
+            const isBoolean = isBitType(getColumnDataType(columnName));
+            const input = document.createElement(isBoolean ? "select" : "input");
+            input.className = isBoolean ? "form-select form-select-sm" : "form-control form-control-sm";
+            if (isBoolean) {
+                if (originalValue === "") input.appendChild(createOption("", ""));
+                input.appendChild(createOption("true", "true"));
+                input.appendChild(createOption("false", "false"));
+                input.value = originalValue === "" ? "" :
+                    (["true", "1", "yes", "taip"].includes(originalValue.toLowerCase()) ? "true" : "false");
+                input.addEventListener("change", () => input.blur());
+            } else {
+                input.type = "text";
+                input.value = originalValue;
+            }
             input.addEventListener("blur", () => saveChanges(input, rowKey, columnName));
             input.addEventListener("keydown", (event) => {
                 if (event.key === "Enter") {

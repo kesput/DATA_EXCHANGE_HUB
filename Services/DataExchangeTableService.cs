@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Globalization;
 using System.Text.Json;
 using DATA_EXCHANGE_HUB.Models;
@@ -17,6 +17,12 @@ public sealed class DataExchangeTableService(
     private readonly DataExchangeOptions _options = options.Value;
 
     private sealed record ColumnValue(ExchangeTableColumn Column, object Value);
+    private sealed record RowKey(IReadOnlyList<ExchangeTableColumn> Columns)
+    {
+        public bool Contains(string name) => Columns.Any(column => column.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        public string AuditLabel => string.Join(", ", Columns.Select(column => column.Name)) is var label && label.Length <= 128
+            ? label : "COMPOSITE KEY";
+    }
 
     private sealed record RowPage(IReadOnlyList<ExchangeTableRow> Rows, bool HasNextPage);
 
@@ -49,14 +55,14 @@ public sealed class DataExchangeTableService(
         await connection.OpenAsync(cancellationToken);
 
         var columns = await LoadColumnsAsync(connection, tableName, cancellationToken);
-        var keyColumn = await LoadKeyColumnAsync(connection, tableName, columns, cancellationToken);
+        var rowKey = await LoadRowKeyAsync(connection, tableName, columns, cancellationToken);
         var uniqueKeys = await LoadUniqueKeysAsync(connection, tableName, cancellationToken);
         var rowPage = includeRows
             ? await LoadRowsAsync(
                 connection,
                 tableName,
                 columns,
-                keyColumn,
+                rowKey,
                 normalizedRowLimit,
                 normalizedPageNumber,
                 filters,
@@ -68,10 +74,11 @@ public sealed class DataExchangeTableService(
             columns,
             uniqueKeys,
             rowPage.Rows,
-            keyColumn,
+            rowKey?.AuditLabel,
             normalizedRowLimit,
             normalizedPageNumber,
-            rowPage.HasNextPage);
+            rowPage.HasNextPage,
+            rowKey?.Columns.Select(column => column.Name).ToArray());
     }
 
     public async Task<int> CountRowsByFilterAsync(
@@ -182,7 +189,7 @@ public sealed class DataExchangeTableService(
         await connection.OpenAsync(cancellationToken);
 
         var columns = await LoadColumnsAsync(connection, tableName, cancellationToken);
-        var keyColumn = await LoadKeyColumnAsync(connection, tableName, columns, cancellationToken);
+        var rowKey = await LoadRowKeyAsync(connection, tableName, columns, cancellationToken);
         var userInsertableColumns = columns
             .Where(column => column.CanInsert &&
                              formData.ContainsKey(column.Name) &&
@@ -227,7 +234,7 @@ public sealed class DataExchangeTableService(
         var insertedRow = await ExecuteInsertAndReadRowAsync(
             command,
             columns,
-            keyColumn,
+            rowKey,
             cancellationToken);
 
         await InsertExchangeLogAsync(
@@ -237,7 +244,7 @@ public sealed class DataExchangeTableService(
             "INSERT",
             "WEB_FORM",
             tableAccess.TableName,
-            keyColumn,
+            rowKey,
             insertedRow?.KeyValue,
             actorUserName,
             beforeValues: null,
@@ -270,7 +277,7 @@ public sealed class DataExchangeTableService(
         await connection.OpenAsync(cancellationToken);
 
         var columns = await LoadColumnsAsync(connection, tableName, cancellationToken);
-        var keyColumn = await LoadKeyColumnAsync(connection, tableName, columns, cancellationToken);
+        var rowKey = await LoadRowKeyAsync(connection, tableName, columns, cancellationToken);
         var uniqueKeys = await LoadUniqueKeysAsync(connection, tableName, cancellationToken);
         var allowedColumns = columns
             .ToDictionary(column => column.Name, StringComparer.OrdinalIgnoreCase);
@@ -344,7 +351,7 @@ public sealed class DataExchangeTableService(
                     (SqlTransaction)transaction,
                     tableName,
                     columns,
-                    keyColumn,
+                    rowKey,
                     keyValues,
                     cancellationToken);
 
@@ -373,7 +380,7 @@ public sealed class DataExchangeTableService(
                         (SqlTransaction)transaction,
                         tableName,
                         columns,
-                        keyColumn,
+                        rowKey,
                         keyValues,
                         updateColumnValues,
                         cancellationToken);
@@ -385,7 +392,7 @@ public sealed class DataExchangeTableService(
                         "UPDATE",
                         "EXCEL_IMPORT",
                         tableAccess.TableName,
-                        keyColumn,
+                        rowKey,
                         updatedRow?.KeyValue ?? existingRow.KeyValue,
                         actorUserName,
                         beforeValues: existingRow.Values,
@@ -423,7 +430,7 @@ public sealed class DataExchangeTableService(
             var insertedRow = await ExecuteInsertAndReadRowAsync(
                 command,
                 columns,
-                keyColumn,
+                rowKey,
                 cancellationToken);
 
             await InsertExchangeLogAsync(
@@ -433,7 +440,7 @@ public sealed class DataExchangeTableService(
                 "IMPORT_INSERT",
                 "EXCEL_IMPORT",
                 tableAccess.TableName,
-                keyColumn,
+                rowKey,
                 insertedRow?.KeyValue,
                 actorUserName,
                 beforeValues: null,
@@ -470,14 +477,14 @@ public sealed class DataExchangeTableService(
         await connection.OpenAsync(cancellationToken);
 
         var columns = await LoadColumnsAsync(connection, tableName, cancellationToken);
-        var keyColumn = await LoadKeyColumnAsync(connection, tableName, columns, cancellationToken);
-        if (string.IsNullOrWhiteSpace(keyColumn))
+        var rowKey = await LoadRowKeyAsync(connection, tableName, columns, cancellationToken);
+        if (rowKey is null)
         {
             throw new InvalidOperationException("Lentele neturi ID arba pirminio rakto stulpelio, todel koregavimas negalimas.");
         }
 
         var editableColumns = columns
-            .Where(column => column.CanUpdate && !column.Name.Equals(keyColumn, StringComparison.OrdinalIgnoreCase))
+            .Where(column => column.CanUpdate && !rowKey.Contains(column.Name))
             .ToDictionary(column => column.Name, StringComparer.OrdinalIgnoreCase);
 
         var batchId = Guid.NewGuid();
@@ -499,7 +506,7 @@ public sealed class DataExchangeTableService(
                 transaction,
                 tableName,
                 columns,
-                keyColumn,
+                rowKey,
                 keyValue,
                 cancellationToken);
             if (beforeRow is null)
@@ -512,9 +519,7 @@ public sealed class DataExchangeTableService(
                     editableColumns[change.Key],
                     ToUserInputDbValue(change.Value)))
                 .Concat(BuildAutomaticAuditColumnValues(columns, actorUserName)
-                    .Where(columnValue => !columnValue.Column.Name.Equals(
-                        keyColumn,
-                        StringComparison.OrdinalIgnoreCase)))
+                    .Where(columnValue => !rowKey.Contains(columnValue.Column.Name)))
                 .ToArray();
             var setClauses = columnValues
                 .Select((columnValue, index) => $"{SqlName.QuoteIdentifier(columnValue.Column.Name)} = @p{index}")
@@ -522,10 +527,11 @@ public sealed class DataExchangeTableService(
 
             await using var command = connection.CreateCommand();
             command.Transaction = transaction;
+            var keyWhere = BuildRowKeyWhereClause(command, rowKey, keyValue);
             command.CommandText = $"""
                 UPDATE {tableName}
                 SET {string.Join(", ", setClauses)}
-                WHERE {SqlName.QuoteIdentifier(keyColumn)} = @keyValue
+                WHERE {keyWhere}
                 """;
 
             for (var index = 0; index < columnValues.Length; index++)
@@ -533,7 +539,6 @@ public sealed class DataExchangeTableService(
                 AddColumnParameter(command, $"@p{index}", columnValues[index]);
             }
 
-            command.Parameters.AddWithValue("@keyValue", keyValue);
             var updatedRows = await command.ExecuteNonQueryAsync(cancellationToken);
             if (updatedRows == 0)
             {
@@ -545,7 +550,7 @@ public sealed class DataExchangeTableService(
                 transaction,
                 tableName,
                 columns,
-                keyColumn,
+                rowKey,
                 keyValue,
                 cancellationToken);
 
@@ -556,7 +561,7 @@ public sealed class DataExchangeTableService(
                 "UPDATE",
                 "WEB_EDIT",
                 tableAccess.TableName,
-                keyColumn,
+                rowKey,
                 beforeRow.KeyValue,
                 actorUserName,
                 beforeValues: beforeRow.Values,
@@ -590,8 +595,8 @@ public sealed class DataExchangeTableService(
         await connection.OpenAsync(cancellationToken);
 
         var columns = await LoadColumnsAsync(connection, tableName, cancellationToken);
-        var keyColumn = await LoadKeyColumnAsync(connection, tableName, columns, cancellationToken);
-        if (string.IsNullOrWhiteSpace(keyColumn))
+        var rowKey = await LoadRowKeyAsync(connection, tableName, columns, cancellationToken);
+        if (rowKey is null)
         {
             throw new InvalidOperationException("Lentele neturi ID arba pirminio rakto stulpelio, todel salinimas negalimas.");
         }
@@ -603,7 +608,7 @@ public sealed class DataExchangeTableService(
             transaction,
             tableName,
             columns,
-            keyColumn,
+            rowKey,
             keyValue,
             cancellationToken);
         if (beforeRow is null)
@@ -613,11 +618,11 @@ public sealed class DataExchangeTableService(
 
         await using var command = connection.CreateCommand();
         command.Transaction = transaction;
+        var keyWhere = BuildRowKeyWhereClause(command, rowKey, keyValue);
         command.CommandText = $"""
             DELETE FROM {tableName}
-            WHERE {SqlName.QuoteIdentifier(keyColumn)} = @keyValue
+            WHERE {keyWhere}
             """;
-        command.Parameters.AddWithValue("@keyValue", keyValue.Trim());
 
         var deletedRows = await command.ExecuteNonQueryAsync(cancellationToken);
         if (deletedRows == 0)
@@ -632,7 +637,7 @@ public sealed class DataExchangeTableService(
             "DELETE",
             "WEB_DELETE",
             tableAccess.TableName,
-            keyColumn,
+            rowKey,
             beforeRow.KeyValue,
             actorUserName,
             beforeValues: beforeRow.Values,
@@ -665,7 +670,7 @@ public sealed class DataExchangeTableService(
         await connection.OpenAsync(cancellationToken);
 
         var columns = await LoadColumnsAsync(connection, tableName, cancellationToken);
-        var keyColumn = await LoadKeyColumnAsync(connection, tableName, columns, cancellationToken);
+        var rowKey = await LoadRowKeyAsync(connection, tableName, columns, cancellationToken);
 
         var batchId = Guid.NewGuid();
         await using var transaction = (SqlTransaction)await connection.BeginTransactionAsync(cancellationToken);
@@ -688,7 +693,7 @@ public sealed class DataExchangeTableService(
         {
             while (await reader.ReadAsync(cancellationToken))
             {
-                deletedRows.Add(ReadCurrentRow(reader, columns, keyColumn));
+                deletedRows.Add(ReadCurrentRow(reader, columns, rowKey));
             }
         }
 
@@ -701,7 +706,7 @@ public sealed class DataExchangeTableService(
                 "DELETE",
                 "WEB_FILTER_DELETE",
                 tableAccess.TableName,
-                keyColumn,
+                rowKey,
                 deletedRow.KeyValue,
                 actorUserName,
                 beforeValues: deletedRow.Values,
@@ -732,7 +737,7 @@ public sealed class DataExchangeTableService(
         await connection.OpenAsync(cancellationToken);
 
         var columns = await LoadColumnsAsync(connection, tableName, cancellationToken);
-        var keyColumn = await LoadKeyColumnAsync(connection, tableName, columns, cancellationToken);
+        var rowKey = await LoadRowKeyAsync(connection, tableName, columns, cancellationToken);
         await using var transaction = (SqlTransaction)await connection.BeginTransactionAsync(cancellationToken);
         var log = await LoadLogDetailsAsync(connection, transaction, logId, cancellationToken);
 
@@ -761,7 +766,7 @@ public sealed class DataExchangeTableService(
                 tableAccess,
                 tableName,
                 columns,
-                keyColumn,
+                rowKey,
                 log,
                 actorUserName,
                 cancellationToken);
@@ -774,7 +779,7 @@ public sealed class DataExchangeTableService(
                 tableAccess,
                 tableName,
                 columns,
-                keyColumn,
+                rowKey,
                 log,
                 actorUserName,
                 cancellationToken);
@@ -847,12 +852,12 @@ public sealed class DataExchangeTableService(
         ExchangeTableAccess tableAccess,
         string tableName,
         IReadOnlyList<ExchangeTableColumn> columns,
-        string? keyColumn,
+        RowKey? rowKey,
         LogDetails log,
         string actorUserName,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(keyColumn) || string.IsNullOrWhiteSpace(log.KeyValue))
+        if (rowKey is null || string.IsNullOrWhiteSpace(log.KeyValue))
         {
             throw new InvalidOperationException("UPDATE atstatymui reikalingas iraso raktas.");
         }
@@ -863,7 +868,7 @@ public sealed class DataExchangeTableService(
         }
 
         var editableColumns = columns
-            .Where(column => column.CanUpdate && !column.Name.Equals(keyColumn, StringComparison.OrdinalIgnoreCase))
+            .Where(column => column.CanUpdate && !rowKey.Contains(column.Name))
             .Where(column => log.BeforeValues.ContainsKey(column.Name))
             .Select(column => new ColumnValue(column, ToUserInputDbValue(log.BeforeValues[column.Name])))
             .ToArray();
@@ -878,7 +883,7 @@ public sealed class DataExchangeTableService(
             transaction,
             tableName,
             columns,
-            keyColumn,
+            rowKey,
             log.KeyValue,
             cancellationToken);
         if (beforeRow is null)
@@ -895,10 +900,11 @@ public sealed class DataExchangeTableService(
 
         await using var command = connection.CreateCommand();
         command.Transaction = transaction;
+        var keyWhere = BuildRowKeyWhereClause(command, rowKey, log.KeyValue);
         command.CommandText = $"""
             UPDATE {tableName}
             SET {string.Join(", ", setClauses)}
-            WHERE {SqlName.QuoteIdentifier(keyColumn)} = @KeyValue
+            WHERE {keyWhere}
             """;
 
         for (var index = 0; index < columnValues.Length; index++)
@@ -906,7 +912,6 @@ public sealed class DataExchangeTableService(
             AddColumnParameter(command, $"@p{index}", columnValues[index]);
         }
 
-        command.Parameters.Add("@KeyValue", SqlDbType.NVarChar, 4000).Value = log.KeyValue;
         var updatedRows = await command.ExecuteNonQueryAsync(cancellationToken);
         if (updatedRows == 0)
         {
@@ -918,7 +923,7 @@ public sealed class DataExchangeTableService(
             transaction,
             tableName,
             columns,
-            keyColumn,
+            rowKey,
             log.KeyValue,
             cancellationToken);
 
@@ -929,7 +934,7 @@ public sealed class DataExchangeTableService(
             "UPDATE",
             "WEB_REVERT",
             tableAccess.TableName,
-            keyColumn,
+            rowKey,
             beforeRow.KeyValue,
             actorUserName,
             beforeValues: beforeRow.Values,
@@ -944,7 +949,7 @@ public sealed class DataExchangeTableService(
         ExchangeTableAccess tableAccess,
         string tableName,
         IReadOnlyList<ExchangeTableColumn> columns,
-        string? keyColumn,
+        RowKey? rowKey,
         LogDetails log,
         string actorUserName,
         CancellationToken cancellationToken)
@@ -992,7 +997,7 @@ public sealed class DataExchangeTableService(
         var insertedRow = await ExecuteInsertAndReadRowAsync(
             command,
             columns,
-            keyColumn,
+            rowKey,
             cancellationToken);
 
         return await InsertExchangeLogAsync(
@@ -1002,7 +1007,7 @@ public sealed class DataExchangeTableService(
             "INSERT",
             "WEB_REVERT",
             tableAccess.TableName,
-            keyColumn,
+            rowKey,
             insertedRow?.KeyValue,
             actorUserName,
             beforeValues: null,
@@ -1038,12 +1043,12 @@ public sealed class DataExchangeTableService(
     private static async Task<ExchangeTableRow?> ExecuteInsertAndReadRowAsync(
         SqlCommand command,
         IReadOnlyList<ExchangeTableColumn> columns,
-        string? keyColumn,
+        RowKey? rowKey,
         CancellationToken cancellationToken)
     {
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         return await reader.ReadAsync(cancellationToken)
-            ? ReadCurrentRow(reader, columns, keyColumn)
+            ? ReadCurrentRow(reader, columns, rowKey)
             : null;
     }
 
@@ -1052,22 +1057,22 @@ public sealed class DataExchangeTableService(
         SqlTransaction transaction,
         string tableName,
         IReadOnlyList<ExchangeTableColumn> columns,
-        string keyColumn,
+        RowKey rowKey,
         string keyValue,
         CancellationToken cancellationToken)
     {
         await using var command = connection.CreateCommand();
         command.Transaction = transaction;
+        var keyWhere = BuildRowKeyWhereClause(command, rowKey, keyValue);
         command.CommandText = $"""
             SELECT TOP (1) *
             FROM {tableName}
-            WHERE {SqlName.QuoteIdentifier(keyColumn)} = @keyValue
+            WHERE {keyWhere}
             """;
-        command.Parameters.AddWithValue("@keyValue", keyValue.Trim());
 
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         return await reader.ReadAsync(cancellationToken)
-            ? ReadCurrentRow(reader, columns, keyColumn)
+            ? ReadCurrentRow(reader, columns, rowKey)
             : null;
     }
 
@@ -1076,7 +1081,7 @@ public sealed class DataExchangeTableService(
         SqlTransaction transaction,
         string tableName,
         IReadOnlyList<ExchangeTableColumn> columns,
-        string? keyColumn,
+        RowKey? rowKey,
         IReadOnlyList<ColumnValue> keyValues,
         CancellationToken cancellationToken)
     {
@@ -1091,7 +1096,7 @@ public sealed class DataExchangeTableService(
 
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         return await reader.ReadAsync(cancellationToken)
-            ? ReadCurrentRow(reader, columns, keyColumn)
+            ? ReadCurrentRow(reader, columns, rowKey)
             : null;
     }
 
@@ -1100,7 +1105,7 @@ public sealed class DataExchangeTableService(
         SqlTransaction transaction,
         string tableName,
         IReadOnlyList<ExchangeTableColumn> columns,
-        string? keyColumn,
+        RowKey? rowKey,
         IReadOnlyList<ColumnValue> keyValues,
         IReadOnlyList<ColumnValue> updateValues,
         CancellationToken cancellationToken)
@@ -1127,7 +1132,7 @@ public sealed class DataExchangeTableService(
 
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         return await reader.ReadAsync(cancellationToken)
-            ? ReadCurrentRow(reader, columns, keyColumn)
+            ? ReadCurrentRow(reader, columns, rowKey)
             : null;
     }
 
@@ -1144,10 +1149,71 @@ public sealed class DataExchangeTableService(
         }));
     }
 
+    private static string? EncodeRowKey(SqlDataReader reader, RowKey? rowKey)
+    {
+        if (rowKey is null) return null;
+        var values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var column in rowKey.Columns)
+        {
+            var raw = reader[column.Name];
+            if (raw == DBNull.Value) return null;
+            values[column.Name] = raw switch
+            {
+                DateTime date => date.ToString("O", CultureInfo.InvariantCulture),
+                DateTimeOffset date => date.ToString("O", CultureInfo.InvariantCulture),
+                _ => Convert.ToString(raw, CultureInfo.InvariantCulture) ?? string.Empty
+            };
+        }
+        var key = rowKey.Columns.Count == 1 ? values[rowKey.Columns[0].Name] : JsonSerializer.Serialize(values);
+        if (key.Length > 4000) throw InvalidKey(
+            "Eilutės raktas per ilgas saugiam redagavimui ir auditui.",
+            "The row key is too long for safe editing and auditing.");
+        return key;
+    }
+
+    private static string BuildRowKeyWhereClause(SqlCommand command, RowKey rowKey, string keyValue)
+    {
+        if (keyValue.Length > 4000) throw InvalidKey("Netinkamas eilutės raktas.", "Invalid row key.");
+        Dictionary<string, string> values;
+        if (rowKey.Columns.Count == 1)
+            values = new(StringComparer.OrdinalIgnoreCase) { [rowKey.Columns[0].Name] = keyValue };
+        else
+        {
+            try
+            {
+                using var document = JsonDocument.Parse(keyValue);
+                if (document.RootElement.ValueKind != JsonValueKind.Object) throw new JsonException();
+                values = new(StringComparer.OrdinalIgnoreCase);
+                foreach (var item in document.RootElement.EnumerateObject())
+                    if (item.Value.ValueKind != JsonValueKind.String || !values.TryAdd(item.Name, item.Value.GetString()!))
+                        throw new JsonException();
+                if (values.Count != rowKey.Columns.Count || rowKey.Columns.Any(column => !values.ContainsKey(column.Name)))
+                    throw new JsonException();
+            }
+            catch (JsonException exception)
+            {
+                throw InvalidKey(
+                    "Netinkamas sudėtinis eilutės raktas. Atnaujinkite lentelę ir bandykite dar kartą.",
+                    "Invalid composite row key. Refresh the table and try again.", exception);
+            }
+        }
+        return string.Join(" AND ", rowKey.Columns.Select((column, index) =>
+        {
+            var parameterName = $"@rowKey{index}";
+            var value = values[column.Name];
+            command.Parameters.AddWithValue(parameterName, IsTextSqlType(column.DataType)
+                ? value : ConvertColumnValue(column, value));
+            return $"{SqlName.QuoteIdentifier(column.Name)} = {parameterName}";
+        }));
+    }
+
+    private static InvalidOperationException InvalidKey(string lithuanian, string english, Exception? inner = null) =>
+        new(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "en" ? english : lithuanian, inner);
+
     private static ExchangeTableRow ReadCurrentRow(
         SqlDataReader reader,
         IReadOnlyList<ExchangeTableColumn> columns,
-        string? keyColumn)
+        RowKey? rowKey)
     {
         var values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
@@ -1159,9 +1225,7 @@ public sealed class DataExchangeTableService(
                 : Convert.ToString(rawValue, System.Globalization.CultureInfo.CurrentCulture) ?? string.Empty;
         }
 
-        var keyValue = !string.IsNullOrWhiteSpace(keyColumn) && values.TryGetValue(keyColumn, out var value)
-            ? value
-            : null;
+        var keyValue = EncodeRowKey(reader, rowKey);
 
         return new ExchangeTableRow(values, keyValue);
     }
@@ -1173,7 +1237,7 @@ public sealed class DataExchangeTableService(
         string actionType,
         string source,
         string tableName,
-        string? keyColumn,
+        RowKey? rowKey,
         string? keyValue,
         string actorUserName,
         IReadOnlyDictionary<string, string>? beforeValues,
@@ -1213,7 +1277,7 @@ public sealed class DataExchangeTableService(
         command.Parameters.Add("@ActionType", SqlDbType.NVarChar, 30).Value = actionType;
         command.Parameters.Add("@Source", SqlDbType.NVarChar, 50).Value = source;
         command.Parameters.Add("@TableName", SqlDbType.NVarChar, 776).Value = tableName;
-        command.Parameters.Add("@KeyColumn", SqlDbType.NVarChar, 128).Value = ToDbValue(keyColumn);
+        command.Parameters.Add("@KeyColumn", SqlDbType.NVarChar, 128).Value = ToDbValue(rowKey?.AuditLabel);
         command.Parameters.Add("@KeyValue", SqlDbType.NVarChar, 4000).Value = ToDbValue(keyValue);
         command.Parameters.Add("@ActorUser", SqlDbType.NVarChar, 256).Value =
             string.IsNullOrWhiteSpace(actorUserName) ? "unknown" : actorUserName.Trim();
@@ -1311,7 +1375,7 @@ public sealed class DataExchangeTableService(
         return columns;
     }
 
-    private async Task<string?> LoadKeyColumnAsync(
+    private async Task<RowKey?> LoadRowKeyAsync(
         SqlConnection connection,
         string tableName,
         IReadOnlyList<ExchangeTableColumn> columns,
@@ -1319,37 +1383,29 @@ public sealed class DataExchangeTableService(
     {
         await using var command = connection.CreateCommand();
         command.CommandText = """
-            SELECT TOP (1) MAX(c.name)
-            FROM sys.indexes i
-            INNER JOIN sys.index_columns ic
-                ON ic.object_id = i.object_id
-                AND ic.index_id = i.index_id
-            INNER JOIN sys.columns c
-                ON c.object_id = ic.object_id
-                AND c.column_id = ic.column_id
-            LEFT JOIN sys.key_constraints kc
-                ON kc.parent_object_id = i.object_id
-                AND kc.unique_index_id = i.index_id
-            WHERE i.object_id = OBJECT_ID(@TableName)
-                AND i.is_unique = 1
-                AND i.is_hypothetical = 0
-                AND ic.is_included_column = 0
-            GROUP BY i.index_id, kc.type
-            HAVING COUNT(*) = 1
-            ORDER BY
-                CASE WHEN kc.type = 'PK' THEN 0 ELSE 1 END,
-                i.index_id
+            SELECT c.name
+            FROM sys.index_columns ic
+            INNER JOIN sys.columns c ON c.object_id = ic.object_id AND c.column_id = ic.column_id
+            WHERE ic.object_id = OBJECT_ID(@TableName)
+              AND ic.key_ordinal > 0
+              AND ic.index_id = (
+                  SELECT TOP (1) i.index_id FROM sys.indexes i
+                  WHERE i.object_id = OBJECT_ID(@TableName)
+                    AND i.is_unique = 1 AND i.is_hypothetical = 0
+                    AND i.has_filter = 0 AND i.is_disabled = 0
+                  ORDER BY CASE WHEN i.is_primary_key = 1 THEN 0 ELSE 1 END, i.index_id)
+            ORDER BY ic.key_ordinal;
             """;
         command.Parameters.Add("@TableName", SqlDbType.NVarChar, 776).Value = tableName;
-
-        var uniqueKey = await command.ExecuteScalarAsync(cancellationToken);
-        if (uniqueKey is string uniqueKeyColumn && !string.IsNullOrWhiteSpace(uniqueKeyColumn))
+        var keyColumns = new List<ExchangeTableColumn>();
+        await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
         {
-            return uniqueKeyColumn;
+            while (await reader.ReadAsync(cancellationToken))
+                keyColumns.Add(columns.Single(column => column.Name.Equals(reader.GetString(0), StringComparison.OrdinalIgnoreCase)));
         }
-
-        return columns.FirstOrDefault(column =>
-            column.Name.Equals("ID", StringComparison.OrdinalIgnoreCase))?.Name;
+        if (keyColumns.Count > 0) return new RowKey(keyColumns);
+        var idColumn = columns.FirstOrDefault(column => column.Name.Equals("ID", StringComparison.OrdinalIgnoreCase));
+        return idColumn is null ? null : new RowKey([idColumn]);
     }
 
     private static async Task<IReadOnlyList<ExchangeUniqueKey>> LoadUniqueKeysAsync(
@@ -1452,15 +1508,15 @@ public sealed class DataExchangeTableService(
         SqlConnection connection,
         string tableName,
         IReadOnlyList<ExchangeTableColumn> columns,
-        string? keyColumn,
+        RowKey? rowKey,
         int rowLimit,
         int pageNumber,
         IReadOnlyList<ExchangeTableFilter>? filters,
         CancellationToken cancellationToken)
     {
-        var orderColumn = !string.IsNullOrWhiteSpace(keyColumn)
-            ? keyColumn
-            : columns.First().Name;
+        var orderSql = rowKey is not null
+            ? string.Join(", ", rowKey.Columns.Select(column => $"{SqlName.QuoteIdentifier(column.Name)} DESC"))
+            : $"{SqlName.QuoteIdentifier(columns.First().Name)} DESC";
 
         await using var command = connection.CreateCommand();
         var whereSql = BuildWhereClause(command, columns, filters);
@@ -1470,7 +1526,7 @@ public sealed class DataExchangeTableService(
                 SELECT *
                 FROM {tableName}
                 {whereSql}
-                ORDER BY {SqlName.QuoteIdentifier(orderColumn)} DESC
+                ORDER BY {orderSql}
                 """;
         }
         else
@@ -1481,7 +1537,7 @@ public sealed class DataExchangeTableService(
                 SELECT *
                 FROM {tableName}
                 {whereSql}
-                ORDER BY {SqlName.QuoteIdentifier(orderColumn)} DESC
+                ORDER BY {orderSql}
                 OFFSET @Offset ROWS
                 FETCH NEXT @Fetch ROWS ONLY
                 """;
@@ -1504,9 +1560,7 @@ public sealed class DataExchangeTableService(
                     : Convert.ToString(rawValue, System.Globalization.CultureInfo.CurrentCulture) ?? string.Empty;
             }
 
-            var keyValue = !string.IsNullOrWhiteSpace(keyColumn) && values.TryGetValue(keyColumn, out var value)
-                ? value
-                : null;
+            var keyValue = EncodeRowKey(reader, rowKey);
 
             rows.Add(new ExchangeTableRow(values, keyValue));
         }

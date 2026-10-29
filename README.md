@@ -4,6 +4,8 @@ Vidinis ASP.NET Core Razor Pages (.NET 9) aplikaciju HUB su Windows vartotoju at
 
 ## Versija v7.3 (2026-10-28)
 
+- 2026-10-29: DataExchange palaiko sudetinius eiluciu raktus (pvz., `LSP_ORDERS_BY_WEEKDAY_POS`: `REPORTNAME + POSID`). Redagavimas, trynimas, auditas ir atstatymas naudoja visus rakto stulpelius; rakto laukai neredaguojami. `bit` langelis po dvigubo paspaudimo turi `true / false` pasirinkima. Pakeitimus reikia patvirtinti mygtuku `Issaugoti pakeitimus`.
+
 - Puslapio antrasteje ir pradiniame puslapyje rodoma `v7.3`; aplikacijos surinkimo versija yra `7.3.0`.
 
 - Windows SSO prisijungimas sesijoje islaiko serverio patvirtinta vartotojo varda, kad griztant i HUB ar modulius IIS uzklausa be Windows tapatybes neprarastu teisiu patikros vartotojo. Nauja Windows tapatybe visada turi pirmenybe ir atnaujina jau patvirtintos sesijos varda. Negaliojanti sesija nesuteikia prieigos.
@@ -20,6 +22,9 @@ Automatines patikros be realiu prisijungimo slaptazodziu ir pranesimu siuntimo:
 ```powershell
 dotnet run --project .\Tests\HubAccess\Checks.csproj
 dotnet run --project .\Tests\CsvExport\Checks.csproj
+dotnet run --project .\Tests\DataExchangeEditing\Checks.csproj
+# Pasirinktinai: 41 patikra naudojant tik atskiras GUID SQL lenteles ir atskira audita:
+dotnet run --project .\Tests\DataExchangeEditing\Checks.csproj -- --sql
 ```
 
 Prisijungimo patikru yra 71, CSV patikru - 26. CSV GET / POST pasirinkimo narsykles patikra: `Tests/CsvExport/BrowserChecks.html`. Paleidziant DEV automatinius SESHAT siuntimus isjunkite su `--SeshatReminders:Enabled=false`. Diegima IIS uzbaikite realaus vartotojo su teisemis ir vartotojo be teisiu patikra; vien vietiniai testai IIS konfiguracijos nepatvirtina.
