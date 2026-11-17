@@ -4,6 +4,10 @@ Vidinis ASP.NET Core Razor Pages (.NET 9) aplikaciju HUB su Windows vartotoju at
 
 ## Versija v7.3 (2026-10-28)
 
+- 2026-11-17: LT operaciju uzklausose pridedamas `QUANTITY_UM`. `LT_OPERATION_PAST_DAY` ir `LT_OPERATION_BY_DATE` suvienodinta `UNION ALL` stulpeliu tvarka, kad matavimo vienetas nebutu konvertuojamas i skaiciu. Abu variantai patikrinti su `KGR`; papildoma `LT_OPERATION_BY_PERIOD` integracine patikra nutruko del SQL vykdymo laiko ribos.
+
+- 2026-11-12: APIS parametras be papildomu taisykliu pagal nutylejima leidzia `=` operatoriu. EE `EE_MANH_ADJUSTIMENT` dienos filtras palaiko tekstines ISO 8601 datas su devyniais sekundziu trupmenos skaitmenimis; datos parametras perduodamas kaip SQL `date`.
+
 - 2026-10-29: DataExchange palaiko sudetinius eiluciu raktus (pvz., `LSP_ORDERS_BY_WEEKDAY_POS`: `REPORTNAME + POSID`). Redagavimas, trynimas, auditas ir atstatymas naudoja visus rakto stulpelius; rakto laukai neredaguojami. `bit` langelis po dvigubo paspaudimo turi `true / false` pasirinkima. Pakeitimus reikia patvirtinti mygtuku `Issaugoti pakeitimus`.
 
 - Puslapio antrasteje ir pradiniame puslapyje rodoma `v7.3`; aplikacijos surinkimo versija yra `7.3.0`.
@@ -23,6 +27,9 @@ Automatines patikros be realiu prisijungimo slaptazodziu ir pranesimu siuntimo:
 dotnet run --project .\Tests\HubAccess\Checks.csproj
 dotnet run --project .\Tests\CsvExport\Checks.csproj
 dotnet run --project .\Tests\DataExchangeEditing\Checks.csproj
+dotnet run --project .\Tests\ApisParameters\Checks.csproj
+# APIS integracine patikra tik skaito EE duomenis per tikra ExecuteAsync:
+dotnet run --project .\Tests\ApisParameters\Checks.csproj -- --sql
 # Pasirinktinai: 41 patikra naudojant tik atskiras GUID SQL lenteles ir atskira audita:
 dotnet run --project .\Tests\DataExchangeEditing\Checks.csproj -- --sql
 ```

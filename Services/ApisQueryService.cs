@@ -417,7 +417,7 @@ public sealed class ApisQueryService(
     {
         if (string.IsNullOrWhiteSpace(rulesText))
         {
-            return new ApisParameterRules([], null, null, [], null, null);
+            return new ApisParameterRules([], null, null, [ExchangeTableFilter.EqualsOperator], null, null);
         }
 
         var rules = rulesText
