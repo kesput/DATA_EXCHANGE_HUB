@@ -7,7 +7,8 @@ namespace DATA_EXCHANGE_HUB.Services;
 
 public sealed class KairosAnalysisQueryService(
     IConfiguration configuration,
-    IWebHostEnvironment environment) : IKairosAnalysisQueryService
+    IWebHostEnvironment environment,
+    IQvdReportAccessService? qvdReportAccess = null) : IKairosAnalysisQueryService
 {
     private const string QueryRoot = "Sql/Kairos";
     private const int DefaultCommandTimeoutSeconds = 180;
@@ -45,6 +46,13 @@ public sealed class KairosAnalysisQueryService(
 
         var queryPath = Path.Combine(environment.ContentRootPath, query.RelativePath);
         var sql = await File.ReadAllTextAsync(queryPath, cancellationToken);
+        if (query.ConnectionName.Equals("QVD", StringComparison.OrdinalIgnoreCase))
+        {
+            using var prepared = new SqlCommand();
+            prepared.CommandText = BuildSqlWithFilters(prepared, sql, query.Filters, filters);
+            var result = await new QvdQueryService(configuration, environment, qvdReportAccess).ExecuteAsync("Kairos", query.RelativePath, sql, prepared, cancellationToken);
+            return new(result.Columns, result.Rows);
+        }
         var connectionString = configuration.GetConnectionString(query.ConnectionName)
             ?? throw new InvalidOperationException($"SQL Server prisijungimo eilute '{query.ConnectionName}' nesukonfiguruota.");
 

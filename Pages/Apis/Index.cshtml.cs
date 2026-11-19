@@ -17,7 +17,8 @@ public sealed class IndexModel(
     IQueryCountryAccessService queryCountryAccessService,
     IExcelWorkbookService excelWorkbookService,
     IMemoryCache memoryCache,
-    IWebHostEnvironment webHostEnvironment) : PageModel
+    IWebHostEnvironment webHostEnvironment,
+    IQvdReportAccessService? qvdReportAccess = null) : PageModel
 {
     [BindProperty(SupportsGet = true)]
     public bool ExcelGridlines { get; set; }
@@ -54,6 +55,21 @@ public sealed class IndexModel(
 
     public ApisQueryDefinition? SelectedQuery { get; private set; }
 
+    public ApisParameterDefinition[] ActiveOptionalParameters
+    {
+        get
+        {
+            if (SelectedQuery is null) return [];
+            var definitions = SelectedQuery.Parameters.Where(parameter => !parameter.IsRequired)
+                .ToDictionary(parameter => parameter.Name, StringComparer.OrdinalIgnoreCase);
+            return Parameters
+                .Where(parameter => !string.IsNullOrWhiteSpace(parameter.Name) && !string.IsNullOrWhiteSpace(parameter.Value))
+                .Select(parameter => definitions.GetValueOrDefault(parameter.Name))
+                .OfType<ApisParameterDefinition>()
+                .ToArray();
+        }
+    }
+
     public ApisQueryResult? Result { get; private set; }
 
     public IReadOnlyList<ApisQvdRoot> QvdRoots { get; private set; } = [];
@@ -65,6 +81,8 @@ public sealed class IndexModel(
     public string? ErrorMessage { get; private set; }
 
     public bool CanViewQvdPreview { get; private set; }
+
+    public bool CanReadQvdReports { get; private set; }
 
     public int ResultPageValue => Math.Max(1, ResultPage);
 
@@ -679,7 +697,8 @@ public sealed class IndexModel(
     }
     private void LoadQueries()
     {
-        Queries = apisQueryService.ListQueries(allowedCountries);
+        Queries = apisQueryService.ListQueries(allowedCountries)
+            .Where(query => CanReadQvdReports || !query.ConnectionName.Equals("QVD", StringComparison.OrdinalIgnoreCase)).ToArray();
         var requestedArea = string.IsNullOrWhiteSpace(Area) ? "Analytics" : Area;
         var selectedById = string.IsNullOrWhiteSpace(QueryId)
             ? null
@@ -704,12 +723,13 @@ public sealed class IndexModel(
 
     private IActionResult DenyPage()
     {
-        ErrorMessage = "Siam Windows vartotojui APIS aplikacijos USER salies teise nesuteikta.";
+        ErrorMessage ??= "Siam Windows vartotojui APIS aplikacijos USER salies teise nesuteikta.";
         return Page();
     }
 
     private async Task<bool> CanOpenAsync()
     {
+        CanReadQvdReports = false;
         try
         {
             var hasAccess = await apisAccessService.HasAccessAsync(
@@ -728,11 +748,20 @@ public sealed class IndexModel(
                 "APIS",
                 "DataExchangeSql",
                 HttpContext.RequestAborted);
+            if (allowedCountries.Count > 0 && qvdReportAccess is not null)
+                CanReadQvdReports = await qvdReportAccess.CanReadAsync("APIS", HttpContext.RequestAborted);
+            if (!CanReadQvdReports && QvdReportAccessService.IsQvdQuery(QueryId, "APIS"))
+            {
+                Response.StatusCode = StatusCodes.Status403Forbidden;
+                ErrorMessage = QvdReportAccessService.AdminOnlyMessage;
+                return false;
+            }
             return hasAccess && allowedCountries.Count > 0;
         }
         catch
         {
             CanViewQvdPreview = false;
+            CanReadQvdReports = false;
             return false;
         }
     }
@@ -816,7 +845,6 @@ public sealed class IndexModel(
             : User.Identity?.Name ?? HttpContext.Session.Id;
         var normalizedParameters = parameters
             .Where(parameter => !string.IsNullOrWhiteSpace(parameter.Name))
-            .OrderBy(parameter => parameter.Name, StringComparer.OrdinalIgnoreCase)
             .Select(parameter => $"{parameter.Name.Trim()}:{parameter.Connector.Trim()}:{parameter.Operator.Trim()}={parameter.Value?.Trim() ?? string.Empty}");
         var sqlVersion = GetQueryFileVersion(query);
         var rawKey = string.Join("|", new[] { cacheOwner, query.Id, sqlVersion }.Concat(normalizedParameters));

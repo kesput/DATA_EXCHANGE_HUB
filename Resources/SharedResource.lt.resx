@@ -1507,5 +1507,18 @@
   <data name="Hub.Security.CurrentUser" xml:space="preserve"><value>Windows vartotojas</value></data>
   <data name="Hub.Security.AccessCheckFailed" xml:space="preserve"><value>Nepavyko patikrinti dalies arba visų modulių teisių. Tai nereiškia, kad teisės nesuteiktos. Pabandykite dar kartą; jei problema kartojasi, kreipkitės į administratorių ir nurodykite čia rodomą vartotojo vardą.</value></data>
   <data name="Hub.Security.RetryAccessCheck" xml:space="preserve"><value>Tikrinti dar kartą</value></data>
+  <data name="QvdReport.QueryLabel" xml:space="preserve"><value>Ataskaitos užklausa / procedūra</value></data>
+  <data name="QvdReport.EmpSummary" xml:space="preserve"><value>Dieninių EMP_TTS QVD failų įvykių ir darbuotojų suvestinė pagal padalinį.</value></data>
+  <data name="QvdReport.DateFrom" xml:space="preserve"><value>Pirma QVD failų diena (imtinai).</value></data>
+  <data name="QvdReport.DateTo" xml:space="preserve"><value>Paskutinė QVD failų diena (imtinai).</value></data>
+  <data name="QvdReport.FlowsJoin" xml:space="preserve"><value>FLOWS_DB, EPL, IBL ir AMOUNT dieninių QVD failų jungimas pagal RECNO ir DORD. MATCH_ROWS: 0 – atitikmens nėra, 1 – rastas, daugiau nei 1 – pasikartojantis raktas; jo skaičiavimo laukai paliekami tušti.</value></data>
+  <data name="QvdReport.OwnerFilter" xml:space="preserve"><value>Pasirenkamas tikslus prekių savininko kodas. Nepasirinkus filtro rodomi visi savininkai.</value></data>
+  <data name="QvdReport.OwnerCode" xml:space="preserve"><value>Prekių savininko kodas.</value></data>
+  <data name="QvdReport.Operation" xml:space="preserve"><value>Operacijos tipas, pvz., OUTGOING OPERATION.</value></data>
+  <data name="QvdReport.ItemFilter" xml:space="preserve"><value>Pasirenkamas prekės kodo filtras. IN leidžia kelis kodus, atskirtus kableliais; LIKE – kodo fragmentą.</value></data>
+  <data name="QvdReport.PrefFilter" xml:space="preserve"><value>Pasirenkamas PREF filtras.</value></data>
+  <data name="QvdReport.PrefstockFilter" xml:space="preserve"><value>Pasirenkamas sandėlio PREFSTOCK filtras.</value></data>
+  <data name="QvdReport.DocumentFilter" xml:space="preserve"><value>Pasirenkamas dokumento DOCK filtras.</value></data>
+  <data name="QvdReport.AdminOnly" xml:space="preserve"><value>QVD užklausos prieinamos tik šio modulio ADMIN vartotojams.</value></data>
 </root>
 

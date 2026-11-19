@@ -4,6 +4,15 @@ Vidinis ASP.NET Core Razor Pages (.NET 9) aplikaciju HUB su Windows vartotoju at
 
 ## Versija v7.3 (2026-10-28)
 
+- 2026-11-19: QVD ataskaitos prieinamos tik atitinkamo modulio aktyvia ADMIN teise turintiems vartotojams. APIS / ARETE / HYDRA sarasuose USER nemato QVD vardu ir kiekiu; tiesioginis pasirinkimas, vykdymas, puslapiavimas ir eksportai blokuojami su HTTP 403. Bendras vykdiklis tikrina ADMIN ir KAIROS atveju. Esamos saliu teises islaikytos; teises tikrinamos pries cache naudojima. Praejo 158 QVD patikros, iskaitant 56 prieigos patikras.
+
+- 2026-11-19: `EE_MANH_ADJUSTIMENT` atkurtas gimtas SQL `date` parametras ir tekstines ISO datos ribos abiejose UNION dalyse. `created_at` su devyniais sekundziu trupmenos skaitmenimis nebelyginamas su implicitiniu `datetime`, kuri sukeldavo tekstiniam parametrui pritaikytas DATEADD. Su `Tests/ApisParameters -- --sql` praejo 38 patikros, iskaitant dienos ribas su sintetiniais saltiniais ir tikra ExecuteAsync LT / EN: 2026-10-23 - 201 irasas, 2026-11-19 - 7 irasai. SQL lenteles nekeistos.
+
+- 2026-11-18: QVD ataskaitu vykdymas prijungtas prie APIS, ARETE, HYDRA ir KAIROS. Palaikomi dieniniu failu sablonai, SELECT / grupavimas / JOIN ir esami eksportai. Instrukcija bei pavyzdziai pateikti skyriuje „QVD ataskaitos“. Windows-1257 skaitiniame eksporte lokalizuotas minuso zenklas normalizuojamas i ASCII, nekeičiant tekstiniu stulpeliu.
+- 2026-11-18: Pridetas `LT_FLOWS_QVD_JOIN` pagal QlikView raporto keturis dieninius QVD saltinius. Jungimo raktas `RECNO` + `DORD`, pagalbiniai raktai tikrinami per MATCH_ROWS. SQL duomenu saltiniai nejungiami. Vykdiklis i laikinas atminties lenteles kelia tik uzklausoje naudojamus stulpelius.
+- 2026-11-18: FLOWS QVD pavyzdyje prideti pasirenkami `INF_PREK`, `PREF`, `PREFSTOCK`, `DOCK` filtrai (`=`, `LIKE`, `IN`). APIS islaiko vartotojo filtru eile formoje, vykdyme ir cache rakte; OR grupe negali apeiti baziniu WHERE salygu.
+- 2026-11-18: QVD pagrindinio saltinio WHERE taikomas skaitymo metu, pries kaupiant vykdymo lentele. FLOWS pagalbiniai saltiniai atrenkami pagal jau filtruotus `RECNO` + `DORD` raktus (`QVD_MATCH`). Nuskaitymo apimties ribos atskirtos nuo po filtru atmintyje laikomu duomenu ribu.
+
 - 2026-11-17: LT operaciju uzklausose pridedamas `QUANTITY_UM`. `LT_OPERATION_PAST_DAY` ir `LT_OPERATION_BY_DATE` suvienodinta `UNION ALL` stulpeliu tvarka, kad matavimo vienetas nebutu konvertuojamas i skaiciu. Abu variantai patikrinti su `KGR`; papildoma `LT_OPERATION_BY_PERIOD` integracine patikra nutruko del SQL vykdymo laiko ribos.
 
 - 2026-11-12: APIS parametras be papildomu taisykliu pagal nutylejima leidzia `=` operatoriu. EE `EE_MANH_ADJUSTIMENT` dienos filtras palaiko tekstines ISO 8601 datas su devyniais sekundziu trupmenos skaitmenimis; datos parametras perduodamas kaip SQL `date`.
@@ -34,7 +43,7 @@ dotnet run --project .\Tests\ApisParameters\Checks.csproj -- --sql
 dotnet run --project .\Tests\DataExchangeEditing\Checks.csproj -- --sql
 ```
 
-Prisijungimo patikru yra 71, CSV patikru - 26. CSV GET / POST pasirinkimo narsykles patikra: `Tests/CsvExport/BrowserChecks.html`. Paleidziant DEV automatinius SESHAT siuntimus isjunkite su `--SeshatReminders:Enabled=false`. Diegima IIS uzbaikite realaus vartotojo su teisemis ir vartotojo be teisiu patikra; vien vietiniai testai IIS konfiguracijos nepatvirtina.
+Prisijungimo patikru yra 71, CSV patikru - 27. CSV GET / POST pasirinkimo narsykles patikra: `Tests/CsvExport/BrowserChecks.html`. Paleidziant DEV automatinius SESHAT siuntimus isjunkite su `--SeshatReminders:Enabled=false`. Diegima IIS uzbaikite realaus vartotojo su teisemis ir vartotojo be teisiu patikra; vien vietiniai testai IIS konfiguracijos nepatvirtina.
 
 ## Versija v7.2
 
@@ -69,6 +78,254 @@ v6.0 pakeitimai orientuoti i dideliu SQL rezultatu valdyma ir vienoda eksportavi
 - Po eksporto puslapyje parodomi KPI: eksportuotu eiluciu kiekis, eksportuotu stulpeliu kiekis ir formatas.
 - Po `EXECUTE` dideli rezultatai vizualizacijoje puslapiuojami po 10 000 eiluciu. SQL rezultatas saugomas cache, todel spaudziant `Ankstesnis` / `Kitas` SQL uzklausa nevykdoma is naujo.
 - Exportai naudoja pilna cache turima rezultata, todel eksportuojamos visos uzkrautos eilutes, ne tik aktyviai matomas 10 000 eiluciu puslapis.
+## QVD ataskaitos (2026-11-18)
+
+`APIS`, `ARETE`, `HYDRA` ir `KAIROS` kataloguose `QVD` yra atskiras duomenu saltinio tipas, lygiagretus `Stat3` / `VM0`. Failai ir toliau turi `.sql` pletini:
+
+- `Sql/Apis/LT/QVD/Processes/LT_EMP_TTS_QVD_SUMMARY.sql` - veikiantis pavyzdys.
+- `Sql/Arete/LT/QVD/<sritis>`, `Sql/Hydra/LT/QVD/<sritis>`, `Sql/Kairos/LT/QVD/<sritis>` - kitu moduliu keliai.
+
+`QVD` katalogo vardas yra butent toks; SQL Server jungtis vardu `QVD` nereikalinga. Lieka iprasta forma, LT / EN kalendoriai, puslapiavimas ir Excel / CSV eksportas. APIS sarase uzklausa pazymeta `(QVD)`. QVD uzklausoms papildomai reikia aktyvios **atitinkamo modulio ADMIN** teises lenteleje `BS_APP_ACCESS`: APIS ADMIN savaime nesuteikia HYDRA ADMIN. USER sarasuose QVD uzklausos ir ju kiekiai nerodomi; tiesiogines GET / POST nuorodos, eksportas ir cache puslapiavimas neapeina ribojimo. ADMIN teise tikrinama kiekvienoje uzklausoje, o bendras QVD vykdiklis taip pat neleidzia vykdyti be ADMIN politikos. Esamos modulio ir salies teises lieka galioti; failu saltinio salys / moduliai papildomai ribojami konfiguracijoje. Nauju SQL lenteliu ar naujo teisiu lygio kurti nereikia. Sena atskiro QVD failo perziura nepasikeicia.
+
+### Saltinio konfiguracija
+
+ARGUS QVD perziura naudoja `Apis:QvdRoots` katalogus. Ataskaitai galima naudoti ta pati kataloga per `PreviewRootIndex`, nekartojant jo kelio. `0` yra projekto `Data/Apis/Qvd`, `1` - pirmas netuscias `Apis:QvdRoots` katalogas, `2` - antras ir t. t. Keiciant saraso tvarka, reikia patikrinti ataskaitu indeksus. Dabartinis `LT_EMP_TTS` pavyzdys naudoja `PreviewRootIndex: 1`:
+
+```json
+{
+  "Apis": {
+    "QvdRoots": ["\\\\FILE_SERVER\\SHARE\\LT\\EMP_TTS"]
+  },
+  "QvdReports": {
+    "Sources": {
+      "LT_EMP_TTS": {
+        "PreviewRootIndex": 1,
+        "Countries": ["LT"],
+        "Modules": ["Apis", "Arete", "Hydra", "Kairos"]
+      }
+    }
+  }
+}
+```
+
+Jei ARGUS katalogas jau nurodytas, pakanka `QvdReports` dalies. ARGUS ir ataskaitos naudoja ta pacia katalogu parinkimo logika; pakeitus `Apis:QvdRoots` kelia, ji naudos abi vietos. Modulio ir salies leidimai tikrinami atskirai; ARGUS administratoriaus teises vartotojui del to nesuteikiamos. Trukstamas indeksas sukelia klaida. Saltiniui pasirenkamas tik vienas budas: `PreviewRootIndex` arba `RootPath`.
+
+Nepriklausomam saltiniui galima nurodyti `RootPath`. Ribas taip pat galima koreguoti `QvdReports` skyriuje:
+
+DEV `appsettings.Local.json`, o IIS `appsettings.Production.json`, prideti skyriu (taip pat yra `appsettings.Local.example.json`):
+
+```json
+{
+  "QvdReports": {
+    "Sources": {
+      "LT_OPERATIONS": {
+        "RootPath": "\\\\FILE_SERVER\\SHARE\\LT\\OPERATIONS",
+        "Countries": ["LT"],
+        "Modules": ["Apis", "Arete", "Hydra", "Kairos"]
+      }
+    },
+    "MaxDays": 31,
+    "MaxFiles": 256,
+    "MaxScannedRows": 10000000,
+    "MaxScanBytes": 2147483648,
+    "MaxInputRows": 1000000,
+    "MaxTotalBytes": 268435456,
+    "MaxResultRows": 100000,
+    "TimeoutSeconds": 60,
+    "MemoryLimitMb": 256
+  }
+}
+```
+
+IIS proceso paskyrai reikia skaitymo teisiu i share ir NTFS katalogus. Serveryje naudokite UNC kelia: vartotojo `Q:` diskas IIS procesui gali buti nematomas. Vykdiklis QVD failu nekuria, nekeicia ir netrina. `DuckDB.NET.Data.Full` native bibliotekos turi patekti i publish paketa; naudokite Windows x64 IIS procesa.
+
+### Kaip rasyti dieninio QVD SELECT
+
+Sukurti, pvz., `Sql/Apis/LT/QVD/Processes/LT_QVD_OPERATIONS.sql`:
+
+```sql
+-- SQL_DESCRIPTION: Operaciju suvestine is dieniniu QVD failu
+-- SQL_PARAM_MUST: @SNDATE|date||Pirma diena (imtinai)
+-- SQL_PARAM_MUST: @ENDATE|date||Paskutine diena (imtinai)
+-- SQL_PARAM_MUST: @OWNER|text||Savininko kodas
+-- QVD_SOURCE: operations|LT_OPERATIONS|{date:yyyy.MM.dd}_OPERATIONS.qvd|@SNDATE|@ENDATE
+-- QVD_COLUMN: operations|QUANTITY|decimal
+
+SELECT _QVD_DATE AS NDATE, OWNER, ITEM, SUM(QUANTITY) AS QUANTITY
+FROM operations
+WHERE OWNER = @OWNER
+GROUP BY _QVD_DATE, OWNER, ITEM
+ORDER BY _QVD_DATE, OWNER, ITEM;
+```
+
+Pasirinkus nuo `2026-11-16` iki `2026-11-17`, atidaromi tik `2026.11.16_OPERATIONS.qvd` ir `2026.11.17_OPERATIONS.qvd` saltinio kataloge. `operations` yra lenteles alias, `LT_OPERATIONS` - konfiguracijos saltinio raktas; `FROM` rasomas alias, o ne Windows failo kelias.
+
+Kelio sablonai: `Operations_{date:yyyyMMdd}.qvd`, `{date:yyyy}/{date:MM}/Operations_{date:yyyyMMdd}.qvd`. Vienos dienos uzklausai naudoti ta pati parametra abiejose ribose: `|@NDATE|@NDATE`. `*` ir `?` leidziami tik failo pavadinime, pvz. `Operations_{date:yyyyMMdd}_*.qvd`; katalogai neskaitomi rekursyviai. Statiniam failui datos parametru nereikia: `-- QVD_SOURCE: products|LT_OPERATIONS|Products.qvd`.
+
+Kiekvienas pasirinkto laikotarpio failas turi egzistuoti. Trukstama diena, sugadintas arba formavimo metu pakites failas, skirtingos dienu schemos ar virsyta riba nutraukia visa uzklausa; nepilnas rezultatas tyliai nepateikiamas. Egzistuojantis failas su 0 irasu yra leistinas. `_QVD_DATE` yra diena is failo kelio sablono (statiniam failui NULL), `_QVD_FILE` - santykinis failo kelias. Laiko juostos neperkeliamos.
+
+### Lauku tipai ir JOIN
+
+Nenurodyti QVD laukai skaitomi kaip tekstas: issaugomi kodai ir nuliai pradzioje, iskaitant Qlik dual reiksmes. Skaiciavimams tipa nurodyti komentaru `-- QVD_COLUMN: alias|LAUKAS|tipas`. Palaikomi `text`, `int`, `number` (double), `decimal` (DECIMAL(38,10)), `date`, `datetime`, `bit`. `date` / `datetime` priima ir skaitines Qlik datas. Netinkamos reiksmes neatmetamos ir neverciamos i 0 - pateikiama lauko klaida. Daugiau nei 10 trupmenos skaitmenu turinti `decimal` reiksme atmetama; tokiam saltiniui rinkites `number` arba is anksto paruostus duomenis. `_QVD_DATE` ir `_QVD_FILE` jau turi tinkamus tipus.
+
+Papildomas `QVD_SOURCE` leidzia JOIN tarp skirtingu QVD failu rinkiniu:
+
+```sql
+-- QVD_SOURCE: products|LT_OPERATIONS|Products.qvd
+SELECT o.ITEM, p.NAME, SUM(o.QUANTITY) AS QUANTITY
+FROM operations o
+LEFT JOIN products p ON p.ITEM = o.ITEM
+WHERE o.OWNER = @OWNER
+GROUP BY o.ITEM, p.NAME
+ORDER BY o.ITEM;
+```
+
+Palaikomi stulpeliai, `AS`, `WHERE`, parametrai `@VARDAS`, `ORDER BY`, `DISTINCT`, `GROUP BY`, `HAVING`, `SUM` / `COUNT` / `AVG` / `MIN` / `MAX`, `INNER` / `LEFT JOIN`, CTE, `UNION ALL` ir isorinis `TOP (sveikas_skaicius)`. `JOIN` daromas tarp deklaruotu QVD alias; tiesioginis SQL Server ir QVD JOIN vienoje uzklausoje nepalaikomas.
+
+Leidziamas vienas SELECT. Nera SQL proceduru, INSERT / UPDATE / DELETE, SELECT INTO, DDL ar savavalisko isoriniu saltiniu skaitymo. Tai SELECT poaibis, ne pilnas T-SQL serveris: naudokite `CAST` / `TRY_CAST`, o ne SQL Server `CONVERT` su stiliaus kodu. Palaikomos paprastos tekstu / skaiciu funkcijos (`UPPER`, `LOWER`, `LEN`, `LTRIM`, `RTRIM`, `TRIM`, `REPLACE`, `CONCAT`, `SUBSTRING`, `LEFT`, `RIGHT`, `ABS`, `ROUND`, `FLOOR`, `CEILING`, `COALESCE`, `NULLIF`, `ISNULL`, `YEAR`, `MONTH`, `DAY`) ir esami parametru `IN` filtrai. Nezinomos funkcijos atmetamos. Duomenys laikomi uzklausai izoliuotoje atmintyje, isoriniai DuckDB saltiniai bei extension diegimas isjungti. Vienu metu vykdomos daugiausia 2 QVD uzklausos.
+
+I vykdymo lenteles keliami tik SELECT, filtruose, JOIN, CTE, grupavime ar rikiavime pamineti QVD stulpeliai; stulpeliu vardai surenkami is SQL sintakses medzio. `SELECT *` / `alias.*` palieka visus laukus. `COUNT(*)` veikia ir neikeliant fiziniu stulpeliu reiksmiu.
+
+Failai skaitomi po viena, o pagrindinio saltinio WHERE salygos taikomos pries kaupiant vykdymo lentele. Paprasti tekstiniai `=` filtrai tikrinami pries konvertuojant kitus laukus; LIKE, IN, skaiciu ir funkciju salygos tikrinamos SQL variklyje riboto dydzio porcijomis (iki 2048 eiluciu arba apie 1 MiB tekstinio turinio). Tik atitike irasai paliekami tolimesniems JOIN. Is WHERE iskeliamas tik saugus pagrindinio saltinio salygu poaibis: OR grupe neskaidoma, kitos JOIN puses salygos neperkeliamos, pasikartojantis saltinio naudojimas / self JOIN, RIGHT / FULL JOIN ir neaiskus atvejai paliekami galutiniam SELECT. Galutine WHERE salyga islaikoma visa.
+
+QVD failai neturi siam vykdikliui prieinamo WHERE indekso: pasirinktu dienu irasus vis tiek reikia nuskaityti, o skaitytuvas atidaro vieno failo simboliu duomenis. Sumažinamas kaupiamu vykdymo duomenu kiekis, ne failu dydis diske. Failu, schemu ir pilnumo patikros galioja net ir tusciam filtravimo rezultatui.
+
+Ribos atskirtos: `MaxFiles` (256), `MaxScanBytes` (2 GiB) ir `MaxScannedRows` (10 mln.) apima visa pasirinktiniu saltiniu nuskaityma; `MaxInputRows` (1 mln.) ir `MaxTotalBytes` (256 MiB, ivertintas eiluciu turinys) apima visu saltiniu **po ankstyvu filtru** kaupiamus irasus. Viso .NET proceso atminties tai negarantuoja. Vieno failo riba lieka 128 MiB, rezultato - 100 tukst. eiluciu, DuckDB atminties - 256 MB. Virsijus riba dalinis rezultatas neatiduodamas.
+
+### Pagalbiniu QVD saltiniu atranka pagal raktus
+
+Jei pagalbine lentele reikalinga tik filtruotos pagrindines lenteles raktams, po `QVD_SOURCE` deklaraciju galima nurodyti:
+
+```sql
+-- QVD_MATCH: epl_raw|RECNO,_QVD_DATE|flows|RECNO,DORD
+```
+
+Formatas: `pagalbinis_alias|jo_raktai|anksciau_deklaruotas_alias|jo_raktai`. Saltiniu tvarka turi buti pagrindinis, tada priklausomi; raktu kiekis vienodas (iki 8). Iki JOIN / CTE grupavimo i `epl_raw` patenka tik irasai, kuriu `RECNO` ir failo diena atitinka jau atrinkto `flows` iraso `RECNO` ir `DORD`. Tikrinama tiksli SQL EXISTS salyga: islaikomi visi sutampantys dublikatai ir NULL nesutampa. Taip neprarandama MATCH_ROWS dubliu tikrinimo logika.
+
+Tai papildoma saltinio apribojimo taisykle, ne automatinis bet kokio JOIN perrasymas. Ja rasyti tik kai pagalbinio saltinio nesusije irasai negali tureti itakos rezultatui; pvz., ji netinka bendrai viso saltinio SUM, RIGHT / FULL JOIN ar nepriklausomam to saltinio naudojimui kitame CTE. Jei taisykles nera, pagalbinis saltinis lieka neapribotas. FLOWS pavyzdyje visoms trims pagalbinems lentelems si taisykle jau nurodyta.
+
+### Pasirenkami QVD filtrai APIS formoje
+
+`SQL_PARAM_MUST` deklaruoja privaloma ivesties lauka, o `SQL_PARAM` - lauka, kuri vartotojas gali pasirinkti skiltyje `Pasirinktiniai filtrai`, paspaudes `Prideti filtra`. Pasirenkamam laukui nurodomi leidziami operatoriai ir tikras SQL laukas su aliasu:
+
+```sql
+-- SQL_PARAM: @INF_PREK|text||QvdReport.ItemFilter|operators==,like,in;expr=s.INF_PREK
+-- SQL_PARAM: @PREFSTOCK|text||QvdReport.PrefstockFilter|operators==,like,in;expr=s.PREFSTOCK
+```
+
+Tame paciame SELECT po baziniu WHERE salygu ir pries ORDER BY nurodoma vieta papildomiems filtrams:
+
+```sql
+WHERE s.OWNER = @OWNER
+/* SQL_PARAM_FILTERS */
+ORDER BY s.DORD;
+```
+
+`expr=s.INF_PREK` rasomas pagal tikra uzklausos aliasa; FLOWS pavyzdyje tai `f.INF_PREK`, o ankstesniame SKC pavyzdyje - `s.INF_PREK`. Galima filtruoti ir JOIN lenteles lauka, pvz., `expr=p.PRODNAMELT`, net jei jis neitrauktas i SELECT. Tokiai deklaracijai uzklausoje turi egzistuoti atitinkamas aliasas ir QVD laukas.
+
+`=` tikrina tikslia reiksme, `LIKE` be `%` / `_` iesko fragmento, o pateikus siuos simbolius naudoja irasyta sablona. `IN` priima kelias kableliais atskirtas reiksmes. Tuscias arba nepasirinktas filtras WHERE nekeicia. Visi aktyvus papildomi filtrai apgaubiami atskirais skliaustais ir prijungiami per AND prie baziniu salygu, todel vidinis OR neapeina privalomu salygu. Vartotojo pasirinkta filtru eile islaikoma SQL generavime, pakartotinai rodant forma ir cache rakte: skirtinga AND / OR tvarka negali grazinti kito pasirinkimo rezultato. Reiksmes perduodamos kaip parametrai, ne kaip SQL tekstas. QVD LIKE atvejui naudojama jam tinkama CONCAT / REPLACE sintakse; SQL Server uzklausoms islaikyta esama LIKE sintakse.
+
+### EMP_TTS pavyzdys ir patikros
+
+DEV: APIS -> Procesai -> `LT_EMP_TTS_QVD_SUMMARY (QVD)`. Naudojamas tas pats ARGUS perziuros `EMP_TTS` katalogas (`PreviewRootIndex: 1`) ir `{date:yyyy.MM.dd}_EMP_TTS.qvd` failai. SQL pateikia dienos / padalinio ivykiu ir darbuotoju kiekiu suvestine. Nurodykite, pvz., `2026-11-17` abiejose datos ribose.
+
+```powershell
+# Atskiri mazi QVD failai, be SQL Server ir laisku:
+dotnet run --project Tests/QvdReports/Checks.csproj
+# Papildomai tik skaitymo EMP_TTS pavyzdzio patikra:
+dotnet run --project Tests/QvdReports/Checks.csproj -- --real
+```
+
+### FLOWS JOIN pagal QlikView raporta
+
+`APIS -> Procesai -> LT_FLOWS_QVD_JOIN (QVD)` yra pradinis pateikto QlikView skripto QVD dalies pavyzdys. Vykdomas tik SELECT is failu; pateikto raporto ODBC jungtys, SQL uzklausos, kainorastu / kuro / svenciu perskaiciavimai ir vadybininku duomenys neperkeliami. Pradinio skripto su prisijungimu informacija projekte nesaugome.
+
+Pavyzdzio failas: `Sql/Apis/LT/QVD/Processes/LT_FLOWS_QVD_JOIN.sql`. Naudojamos keturios saltinio `LT_FLOWS` dalys:
+
+| Alias | Failas saltinio kataloge | Jungimas |
+| --- | --- | --- |
+| `flows` | `FLOWS_DB/{date:yyyy.MM.dd}_LT_FLOWS_DB.qvd` | Pagrindiniai irasai, taikomi pateikto skripto LT_FLOWS filtrai |
+| `epl_raw` | `EPL/{date:yyyy.MM.dd}_EPL.qvd` | `RECNO` + failo diena = `flows.RECNO` + `flows.DORD` |
+| `ibl_raw` | `IBL/{date:yyyy.MM.dd}_EPL.qvd` | Tas pats raktas; IBL failo pavadinimas taip pat baigiasi `_EPL.qvd` |
+| `amount_raw` | `AMOUNT/{date:yyyy.MM.dd}_AMOUNT.qvd` | Tas pats raktas |
+
+`LT_FLOWS.RootPath` DEV konfige yra `Q:\DATA\LT\FLOWS\FLOWS_FANAS_DAYOFF`. Pateikto serverio skripto atitikmuo yra `Q:\QLIKDATA\DATA\LT\FLOWS\FLOWS_FANAS_DAYOFF`; IIS aplinkoje nurodyti proceso paskyrai pasiekiama kelia, pageidautina UNC. `appsettings.Local.example.json` papildytas atskiru `LT_FLOWS` saltiniu. EMP_TTS / ARGUS katalogo nustatymas nesikeicia.
+
+Pirmai patikrai abiejose datose rinktis `2026-11-17`. Pagal vartotojo papildyta uzklausa `@OWNER` ir `@OPERATION` yra privalomi; operacijos reiksmes pavyzdys - `OUTGOING OPERATION`. Papildomai galima pasirinkti `@INF_PREK`, `@PREF`, `@PREFSTOCK` arba `@DOCK` ir operatoriu `=`, `LIKE` ar `IN`. FLOWS pagrindiniai irasai atrenkami skaitymo metu, o EPL / IBL / AMOUNT kelia tik jau atrinktiems `RECNO` + `DORD` reikalingus irasus. Is keturiu saltiniu vis tiek skenuojamos pasirinktos dienos; nuskaitymui ir kaupiamiems duomenims taikomos atskiros ribos, aprasytos auksciau.
+
+Saugomi prekiu kodai su nuliais pradzioje. Kiekiai ir sumos yra skaiciai, `DORD` - data, iskaitant Qlik skaitines datas. `DOCK = QVU0322237` atvejui palikti `INTERNAL OPERATION` ir `FAKE` pakeitimai; `CALC` irasams palikta atskira filtro isimtis. Tuscias `INVOICEOWNER` laikomas nepatenkanciu i atmestu kodu sarasa.
+
+CTE sugrupuoja pagalbines lenteles iki vienos eilutes jungimo raktui, kad JOIN nepadaugintu kiekiu. `EPL_MATCH_ROWS`, `IBL_MATCH_ROWS`, `AMOUNT_MATCH_ROWS`: `0` - atitikmens nera, `1` - vienas atitikmuo, `>1` - pasikartojantis raktas. Pastaruoju atveju metrikos paliekamos tuscios, kad nebutu pasirinkta atsitiktine ar susumuota klaidinga reiksme. Trukstamas atitikmuo taip pat netampa nuliniu kiekiu. Jeigu operacijos `DORD` nepatenka i pasirinkta failu dienu intervala, ankstesnis failas automatiskai neikeliamas ir rodomas trukstamas atitikmuo.
+
+Tai detali keturiu QVD sujungimo lentele. Kitu raporto QVD (`PRODUCTH`, `OWNER`, `ORDERBASE`, `PRODH_DORD` ir kt.) bei istorinio `Y:` archyvo marsruto siame pavyzdyje nera. `PRODUCTH.qvd` siuo metu apie 304 MB ir virsija numatyta 128 MiB vieno failo riba; jo prijungimui reikia atskiro apimties sprendimo. Qlik asociatyvaus modelio / `WHERE EXISTS` negalima aklai pakeisti paprastu LEFT JOIN: [Qlik dokumentacija](https://help.qlik.com/en-US/qlikview/May2024/Subsystems/Client/Content/QV_QlikView/Scripting/InterRecordFunctions/Exists.htm).
+
+Sintetiniai testai tikrina kartojama RECNO skirtingomis dienomis, DORD ir failo dienos skirtuma, kelis pasikartojancius pagalbiniu lenteliu raktus, trukstamus atitikmenis, filtrus ir kiekiu tipu islaikyma. Tikru failu patikra papildomai palygina rezultato eiluciu skaiciu ir paleciu suma su atskirai nuskaitytu FLOWS_DB failu:
+
+```powershell
+dotnet run --project Tests/QvdReports/Checks.csproj -- --flows
+```
+
+Patikrinta 2026-11-18: 76 QVD patikros praejo. Tikru `2026-11-17` failu rezultatas - 93 596 eilutes, 23 stulpeliai; pirminio failo filtruotas eiluciu skaicius ir paleciu suma sutapo. Visose trijose pagalbinese lentelese kiekvienam rezultato irasui rastas vienas atitikmuo, pasikartojanciu raktu nebuvo.
+
+Po papildomu filtru prijungimo praejo 89 QVD ir 29 APIS parametru patikros. Jos apima pasirenkamu filtru AND / OR grupavima, vartotojo eiliskuma formoje ir cache rakte bei SQL Server parametru regresija. Su vartotojo papildyta privaloma salyga `OPERATION = OUTGOING OPERATION` ir `OWNER = NULL` visu savininku bandymui, tos pacios dienos tikru failu rezultatas yra 76 809 eilutes ir 23 stulpeliai; paleciu suma bei filtruotas irasu skaicius vel sutapo su atskirai nuskaitytu FLOWS_DB saltiniu.
+
+Po atrankos perkelimo i skaitymo etapa praejo 106 QVD patikros (iskaitant EMP_TTS ir FLOWS tikrus dieninius failus) bei 29 APIS parametru patikros. Atskirai patikrintas vartotojo `2026-11-01` - `2026-11-18` pavyzdys: `OWNER=SNX`, `OPERATION=OUTGOING OPERATION`, `PREFSTOCK=VN1`, `INF_PREK=M011292`. Rezultatas **451 eilute / 23 stulpeliai**; kiekis ir paleciu suma sutapo su nepriklausomai nuskaitytais pagrindiniais QVD. Is 72 failu (430 619 372 baitu) nuskaityta 4 957 207 eiluciu, bet i vykdymo lenteles pateko tik 1804: po 451 i `flows`, `epl_raw`, `ibl_raw` ir `amount_raw`. Ivertintas kaupiamu eiluciu turinys - 589 343 baitai; tai ne visas proceso RAM. DEV uzklausa truko 44,4 s.
+
+```powershell
+# Tikru 18 dienu failu filtruoto pavyzdzio patikra (be SQL jungciu):
+dotnet run --project Tests/QvdReports/Checks.csproj -- --filtered-flows
+```
+
+### QVD rezultatu atminties matavimas (2026-11-18)
+
+`Tests/QvdMemory` yra atskiras matavimo irankis, nekeiciantis web konfiguracijos ir QVD failu. Is realaus `2026.11.17_LT_FLOWS_DB.qvd` (98 923 eilutes) visu lauku parenkami 15 didziausia vidutini tekstini ilgi turinciu lauku. Saugomi tik lauku vardai ir ilgiu histogramos, ne pradines reiksmes. Is tu ilgiu sugeneruojama ir realiai atmintyje sukuriama po 500 tukst. / 1 mln. rezultato eiluciu. Tai apimties modeliavimas pagal realiu lauku ilgius, ne tiek skirtingu realaus QVD irasu nuskaitymas.
+
+Parinkti laukai: `OPERATION_KAY`, `ISKRVIET`, `PRODH_DORD_K`, `NW_JOIN_KAY`, `PREF_PCK_TMP`, `OPERATION`, `RECNO`, `ORG`, `SKC_RECNO`, `DOCK_DAL`, `PAL_DAL`, `MIX_PAL_DAL`, `SENT2WAREHOUSETIME`, `ORD_DAL`, `ORGBRIEF`. Bendra vidutine eilutes tekstu apimtis - 305,84 simbolio; visu 15 lauku didziausiu rastu ilgiu suma - 573 simboliai. Pastarasis scenarijus konservatyvus: kiekviename lauke vienu metu naudojamas jo maksimumas.
+
+Rezultatas kuriamas tokia pacia struktura kaip vykdiklyje: kiekvienai eilutei atskiras `Dictionary<string, string?>`, reiksmes - atskiri tekstiniai objektai, visi irasai laikomi sarase. GB cia yra 1 000 000 000 baitu.
+
+| Scenarijus | 500 000 eiluciu | 1 000 000 eiluciu |
+| --- | ---: | ---: |
+| Vien laikomas rezultatas, realiu ilgiu pasiskirstymas | 0,80 GB | 1,60 GB |
+| Vien laikomas rezultatas, visu lauku maksimalus ilgis | 1,08 GB | 2,15 GB |
+| Rezultato kurimo proceso privataus atminties kiekio pikas, realiu ilgiu pasiskirstymas | 0,90 GB | 1,78 GB |
+| Rezultato kurimo proceso privataus atminties kiekio pikas, visu lauku maksimalus ilgis | 1,20 GB | 2,38 GB |
+
+Fizinio working set pikai buvo atitinkamai 0,93 / 1,81 GB ir 1,23 / 2,40 GB. Laikomo rezultato eilutese atimta pradine valdoma atmintis; procesu pikuose itraukta nedidele matavimo programos baze. Tai .NET 9 Windows x64 konsoles proceso matavimas; IIS bazine atmintis, GC politika, QVD skaitytuvas, JOIN, HTML ir eksportas papildomi. Cache naudoja ta pati rezultato objekta, taciau skirtingi uzklausu / parametru / vartotoju rezultatai gali kauptis atskirai.
+
+Atskirame paprastos 15 VARCHAR stulpeliu lenteles DuckDB + rezultato formavimo bandyme su dabartine `memory_limit=256MB` ir isjungtu diskiniu laikinu saugojimu 500 tukst. realiu ilgiu pasiskirstymo eiluciu pasieke 1,46 GB privataus proceso atminties pika. Vadinasi, DuckDB limitas neriboja viso .NET proceso. 1 mln. bandymas sustojo kraunant apie 614 tukst. ivesties eiluciu; maksimaliu ilgiu bandymai sustojo ties mazdaug 410 tukst. eiluciu. Sie bandymai neskaito tikru QVD dar karta, nedaro JOIN ir neeksportuoja Excel; native duomenims generuojamas ASCII tekstas pagal tuos pacius UTF-16 ilgius.
+
+Matavimo metu galiojusios rezultato ribos islaikytos: iki 100 tukst. rezultato eiluciu, 32 mln. bendru rezultato teksto simboliu, 256 MB DuckDB limitas, daugiausia 2 vienu metu vykdomos QVD uzklausos. Veliau atskirtos 10 mln. nuskaitymo ir 1 mln. po filtru kaupiamu ivesties eiluciu ribos, aprasytos auksciau. Ilgiu maksimumu scenarijuje teksto riba butu pasiekta ties 55 847 eilute, net pakelus eiluciu riba. Matavimo irankis eiluciu / teksto ribu netaiko, bet sustoja, jei lieka maziau nei 512 MiB fizines ar commit atminties arba procesas virsija 2304 MiB privataus kiekio. Keturi vien rezultato bandymai pasieke visa prasoma eiluciu skaiciu.
+
+Pakartojimas (naudoti atskirus procesus nuosekliai):
+
+```powershell
+dotnet run --project Tests/QvdMemory/Checks.csproj -- profile Q:/DATA/LT/FLOWS/FLOWS_FANAS_DAYOFF/FLOWS_DB/2026.11.17_LT_FLOWS_DB.qvd .buildcheck/qvd-memory/profile.json
+dotnet run --project Tests/QvdMemory/Checks.csproj -- run .buildcheck/qvd-memory/profile.json result 500000 observed .buildcheck/qvd-memory/result-500000-observed.json
+dotnet run --project Tests/QvdMemory/Checks.csproj -- run .buildcheck/qvd-memory/profile.json result 1000000 max .buildcheck/qvd-memory/result-1000000-max.json
+dotnet run --project Tests/QvdMemory/Checks.csproj -- run .buildcheck/qvd-memory/profile.json pipeline 500000 observed .buildcheck/qvd-memory/pipeline-500000-observed.json
+```
+
+`observed` naudoja realu kiekvieno lauko ilgiu pasiskirstyma, `max` - kiekvieno lauko ilgio maksimuma. `result` matuoja vien galutine rezultato struktura; `pipeline` papildomai krauna DuckDB lentele ir skaito jos SELECT. JSON ataskaitose atskirai pateikiami managed, private ir working set matavimai; jos laikomos ignoruojamame `.buildcheck/qvd-memory` kataloge.
+
+### Planuojamas diskinis rezultatu saugojimas ir valymas
+
+Tai busimo diskinio rezimo reikalavimai; dabartinis QVD vykdiklis rezultatus dar laiko atmintyje. Dideliu uzklausu JOIN, WHERE ir stulpeliu atranka bus atliekami pries issaugant galutini rezultata diske. Puslapiavimas ir eksportas naudos ta pati paruosta rezultata, jo viso neikeldami i RAM. Vykdymo metu prireikus bus leidziami ir kontroliuojami laikini tarpiniai duomenys diske.
+
+Laikini rezultatai turi buti susieti su konkrecia prisijungimo sesija ir atsitiktiniu rezultato identifikatoriumi. Vien vartotojo vardo nepakanka: atskiros to paties vartotojo sesijos neturi trinti viena kitos aktyviu rezultatu. Visi galutiniai rezultatai, tarpiniai duomenys ir laikini eksportai laikomi atskirame, viesai nepasiekiamame `App_Data/QueryResults` kataloge. Valymas apima tik si katalogu medi ir jam priklausancius irasus.
+
+Numatytas gyvavimo ciklas:
+
+- Atsijungus, panaikinus sesija ar pakeitus patvirtinta prisijungimo tapatybe, tos sesijos rezultatai atsaukiami ir paruosiami istrynimui.
+- Pasibaigus sesijai ar rezultato galiojimui, jo failai ir nuorodos cache pasalinami. Rezultatu pradiniai, konfiguruojami terminai derinami su esamu cache: 20 min. be naudojimo, daugiausia 1 val. nuo sukurimo. Ilgesne HUB sesija (siuo metu 8 val. neaktyvumo) rezultato galiojimo nepratesia virs sio maksimumo.
+- Uzdarius narsykle serveris ne visada gauna patikima pranesima. Tokius likucius surenka periodinis valymas, numatytai kas 5 min.; narsykles uzdarymo ivykis gali tik paspartinti, bet negali buti vienintelis valymo mechanizmas.
+- Pakartotinai suformavus ta pati vaizda, senas nebereikalingas rezultatas istrinamas. Nesekmingai, atsauktai ar nutrukusiai uzklausai sukurti daliniai failai valomi ir klaidos atveju.
+- Vienkartiniai eksporto failai istrinami uzbaigus arba nutraukus ju perdavima. Aktyviai skaitomas / rasomas rezultatas turi naudojimo zyme: istrynimas atidedamas iki skaitymo ar eksporto uzbaigimo; jau atsauktam rezultatui nauji skaitymai nebeleidziami.
+- Paleidus aplikacija ir periodiskai tikrinami po IIS persikrovimo, proceso nutrukimo ar nepavykusio trynimo like pasene / nebepriklausantys aktyviai sesijai failai. Valymas turi atsizvelgti i dar veikiancio IIS proceso aktyvu skaityma, jei procesu paleidimas persidengia.
+- Nepavykes trynimas registruojamas ir kartojamas kitu valymo ciklu. Ilgai nenaudojami rezultatai negali likti diske vien del prarasto cache iraso ar sesijos pabaigos pranesimo.
+
+Pries kiekviena trynima turi buti patikrintas absoliutus kelias ir jo priklausymas valomam katalogui; bendru duomenu katalogu rekursyvus valymas neleidziamas. Realizavimo patikros tures apimti atsijungima, galiojimo pabaiga be narsykles pranesimo, uzklausos atsaukima, aktyvu eksporta, IIS persikrovima ir atskiru sesiju izoliavima.
+
 ## Paleidimas
 
 LT ir EN vartotojo sasajos tekstai saugomi `Resources/SharedResource.lt.resx` ir `Resources/SharedResource.en.resx`. Puslapiai juos naudoja per `L[...]`, o dinaminiai naršykles pranesimai gauna tik reikiamus vertimus is `Pages/Shared/_ClientLocalization.cshtml`. SQL parametru ir uzklausu aprasymai taip pat lokalizuojami pagal komentaro teksta. Keiciant tekstus reikia atnaujinti abi kalbas, islaikyti vienodus formatavimo argumentus ir nekeisti formu lauku vardu bei siunciamu techniniu reiksmiu.

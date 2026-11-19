@@ -242,11 +242,11 @@
                         <form method="post" class="d-grid gap-3" id="apisQueryForm">
                             <div class="row g-3 align-items-end">
                                 <div class="col-lg-8">
-                                    <label class="form-label" asp-for="QueryId">@L["SQL select / procedura"]</label>
+                                    <label class="form-label" asp-for="QueryId">@L["QvdReport.QueryLabel"]</label>
                                     <select class="form-select" asp-for="QueryId" id="apisQuerySelect">
                                         @foreach (var query in areaQueries)
                                         {
-                                            <option value="@query.Id">@query.Name (@(query.CommandType.Equals("Procedure", StringComparison.OrdinalIgnoreCase) ? "PROC" : "SQL"))</option>
+                                            <option value="@query.Id">@query.Name (@(query.ConnectionName.Equals("QVD", StringComparison.OrdinalIgnoreCase) ? "QVD" : query.CommandType.Equals("Procedure", StringComparison.OrdinalIgnoreCase) ? "PROC" : "SQL"))</option>
                                         }
                                     </select>
                                 </div>
@@ -280,11 +280,7 @@
                                     .Where(parameter => !parameter.IsRequired)
                                     .OrderBy(parameter => parameter.Name, StringComparer.OrdinalIgnoreCase)
                                     .ToArray();
-                                var activeOptionalParameters = optionalParameters
-                                    .Where(parameter => Model.Parameters.Any(value =>
-                                        value.Name.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase) &&
-                                        !string.IsNullOrWhiteSpace(value.Value)))
-                                    .ToArray();
+                                var activeOptionalParameters = Model.ActiveOptionalParameters;
                                 <div class="hub-board apis-parameter-board" data-apis-required-parameter-count="@requiredParameters.Length">
                                     <div class="section-title-row compact">
                                         <h3>@L["Parametrai"]</h3>

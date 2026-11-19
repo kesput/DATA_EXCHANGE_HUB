@@ -7,10 +7,12 @@ namespace DATA_EXCHANGE_HUB.Services;
 
 public sealed class HydraQueryService(
     IConfiguration configuration,
-    IWebHostEnvironment environment) : IHydraQueryService
+    IWebHostEnvironment environment,
+    IQvdReportAccessService? qvdReportAccess = null) : IHydraQueryService
 {
     private const string QueryRoot = "Sql/Hydra";
     private const int DefaultCommandTimeoutSeconds = 180;
+    private const string OptionalFilterPlaceholder = "/* SQL_PARAM_FILTERS */";
 
     public IReadOnlyList<HydraQueryDefinition> ListQueries() => ListQueries(null);
 
@@ -44,6 +46,18 @@ public sealed class HydraQueryService(
 
         var queryPath = Path.Combine(environment.ContentRootPath, query.RelativePath);
         var sql = await File.ReadAllTextAsync(queryPath, cancellationToken);
+        if (query.ConnectionName.Equals("QVD", StringComparison.OrdinalIgnoreCase))
+        {
+            using var prepared = new SqlCommand();
+            var qvdParameters = ApisQueryService.ReadParameterDefinitions(queryPath);
+            var parameterQuery = new ApisQueryDefinition(query.Id, query.Name, query.ConnectionName, query.Area,
+                query.RelativePath, "Text", null, "", qvdParameters);
+            ApisQueryService.AddNamedParameters(prepared, parameterQuery, filters?.Select(filter =>
+                new ApisParameterValue(filter.ColumnName, filter.Value, filter.Operator, filter.Connector)).ToArray());
+            prepared.CommandText = BuildSqlWithFilters(prepared, sql, query.Filters, filters);
+            var result = await new QvdQueryService(configuration, environment, qvdReportAccess).ExecuteAsync("Hydra", query.RelativePath, sql, prepared, cancellationToken);
+            return new(result.Columns, result.Rows);
+        }
         var connectionString = configuration.GetConnectionString(query.ConnectionName)
             ?? throw new InvalidOperationException($"SQL Server prisijungimo eilute '{query.ConnectionName}' nesukonfiguruota.");
 
@@ -116,7 +130,7 @@ public sealed class HydraQueryService(
 
     private static IReadOnlyList<HydraFilterDefinition> ReadFilterDefinitions(string filePath)
     {
-        return File
+        var definitions = File
             .ReadLines(filePath)
             .Select(line => line.Trim())
             .Select(TryReadFilterLine)
@@ -145,6 +159,10 @@ public sealed class HydraQueryService(
                     item.Parts.Length >= 3 ? NormalizeFilterDataType(item.Parts[2]) : "text"),
                 item.Parts.Length >= 5 ? item.Parts[4] : string.Empty))
             .ToArray();
+        if (!filePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Contains("QVD", StringComparer.OrdinalIgnoreCase)) return definitions;
+        return definitions.Concat(ApisQueryService.ReadParameterDefinitions(filePath).Select(parameter =>
+            new HydraFilterDefinition(parameter.Name, parameter.Name, parameter.IsRequired, parameter.DataType,
+                parameter.AllowedOperators, parameter.Description, IsQueryParameter: true))).ToArray();
     }
 
     private static (bool IsRequired, string Definition)? TryReadFilterLine(string line)
@@ -178,7 +196,7 @@ public sealed class HydraQueryService(
 
         if (filters.Count == 0 || filters.All(filter => !filter.IsActive))
         {
-            return sql;
+            return sql.Replace(OptionalFilterPlaceholder, string.Empty, StringComparison.OrdinalIgnoreCase);
         }
 
         var allowedFilters = filterDefinitions.ToDictionary(
@@ -194,6 +212,8 @@ public sealed class HydraQueryService(
                 throw new InvalidOperationException($"Netinkamas HYDRA filtro laukas: {filter.ColumnName}");
             }
 
+            if (definition.IsQueryParameter) continue;
+
             var connectorSql = clauses.Count == 0
                 ? string.Empty
                 : GetFilterConnectorSql(filter.Connector);
@@ -203,10 +223,13 @@ public sealed class HydraQueryService(
 
         if (clauses.Count == 0)
         {
-            return sql;
+            return sql.Replace(OptionalFilterPlaceholder, string.Empty, StringComparison.OrdinalIgnoreCase);
         }
 
-        return $"{sql.TrimEnd().TrimEnd(';')}{Environment.NewLine}AND {string.Join(" ", clauses)}";
+        var filterSql = "AND " + string.Join(" ", clauses);
+        return sql.Contains(OptionalFilterPlaceholder, StringComparison.OrdinalIgnoreCase)
+            ? sql.Replace(OptionalFilterPlaceholder, filterSql, StringComparison.OrdinalIgnoreCase)
+            : $"{sql.TrimEnd().TrimEnd(';')}{Environment.NewLine}{filterSql}";
     }
 
     private static void ValidateRequiredFilters(

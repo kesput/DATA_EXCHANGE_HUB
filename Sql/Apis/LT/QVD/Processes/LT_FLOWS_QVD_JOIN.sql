@@ -1,0 +1,100 @@
+-- SQL_DESCRIPTION: QvdReport.FlowsJoin
+-- SQL_PARAM_MUST: @SNDATE|date||QvdReport.DateFrom
+-- SQL_PARAM_MUST: @ENDATE|date||QvdReport.DateTo
+-- SQL_PARAM_MUST: @OWNER|text||QvdReport.OwnerCode
+-- SQL_PARAM_MUST: @OPERATION|text||QvdReport.Operation
+-- SQL_PARAM: @INF_PREK|text||QvdReport.ItemFilter|operators==,like,in;expr=f.INF_PREK
+-- SQL_PARAM: @PREF|text||QvdReport.PrefFilter|operators==,like,in;expr=f.PREF
+-- SQL_PARAM: @PREFSTOCK|text||QvdReport.PrefstockFilter|operators==,like,in;expr=f.PREFSTOCK
+-- SQL_PARAM: @DOCK|text||QvdReport.DocumentFilter|operators==,like,in;expr=f.DOCK
+-- QVD_SOURCE: flows|LT_FLOWS|FLOWS_DB/{date:yyyy.MM.dd}_LT_FLOWS_DB.qvd|@SNDATE|@ENDATE
+-- QVD_SOURCE: epl_raw|LT_FLOWS|EPL/{date:yyyy.MM.dd}_EPL.qvd|@SNDATE|@ENDATE
+-- QVD_SOURCE: ibl_raw|LT_FLOWS|IBL/{date:yyyy.MM.dd}_EPL.qvd|@SNDATE|@ENDATE
+-- QVD_SOURCE: amount_raw|LT_FLOWS|AMOUNT/{date:yyyy.MM.dd}_AMOUNT.qvd|@SNDATE|@ENDATE
+-- QVD_MATCH: epl_raw|RECNO,_QVD_DATE|flows|RECNO,DORD
+-- QVD_MATCH: ibl_raw|RECNO,_QVD_DATE|flows|RECNO,DORD
+-- QVD_MATCH: amount_raw|RECNO,_QVD_DATE|flows|RECNO,DORD
+-- QVD_COLUMN: flows|DORD|date
+-- QVD_COLUMN: flows|PAL_DAL|number
+-- QVD_COLUMN: flows|BRUTTO_KG|number
+-- QVD_COLUMN: epl_raw|CALC_PLL_DAL|number
+-- QVD_COLUMN: epl_raw|EPL_DAL|number
+-- QVD_COLUMN: ibl_raw|PAL_DAL_IBL_EXT|number
+-- QVD_COLUMN: amount_raw|AMOUNT_IN_TOTAL_SUM|number
+-- QVD_COLUMN: amount_raw|AMOUNT_OUT_TOTAL_SUM|number
+-- QVD_COLUMN: amount_raw|AMOUNT_RETURN_TARE_SUM|number
+-- SQL_EXCEL_NUMBER: PAL_DAL|0.00000
+-- SQL_EXCEL_NUMBER: BRUTTO_KG|0.000006PPrtOhaL
+-- SQL_EXCEL_NUMBER: CALC_PLL_DAL|0.00000
+-- SQL_EXCEL_NUMBER: EPL_DAL|0.00000
+-- SQL_EXCEL_NUMBER: PAL_DAL_IBL_EXT|0.00000
+-- SQL_EXCEL_NUMBER: AMOUNT_IN_TOTAL_SUM|0.00000
+-- SQL_EXCEL_NUMBER: AMOUNT_OUT_TOTAL_SUM|0.00000
+-- SQL_EXCEL_NUMBER: AMOUNT_RETURN_TARE_SUM|0.00000
+
+-- QVD-only starting point from the supplied QlikView report; no database sources.
+-- Qlik's RECNODORD is flows.RECNO + flows.DORD, versus RECNO + file day in the other sources.
+-- Keep one joined row per key. Duplicate keys yield empty metrics and a MATCH_ROWS count > 1.
+WITH epl AS (
+    SELECT RECNO, _QVD_DATE, COUNT(*) AS MATCH_ROWS,
+        CASE WHEN COUNT(*) = 1 THEN MAX(CALC_PLL_DAL) END AS CALC_PLL_DAL,
+        CASE WHEN COUNT(*) = 1 THEN MAX(EPL_DAL) END AS EPL_DAL
+    FROM epl_raw
+    GROUP BY RECNO, _QVD_DATE
+), ibl AS (
+    SELECT RECNO, _QVD_DATE, COUNT(*) AS MATCH_ROWS,
+        CASE WHEN COUNT(*) = 1 THEN MAX(IBL_CAT_NEW) END AS IBL_CAT_NEW,
+        CASE WHEN COUNT(*) = 1 THEN MAX(PAL_DAL_IBL_EXT) END AS PAL_DAL_IBL_EXT
+    FROM ibl_raw
+    GROUP BY RECNO, _QVD_DATE
+), amount AS (
+    SELECT RECNO, _QVD_DATE, COUNT(*) AS MATCH_ROWS,
+        CASE WHEN COUNT(*) = 1 THEN MAX(AMOUNT_IN_TOTAL_SUM) END AS AMOUNT_IN_TOTAL_SUM,
+        CASE WHEN COUNT(*) = 1 THEN MAX(AMOUNT_OUT_TOTAL_SUM) END AS AMOUNT_OUT_TOTAL_SUM,
+        CASE WHEN COUNT(*) = 1 THEN MAX(AMOUNT_RETURN_TARE_SUM) END AS AMOUNT_RETURN_TARE_SUM
+    FROM amount_raw
+    GROUP BY RECNO, _QVD_DATE
+)
+SELECT
+    f._QVD_DATE AS QVD_DATE,
+    f.DORD,
+    f.RECNO,
+    f.OWNER,
+    f.INF_PREK,
+    f.DOCK,
+    f.PREF,
+    f.PREFSTOCK,
+    CASE WHEN f.DOCK = 'QVU0322237' THEN 'INTERNAL OPERATION' ELSE f.OPERATION END AS OPERATION,
+    f.MOVEMENT_TYPE,
+    CASE WHEN f.DOCK = 'QVU0322237' THEN 'FAKE' ELSE f.OPER_STATUS END AS OPER_STATUS,
+    f.PAL_DAL,
+    f.BRUTTO_KG,
+    e.CALC_PLL_DAL,
+    e.EPL_DAL,
+    i.IBL_CAT_NEW,
+    i.PAL_DAL_IBL_EXT,
+    a.AMOUNT_IN_TOTAL_SUM,
+    a.AMOUNT_OUT_TOTAL_SUM,
+    a.AMOUNT_RETURN_TARE_SUM,
+    COALESCE(e.MATCH_ROWS, 0) AS EPL_MATCH_ROWS,
+    COALESCE(i.MATCH_ROWS, 0) AS IBL_MATCH_ROWS,
+    COALESCE(a.MATCH_ROWS, 0) AS AMOUNT_MATCH_ROWS
+FROM flows f
+LEFT JOIN epl e ON e.RECNO = f.RECNO AND e._QVD_DATE = f.DORD
+LEFT JOIN ibl i ON i.RECNO = f.RECNO AND i._QVD_DATE = f.DORD
+LEFT JOIN amount a ON a.RECNO = f.RECNO AND a._QVD_DATE = f.DORD
+WHERE (@OWNER IS NULL OR f.OWNER = @OWNER)
+    AND f.OPERATION=@OPERATION
+  AND (
+    (
+        LEN(f.PREF) > 1
+        AND (LEFT(f.PREF, 2) = 'VB' OR LEFT(f.PREFSTOCK, 1) = 'W'
+            OR (LEFT(f.PREF, 2) <> 'VB' AND f.OPERATION = 'INCOMING OPERATION'))
+        AND f.PREF <> 'MTD'
+        AND COALESCE(f.INVOICEOWNER, '') NOT IN ('EOR', 'IC', 'PCCLT', 'UVSLT')
+        AND NOT (f.MOVEMENT_TYPE = 'PARCEL' AND f.OPERATION = 'INCOMING OPERATION')
+    )
+    OR f.OPER_STATUS = 'CALC'
+  )
+/* SQL_PARAM_FILTERS */
+ORDER BY f._QVD_DATE, f.DORD, f.RECNO;

@@ -10,8 +10,12 @@ public static class CsvExportEncoding
     public static string? InvariantNumber(string? value, string? valueCulture)
     {
         if (value is null || valueCulture is null) return value;
-        var separator = CultureInfo.GetCultureInfo(valueCulture).NumberFormat.NumberDecimalSeparator;
-        return separator == "." ? value : value.Replace(separator, ".", StringComparison.Ordinal);
+        var format = CultureInfo.GetCultureInfo(valueCulture).NumberFormat;
+        if (format.NegativeSign != "-" && format.NegativeSign.Length > 0)
+            value = value.Replace(format.NegativeSign, "-", StringComparison.Ordinal);
+        if (format.PositiveSign != "+" && format.PositiveSign.Length > 0)
+            value = value.Replace(format.PositiveSign, "+", StringComparison.Ordinal);
+        return format.NumberDecimalSeparator == "." ? value : value.Replace(format.NumberDecimalSeparator, ".", StringComparison.Ordinal);
     }
 
     private static readonly Encoding Baltic = CreateBalticEncoding();

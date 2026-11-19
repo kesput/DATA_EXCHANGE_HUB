@@ -11,7 +11,8 @@ public sealed class IndexModel(
     IAreteAccessService areteAccessService,
     IQueryCountryAccessService queryCountryAccessService,
     IExcelWorkbookService excelWorkbookService,
-    Microsoft.Extensions.Caching.Memory.IMemoryCache memoryCache) : PageModel
+    Microsoft.Extensions.Caching.Memory.IMemoryCache memoryCache,
+    IQvdReportAccessService? qvdReportAccess = null) : PageModel
 {
     [BindProperty(SupportsGet = true)]
     public bool ExcelGridlines { get; set; }
@@ -35,6 +36,8 @@ public sealed class IndexModel(
     public AreteQueryDefinition? SelectedQuery { get; private set; }
 
     public string? ErrorMessage { get; private set; }
+
+    public bool CanReadQvdReports { get; private set; }
     public int ResultPageValue => Math.Max(1, ResultPage);
 
     public int ResultTotalRows => Result?.Rows.Count ?? 0;
@@ -189,8 +192,9 @@ public IReadOnlyList<AreteRequiredFilterRow> RequiredFilterRows =>
         return Page();
     }
 
-    public IActionResult OnPostResultPageAsync()
+    public async Task<IActionResult> OnPostResultPageAsync()
     {
+        if (!await CanOpenAsync()) return DenyPage();
         LoadQueries();
         ActiveFilters = BuildFilters();
         SelectedQuery = Queries.FirstOrDefault(query =>
@@ -485,7 +489,8 @@ public IReadOnlyList<AreteRequiredFilterRow> RequiredFilterRows =>
 
     private void LoadQueries()
     {
-        Queries = areteQueryService.ListQueries(allowedCountries);
+        Queries = areteQueryService.ListQueries(allowedCountries)
+            .Where(query => CanReadQvdReports || !query.ConnectionName.Equals("QVD", StringComparison.OrdinalIgnoreCase)).ToArray();
         if (string.IsNullOrWhiteSpace(QueryId))
         {
             var requestedArea = GetKnownArea(AreteArea);
@@ -508,12 +513,13 @@ public IReadOnlyList<AreteRequiredFilterRow> RequiredFilterRows =>
 
     private IActionResult DenyPage()
     {
-        ErrorMessage = "Siam Windows vartotojui ARETE aplikacijos USER salies teise nesuteikta.";
+        ErrorMessage ??= "Siam Windows vartotojui ARETE aplikacijos USER salies teise nesuteikta.";
         return Page();
     }
 
     private async Task<bool> CanOpenAsync()
     {
+        CanReadQvdReports = false;
         try
         {
             var hasAccess = await areteAccessService.HasAccessAsync(
@@ -522,10 +528,19 @@ public IReadOnlyList<AreteRequiredFilterRow> RequiredFilterRows =>
             allowedCountries = hasAccess
                 ? await queryCountryAccessService.GetUserCountriesAsync(User, "ARETE", "DataExchangeSql", HttpContext.RequestAborted)
                 : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (hasAccess && allowedCountries.Count > 0 && qvdReportAccess is not null)
+                CanReadQvdReports = await qvdReportAccess.CanReadAsync("ARETE", HttpContext.RequestAborted);
+            if (!CanReadQvdReports && QvdReportAccessService.IsQvdQuery(QueryId, "ARETE"))
+            {
+                Response.StatusCode = StatusCodes.Status403Forbidden;
+                ErrorMessage = QvdReportAccessService.AdminOnlyMessage;
+                return false;
+            }
             return hasAccess && allowedCountries.Count > 0;
         }
         catch
         {
+            CanReadQvdReports = false;
             return false;
         }
     }

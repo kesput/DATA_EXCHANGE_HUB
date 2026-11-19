@@ -7,7 +7,8 @@ namespace DATA_EXCHANGE_HUB.Services;
 
 public sealed class AreteQueryService(
     IConfiguration configuration,
-    IWebHostEnvironment environment) : IAreteQueryService
+    IWebHostEnvironment environment,
+    IQvdReportAccessService? qvdReportAccess = null) : IAreteQueryService
 {
     private const string QueryRoot = "Sql/Arete";
     private const int DefaultCommandTimeoutSeconds = 180;
@@ -45,6 +46,13 @@ public sealed class AreteQueryService(
 
         var queryPath = Path.Combine(environment.ContentRootPath, query.RelativePath);
         var sql = await File.ReadAllTextAsync(queryPath, cancellationToken);
+        if (query.ConnectionName.Equals("QVD", StringComparison.OrdinalIgnoreCase))
+        {
+            using var prepared = new SqlCommand();
+            prepared.CommandText = BuildSqlWithFilters(prepared, sql, query.Filters, filters);
+            var result = await new QvdQueryService(configuration, environment, qvdReportAccess).ExecuteAsync("Arete", query.RelativePath, sql, prepared, cancellationToken);
+            return new(result.Columns, result.Rows);
+        }
         var connectionString = configuration.GetConnectionString(query.ConnectionName)
             ?? throw new InvalidOperationException($"SQL Server prisijungimo eilute '{query.ConnectionName}' nesukonfiguruota.");
 

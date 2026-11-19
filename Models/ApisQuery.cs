@@ -36,4 +36,5 @@ public sealed record ApisQueryResult(
     IReadOnlyList<string> Columns,
     IReadOnlyList<IReadOnlyDictionary<string, string?>> Rows,
     IReadOnlySet<string>? NumericColumns = null,
-    string? ValueCulture = null);
+    string? ValueCulture = null,
+    QvdReadStatistics? ReadStatistics = null);

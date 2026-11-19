@@ -14,7 +14,8 @@ public sealed record HydraFilterDefinition(
     bool IsRequired,
     string DataType,
     IReadOnlyList<string> AllowedOperators,
-    string Description = "");
+    string Description = "",
+    bool IsQueryParameter = false);
 
 public sealed record HydraQueryResult(
     IReadOnlyList<string> Columns,

@@ -1,8 +1,8 @@
 -- SQL_DESCRIPTION: Pagal data atvedama ADJUSTIMENT informacija, kurioje nurodoma kokiu budu buvo atliktas likuciu koregavimas (status change arba adjustment).
 -- SQL_PARAM_MUST: @DATE|date||Koregavimo data. Rodomi pasirinktos dienos irasai.
 
--- created_at is ISO 8601 text with up to nine fractional-second digits.
--- Keep both range bounds as text: implicit datetime conversion rejects these values.
+-- created_at contains ISO 8601 text with up to nine fractional-second digits.
+-- Text bounds avoid implicit conversion of the source timestamps to datetime.
 DECLARE @DateFrom nvarchar(10) = CONVERT(nvarchar(10), @DATE, 23);
 DECLARE @DateTo nvarchar(10) = CONVERT(nvarchar(10), DATEADD(DAY, 1, @DATE), 23);
 

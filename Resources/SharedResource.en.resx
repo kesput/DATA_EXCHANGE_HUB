@@ -1507,5 +1507,18 @@
   <data name="Hub.Security.CurrentUser" xml:space="preserve"><value>Windows user</value></data>
   <data name="Hub.Security.AccessCheckFailed" xml:space="preserve"><value>Some or all module permissions could not be checked. This does not mean that access has not been assigned. Try again; if the problem persists, contact an administrator and provide the username shown here.</value></data>
   <data name="Hub.Security.RetryAccessCheck" xml:space="preserve"><value>Check again</value></data>
+  <data name="QvdReport.QueryLabel" xml:space="preserve"><value>Report query / procedure</value></data>
+  <data name="QvdReport.EmpSummary" xml:space="preserve"><value>Daily EMP_TTS QVD event and employee totals by branch.</value></data>
+  <data name="QvdReport.DateFrom" xml:space="preserve"><value>First QVD file date (inclusive).</value></data>
+  <data name="QvdReport.DateTo" xml:space="preserve"><value>Last QVD file date (inclusive).</value></data>
+  <data name="QvdReport.FlowsJoin" xml:space="preserve"><value>Daily FLOWS_DB, EPL, IBL and AMOUNT QVD files joined by RECNO and DORD. MATCH_ROWS: 0 – missing match, 1 – matched, more than 1 – duplicate key; its calculated fields are left empty.</value></data>
+  <data name="QvdReport.OwnerFilter" xml:space="preserve"><value>Optional exact product owner code. All owners are shown when no filter is selected.</value></data>
+  <data name="QvdReport.OwnerCode" xml:space="preserve"><value>Product owner code.</value></data>
+  <data name="QvdReport.Operation" xml:space="preserve"><value>Operation type, e.g. OUTGOING OPERATION.</value></data>
+  <data name="QvdReport.ItemFilter" xml:space="preserve"><value>Optional product code filter. IN accepts comma-separated codes; LIKE accepts a code fragment.</value></data>
+  <data name="QvdReport.PrefFilter" xml:space="preserve"><value>Optional PREF filter.</value></data>
+  <data name="QvdReport.PrefstockFilter" xml:space="preserve"><value>Optional PREFSTOCK warehouse filter.</value></data>
+  <data name="QvdReport.DocumentFilter" xml:space="preserve"><value>Optional DOCK document filter.</value></data>
+  <data name="QvdReport.AdminOnly" xml:space="preserve"><value>QVD queries are available only to users with ADMIN access to this module.</value></data>
 </root>
 

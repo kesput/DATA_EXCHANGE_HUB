@@ -79,6 +79,7 @@ builder.Services.AddScoped<IDataExchangeService, DataExchangeService>();
 builder.Services.AddScoped<IDataExchangeTableService, DataExchangeTableService>();
 builder.Services.AddScoped<IExcelWorkbookService, ExcelWorkbookService>();
 builder.Services.AddScoped<IQueryCountryAccessService, QueryCountryAccessService>();
+builder.Services.AddScoped<IQvdReportAccessService, QvdReportAccessService>();
 builder.Services.AddScoped<IOraculService, OraculService>();
 builder.Services.AddScoped<IKairosService, KairosService>();
 builder.Services.AddScoped<IKairosAnalysisQueryService, KairosAnalysisQueryService>();

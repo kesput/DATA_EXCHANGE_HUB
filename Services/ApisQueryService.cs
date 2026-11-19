@@ -10,7 +10,8 @@ namespace DATA_EXCHANGE_HUB.Services;
 public sealed class ApisQueryService(
     IConfiguration configuration,
     IWebHostEnvironment environment,
-    IOptions<ApisOptions> options) : IApisQueryService
+    IOptions<ApisOptions> options,
+    IQvdReportAccessService? qvdReportAccess = null) : IApisQueryService
 {
     private const string QueryRoot = "Sql/Apis";
     private const string TextCommandType = "Text";
@@ -49,6 +50,15 @@ public sealed class ApisQueryService(
 
         var queryPath = Path.Combine(environment.ContentRootPath, query.RelativePath);
         var sql = await File.ReadAllTextAsync(queryPath, cancellationToken);
+        if (query.ConnectionName.Equals("QVD", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!query.CommandType.Equals(TextCommandType, StringComparison.OrdinalIgnoreCase))
+                throw QvdReportError.Create("QVD nepalaiko SQL proceduru.", "QVD does not support SQL procedures.");
+            using var prepared = new SqlCommand();
+            prepared.CommandText = BuildTextCommand(prepared, sql, query, parameters);
+            var result = await new QvdQueryService(configuration, environment, qvdReportAccess).ExecuteAsync("Apis", query.RelativePath, sql, prepared, cancellationToken);
+            return new(result.Columns, result.Rows, result.NumericColumns, result.ValueCulture, result.ReadStatistics);
+        }
         var connectionString = configuration.GetConnectionString(query.ConnectionName)
             ?? throw new InvalidOperationException($"SQL Server prisijungimo eilute '{query.ConnectionName}' nesukonfiguruota.");
 
@@ -189,7 +199,7 @@ public sealed class ApisQueryService(
             : $"EXEC {query.ProcedureName} {string.Join(", ", parameterNames)}";
     }
 
-    private static void AddNamedParameters(
+    internal static void AddNamedParameters(
         SqlCommand command,
         ApisQueryDefinition query,
         IReadOnlyList<ApisParameterValue>? parameters)
@@ -237,9 +247,14 @@ public sealed class ApisQueryService(
             .Where(parameter => !string.IsNullOrWhiteSpace(parameter.Name))
             .ToDictionary(parameter => parameter.Name, parameter => parameter.Connector, StringComparer.OrdinalIgnoreCase);
         var clauses = new List<string>();
+        var optionalDefinitions = query.Parameters
+            .Where(parameter => !parameter.IsRequired && !string.IsNullOrWhiteSpace(parameter.FilterExpression))
+            .ToDictionary(parameter => parameter.Name, StringComparer.OrdinalIgnoreCase);
 
-        foreach (var definition in query.Parameters.Where(parameter => !parameter.IsRequired && !string.IsNullOrWhiteSpace(parameter.FilterExpression)))
+        foreach (var requested in parameters)
         {
+            if (string.IsNullOrWhiteSpace(requested.Name) || !optionalDefinitions.TryGetValue(requested.Name, out var definition))
+                continue;
             if (!values.TryGetValue(definition.Name, out var rawValue) || string.IsNullOrWhiteSpace(rawValue) || IsNullLiteral(rawValue))
             {
                 continue;
@@ -268,9 +283,13 @@ public sealed class ApisQueryService(
                 ExchangeTableFilter.LessThanOrEqualOperator => "<=",
                 _ => throw new InvalidOperationException("APIS parametrui parinktas nepalaikomas operatorius.")
             };
-            var valueExpression = normalizedOperator.Equals(ExchangeTableFilter.LikeOperator, StringComparison.OrdinalIgnoreCase)
-                ? $"CASE WHEN {parameterName} LIKE '%[%_]%' THEN {parameterName} ELSE '%' + {parameterName} + '%' END"
-                : parameterName;
+            var valueExpression = parameterName;
+            if (normalizedOperator.Equals(ExchangeTableFilter.LikeOperator, StringComparison.OrdinalIgnoreCase))
+            {
+                valueExpression = query.ConnectionName.Equals("QVD", StringComparison.OrdinalIgnoreCase)
+                    ? $"CASE WHEN REPLACE(REPLACE(REPLACE({parameterName}, '%', ''), '_', ''), '[', '') <> {parameterName} THEN {parameterName} ELSE CONCAT('%', {parameterName}, '%') END"
+                    : $"CASE WHEN {parameterName} LIKE '%[%_]%' THEN {parameterName} ELSE '%' + {parameterName} + '%' END";
+            }
             var connectorSql = clauses.Count == 0 ? string.Empty : ResolveParameterConnector(connectors, definition);
             var clause = $"{expression} {operatorSql} {valueExpression}";
             clauses.Add(string.IsNullOrWhiteSpace(connectorSql) ? clause : $"{connectorSql} {clause}");
@@ -278,7 +297,7 @@ public sealed class ApisQueryService(
 
         var replacement = clauses.Count == 0
             ? string.Empty
-            : $"AND {string.Join(" ", clauses)}";
+            : $"AND ({string.Join(" ", clauses)})";
         return sql.Replace(OptionalFilterPlaceholder, replacement, StringComparison.OrdinalIgnoreCase);
     }
     private static string? ResolveParameterValue(
@@ -359,7 +378,7 @@ public sealed class ApisQueryService(
             .FirstOrDefault(value => !string.IsNullOrWhiteSpace(value));
     }
 
-    private static IReadOnlyList<ApisParameterDefinition> ReadParameterDefinitions(string filePath)
+    internal static IReadOnlyList<ApisParameterDefinition> ReadParameterDefinitions(string filePath)
     {
         return File
             .ReadLines(filePath)

@@ -44,6 +44,8 @@ Check(numericCsv == "sep=;\r\n\"QUANTITY\";\"CODE\";\"NAME\"\r\n\"-300.00000\";\
 var unchanged = Encoding.UTF8.GetString(service.CreateSemicolonCsv(["QUANTITY","CODE","NAME"], numericRows, false, numericColumns, "lt-LT"));
 Check(unchanged.Contains("-300,00000;001,02;"), "UTF-8 retains current formatting");
 Check(CsvExportEncoding.InvariantNumber("-2,00000", "lt-LT") == "-2.00000", "LT cached number converted independently of current EN culture");
+var ltNegative = CultureInfo.GetCultureInfo("lt-LT").NumberFormat.NegativeSign;
+Check(CsvExportEncoding.InvariantNumber(ltNegative + "2,50000", "lt-LT") == "-2.50000", "LT native negative sign normalizes to Windows-compatible ASCII minus");
 Check(CsvExportEncoding.InvariantNumber("-2.00000", "en-US") == "-2.00000", "EN SQL number unchanged");
 Check(CsvExportEncoding.InvariantNumber("123456789012345678901234567890123,00000", "lt-LT") == "123456789012345678901234567890123.00000", "SQL high precision survives without decimal parsing");
 var sourceType = typeof(DATA_EXCHANGE_HUB.Models.IrisReportSource);
